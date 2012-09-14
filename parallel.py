@@ -129,8 +129,11 @@ def _getexcepthook():
 
 # Stuff for @splitpoint 
 
-def _splitprocess(func, input, output):
+splitno = None
+def _splitprocess(func, input, output, splitid):
     # The target of a process created for a splitpoint
+    global splitno
+    splitno = splitid
     sys.excepthook = _getexcepthook() # To handle uncaught exceptions and halt
     (args, kw) = input.get()
     while True:
@@ -176,6 +179,8 @@ def splitpoint(*arg, **kwargs):
          .put(obj) method). The annotated function's results will then be put
          in the output
        - instances: Determines how many processes should run the function.
+         Each of the processes will have the value parallel.splitno set to
+         a unique value between 0 (incl.) and instances (excl.).
        - queuesize: Given as an argument to a multiprocessing.JoinableQueue
          which holds arguments to the annotated function while they wait for
          an idle process that will pass them on to the annotated function.
@@ -220,7 +225,7 @@ def splitpoint(*arg, **kwargs):
         input = multiprocessing.JoinableQueue(queuesize)
         for n in range(instances):
             p = multiprocessing.Process(target=_splitprocess,\
-                                            args=(func, input, output))
+                                            args=(func, input, output, n))
             p.name = 'Process-%d for %s' % (n, func.__name__)
             p.daemon = True
             p.start()
