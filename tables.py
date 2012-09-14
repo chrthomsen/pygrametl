@@ -1438,12 +1438,17 @@ class BulkFactTable(object):
              primary key of the fact tables (i.e., the dimension references)
            - measures: a possibly empty sequence of measure names.
            - bulkloader: A method 
-             m(name, attributes, fieldsep, rowsep, nullsubst, tempdest)
-             that is called to load data from a temporary file into the DW.
-             The argument attributes is the combination of keyrefs and measures
-             and show the order in which the attribute values appear in the 
-             temporary file. The rest of the arguments are similar to those
-             described here.
+             m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
+             is called to load data from a temporary file into the DW. The
+             argument "attributes" is the combination of keyrefs and measures
+             (i.e., a list of the names of the columns to insert values into)
+             and show the order in which the attribute values appear in the
+             temporary file.  The rest of the arguments are similar to those
+             arguments with identical names that are given to
+             BulkFactTable.__init__ as described here. The argument "tempdest"
+             can, however, be 1) a string with a filename or 2) a file
+             object. This is determined by the usefilename argument to
+             BulkFactTable.__init__ (see below).
            - fieldsep: a string used to separate fields in the temporary 
              file. Default: '\\t'
            - rowsep: a string used to separate rows in the temporary file.
@@ -1455,7 +1460,10 @@ class BulkFactTable(object):
            - bulksize: an int deciding the number of rows to load in one
              bulk operation.
            - usefilename: a value deciding if the file should be passed to the
-             bulkloader by its name instead of as a file-like object.
+             bulkloader by its name instead of as a file-like object. This is
+             necessary when the bulkloader runs in another process (for example,
+             when if the BulkFactTable is wrapped by a DecoupledFactTable and
+             invokes the bulkloader on a shared connection wrapper).
         """
 
         self.name = name
