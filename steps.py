@@ -304,14 +304,38 @@ class SCDimensionStep(Step):
         self.dimension.scdensure(row)
 
 
-class RenamingStep(Step):
+class RenamingFromToStep(Step):
     # Performs renamings of attributes in rows.
     def __init__(self, renaming, next=None, name=None):
+        """Arguments:
+           - name: A name for the Step instance. This is used when another
+             Step (implicitly or explicitly) passes on rows. If two instanes
+             have the same name, the name is mapped to the instance that was
+             created the latest. Default: None
+           - renaming: A dict with pairs (oldname, newname) which will
+             by used by pygrametl.renamefromto to do the renaming
+           - next: The default next step to use. This should be 1) an instance
+             of a Step, 2) the name of a Step, or 3) None.
+             If if is a name, the next step will be looked up dynamically
+             each time. If it is None, no default step will exist and rows
+             will not be passed on. Default: None
+           - name: A name for the Step instance. This is used when another
+             Step (implicitly or explicitly) passes on rows. If two instanes
+             have the same name, the name is mapped to the instance that was
+             created the latest. Default: None
+        """
         Step.__init__(self, None, next, name)
         self.renaming = renaming
 
     def defaultworker(self, row):
-        pygrametl.rename(row, self.renaming)
+        pygrametl.renamefromto(row, self.renaming)
+
+RenamingStep = RenamingFromToStep # for backwards compat.
+
+
+class RenamingToFromStep(RenamingFromToStep):
+    def defaultworker(self, row):
+        pygrametl.renametofrom(row, self.renaming)
 
 
 class GarbageStep(Step):

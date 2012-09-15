@@ -54,13 +54,14 @@ import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0.2'
-__all__ = ['project', 'copy', 'rename', 'getint', 'getlong', 'getfloat', 
-           'getstr', 'getstrippedstr', 'getstrornullvalue', 'getbool', 
-           'getdate', 'gettimestamp', 'getvalue', 'getvalueor', 'setdefaults', 
-           'rowfactory', 'endload', 'today', 'now', 'ymdparser', 'ymdhmsparser',
-           'datereader', 'datetimereader', 'datespan', 
-           'toupper', 'tolower', 'keepasis', 
+__version__ = '0.2.0.3'
+
+__all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
+           'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
+           'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp', 
+           'getvalue', 'getvalueor', 'setdefaults', 'rowfactory', 'endload', 
+           'today', 'now', 'ymdparser', 'ymdhmsparser', 'datereader', 
+           'datetimereader', 'datespan', 'toupper', 'tolower', 'keepasis', 
            'ConnectionWrapper']
 
 
@@ -110,18 +111,34 @@ def copy(row, **renaming):
     return res
 
 
-def rename(row, renaming):
+def renamefromto(row, renaming):
     """Rename keys in a dictionary.
 
-       For each (k,v) in renaming.items(): rename row[k] to row[v].
+       For each (oldname, newname) in renaming.items(): rename row[oldname] to 
+       row[newname].
     """
     if not renaming:
         return row
 
-    for k,v in renaming.items():
-        row[v] = row[k]
-        del row[k]
-    
+    for old, new in renaming.items():
+        row[new] = row[old]
+        del row[old]
+
+rename = renamefromto # for backwards compatibility
+
+
+def renametofrom(row, renaming):    
+    """Rename keys in a dictionary.
+
+       For each (newname, oldname) in renaming.items(): rename row[oldname] to 
+       row[newname].
+    """
+    if not renaming:
+        return row
+
+    for new, old in renaming.items():
+        row[new] = row[old]
+        del row[old]
 
     
 def getint(value, default=None):
