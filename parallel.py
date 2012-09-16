@@ -2,9 +2,11 @@
    Warning: This is still experimental and things may be changed drastically.
    If you have ideas, comments, bug reports, etc., please report them to
    Christian Thomsen (chr@cs.aau.dk)
+   Note that this module in many cases will give better results with Jython
+   (where it uses threads) than with CPython (where it uses processes).
 """
 
-# Copyright (c) 2011, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2011-2012, Christian Thomsen (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -30,7 +32,7 @@
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 __all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled', \
                'shareconnectionwrapper', 'getsharedsequencefactory']
 

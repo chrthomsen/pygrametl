@@ -1,8 +1,9 @@
-"""This module holds classes that can be used as data soures. A data source
-   must be iterable and provide dicts with data values.
+"""This module holds classes that can be used as data soures. Note that it is
+   easy to create other data sources: A data source must be iterable and
+   provide dicts that map from attribute names to attribute values.
 """
 
-# Copyright (c) 2009-2011, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2012, Christian Thomsen (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
