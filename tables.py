@@ -1740,8 +1740,8 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
         """Invoke endload on the decoupled Dimension in the separate process and
            return when all waiting method calls have been executed
         """
-        self._enqueuenoreturn('endload')
-        self._endbatch()
+        self._enqueuenoreturn('endload') # first add 'endload' to the batch ...
+        self._endbatch()                 # ... and then send the batch
         self._join()
         return None
 
