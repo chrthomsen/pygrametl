@@ -621,6 +621,11 @@ class Decoupled(object):
 
         while True:
             batch = self.__toworker.get()
+            ###
+            if batch == 'STOP':
+                self.__toworker.task_done()
+                return
+            ###
             resbatch = []
             for [id, funcname, args] in batch:
                 if self.__otherqueues and args:
@@ -688,6 +693,21 @@ class Decoupled(object):
         self._endbatch()
         self.__toworker.join()
 
+    def shutdowndecoupled(self):
+        """Let the Decoupled instance finish its tasks and stop it.
+
+        The Decoupled instance should not be used after this.
+        """
+        self._join()
+        self.__toworker.put('STOP')
+        self.__toworker.join()
+        self.__toworker.close()
+        if self.__fromworker is not None:
+            self.__fromworker.close()
+        try:
+            pygrametl._alltables.remove(self)
+        except ValueError:
+            pass
 
 
 
@@ -896,6 +916,9 @@ class SharedConnectionWrapperServer(object):
                 target = getattr(self, method)
                 target(*args)
                 self.__toclients[client].put('USERFUNC')
+            elif method == 'close':
+                target = getattr(self.__wrapped, method)
+                target(*args) # Probably no arguments anyway, but ...
             else: # it must be a function from the wrapped ConnectionWrapper
                 target = getattr(self.__wrapped, method)
                 target(*args)
@@ -905,6 +928,8 @@ class SharedConnectionWrapperServer(object):
                     res = list(res)
                 self.__results[client] = (self.__wrapped.resultnames(), res)
             self.__toserver.task_done()
+            if method == 'close':
+                return
 
 
 def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
