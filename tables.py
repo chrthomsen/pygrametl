@@ -51,7 +51,7 @@ from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0.3'
+__version__ = '0.2.1'
 __all__ = ['Dimension', 'CachedDimension', 'SlowlyChangingDimension',
            'SnowflakedDimension', 'FactTable', 'BatchFactTable',
            'BulkFactTable', 'SubprocessFactTable', 'DecoupledDimension',
@@ -503,16 +503,18 @@ class CachedDimension(Dimension):
 
 
 class SlowlyChangingDimension(Dimension):
-    """A class for accessing a slowly changing dimension. Does caching.
+    """A class for accessing a slowly changing dimension of "type 2".
+    
+       "Type 1" updates can also be applied for a subset of the attributes.
 
-       We assume that the DB doesn't change or add any attribute
-       values that are cached.
-       For example, a DEFAULT value in the DB can break this assumption.
+       Caching is used. We assume that the DB doesn't change or add any 
+       attribute values that are cached. For example, a DEFAULT value in the 
+       DB can break this assumption.
     """
 
     def __init__(self, name, key, attributes, lookupatts, versionatt, 
                  fromatt=None, fromfinder=None,
-                 toatt=None, tofinder=None, maxto=None,
+                 toatt=None, tofinder=None, minfrom=None, maxto=None,
                  srcdateatt=None, srcdateparser=pygrametl.ymdparser,
                  type1atts=(), cachesize=10000, prefill=False, idfinder=None,
                  targetconnection=None):
@@ -551,6 +553,17 @@ class SlowlyChangingDimension(Dimension):
              (note that if fromfinder is None, it is set to a default
              function -- see the comments about fromfinder. The possibly
              modified value is used here.) Default: None
+           - minfrom: the value to use for fromatt for the 1st version of a 
+             member if fromatt is not already set. If None, the value is 
+             found in the same way as for other new versions, i.e., as 
+             described for fromfinder. If fromatt should take the value
+             NULL for the 1st version, set minfrom to a tuple holding a single 
+             element which is None: (None,). Note that minto affects the 1st 
+             version, not any following versions. Note also that if the member 
+             to insert already contains a value for fromatt, minfrom is ignored.
+             Default: None.
+             ADDED IN THE AUGUST 2013 RELEASE. The minfrom argument is not 
+             available in previous releases.
            - maxto: the value to use for toatt for new members. Default: None
            - srcdateatt: the name of the attribute in the source data that
              holds a date showing when a version is valid from. The data is
@@ -598,6 +611,7 @@ class SlowlyChangingDimension(Dimension):
         if tofinder is None:
             tofinder = self.fromfinder
         self.tofinder = tofinder
+        self.minfrom = minfrom
         self.maxto = maxto
         self.srcdateatt = srcdateatt
         self.srcdateparser = srcdateparser
@@ -715,8 +729,14 @@ class SlowlyChangingDimension(Dimension):
             # It is a new member. We add the first version.
             row[versionatt] = 1
             if fromatt and fromatt not in row:
-                row[fromatt] = self.fromfinder(self.targetconnection, 
-                                               row, namemapping)
+                if self.minfrom is not None:
+                    # We need the following hack to distinguish between
+                    # 'not set' and 'use the value None'...
+                    if self.minfrom == (None,): row[fromatt] = None
+                    else: row[fromatt] = self.minfrom
+                else:
+                    row[fromatt] = self.fromfinder(self.targetconnection, 
+                                                   row, namemapping)
             if toatt and toatt not in row:
                 row[toatt] = self.maxto
             row[key] = self.insert(row, namemapping)
