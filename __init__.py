@@ -54,7 +54,7 @@ import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0.3'
+__version__ = '0.2.0.4'
 
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
@@ -427,6 +427,8 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
           datetime.date or a YYYY-MM-DD formatted string.
         - fromdateincl: Decides if fromdate is included. Default: True
         - todateincl: Decides if todate is included. Default: True
+        - key: The name of the attribute where an int (YYYYMMDD) that uniquely
+          identifies the date is stored. Default: 'dateid'.
         - strings: A dict mapping attribute names to formatting directives (as
           those used by strftime). The returned dicts will have the specified
           attributes as strings.

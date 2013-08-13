@@ -55,14 +55,14 @@ class SQLSource(object):
     def __init__(self, connection, query, names=(), initsql=None, \
                      cursorarg=None):
         """Arguments:
-           - connection: the PEP 249 connection to use.
+           - connection: the PEP 249 connection to use. NOT a ConnectionWrapper!
            - query: the query that generates the result
            - names: names of attributes in the result. If not set,
              the names from the database are used. Default: ()
            - initsql: SQL that is executed before the query. The result of this
-             initsql is not returned.
+             initsql is not returned. Default: None.
            - cursorarg: if not None, this argument is used as an argument when
-             the connection's cursor method is called.
+             the connection's cursor method is called. Default: None.
         """
         self.connection = connection
         if cursorarg is not None:
@@ -168,7 +168,7 @@ class HashJoiningSource(object):
         """Arguments:
            - src1: the first source. This source is iterated row by row.
            - key1: the attribute of the first source to use in the join
-           - src2: the second soruce. The rows of this source are all loaded
+           - src2: the second source. The rows of this source are all loaded
              into memory.
            - key2: the attriubte of the second source to use in the join.
         """
