@@ -18,7 +18,7 @@
      removed in first-in first-out order
 """
 
-# Copyright (c) 2009-2012, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2013, Christian Thomsen (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -54,7 +54,7 @@ import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0.4'
+__version__ = '0.2.0.5'
 
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
@@ -505,7 +505,7 @@ class ConnectionWrapper(object):
        statements can be executed anyway.
     """
 
-    def __init__(self, connection, stmtcachesize=1000):
+    def __init__(self, connection, stmtcachesize=1000, paramstyle=None):
         """Create a ConnectionWrapper around the given PEP 249 connection 
 
            If no default ConnectionWrapper already exists, the new 
@@ -518,20 +518,32 @@ class ConnectionWrapper(object):
              does not use 'pyformat' to specify parameters. When 'pyformat' is
              used, stmtcachesize is ignored as no statements need to be 
              translated. 
+           - paramstyle: A string holding the name of the PEP 249 connection's
+             paramstyle. If None, pygrametl will try to find the paramstyle
+             automatically (an AttributeError can be raised if that fails).
         """
         self.__connection = connection
         self.__cursor = connection.cursor()
         self.nametranslator = lambda s: s
-        try:
-            paramstyle = \
-                modules[self.__connection.__class__.__module__].paramstyle
-        except AttributeError:
-            # Note: This is probably a better way to do it, but to avoid to
-            # break anything that worked before this fix, we only do it this 
-            # way if the first approach didn't work
-            paramstyle = \
-                modules[self.__connection.__class__.__module__.split('.')[0]].\
-                paramstyle
+
+        if paramstyle is None:
+            try:
+                paramstyle = \
+                    modules[self.__connection.__class__.__module__].paramstyle
+            except AttributeError:
+                # Note: This is probably a better way to do this, but to avoid
+                # to break anything that worked before this fix, we only do it
+                # this way if the first approach didn't work
+                try:
+                    paramstyle = \
+                        modules[self.__connection.__class__.__module__.\
+                                    split('.')[0]].paramstyle
+                except AttributeError:
+                    # To support, e.g., mysql.connector connections
+                    paramstyle = \
+                        modules[self.__connection.__class__.__module__.\
+                                    rsplit('.', 1)[0]].paramstyle
+
         if not paramstyle == 'pyformat':
             self.__translations = FIFODict.FIFODict(stmtcachesize)
             try:
@@ -782,20 +794,29 @@ class BackgroundConnectionWrapper(object):
     # Most of this class' code was just copied from ConnectionWrapper
     # as we just want to do experiments with this class.
 
-    def __init__(self, connection, stmtcachesize=1000):
+    def __init__(self, connection, stmtcachesize=1000, paramstyle=None):
         self.__connection = connection
         self.__cursor = connection.cursor()
         self.nametranslator = lambda s: s
-        try:
-            paramstyle = \
-                modules[self.__connection.__class__.__module__].paramstyle
-        except AttributeError:
-            # Note: This is probably a better way to do it, but to avoid to
-            # break anything that worked before this fix, we only do it this 
-            # way if the first approach didn't work
-            paramstyle = \
-                modules[self.__connection.__class__.__module__.split('.')[0]].\
-                paramstyle
+
+        if paramstyle is None:
+            try:
+                paramstyle = \
+                    modules[self.__connection.__class__.__module__].paramstyle
+            except AttributeError:
+                # Note: This is probably a better way to do this, but to avoid
+                # to break anything that worked before this fix, we only do it
+                # this way if the first approach didn't work
+                try:
+                    paramstyle = \
+                        modules[self.__connection.__class__.__module__.\
+                                    split('.')[0]].paramstyle
+                except AttributeError:
+                    # To support, e.g., mysql.connector connections
+                    paramstyle = \
+                        modules[self.__connection.__class__.__module__.\
+                                    rsplit('.', 1)[0]].paramstyle
+
         if not paramstyle == 'pyformat':
             self.__translations = FIFODict.FIFODict(stmtcachesize)
             try:
