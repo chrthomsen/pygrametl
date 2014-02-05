@@ -18,7 +18,7 @@
      removed in first-in first-out order
 """
 
-# Copyright (c) 2009-2013, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Christian Thomsen (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -54,7 +54,7 @@ import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0.5'
+__version__ = '0.2.0.6'
 
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
@@ -96,8 +96,10 @@ def copy(row, **renaming):
        Arguments:
        - row the dictionary to copy
        - **renaming allows renamings to be specified in the form
-         newname=oldname meaning that in the result oldname will be
-         renamed to newname.
+         newname=oldname meaning that in the result, oldname will be
+         renamed to newname. The key oldname must exist in the row argument, 
+         but it can be assigned to several newnames in the result as in
+         x='repeated', y='repeated'.
     """
     if not renaming:
         return row.copy()
@@ -106,10 +108,10 @@ def copy(row, **renaming):
     res = {}
     for k,v in renaming.items():
         res[k] = row[v]
-        del tmp[v]
+        if v in tmp: #needed for renamings like {'x':'repeated', 'y':'repeated'}
+            del tmp[v]
     res.update(tmp)
     return res
-
 
 def renamefromto(row, renaming):
     """Rename keys in a dictionary.
