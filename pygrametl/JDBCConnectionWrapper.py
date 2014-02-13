@@ -2,7 +2,7 @@
    JDBC Connection. The module should only be used when running Jython.
 """
 
-# Copyright (c) 2009-2011, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -26,7 +26,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 import java.sql as jdbc
 
 from copy import copy as pcopy
@@ -42,8 +41,9 @@ from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0'
+__version__ = '2.2'
 __all__ = ['JDBCConnectionWrapper', 'BackgroundJDBCConnectionWrapper']
+
 
 class JDBCConnectionWrapper(object):
     """Wrap a JDBC Connection.
@@ -175,7 +175,7 @@ class JDBCConnectionWrapper(object):
 
            Arguments:
            - stmt: the statement to execute
-           - arguments: a mapping with the arguments (default: None)
+           - arguments: a mapping with the arguments. Default: None.
            - namemapping: a mapping of names such that if stmt uses %(arg)s
              and namemapping[arg]=arg2, the value arguments[arg2] is used 
              instead of arguments[arg]
@@ -301,10 +301,21 @@ class BackgroundJDBCConnectionWrapper(object):
        have to care about which parameter format is used.
        This ConnectionWrapper is a special one for JDBC in Jython and does DB 
        communication from a Thread.
+
+       .. Note::
+          BackgroundJDBCConnectionWrapper is added for experiments. 
+          It is quite similar to JDBCConnectionWrapper and one of them may be 
+          removed.
     """
 
     def __init__(self, jdbcconn, stmtcachesize=20):
-        """Create a ConnectionWrapper around the given JDBC connection """
+        """Create a ConnectionWrapper around the given JDBC connection 
+
+           Arguments:
+           - jdbcconn: An open JDBC Connection (not a PEP249 Connection)
+           - stmtcachesize: The maximum number of PreparedStatements kept
+             open. Default: 20.
+        """
         self.__jdbcconn = jdbcconn
         # Add a finalizer to __prepstmts to close PreparedStatements when
         # they are pushed out
@@ -420,7 +431,7 @@ class BackgroundJDBCConnectionWrapper(object):
 
            Arguments:
            - stmt: the statement to execute
-           - arguments: a mapping with the arguments (default: None)
+           - arguments: a mapping with the arguments. Default: None.
            - namemapping: a mapping of names such that if stmt uses %(arg)s
              and namemapping[arg]=arg2, the value arguments[arg2] is used 
              instead of arguments[arg]

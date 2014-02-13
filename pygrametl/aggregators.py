@@ -1,17 +1,16 @@
-""" A module with classes for aggregation.
-An Aggregator has two methods: process and finish.
+"""A module with classes for aggregation.
+   An Aggregator has two methods: process and finish.
 
-process(group, val) is called to "add" val to the aggregation of the set of 
-values identified by the value of group. The value in group (which could be any 
-hashable type, also a tuple as ('A', 'B')) thus corresponds to the GROUP BY 
-attributes in SQL.
+   process(group, val) is called to "add" val to the aggregation of the set of 
+   values identified by the value of group. The value in group (which could be 
+   any hashable type, also a tuple as ('A', 'B')) thus corresponds to the 
+   GROUP BY attributes in SQL.
 
-finish(group, default) is called to get the final result for group. If no such
-results exists, default is returned.
+   finish(group, default) is called to get the final result for group.
+   If no such results exists, default is returned.
 """
 
-
-# Copyright (c) 2011, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2011-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -35,13 +34,11 @@ results exists, default is returned.
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0'
+__version__ = '2.2'
 __all__ = ['Aggregator', 'SimpleAggregator', 'Sum', 'Count', 'CountDistinct',
            'Max', 'Min', 'Avg']
-
 
 
 class Aggregator(object):

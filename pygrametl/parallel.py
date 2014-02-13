@@ -1,12 +1,13 @@
 """This module contains methods and classes for making parallel ETL flows.
+   Note that this module in many cases will give better results with Jython
+   (where it uses threads) than with CPython (where it uses processes).
+
    Warning: This is still experimental and things may be changed drastically.
    If you have ideas, comments, bug reports, etc., please report them to
    Christian Thomsen (chr@cs.aau.dk)
-   Note that this module in many cases will give better results with Jython
-   (where it uses threads) than with CPython (where it uses processes).
 """
 
-# Copyright (c) 2011-2012, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2011-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -30,12 +31,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '0.2.1'
-__all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled', \
-               'shareconnectionwrapper', 'getsharedsequencefactory']
-
 import copy
 import os
 from Queue import Empty
@@ -48,6 +43,12 @@ else:
     import multiprocessing
 
 import pygrametl
+
+__author__ = "Christian Thomsen"
+__maintainer__ = "Christian Thomsen"
+__version__ = '2.2'
+__all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
+           'shareconnectionwrapper', 'getsharedsequencefactory']
 
 
 # Support for spawned processes to be able to terminate all related processes
@@ -158,23 +159,23 @@ def splitpoint(*arg, **kwargs):
 
        @splitpoint can be used as in the following examples:
 
-       @splitpoint
-       def f(args):
-          # The simplest case. Makes f run in a separate process.
-          # All calls of f will return None immediately and f will be
-          # invoked in the separate process.
-          ...
+       | @splitpoint
+       | def f(args):
 
-       @splitpoint()
-       def g(args):
-          # With parentheses. Has the same effect as the previous example.
-          ...
+           `The simplest case. Makes f run in a separate process.
+           All calls of f will return None immediately and f will be
+           invoked in the separate process.`
 
-       @splitpoint(output=queue, instances=2, queuesize=200)
-       def h(args):
-          # With keyword arguments. It is not required that
-          # all of keyword arguments above are given.
-          ...
+       | @splitpoint()
+       | def g(args):
+
+           `With parentheses. Has the same effect as the previous example.`
+
+       | @splitpoint(output=queue, instances=2, queuesize=200)
+       | def h(args):
+
+           `With keyword arguments. It is not required that
+           all of keyword arguments above are given.`
           
        Keyword arguments:
        - output: If given, it should be a queue-like object (offering the
@@ -352,7 +353,7 @@ class Flow(object):
     def getall(self):
         """Return all results in a single list. 
 
-        The results are of the same form as those returned by get.
+           The results are of the same form as those returned by get.
         """
         res = []
         try:
@@ -400,7 +401,9 @@ def createflow(*functions, **options):
 
        A flow consists of several functions running in several processes.
        A flow created by 
+
            flow = createflow(f1, f2, f3) 
+
        uses three processes. Data can be inserted into the flow by calling it
        as in flow(data). The argument data is then first processed by f1(data),
        then f2(data), and finally f3(data). Return values from f1, f2, and f3 
@@ -432,6 +435,7 @@ def createflow(*functions, **options):
          arguments.
        - **options: keyword arguments configuring details. The considered
          options are:
+
          - batchsize: an integer deciding how many function calls are "grouped
            together" before they are passed on between processes. The default
            is 500.
@@ -490,7 +494,7 @@ def createflow(*functions, **options):
 
 class FutureResult(object):
     """Represent a value that may or may not be computed yet. 
-    FutureResults are created by Decoupled objects.
+       FutureResults are created by Decoupled objects.
     """
 
     def __init__(self, creator, id):
@@ -967,17 +971,20 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
     user-defined bulk loaders as used by BulkFactTable:
 
     def bulkload():
-        # DBMS-specific code here.
-        # No other DW operation should take place concurrently
+       `DBMS-specific code here. 
+       No other DW operation should take place concurrently`
 
     scw = shareconnectionwrapper(ConnectionWrapper(...), userfuncs=(bulkload,))
-    facttbl = BulkFact(..., bulkloader=scw.copy().bulkload) #Note the .copy(). 
+
+    facttbl = BulkFact(..., bulkloader=scw.copy().bulkload)
+
+    .. Note:: The SharedConnectionWrapper must be copied using .copy(). 
 
     Arguments:
     - targetconnection: a pygrametl ConnectionWrapper
     - maxclients: the maximum number of concurrent clients. Default: 10
     - userfuncs: a sequence of functions to add to the shared 
-    ConnectionWrapper. Default: ()
+      ConnectionWrapper. Default: ()
     """
     toserver = multiprocessing.JoinableQueue(5000)
     toclients = [multiprocessing.Queue() for i in range(maxclients)]

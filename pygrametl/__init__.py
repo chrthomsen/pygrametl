@@ -1,5 +1,4 @@
-"""
-   A package for creating Extract-Transform-Load (ETL) programs in Python.
+"""A package for creating Extract-Transform-Load (ETL) programs in Python.
 
    The package contains a number of classes for filling fact tables
    and dimensions (including snowflaked and slowly changing dimensions), 
@@ -8,6 +7,7 @@
    functionality.
 
    The package's modules are:
+
    - datasources for access to different data sources
    - tables for giving easy and abstracted access to dimension and fact tables
    - parallel for parallelizing ETL operations
@@ -18,7 +18,7 @@
      removed in first-in first-out order
 """
 
-# Copyright (c) 2009-2014, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -54,15 +54,14 @@ import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0.6'
-
+__version__ = '2.2'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
            'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp', 
            'getvalue', 'getvalueor', 'setdefaults', 'rowfactory', 'endload', 
            'today', 'now', 'ymdparser', 'ymdhmsparser', 'datereader', 
            'datetimereader', 'datespan', 'toupper', 'tolower', 'keepasis', 
-           'ConnectionWrapper']
+           'getdefaulttargetconnection', 'ConnectionWrapper']
 
 
 _alltables = []
@@ -76,10 +75,10 @@ def project(atts, row, renaming={}):
        - row is the original dictionary to copy data from.
        - renaming is a mapping of names such that for each k in atts, 
          the following holds:
+
          - If k in renaming then result[k] = row[renaming[k]]. 
          - If k not in renaming then result[k] = row[k].
-         renaming defauts to {}
-         
+         - renaming defaults to {}
     """
     res = {}
     for c in atts:
@@ -112,6 +111,7 @@ def copy(row, **renaming):
             del tmp[v]
     res.update(tmp)
     return res
+
 
 def renamefromto(row, renaming):
     """Rename keys in a dictionary.
@@ -215,6 +215,7 @@ def getdate(targetconnection, ymdstr, default=None):
     """Convert a string of the form 'yyyy-MM-dd' to a Date object.
 
        The returned Date is in the given targetconnection's format.
+
        Arguments:
        - targetconnection: a ConnectionWrapper whose underlying module's
          Date format is used
@@ -231,7 +232,8 @@ def getdate(targetconnection, ymdstr, default=None):
 def gettimestamp(targetconnection, ymdhmsstr, default=None):
     """Converts a string of the form 'yyyy-MM-dd HH:mm:ss' to a Timestamp.
     
-    The returned Timestamp is in the given targetconnection's format.
+       The returned Timestamp is in the given targetconnection's format.
+
        Arguments:
        - targetconnection: a ConnectionWrapper whose underlying module's
          Timestamp format is used
@@ -420,27 +422,27 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
              strings={'date':'%Y-%m-%d', 'monthname':'%B', 'weekday':'%A'},
              ints={'year':'%Y', 'month':'%m', 'day':'%d'},
              expander=None):
-    """ Return a generator yielding dicts for all dates in an interval.
+    """Return a generator yielding dicts for all dates in an interval.
 
-        Arguments:
-        - fromdate: The lower bound for the date interval. Should be a
-          datetime.date or a YYYY-MM-DD formatted string.
-        - todate: The upper bound for the date interval. Should be a
-          datetime.date or a YYYY-MM-DD formatted string.
-        - fromdateincl: Decides if fromdate is included. Default: True
-        - todateincl: Decides if todate is included. Default: True
-        - key: The name of the attribute where an int (YYYYMMDD) that uniquely
-          identifies the date is stored. Default: 'dateid'.
-        - strings: A dict mapping attribute names to formatting directives (as
-          those used by strftime). The returned dicts will have the specified
-          attributes as strings.
-          Default: {'date':'%Y-%m-%d', 'monthname':'%B', 'weekday':'%A'}
-        - ints: A dict mapping attribute names to formatting directives (as
-          those used by strftime). The returned dicts will have the specified
-          attributes as ints.
-          Default: {'year':'%Y', 'month':'%m', 'day':'%d'}
-        - expander: A callable f(date, dict) that is invoked on each created
-          dict. Not invoked if None. Default: None
+       Arguments:
+       - fromdate: The lower bound for the date interval. Should be a
+         datetime.date or a YYYY-MM-DD formatted string.
+       - todate: The upper bound for the date interval. Should be a
+         datetime.date or a YYYY-MM-DD formatted string.
+       - fromdateincl: Decides if fromdate is included. Default: True
+       - todateincl: Decides if todate is included. Default: True
+       - key: The name of the attribute where an int (YYYYMMDD) that uniquely
+         identifies the date is stored. Default: 'dateid'.
+       - strings: A dict mapping attribute names to formatting directives (as
+         those used by strftime). The returned dicts will have the specified
+         attributes as strings.
+         Default: {'date':'%Y-%m-%d', 'monthname':'%B', 'weekday':'%A'}
+       - ints: A dict mapping attribute names to formatting directives (as
+         those used by strftime). The returned dicts will have the specified
+         attributes as ints.
+         Default: {'year':'%Y', 'month':'%m', 'day':'%d'}
+       - expander: A callable f(date, dict) that is invoked on each created
+         dict. Not invoked if None. Default: None
     """
 
     for arg in (fromdate, todate):

@@ -3,7 +3,7 @@
    each step does something with the row.
 """
 
-# Copyright (c) 2009, 2010, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -31,11 +31,12 @@ import pygrametl
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.1.1.0'
+__version__ = '1.2'
 __all__ = ['Step', 'SourceStep', 'MappingStep', 'ValueMappingStep',
            'PrintStep', 'DimensionStep', 'SCDimensionStep', 'RenamingStep', 
-           'GarbageStep', 'ConditionalStep', 'CopyStep',
-           'connectsteps']
+           'RenamingFromToStep', 'RenamingToFromStep', 'GarbageStep', 
+           'ConditionalStep', 'CopyStep', 'connectsteps']
+
 
 def connectsteps(*steps):
     """Set a.next = b, b.next = c, etc. when given the steps a, b, c, ..."""
@@ -160,7 +161,7 @@ class MappingStep(Step):
     """A Step that applies functions to attributes in rows."""
 
     def __init__(self, targets, requiretargets=True, next=None, name=None):
-        """Argument:
+        """Arguments:
            - targets: A sequence of (name, function) pairs. For each element,
              row[name] is set to function(row[name]) for each row given to the
              step.
@@ -305,7 +306,8 @@ class SCDimensionStep(Step):
 
 
 class RenamingFromToStep(Step):
-    # Performs renamings of attributes in rows.
+    """Step that performs renamings of attributes in rows."""
+
     def __init__(self, renaming, next=None, name=None):
         """Arguments:
            - name: A name for the Step instance. This is used when another
@@ -342,8 +344,8 @@ class GarbageStep(Step):
     """ A Step that does nothing. Rows are neither modified nor passed on."""
 
     def __init__(self, name=None):
-        """Argument:
-            - name: A name for the Step instance. This is used when another
+        """Arguments:
+           - name: A name for the Step instance. This is used when another
              Step (implicitly or explicitly) passes on rows. If two instanes
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
@@ -367,7 +369,7 @@ class ConditionalStep(Step):
              will not be passed on.
            - whenfalse: The Step that rows are sent to when the condition 
              evaluates to a false value. If None, the rows are silently 
-             discarded. Default=None
+             discarded. Default: None
            - name: A name for the Step instance. This is used when another
              Step (implicitly or explicitly) passes on rows. If two instanes
              have the same name, the name is mapped to the instance that was

@@ -1,8 +1,9 @@
-""" A module for Jython emulating (a small part of) CPython's multiprocessing.
-    With this, pygrametl can be made to use multiprocessing, but actually use       threads when used from Jython (where there is no GIL).
+"""A module for Jython emulating (a small part of) CPython's multiprocessing.
+   With this, pygrametl can be made to use multiprocessing, but actually use
+   threads when used from Jython (where there is no GIL).
 """
 
-# Copyright (c) 2011, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2011-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -26,18 +27,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0'
-__all__ = ['JoinableQueue', 'Process', 'Queue', 'Value']
-
-import sys
-if not sys.platform.startswith('java'):
-    raise ImportError, 'jythonmultiprocessing is made for Jython'
-
 from threading import Thread
 from Queue import Queue
 from pygrametl.jythonsupport import Value
+
+# NOTE: This module is made for Jython.
+
+__author__ = "Christian Thomsen"
+__maintainer__ = "Christian Thomsen"
+__version__ = '2.2'
+__all__ = ['JoinableQueue', 'Process', 'Queue', 'Value']
+
 
 class Process(Thread):
     pid = '<n/a>'

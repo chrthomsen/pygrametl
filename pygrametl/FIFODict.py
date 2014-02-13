@@ -1,9 +1,8 @@
-"""
-  A simple mapping between keys and values, but with a limited capacity. When
-  the max. capacity is reached, the first inserted key/value pair is deleted
+"""A simple mapping between keys and values, but with a limited capacity. When
+   the max. capacity is reached, the first inserted key/value pair is deleted
 """
 
-# Copyright (c) 2009, 2010, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -27,30 +26,30 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 from collections import deque
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0'
+__version__ = '2.2'
 __all__ = ['FIFODict']
 
-class FIFODict:
 
-    """
-    A simple FIFO mapping between keys and values.
-    When the max. capacity is reached, the key/value pair that has been in
-    the dict the longest time is removed.
+class FIFODict:
+    """A simple FIFO mapping between keys and values.
+       When the max. capacity is reached, the key/value pair that has been in
+       the dict the longest time is removed.
     """
 
     def __init__(self, size, finalizer=None):
         """Create a FIFODict with the given maximum size. 
-
-           The argument size determines the maximum size of the dict. 
-           If finalizer is given, it must be a callable f(key, value).
-           It is then called, when a item is removed due to the size of the
-           dict reaching the maximum (finalizer is NOT called when an item 
-           is explicitly deleted with del d[key] or when the dict is cleared.
+           
+           Arguments:
+           - size: Determines the maximum size of the dict.
+           - finalizer: If finalizer is given, it must be a callable 
+             f(key, value). It is then called, when a item is removed due to 
+             the size of the dict reaching the maximum (finalizer is NOT called 
+             when an item is explicitly deleted with del d[key] or when the 
+             dict is cleared).
         """
         if not type(size) == type(0):
             raise TypeError, "size must be an int"

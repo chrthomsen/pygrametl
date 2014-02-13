@@ -3,7 +3,7 @@
    provide dicts that map from attribute names to attribute values.
 """
 
-# Copyright (c) 2009-2012, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -40,10 +40,11 @@ from Queue import Empty
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.0'
-__all__ = ['CSVSource', 'SQLSource', 'BackgroundSource', 'HashJoiningSource',
-           'MergeJoiningSource', 'ProcessSource', 'TransformingSource',
-           'UnionSource', 'CrossTabbingSource', 'FilteringSource']
+__version__ = '2.2'
+__all__ = ['CSVSource', 'SQLSource', 'JoiningSource', 'HashJoiningSource', 
+           'MergeJoiningSource', 'BackgroundSource', 'ProcessSource', 
+           'TransformingSource', 'UnionSource', 'CrossTabbingSource', 
+           'FilteringSource', 'DynamicForEachSource', 'RoundRobinSource']
 
 
 CSVSource = DictReader
@@ -113,9 +114,9 @@ class ProcessSource(object):
         """Arguments:
            - source: the source to iterate
            - batchsize: the number of rows passed from the worker process each
-             time it passes on a batch of rows. Must be positive. Default: 1000
+             time it passes on a batch of rows. Must be positive. Default: 500
            - queuesize: the maximum number of batches that can wait in a queue
-             between the processes. 0 means unlimited. Default: 100
+             between the processes. 0 means unlimited. Default: 20
         """
         if type(batchsize) != int or batchsize < 1:
             raise ValueError, 'batchsize must be a positive integer'
@@ -200,7 +201,7 @@ JoiningSource = HashJoiningSource # for compatability
 
 
 class MergeJoiningSource(object):
-    """A ckass for merge-joining two sorted data sources"""
+    """A class for merge-joining two sorted data sources"""
 
     def __init__(self, src1, key1, src2, key2):
         """Arguments:
@@ -265,7 +266,7 @@ class MergeJoiningSource(object):
 
 
 class TransformingSource(object):
-    "A source that applies functions to the rows from another source"
+    """A source that applies functions to the rows from another source"""
 
     def __init__(self, source, *transformations):
         """Arguments:
@@ -285,7 +286,7 @@ class TransformingSource(object):
 
 
 class CrossTabbingSource(object):
-    "A source that produces a crosstab from another source"
+    """A source that produces a crosstab from another source"""
 
     def __init__(self, source, rowvaluesatt, colvaluesatt, values,
                  aggregator=None, nonevalue=0, sortrows=False):
@@ -336,7 +337,7 @@ class CrossTabbingSource(object):
 
 
 class FilteringSource(object):
-    "A source that applies a filter to another source"
+    """A source that applies a filter to another source"""
 
     def __init__(self, source, filter=bool):
         """Arguments:
@@ -362,7 +363,9 @@ class UnionSource(object):
     """
 
     def __init__(self, *sources):
-        "Arguments: The sources to union in the order they should be used."
+        """Arguments:
+           - *sources: The sources to union in the order they should be used.
+        """
         self.__sources = sources
 
     def __iter__(self):
@@ -372,14 +375,14 @@ class UnionSource(object):
 
 
 class RoundRobinSource(object):
-    "A source that reads sets of rows from sources in round robin-fashion"
+    """A source that reads sets of rows from sources in round robin-fashion"""
 
     def __init__(self, sources, batchsize=500):
         """Arguments:
-        - sources: a sequence of data sources
-        - batchsize: the amount of rows to read from a data source before going
-          to the next data source. Must be positive (to empty a source before
-          going to the next, use UnionSource)
+           - sources: a sequence of data sources
+           - batchsize: the amount of rows to read from a data source before
+             going to the next data source. Must be positive (to empty a source 
+             before going to the next, use UnionSource)
         """
         self.__sources = [iter(src) for src in sources]
         self.__sources.reverse() # we iterate it from the back in __iter__
@@ -415,12 +418,12 @@ class DynamicForEachSource(object):
     """
     def __init__(self, seq, callee):
         """Arguments:
-        - seq: A sequence with the elements for each of which a unique source 
-          must be created. The elements are given (one by one) to callee.
-        - callee: A function f(e) that must accept elements as those in the seq
-          argument. The function should return a source which then will be
-          iterated by this source. The function is called once for every
-          element in seq. 
+           - seq: a sequence with the elements for each of which a unique source 
+             must be created. the elements are given (one by one) to callee.
+           - callee: a function f(e) that must accept elements as those in the
+             seq argument. the function should return a source which then will
+             be iterated by this source. the function is called once for every
+             element in seq. 
         """
         self.__queue = Queue()  # a multiprocessing.Queue
         if not callable(callee):

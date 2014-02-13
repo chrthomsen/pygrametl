@@ -16,7 +16,7 @@
    dim.insert(row=..., namemapping={'order_date':'date'})
 """
 
-# Copyright (c) 2009-2011, Christian Thomsen (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -51,12 +51,13 @@ from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '0.2.1'
+__version__ = '2.2'
 __all__ = ['Dimension', 'CachedDimension', 'SlowlyChangingDimension',
            'SnowflakedDimension', 'FactTable', 'BatchFactTable',
            'BulkFactTable', 'SubprocessFactTable', 'DecoupledDimension',
            'DecoupledFactTable', 'BasePartitioner', 'DimensionPartitioner',
            'FactTablePartitioner']
+
 
 class Dimension(object):
     """A class for accessing a dimension. Does no caching."""
@@ -145,11 +146,11 @@ class Dimension(object):
 
 
     def lookup(self, row, namemapping={}):
-        """ Find the key for the row with the given values.
+        """Find the key for the row with the given values.
 
-            Arguments:
-            - row: a dict which must contain at least the lookup attributes
-            - namemapping: an optional namemapping (see module's documentation)
+           Arguments:
+           - row: a dict which must contain at least the lookup attributes
+           - namemapping: an optional namemapping (see module's documentation)
         """
         key = self._before_lookup(row, namemapping)
         if key is not None:
@@ -231,11 +232,11 @@ class Dimension(object):
         """Update a single row in the dimension table.
 
            Arguments:
-            - row: a dict which must contain the key for the dimension.
-              The row with this key value is updated such that it takes
-              the value of row[att] for each attribute att which is also in 
-              row.
-            - namemapping: an optional namemapping (see module's documentation)
+           - row: a dict which must contain the key for the dimension.
+             The row with this key value is updated such that it takes
+             the value of row[att] for each attribute att which is also in 
+             row.
+           - namemapping: an optional namemapping (see module's documentation)
         """
         res = self._before_update(row, namemapping)
         if res:
@@ -324,8 +325,6 @@ class Dimension(object):
     def endload(self):
         """Finalize the load."""
         pass
-
-
 
 
 class CachedDimension(Dimension):
@@ -494,12 +493,6 @@ class CachedDimension(Dimension):
                 tmp = pygrametl.project(self.all, row, namemapping)
                 tmp[self.key] = newkeyvalue
                 self._after_getbykey(newkeyvalue, tmp)
-
-
-
-
-
-
 
 
 class SlowlyChangingDimension(Dimension):
@@ -681,11 +674,11 @@ class SlowlyChangingDimension(Dimension):
 
 
     def lookup(self, row, namemapping={}):
-        """ Find the key for the newest version with the given values.
+        """Find the key for the newest version with the given values.
 
-            Arguments:
-            - row: a dict which must contain at least the lookup attributes
-            - namemapping: an optional namemapping (see module's documentation)
+           Arguments:
+           - row: a dict which must contain at least the lookup attributes
+           - namemapping: an optional namemapping (see module's documentation)
         """
         if self.__prefill and (self.__cachesize < 0 or \
                                    len(self.keycache) < self.__cachesize):
@@ -700,7 +693,7 @@ class SlowlyChangingDimension(Dimension):
     def scdensure(self, row, namemapping={}):
         """Lookup or insert a version of a slowly changing dimension member.
 
-           NB: Has side-effects on the given row.
+           .. Note:: Has side-effects on the given row.
 
            Arguments:
            - row: a dict containing the attributes for the member. 
@@ -911,9 +904,6 @@ class SlowlyChangingDimension(Dimension):
 SCDimension = SlowlyChangingDimension
 
 
-
-
-
 # NB: SnowflakedDimension's methods may have side-effects:
 # row[somedim.key] = someval.
 
@@ -1028,13 +1018,13 @@ class SnowflakedDimension(object):
 
 
     def lookup(self, row, namemapping={}):
-        """ Find the key for the row with the given values.
+        """Find the key for the row with the given values.
 
-            Arguments:
-            - row: a dict which must contain at least the lookup attributes
-              which all must come from the root (the table closest to the
-              fact table).
-            - namemapping: an optional namemapping (see module's documentation)
+           Arguments:
+           - row: a dict which must contain at least the lookup attributes
+             which all must come from the root (the table closest to the
+             fact table).
+           - namemapping: an optional namemapping (see module's documentation)
         """
         res = self._before_lookup(row, namemapping)
         if res:
@@ -1137,9 +1127,9 @@ class SnowflakedDimension(object):
            directly on the Dimensions that should be updated.
            
            Arguments:
-            - row: a dict. If the key of a participating dimension D is in the
-              dict, D.update(...) is invoked.
-            - namemapping: an optional namemapping (see module's documentation)
+           - row: a dict. If the key of a participating dimension D is in the
+             dict, D.update(...) is invoked.
+           - namemapping: an optional namemapping (see module's documentation)
         """
         res = self._before_update(row, namemapping)
         if res is not None:
@@ -1262,11 +1252,12 @@ class SnowflakedDimension(object):
 
     def scdensure(self, row, namemapping={}):
         """Lookup or insert a version of a slowly changing dimension member.
+           
+           .. Warning:: 
+              Still experimental!!! For now we require that only the
+              root is a SlowlyChangingDimension.
 
-           # Still experimental!!! For now we require that only the
-           # root is a SlowlyChangingDimension.
-
-           NB: Has side-effects on the given row.
+           .. Note:: Has side-effects on the given row.
 
            Arguments:
            - row: a dict containing the attributes for the member. 
@@ -1285,8 +1276,6 @@ class SnowflakedDimension(object):
         row[(namemapping.get(self.root.key) or self.root.key)] = \
             self.root.scdensure(row, namemapping)
         return row[(namemapping.get(self.root.key) or self.root.key)]
-
-
 
 
 class FactTable(object):
@@ -1347,7 +1336,7 @@ class FactTable(object):
     def _emptyfacttonone(self, argdict):
         """Return None if the given argument only contains None values, 
            otherwise return the given argument
-        """ 
+        """
         for k in self.keyrefs:
             if argdict[k] is not None:
                 return argdict
@@ -1402,8 +1391,6 @@ class FactTable(object):
         pass
 
 
-
-
 class BatchFactTable(FactTable):
     """A class for accessing a fact table in the DW. This class performs
        performs insertions in batches.
@@ -1444,15 +1431,13 @@ class BatchFactTable(FactTable):
             self.__batch = []
 
 
-
-
 class BulkFactTable(object):
     """Class for addition of facts to a fact table. Reads are not supported. """
 
     def __init__(self, name, keyrefs, measures, bulkloader, 
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=500000, usefilename=False):
-        """Arguments:
+        r"""Arguments:
            - name: the name of the fact table in the DW
            - keyrefs: a sequence of attribute names that constitute the
              primary key of the fact tables (i.e., the dimension references)
@@ -1470,9 +1455,9 @@ class BulkFactTable(object):
              object. This is determined by the usefilename argument to
              BulkFactTable.__init__ (see below).
            - fieldsep: a string used to separate fields in the temporary 
-             file. Default: '\\t'
+             file. Default: '\t'
            - rowsep: a string used to separate rows in the temporary file.
-             Default: '\\n'
+             Default: '\n'
            - nullsubst: an optional string used to replace None values.
              If nullsubst=None, no substitution takes place. Default: None
            - tempdest: a file object or None. If None a named temporary file
@@ -1593,18 +1578,18 @@ class BulkFactTable(object):
 class SubprocessFactTable(object):
     """Class for addition of facts to a subprocess. 
 
-    The subprocess can, e.g., be a logger or bulkloader. Reads are not 
-    supported. 
+       The subprocess can, e.g., be a logger or bulkloader. Reads are not 
+       supported. 
 
-    Note that a created instance can not be used when endload() has been 
-    called (and endload() is called from pygrametl.commit()).
+       Note that a created instance can not be used when endload() has been 
+       called (and endload() is called from pygrametl.commit()).
     """
 
     def __init__(self, keyrefs, measures, executable, 
                  initcommand=None, endcommand=None, terminateafter=-1,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  buffersize=16384):
-        """Arguments:
+        r"""Arguments:
            - keyrefs: a sequence of attribute names that constitute the
              primary key of the fact table (i.e., the dimension references)
            - measures: a possibly empty sequence of measure names. Default: ()
@@ -1617,7 +1602,7 @@ class SubprocessFactTable(object):
              is terminated after this amount of seconds after the pipe to
              the subprocess is closed.
            - fieldsep: a string used to separate fields in the output
-             sent to the subprocess. Default: '\t'
+             sent to the subprocess. Default: '\t
            - rowsep: a string used to separate rows in the output sent to the
              subprocess. Default: '\n'
            - nullsubst: an optional string used to replace None values.
@@ -1782,7 +1767,7 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
     def __init__(self, facttbl, returnvalues=True, consumes=(),
                  attstoconsume=(), batchsize=500, queuesize=200):
         """Arguments:
-           - factbl: the FactTable object to use in a separate process
+           - facttbl: the FactTable object to use in a separate process
            - returnvalues: decides if return values from method calls on facttbl
              should be kept such that they can be fetched by the caller or
              another Decoupled instance
@@ -1868,8 +1853,8 @@ class BasePartitioner(object):
 
     def getpart(self, row, namemapping={}):
         """Find  the part that should handle the given row. The provided
-        implementation in BasePartitioner does only use round robin 
-        partitioning, but subclasses apply other methods """
+           implementation in BasePartitioner does only use round robin 
+           partitioning, but subclasses apply other methods """
         part = self.parts[self.__nextpart]
         self.__nextpart = (self.__nextpart + 1) % len(self.parts)
         return part
@@ -1892,19 +1877,19 @@ class DimensionPartitioner(BasePartitioner):
     """
 
     def __init__(self, parts, getbyvalsfromall=False, partitioner=None):
-        """
-        Arguments:
-        - parts: a sequence of Dimension objects.
-        - getbyvalsfromall: determines if getbyvals should be answered by means
-          of all parts (when getbyvalsfromall = True) or only the first part, 
-          i.e., parts[0] (when getbybalsfromall = False). Default: False
-        - partitioner: None or a callable p(dict) -> int where the argument
-          is a dict mapping from the names of the lookupatts to the values of
-          the lookupatts. The resulting int is used to determine which part
-          a given row should be handled by.
-          When partitioner is None, a default partitioner is used. This
-          partitioner computes the hash value of each value of the lookupatts
-          and adds them together.
+        """Arguments:
+           - parts: a sequence of Dimension objects.
+           - getbyvalsfromall: determines if getbyvals should be answered by 
+             means of all parts (when getbyvalsfromall = True) or only the 
+             first part, i.e., parts[0] (when getbybalsfromall = False). 
+             Default: False
+           - partitioner: None or a callable p(dict) -> int where the argument
+             is a dict mapping from the names of the lookupatts to the values of
+             the lookupatts. The resulting int is used to determine which part
+             a given row should be handled by.
+             When partitioner is None, a default partitioner is used. This
+             partitioner computes the hash value of each value of the lookupatts
+             and adds them together.
         """
         BasePartitioner.__init__(self, parts)
         self.getbyvalsfromall = getbyvalsfromall
@@ -1992,7 +1977,8 @@ class FactTablePartitioner(BasePartitioner):
        called, the corresponding method on one of the parts (chosen by a
        user-definable partitioner function) will be invoked. The parts can
        operate on a single physical fact table or different physical
-       tables. """
+       tables.
+    """
 
     def __init__(self, parts, partitioner=None):
         """
