@@ -51,12 +51,12 @@ from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.2'
-__all__ = ['Dimension', 'CachedDimension', 'SlowlyChangingDimension',
-           'SnowflakedDimension', 'FactTable', 'BatchFactTable',
-           'BulkFactTable', 'SubprocessFactTable', 'DecoupledDimension',
-           'DecoupledFactTable', 'BasePartitioner', 'DimensionPartitioner',
-           'FactTablePartitioner']
+__version__ = '2.3b'
+__all__ = ['Dimension', 'CachedDimension', 'BulkDimension'
+           'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable', 
+           'BatchFactTable', 'BulkFactTable', 'SubprocessFactTable', 
+           'DecoupledDimension', 'DecoupledFactTable', 
+           'BasePartitioner', 'DimensionPartitioner', 'FactTablePartitioner']
 
 
 class Dimension(object):
@@ -299,15 +299,12 @@ class Dimension(object):
         key = (namemapping.get(self.key) or self.key)
         if row.get(key) is None:
             keyval = self.idfinder(row, namemapping)
+            row = dict(row) # Make a copy to change
             row[key] = keyval
-            keyadded = True
         else:
             keyval = row[key]
-            keyadded = False
 
         self.targetconnection.execute(self.insertsql, row, namemapping)
-        if keyadded:
-            del row[key]
         self._after_insert(row, namemapping, keyval)
         return keyval
 
@@ -429,7 +426,9 @@ class CachedDimension(Dimension):
             else:
                 return self.defaultidvalue
         else:
-            # Something is not cached so we have to use the classical lookup
+            # Something is not cached so we have to use the classical lookup.
+            # (We may still benefit from the cache due to a call of 
+            # _before_lookup)
             return Dimension.lookup(self, row, namemapping)
 
     def _before_lookup(self, row, namemapping):
@@ -480,6 +479,17 @@ class CachedDimension(Dimension):
                 del self.__key2row[row[key]]
 
         return None
+
+    def _after_update(self, row, namemapping):
+        """ """
+        if self.__prefill and self.cacheoninsert and \
+                (self.__size <= 0 or len(self.__vals2key) < self.__size):
+            # Everything is cached and we sometimes avoid looking in the DB.
+            # Therefore, we have to update the cache now. In _before_update,
+            # we deleted the cached data.
+            keyval = row[(namemapping.get(self.key) or self.key)]
+            newrow = self.getbykey(keyval) # This also updates __key2row
+            self._after_lookup(newrow, {}, keyval) # Updates __vals2key
 
     def _after_insert(self, row, namemapping, newkeyvalue):
         """ """
@@ -1431,12 +1441,147 @@ class BatchFactTable(FactTable):
             self.__batch = []
 
 
-class BulkFactTable(object):
+class _BaseBulkloadable(object):
+    """Common functionality for bulkloadable tables"""
+
+    def __init__(self, name, atts, bulkloader, 
+                 fieldsep='\t', rowsep='\n', nullsubst=None,
+                 tempdest=None, bulksize=500000, usefilename=False,
+                 dependson=()):
+        r"""Arguments:
+           - name: the name of the table in the DW
+           - atts: a sequence of the bulkloadable tables' attribute names
+           - bulkloader: A method 
+             m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
+             is called to load data from a temporary file into the DW. The
+             argument "attributes" is a list of the names of the columns to 
+             insert values into and show the order in which the attribute 
+             values appear in the temporary file.  The rest of the arguments 
+             are similar to those arguments with identical names that are given
+             to _BaseBulkloadable.__init__ as described here. The argument 
+             "tempdest" can, however, be 1) a string with a filename or 
+             2) a file object. This is determined by the usefilename argument to
+             _BaseBulkloadable.__init__ (see below).
+           - fieldsep: a string used to separate fields in the temporary 
+             file. Default: '\t'
+           - rowsep: a string used to separate rows in the temporary file.
+             Default: '\n'
+           - nullsubst: an optional string used to replace None values.
+             If nullsubst=None, no substitution takes place. Default: None
+           - tempdest: a file object or None. If None a named temporary file
+             is used. Default: None
+           - bulksize: an int deciding the number of rows to load in one
+             bulk operation. Default: 500000
+           - usefilename: a value deciding if the file should be passed to the
+             bulkloader by its name instead of as a file-like object. 
+             Default: False
+           - dependson: a sequence of other bulkloadble tables that should
+             be loaded before this instance does bulkloading (e.g., if
+             a fact table has foreign keys to some bulkloaded dimension tables).
+             Default: ()
+        """
+
+        self.name = name
+        self.atts = atts
+        self.__close = False
+        if tempdest is None:
+            self.__close = True
+            self.__namedtempfile = tempfile.NamedTemporaryFile(bufsize=64*1024)
+            tempdest = self.__namedtempfile.file
+        self.fieldsep = fieldsep
+        self.rowsep = rowsep
+        self.nullsubst = nullsubst
+        self.bulkloader = bulkloader
+        self.tempdest = tempdest
+
+        self.bulksize = bulksize
+        self.usefilename = usefilename
+        self.dependson = dependson
+
+        self.__count = 0
+        self.__ready = True
+
+    def __preparetempfile(self):
+        self.__namedtempfile = tempfile.NamedTemporaryFile()
+        self.tempdest = self.__namedtempfile.file
+        self.__ready = True
+
+    def _insertwithnulls(self, row, namemapping={}):
+        """Insert (eventually) a row into the table.
+
+           Arguments:
+           - row: a dict at least containing values for each of the tables'
+             attributes.
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+
+        if not self.__ready:
+            self.__preparetempfile()
+        rawdata = [row[namemapping.get(att) or att] for att in self.atts]
+        data = [pygrametl.getstrornullvalue(val, self.nullsubst) \
+                for val in rawdata]
+        self.__count += 1
+        self.tempdest.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
+        if self.__count == self.bulksize:
+            self._bulkloadnow()
+
+    def _insertwithoutnulls(self, row, namemapping={}):
+        """Insert (eventually) a row into the table.
+
+           Arguments:
+           - row: a dict at least containing values for each of the tables'
+             attributes.
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+
+        if not self.__ready:
+            self.__preparetempfile()
+        data = [str(row[namemapping.get(att) or att]) for att in self.atts]
+        self.__count += 1
+        self.tempdest.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
+        if self.__count == self.bulksize:
+            self._bulkloadnow()
+
+
+    def _bulkloadnow(self):
+        for b in self.dependson:
+            b._bulkloadnow()
+
+        self.tempdest.flush()
+        self.tempdest.seek(0)
+        self.bulkloader(self.name, self.atts, 
+                        self.fieldsep, self.rowsep, self.nullsubst,
+                        self.usefilename and self.__namedtempfile.name or \
+                            self.tempdest)
+        self.tempdest.seek(0)
+        self.tempdest.truncate(0)
+        self.__count = 0
+        
+    def endload(self):
+        """Finalize the load."""
+        if self.__count > 0:
+            self._bulkloadnow()
+        if self.__close:
+            try:
+                self.__namedtempfile.close()
+            except OSError:
+                pass # may happen if the instance was decoupled
+            self.__ready = False
+
+    def _decoupled(self):
+        if self.__close:
+            # We need to make a private tempfile
+            self.__namedtempfile = tempfile.NamedTemporaryFile()
+            self.tempdest = self.__namedtempfile.file
+
+
+class BulkFactTable(_BaseBulkloadable):
     """Class for addition of facts to a fact table. Reads are not supported. """
 
     def __init__(self, name, keyrefs, measures, bulkloader, 
                  fieldsep='\t', rowsep='\n', nullsubst=None,
-                 tempdest=None, bulksize=500000, usefilename=False):
+                 tempdest=None, bulksize=500000, usefilename=False,
+                 dependson=()):
         r"""Arguments:
            - name: the name of the fact table in the DW
            - keyrefs: a sequence of attribute names that constitute the
@@ -1461,48 +1606,36 @@ class BulkFactTable(object):
            - nullsubst: an optional string used to replace None values.
              If nullsubst=None, no substitution takes place. Default: None
            - tempdest: a file object or None. If None a named temporary file
-             is used.
+             is used. Default: None
            - bulksize: an int deciding the number of rows to load in one
-             bulk operation.
+             bulk operation. Default: 500000
            - usefilename: a value deciding if the file should be passed to the
-             bulkloader by its name instead of as a file-like object. This is
-             necessary when the bulkloader runs in another process (for example,
-             when if the BulkFactTable is wrapped by a DecoupledFactTable and
-             invokes the bulkloader on a shared connection wrapper).
+             bulkloader by its name instead of as a file-like object. This is,
+             e.g., necessary when the bulk loading is invoked through SQL 
+             (instead of directly via a method on the PEP249 driver). It is 
+             also necessary if the bulkloader runs in another process 
+             (for example, when if the BulkFactTable is wrapped by a 
+             DecoupledFactTable and invokes the bulkloader on a shared 
+             connection wrapper). Default: False
+           - dependson: a sequence of other bulkloadble tables that should
+             be bulkloaded before this instance does bulkloading (e.g., if
+             the fact table has foreign keys to some bulk-loaded dimension 
+             table). Default: ()
         """
 
-        self.name = name
-        self.keyrefs = keyrefs
-        self.measures = measures
-        self.all = [k for k in keyrefs] + [m for m in measures]
-        self.__close = False
-        if tempdest is None:
-            self.__close = True
-            self.__namedtempfile = tempfile.NamedTemporaryFile(bufsize=64*1024)
-            tempdest = self.__namedtempfile.file
-        self.fieldsep = fieldsep
-        self.rowsep = rowsep
-        self.nullsubst = nullsubst
-        self.bulkloader = bulkloader
-        self.tempdest = tempdest
-
-        self.bulksize = bulksize
-        self.usefilename = usefilename
-
-        self.__count = 0
-        self.__ready = True
+        _BaseBulkloadable.__init__(self, name, 
+                 [k for k in keyrefs] + [m for m in measures],
+                 bulkloader, fieldsep, rowsep, nullsubst,
+                 tempdest, bulksize, usefilename, dependson)
 
         if nullsubst is None:
             self.insert = self._insertwithoutnulls
         else:
             self.insert = self._insertwithnulls
 
+
         pygrametl._alltables.append(self)
 
-    def __preparetempfile(self):
-        self.__namedtempfile = tempfile.NamedTemporaryFile()
-        self.tempdest = self.__namedtempfile.file
-        self.__ready = True
 
     def insert(self, row, namemapping={}):
         """Insert a fact into the fact table.
@@ -1513,67 +1646,174 @@ class BulkFactTable(object):
         """
         pass # Is set to _insertwithnulls or _inserwithoutnulls from __init__
 
-    def _insertwithnulls(self, row, namemapping={}):
-        """Insert a fact into the fact table.
+
+class BulkDimension(_BaseBulkloadable, CachedDimension):
+    """A class for accessing a dimension table. Does caching and bulk loading.
+
+       The class caches all dimension members in memory. Newly inserted
+       dimension members are also put into the cache. The class does not
+       INSERT new dimension members into the underlying database table
+       immediately when insert or ensure is invoked. Instead, the class does
+       bulk loading of new members. When a certain amount of new dimension
+       members have been inserted (configurable through __init__'s bulksize
+       argument), a user-provided bulkloader method is called.
+
+       Calls of lookup and ensure will only use the cache and does not invoke
+       any database operations. It is also possible to use the update and
+       getbyvals methods, but calls of these will invoke the bulkloader first
+       (and performance can degrade). If the dimension table's full rows
+       are cached (by setting __init__'s cachefullrow argument to True), a
+       call of getbykey will only use the cache, but if cachefullrows==False
+       (which is the default), the bulkloader is again invoked first.
+
+       We assume that the DB doesn't change or add any attribute
+       values that are cached.
+       For example, a DEFAULT value in the DB can break this assumption.
+    """
+
+    def __init__(self, name, key, attributes, bulkloader, lookupatts=(), 
+                 idfinder=None, defaultidvalue=None, rowexpander=None,
+                 cachefullrows=False, 
+                 fieldsep='\t', rowsep='\n', nullsubst=None,
+                 tempdest=None, bulksize=500000, usefilename=False,
+                 dependson=(), targetconnection=None):
+        r"""Arguments:
+           - name: the name of the dimension table in the DW
+           - key: the name of the primary key in the DW
+           - attributes: a sequence of the attribute names in the dimension 
+             table. Should not include the name of the primary key which is
+             given in the key argument.
+           - bulkloader: A method 
+             m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
+             is called to load data from a temporary file into the DW. The
+             argument "attributes" is a list of the names of the columns to 
+             insert values into and show the order in which the attribute 
+             values appear in the temporary file.  The rest of the arguments 
+             are similar to those arguments with identical names that are 
+             described below. The argument "tempdest" can, however, be 
+             1) a string with a filename or 2) a file object. This is 
+             determined by the usefilename argument (see below).             
+           - lookupatts: A subset of the attributes that uniquely identify
+             a dimension members. These attributes are thus used for looking
+             up members. If not given, it is assumed that 
+             lookupatts = attributes
+           - idfinder: A function(row, namemapping) -> key value that assigns
+             a value to the primary key attribute based on the content of the
+             row and namemapping. If not given, it is assumed that the primary
+             key is an integer, and the assigned key value is then the current
+             maximum plus one.
+           - defaultidvalue: An optional value to return when a lookup fails. 
+             This should thus be the ID for a preloaded "Unknown" member.
+           - rowexpander: A function(row, namemapping) -> row. This function
+             is called by ensure before insertion if a lookup of the row fails.
+             This is practical if expensive calculations only have to be done
+             for rows that are not already present. For example, for a date
+             dimension where the full date is used for looking up rows, a
+             rowexpander can be set such that week day, week number, season, 
+             year, etc. are only calculated for dates that are not already
+             represented. If not given, no automatic expansion of rows is
+             done.
+           - cachefullrows: a flag deciding if full rows should be
+             cached. If not, the cache only holds a mapping from
+             lookupattributes to key values. Default: False.
+           - fieldsep: a string used to separate fields in the temporary 
+             file. Default: '\t'
+           - rowsep: a string used to separate rows in the temporary file.
+             Default: '\n'
+           - nullsubst: an optional string used to replace None values.
+             If nullsubst=None, no substitution takes place. Default: None
+           - tempdest: a file object or None. If None a named temporary file
+             is used. Default: None
+           - bulksize: an int deciding the number of rows to load in one
+             bulk operation. Default: 500000
+           - usefilename: a value deciding if the file should be passed to the
+             bulkloader by its name instead of as a file-like object. This is,
+             e.g., necessary when the bulk loading is invoked through SQL 
+             (instead of directly via a method on the PEP249 driver). It is 
+             also necessary if the bulkloader runs in another process.
+             Default: False
+           - dependson: a sequence of other bulkloadble tables that should
+             be loaded before this instance does bulkloading. Default: ()
+           - targetconnection: The ConnectionWrapper to use. If not given,
+             the default target connection is used.
+        """ 
+        _BaseBulkloadable.__init__(self, name, 
+                 [key] + [a for a in attributes], #atts
+                 bulkloader, fieldsep, rowsep, nullsubst, tempdest, 
+                 bulksize, usefilename, dependson)
+
+        CachedDimension.__init__(self, name, key, attributes, lookupatts, 
+                                 idfinder, defaultidvalue, rowexpander,
+                                 0, # size
+                                 True, #prefill 
+                                 cachefullrows,
+                                 True, #cacheoninsert
+                                 targetconnection)
+
+        self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
+
+        if nullsubst is None:
+            self._insert = self._insertwithoutnulls
+        else:
+            self._insert = self._insertwithnulls
+
+
+    def _before_getbyvals(self, values, namemapping):
+        self._bulkloadnow()
+        return None
+
+    def _before_update(self, row, namemapping):
+        self._bulkloadnow()
+        return None
+
+    def getbykey(self, keyvalue):
+        """Lookup and return the row with the given key value.
+
+           If no row is found in the dimension table, the function returns
+           a row where all values (including the key) are None.
+        """
+
+        if not self.cachefullrows:
+            self._bulkloadnow()
+            return CachedDimension.getbykey(self, keyvalue)
+
+        # else we do cache full rows and all rows are cached...
+        if type(keyvalue) == types.DictType:
+            keyvalue = keyvalue[self.key]
+
+        row = self._before_getbykey(keyvalue)
+        if row is not None:
+            return row
+        else:
+            # Do not look in the DB; we cache everything
+            return self.emptyrow.copy()
+            
+    def insert(self, row, namemapping={}):
+        """Insert the given row. Return the new key value.
 
            Arguments:
-           - row: a dict at least containing values for the keys and measures.
+           - row: the row to insert. The dict is not updated. It must contain
+             all attributes, and is allowed to contain more attributes than
+             that.
            - namemapping: an optional namemapping (see module's documentation)
         """
-        if not self.__ready:
-            self.__preparetempfile()
-        rawdata = [row[namemapping.get(att) or att] for att in self.all]
-        data = [pygrametl.getstrornullvalue(val, self.nullsubst) \
-                for val in rawdata]
-        self.__count += 1
-        self.tempdest.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
-        if self.__count == self.bulksize:
-            self.__bulkloadnow()
+        res = self._before_insert(row, namemapping)
+        if res is not None:
+            return res
 
-    def _insertwithoutnulls(self, row, namemapping={}):
-        """Insert a fact into the fact table.
+        key = (namemapping.get(self.key) or self.key)
+        if row.get(key) is None:
+            keyval = self.idfinder(row, namemapping)
+            row = dict(row) # Make a copy to change
+            row[key] = keyval
+        else:
+            keyval = row[key]
 
-           Arguments:
-           - row: a dict at least containing values for the keys and measures.
-           - namemapping: an optional namemapping (see module's documentation)
-        """
-        if not self.__ready:
-            self.__preparetempfile()
-        data = [str(row[namemapping.get(att) or att]) for att in self.all]
-        self.__count += 1
-        self.tempdest.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
-        if self.__count == self.bulksize:
-            self.__bulkloadnow()
+        self._insert(row, namemapping)
 
+        self._after_insert(row, namemapping, keyval)
+        return keyval
 
-    def __bulkloadnow(self):
-        self.tempdest.flush()
-        self.tempdest.seek(0)
-        self.bulkloader(self.name, self.all, 
-                        self.fieldsep, self.rowsep, self.nullsubst,
-                        self.usefilename and self.__namedtempfile.name or \
-                            self.tempdest)
-        self.tempdest.seek(0)
-        self.tempdest.truncate(0)
-        self.__count = 0
-        
-
-    def endload(self):
-        """Finalize the load."""
-        if self.__count > 0:
-            self.__bulkloadnow()
-        if self.__close:
-            try:
-                self.__namedtempfile.close()
-            except OSError:
-                pass # may happen if the instance was decoupled
-            self.__ready = False
-
-    def _decoupled(self):
-        if self.__close:
-            # We need to make a private tempfile
-            self.__namedtempfile = tempfile.NamedTemporaryFile()
-            self.tempdest = self.__namedtempfile.file
 
 class SubprocessFactTable(object):
     """Class for addition of facts to a subprocess. 
