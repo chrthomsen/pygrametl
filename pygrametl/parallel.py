@@ -46,7 +46,7 @@ import pygrametl
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.2'
+__version__ = '2.2.1'
 __all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
            'shareconnectionwrapper', 'getsharedsequencefactory']
 
@@ -818,14 +818,22 @@ class SharedConnectionWrapperClient(object):
         for r in rows:
             yield dict(zip(names, r))
 
+    def __fetchonehelper(self):
+        # returns (rownames, tuple with values) where the latter tuple might
+        # contain only None values. Dimension.lookup expects a tuple.
+        (rownames, row) = self.__getrows(1)
+        if not row:
+            row = (None, ) * len(rownames)
+        return (rownames, row)
+
     def fetchone(self, names=None):
         """Return one result row (i.e. dict)."""
-        (rownames, row) = self.__getrows(1)
+        (rownames, row) = self.__fetchonehelper()
         return dict(zip(names or rownames, row))
 
     def fetchonetuple(self):
         """Return one result tuple."""
-        (rownames, row) = self.__getrows(1)
+        (ignoredrownames, row) = self.__fetchonehelper()
         return row
 
     def fetchmanytuples(self, cnt):
