@@ -43,25 +43,35 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import copy as pcopy
-import exceptions
-import types
 from datetime import date, datetime
-from Queue import Queue
-from sys import modules
+from sys import modules, version_info
 from threading import Thread
 
-import FIFODict
+
+if version_info.major == 2:
+    import types
+    _stringtypes = types.StringTypes  # (str, unicode) on Python 2
+    from Queue import Queue
+    from exceptions import StandardError as _DBBaseException #Used by PEP249,but
+                                                             #not avail. on Py3
+else: # For Python 3
+    _stringtypes = (str,) 
+    from queue import Queue
+    _DBBaseException  = Exception
+
+
+from . import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.2'
+__version__ = '2.3a'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
            'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp', 
            'getvalue', 'getvalueor', 'setdefaults', 'rowfactory', 'endload', 
            'today', 'now', 'ymdparser', 'ymdhmsparser', 'datereader', 
            'datetimereader', 'datespan', 'toupper', 'tolower', 'keepasis', 
-           'getdefaulttargetconnection', 'ConnectionWrapper']
+           'getdefaulttargetconnection', 'ConnectionWrapper', '_stringtypes']
 
 
 _alltables = []
@@ -280,7 +290,7 @@ def setdefaults(row, attributes, defaults=None):
        - defaults is a sequence of default values (see above)
     """
     if defaults and len(defaults) != len(attributes):
-        raise ValueError, "Lists differ in length"
+        raise ValueError("Lists differ in length")
 
     if defaults:
         seqlist = zip(attributes, defaults)
@@ -446,11 +456,11 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
     """
 
     for arg in (fromdate, todate):
-        if not ((type(arg) in types.StringTypes and arg.count('-') == 2)\
+        if not ((type(arg) in _stringtypes and arg.count('-') == 2)\
                     or isinstance(arg, date)):
-            raise ValueError, \
+            raise ValueError(\
             "fromdate and today must be datetime.dates or " + \
-            "YYYY-MM-DD formatted strings"
+            "YYYY-MM-DD formatted strings")
 
     (year, month, day) = fromdate.split('-')
     fromdate = date(int(year), int(month), int(day))
@@ -466,7 +476,7 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
     if todateincl:
         end += 1
 
-    for i in xrange(start, end):
+    for i in range(start, end):
         d = date.fromordinal(i)
         res = {}
         res[key] = int(d.strftime('%Y%m%d'))
@@ -553,8 +563,8 @@ class ConnectionWrapper(object):
             try:
                 self.__translate = getattr(self, '_translate2' + paramstyle)
             except AttributeError:
-                raise InterfaceError, "The paramstyle '%s' is not supported" %\
-                    paramstyle
+                raise InterfaceError("The paramstyle '%s' is not supported" %\
+                    paramstyle)
         else:
             self.__translate = None
 
@@ -826,8 +836,8 @@ class BackgroundConnectionWrapper(object):
             try:
                 self.__translate = getattr(self, '_translate2' + paramstyle)
             except AttributeError:
-                raise InterfaceError, "The paramstyle '%s' is not supported" %\
-                    paramstyle
+                raise InterfaceError("The paramstyle '%s' is not supported" %\
+                    paramstyle)
         else:
             self.__translate = None
 
@@ -1046,7 +1056,7 @@ class BackgroundConnectionWrapper(object):
             self.__queue.task_done()
 
 
-class Error(exceptions.StandardError):
+class Error(_DBBaseException):
     pass
 
 class InterfaceError(Error):

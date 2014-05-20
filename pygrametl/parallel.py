@@ -33,7 +33,10 @@
 
 import copy
 import os
-from Queue import Empty
+try:
+    from Queue import Empty # Python 2
+except ImportError:
+    from queue import Empty # Python 3
 import sys
 if sys.platform.startswith('java'):
     # Jython specific code in jythonmultiprocessing
@@ -46,7 +49,7 @@ import pygrametl
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.2.1'
+__version__ = '2.3a'
 __all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
            'shareconnectionwrapper', 'getsharedsequencefactory']
 
@@ -207,8 +210,8 @@ def splitpoint(*arg, **kwargs):
 
     for kw in kwargs.keys():
         if kw not in ('instances', 'output', 'queuesize'):
-            raise TypeError, \
-                "'%s' is an invalid keyword argument for splitpoint" % kw
+            raise TypeError(\
+                "'%s' is an invalid keyword argument for splitpoint" % kw)
 
     output = kwargs.get('output', None)
     instances = kwargs.get('instances', 1)
@@ -242,7 +245,7 @@ def splitpoint(*arg, **kwargs):
     elif len(arg) == 1:
         return decorator(*arg)
     else:
-        raise ValueError, 'More than one *arg given'
+        raise ValueError('More than one *arg given')
 
 
 def endsplits():
@@ -348,7 +351,7 @@ class Flow(object):
                     retryingafterclose = True
                     continue
                 else:
-                    raise Empty
+                    raise Empty()
 
     def getall(self):
         """Return all results in a single list. 
@@ -458,12 +461,12 @@ def createflow(*functions, **options):
         else:
             # Check the arguments
             if not hasattr(item, '__iter__'):
-                raise ValueError, \
-                    'An element is neither iterable nor callable'
+                raise ValueError(\
+                    'An element is neither iterable nor callable')
             for f in item:
                 if not callable(f):
-                    raise ValueError, \
-                        'An element in a sequence is not callable'
+                    raise ValueError(\
+                        'An element in a sequence is not callable')
             # We can - finally - create the function
             groupfunc = _buildgroupfunction(item)
             resultfuncs.append(groupfunc)
@@ -613,7 +616,7 @@ class Decoupled(object):
                 fut = args[x][y][z]
                 args[x][y][z] = self.__getresultfromother(fut.creator, fut.id)
             else:
-                raise ValueError, 'Positions must be of length 2 or 3'
+                raise ValueError('Positions must be of length 2 or 3')
 
     def __decoupledworker(self):
         sys.excepthook = _getexcepthook()
@@ -678,9 +681,9 @@ class Decoupled(object):
 
     def _getresult(self, future):
         if self.__fromworker is None:
-            raise RuntimeError, "Return values are not kept"
+            raise RuntimeError("Return values are not kept")
         if future.creator != self.__instancenumber:
-            raise ValueError, "Cannot return results from other instances"
+            raise ValueError("Cannot return results from other instances")
         # else find and return the result
         while True:
             if future.id in self.__results:
@@ -875,7 +878,7 @@ class SharedConnectionWrapperClient(object):
 
     def cursor(self):
         """Return a cursor object. Optional method."""
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def resultnames(self):
         (rownames, nothing) = self.__getrows(None)
@@ -1005,9 +1008,9 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
     for func in userfuncs:
         if not (callable(func) and hasattr(func, 'func_name') and \
                     not func.func_name == '<lambda>'):
-            raise ValueError, "Elements in userfunc must be callable and named"
+            raise ValueError("Elements in userfunc must be callable and named")
         if hasattr(SharedConnectionWrapperClient, func.func_name):
-            raise ValueError, "Illegal function name: " + func.func_name
+            raise ValueError("Illegal function name: " + func.func_name)
         setattr(serverCW, '_userfunc_' + func.func_name, func)
         userfuncnames.append(func.func_name)
     serverprocess = multiprocessing.Process(target=serverCW.worker)

@@ -43,10 +43,10 @@ __all__ = ['Aggregator', 'SimpleAggregator', 'Sum', 'Count', 'CountDistinct',
 
 class Aggregator(object):
     def process(self, group, val):
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def finish(self, group, default=None):
-        raise NotImplementedError
+        raise NotImplementedError()
 
 class SimpleAggregator(Aggregator):
     def __init__(self):

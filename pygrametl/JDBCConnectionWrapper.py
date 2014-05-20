@@ -66,9 +66,9 @@ class JDBCConnectionWrapper(object):
              open. Default: 20.
         """
         if not isinstance(jdbcconn, jdbc.Connection):
-            raise TypeError, '1st argument must implement java.sql.Connection'
+            raise TypeError('1st argument must implement java.sql.Connection')
         if jdbcconn.isClosed():
-            raise ValueError, '1st argument must be an open Connection'
+            raise ValueError('1st argument must be an open Connection')
         self.__jdbcconn = jdbcconn
         # Add a finalizer to __prepstmts to close PreparedStatements when
         # they are pushed out
@@ -282,7 +282,7 @@ class JDBCConnectionWrapper(object):
 
     def cursor(self):
         """Not implemented for this JDBC connection wrapper!"""
-        raise NotImplementedError, ".cursor() not supported"
+        raise NotImplementedError(".cursor() not supported")
 
     def resultnames(self):
         if self.__resultnames is None:
@@ -548,7 +548,7 @@ class BackgroundJDBCConnectionWrapper(object):
 
     def cursor(self):
         """Not implemented for this JDBC connection wrapper!"""
-        raise NotImplementedError, ".cursor() not supported"
+        raise NotImplementedError(".cursor() not supported")
 
     def resultnames(self):
         self.__queue.join()

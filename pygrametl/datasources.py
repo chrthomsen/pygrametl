@@ -36,11 +36,14 @@ if sys.platform.startswith('java'):
 else:
     from multiprocessing import Queue, Process
 
-from Queue import Empty
+try:
+    from Queue import Empty # Python 2
+except ImportError:
+    from queue import Empty # Python 3
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.2'
+__version__ = '2.3a'
 __all__ = ['CSVSource', 'SQLSource', 'JoiningSource', 'HashJoiningSource', 
            'MergeJoiningSource', 'BackgroundSource', 'ProcessSource', 
            'TransformingSource', 'UnionSource', 'CrossTabbingSource', 
@@ -95,9 +98,9 @@ class SQLSource(object):
                     # psycopg2 cursor.
                     names = [t[0] for t in self.cursor.description]
                 if len(names) != len(data[0]):
-                    raise ValueError, \
+                    raise ValueError(\
                         "Incorrect number of names provided. " + \
-                        "%d given, %d needed." % (len(names), len(data[0]))
+                        "%d given, %d needed." % (len(names), len(data[0])))
                 for row in data:
                     yield dict(zip(names, row))
         finally:
@@ -119,7 +122,7 @@ class ProcessSource(object):
              between the processes. 0 means unlimited. Default: 20
         """
         if type(batchsize) != int or batchsize < 1:
-            raise ValueError, 'batchsize must be a positive integer'
+            raise ValueError('batchsize must be a positive integer')
         self.__source = source
         self.__batchsize = batchsize
         self.__queue = Queue(queuesize)
@@ -139,7 +142,7 @@ class ProcessSource(object):
             if batch:
                 self.__queue.put(batch)
             self.__queue.put('STOP')
-        except Exception, e:
+        except Exception as e:
             if batch:
                 self.__queue.put(batch)
             self.__queue.put('EXCEPTION')
@@ -387,7 +390,7 @@ class RoundRobinSource(object):
         self.__sources = [iter(src) for src in sources]
         self.__sources.reverse() # we iterate it from the back in __iter__
         if not batchsize > 0:
-            raise ValueError, "batchsize must be positive"
+            raise ValueError("batchsize must be positive")
         self.__batchsize = batchsize
 
     def __iter__(self):
@@ -402,7 +405,7 @@ class RoundRobinSource(object):
                     # we're done with this source and can delete it since
                     # we iterate the list as we do
                     del self.__sources[i]
-        raise StopIteration
+        raise StopIteration()
 
 
 class DynamicForEachSource(object):
@@ -427,7 +430,7 @@ class DynamicForEachSource(object):
         """
         self.__queue = Queue()  # a multiprocessing.Queue
         if not callable(callee):
-            raise TypeError, 'callee must be callable'
+            raise TypeError('callee must be callable')
         self.__callee = callee
         for e in seq:
             # put them in a safe queue such that this object can be used from
@@ -442,4 +445,4 @@ class DynamicForEachSource(object):
                 for row in src:
                     yield row
             except Empty:
-                raise StopIteration
+                raise StopIteration()

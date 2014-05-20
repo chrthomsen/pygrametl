@@ -52,11 +52,11 @@ class FIFODict:
              dict is cleared).
         """
         if not type(size) == type(0):
-            raise TypeError, "size must be an int"
+            raise TypeError("size must be an int")
         if not size > 0:
-            raise ValueError, "size must be positive"
+            raise ValueError("size must be positive")
         if finalizer is not None and not callable(finalizer):
-            raise TypeError, "finalizer must be None or a callable"
+            raise TypeError("finalizer must be None or a callable")
 
         self.__size = size
         self.__data = {}
@@ -123,7 +123,7 @@ class FIFODict:
 
     def __delitem__(self, item):
         if item not in self.__data:
-            raise KeyError, item
+            raise KeyError(item)
 
         del self.__data[item]
         self.__order.remove(item)

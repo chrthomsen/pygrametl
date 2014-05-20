@@ -40,7 +40,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from functools import reduce
+import locale
 from subprocess import Popen, PIPE
+from sys import version_info
 from time import sleep
 import types
 import tempfile
@@ -94,15 +97,15 @@ class Dimension(object):
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
         """
-        if not type(key) in types.StringTypes:
-            raise ValueError, "Key argument must be a string"
+        if not type(key) in pygrametl._stringtypes:
+            raise ValueError("Key argument must be a string")
         if not len(attributes):
-            raise ValueError, "No attributes given"
+            raise ValueError("No attributes given")
 
         if targetconnection is None:
             targetconnection = pygrametl.getdefaulttargetconnection()
             if targetconnection is None:
-                raise ValueError, "No target connection available"
+                raise ValueError("No target connection available")
         self.targetconnection = targetconnection
         self.name = name
         self.attributes = attributes
@@ -178,7 +181,7 @@ class Dimension(object):
            If no row is found in the dimension table, the function returns
            a row where all values (including the key) are None.
         """
-        if type(keyvalue) == types.DictType:
+        if isinstance(keyvalue, dict):
             keyvalue = keyvalue[self.key]
 
         row = self._before_getbykey(keyvalue)
@@ -243,8 +246,8 @@ class Dimension(object):
             return
 
         if self.key not in row:
-            raise KeyError, "The key value (%s) is missing in the row" % \
-                (self.key,)
+            raise KeyError("The key value (%s) is missing in the row" % \
+                (self.key,))
 
         attstouse = [a for a in self.attributes \
                          if a in row or a in namemapping]
@@ -600,7 +603,7 @@ class SlowlyChangingDimension(Dimension):
                            idfinder, None, None, targetconnection)
 
         if not versionatt:
-            raise ValueError, 'A version attribute must be given'
+            raise ValueError('A version attribute must be given')
 
         self.versionatt = versionatt
         self.fromatt = fromatt
@@ -633,8 +636,8 @@ class SlowlyChangingDimension(Dimension):
         # attributes
         for var in (versionatt, fromatt, toatt):
             if var and var not in attributes:
-                raise ValueError, "%s not present in attributes argument" % \
-                    (var,)
+                raise ValueError("%s not present in attributes argument" % \
+                    (var,))
 
         # Now extend the SQL from Dimension such that we use the versioning
         self.keylookupsql += " ORDER BY %s DESC" % (versionatt,)
@@ -971,9 +974,9 @@ class SnowflakedDimension(object):
                 refeddims = (refeddims, )
             for rd in refeddims:
                 if rd.targetconnection is not self.targetconnection:
-                    raise ValueError, "Different connections used"
+                    raise ValueError("Different connections used")
                 if rd in dims:
-                    raise ValueError, "The tables do not form a tree"
+                    raise ValueError("The tables do not form a tree")
                 dims.add(rd)
                 tmp = self.refs.get(dim, set())
                 tmp.add(rd)
@@ -991,7 +994,7 @@ class SnowflakedDimension(object):
                 dimscopy.remove(target)
         # Those dimensions that are left in dims at this point are unreachable
         if len(dimscopy) != 0:
-            raise ValueError, "Not every given dimension is reachable"
+            raise ValueError("Not every given dimension is reachable")
 
         # Construct SQL...
 
@@ -1004,7 +1007,7 @@ class SnowflakedDimension(object):
 
         # Make sure that there are no duplicated names:
         if len(self.allnames) != len(set(self.allnames)):
-            raise ValueError, "Duplicated attribute names found"
+            raise ValueError("Duplicated attribute names found")
 
         self.alljoinssql = "SELECT " + ", ".join(self.allnames) + \
             " FROM " + " NATURAL JOIN ".join(map(lambda d: d.name, dims))
@@ -1201,7 +1204,7 @@ class SnowflakedDimension(object):
         (key, insertdone) = self.__ensure_helper(self.root, row, namemapping, 
                                                  False)
         if not insertdone:
-            raise ValueError, "Member already present - nothing inserted"
+            raise ValueError("Member already present - nothing inserted")
         self._after_insert(row, namemapping, key)
         return key
 
@@ -1392,8 +1395,8 @@ class FactTable(object):
         elif compare:
             for m in self.measures:
                 if m in row and row[m] != res.get(m):
-                    raise ValueError, \
-                        "The existing fact has different measure values"
+                    raise ValueError(\
+                        "The existing fact has different measure values")
         return True
 
     def endload(self):
@@ -1447,7 +1450,7 @@ class _BaseBulkloadable(object):
     def __init__(self, name, atts, bulkloader, 
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=500000, usefilename=False,
-                 dependson=()):
+                 encoding=None, dependson=()):
         r"""Arguments:
            - name: the name of the table in the DW
            - atts: a sequence of the bulkloadable tables' attribute names
@@ -1475,6 +1478,9 @@ class _BaseBulkloadable(object):
            - usefilename: a value deciding if the file should be passed to the
              bulkloader by its name instead of as a file-like object. 
              Default: False
+           - encoding: a string with the encoding to use. If None, 
+             locale.getpreferredencoding() is used. This argument is
+             ignored under Python 2! Default: None
            - dependson: a sequence of other bulkloadble tables that should
              be loaded before this instance does bulkloading (e.g., if
              a fact table has foreign keys to some bulkloaded dimension tables).
@@ -1486,7 +1492,7 @@ class _BaseBulkloadable(object):
         self.__close = False
         if tempdest is None:
             self.__close = True
-            self.__namedtempfile = tempfile.NamedTemporaryFile(bufsize=64*1024)
+            self.__namedtempfile = tempfile.NamedTemporaryFile()
             tempdest = self.__namedtempfile.file
         self.fieldsep = fieldsep
         self.rowsep = rowsep
@@ -1496,7 +1502,18 @@ class _BaseBulkloadable(object):
 
         self.bulksize = bulksize
         self.usefilename = usefilename
+        if encoding is not None:
+            self.encoding = encoding
+        else:
+            self.encoding = locale.getpreferredencoding()
         self.dependson = dependson
+
+        if version_info.major == 2:
+            # Python 2: We ignore the specified encoding
+            self._tobytes = lambda data, encoding: str(data)
+        else:
+            # Python 3: We make _tobytes use the specified encoding:
+            self._tobytes = lambda data, encoding: bytes(data, encoding)
 
         self.__count = 0
         self.__ready = True
@@ -1521,7 +1538,8 @@ class _BaseBulkloadable(object):
         data = [pygrametl.getstrornullvalue(val, self.nullsubst) \
                 for val in rawdata]
         self.__count += 1
-        self.tempdest.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
+        self.tempdest.write(self._tobytes("%s%s" % (self.fieldsep.join(data), 
+                                                self.rowsep), self.encoding))
         if self.__count == self.bulksize:
             self._bulkloadnow()
 
@@ -1538,7 +1556,8 @@ class _BaseBulkloadable(object):
             self.__preparetempfile()
         data = [str(row[namemapping.get(att) or att]) for att in self.atts]
         self.__count += 1
-        self.tempdest.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
+        self.tempdest.write(self._tobytes("%s%s" % (self.fieldsep.join(data), 
+                                            self.rowsep), self.encoding))
         if self.__count == self.bulksize:
             self._bulkloadnow()
 
@@ -1581,7 +1600,7 @@ class BulkFactTable(_BaseBulkloadable):
     def __init__(self, name, keyrefs, measures, bulkloader, 
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=500000, usefilename=False,
-                 dependson=()):
+                 encoding=None, dependson=()):
         r"""Arguments:
            - name: the name of the fact table in the DW
            - keyrefs: a sequence of attribute names that constitute the
@@ -1617,6 +1636,9 @@ class BulkFactTable(_BaseBulkloadable):
              (for example, when if the BulkFactTable is wrapped by a 
              DecoupledFactTable and invokes the bulkloader on a shared 
              connection wrapper). Default: False
+           - encoding: a string with the encoding to use. If None, 
+             locale.getpreferredencoding() is used. This argument is
+             ignored under Python 2! Default: None
            - dependson: a sequence of other bulkloadble tables that should
              be bulkloaded before this instance does bulkloading (e.g., if
              the fact table has foreign keys to some bulk-loaded dimension 
@@ -1626,7 +1648,7 @@ class BulkFactTable(_BaseBulkloadable):
         _BaseBulkloadable.__init__(self, name, 
                  [k for k in keyrefs] + [m for m in measures],
                  bulkloader, fieldsep, rowsep, nullsubst,
-                 tempdest, bulksize, usefilename, dependson)
+                 tempdest, bulksize, usefilename, encoding, dependson)
 
         if nullsubst is None:
             self.insert = self._insertwithoutnulls
@@ -1676,7 +1698,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
                  cachefullrows=False, 
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=500000, usefilename=False,
-                 dependson=(), targetconnection=None):
+                 encoding=None, dependson=(), targetconnection=None):
         r"""Arguments:
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
@@ -1736,11 +1758,14 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
              be loaded before this instance does bulkloading. Default: ()
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
+           - encoding: a string with the encoding to use. If None, 
+             locale.getpreferredencoding() is used. This argument is
+             ignored under Python 2! Default: None
         """ 
         _BaseBulkloadable.__init__(self, name, 
                  [key] + [a for a in attributes], #atts
                  bulkloader, fieldsep, rowsep, nullsubst, tempdest, 
-                 bulksize, usefilename, dependson)
+                 bulksize, usefilename, encoding, dependson)
 
         CachedDimension.__init__(self, name, key, attributes, lookupatts, 
                                  idfinder, defaultidvalue, rowexpander,
@@ -1778,7 +1803,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
             return CachedDimension.getbykey(self, keyvalue)
 
         # else we do cache full rows and all rows are cached...
-        if type(keyvalue) == types.DictType:
+        if isinstance(keyvalue, dict):
             keyvalue = keyvalue[self.key]
 
         row = self._before_getbykey(keyvalue)
@@ -1921,7 +1946,7 @@ class SubprocessFactTable(object):
             # In Jython, we use threads for decoupling and we do not have
             # to prevent it.
             return
-        raise TypeError, 'A SubProcessFactTable cannot be decoupled'
+        raise TypeError('A SubProcessFactTable cannot be decoupled')
 
 
 class DecoupledDimension(pygrametl.parallel.Decoupled):
@@ -1995,7 +2020,7 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
         if hasattr(self._obj, 'scdensure'):
             return self._enqueue('scdensure', row, namemapping)
         else:
-            raise AttributeError, 'The object does not support scdensure'
+            raise AttributeError('The object does not support scdensure')
 
 
 class DecoupledFactTable(pygrametl.parallel.Decoupled):
@@ -2053,14 +2078,14 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
         if hasattr(self._obj, 'lookup'):
             return self._enqueue('lookup', row, namemapping)
         else:
-            raise AttributeError, 'The object does not support lookup'
+            raise AttributeError('The object does not support lookup')
         
     def ensure(self, row, namemapping={}):
         """Invoke ensure on the decoupled FactTable in the separate process"""
         if hasattr(self._obj, 'ensure'):
             return self._enqueue('ensure', row, namemapping)
         else:
-            raise AttributeError, 'The object does not support ensure'
+            raise AttributeError('The object does not support ensure')
 
 
 #######
@@ -2137,9 +2162,9 @@ class DimensionPartitioner(BasePartitioner):
         self.key = parts[0].key
         for p in parts:
             if not p.lookupatts == self.lookupatts:
-                raise ValueError, 'The parts must have the same lookupatts'
+                raise ValueError('The parts must have the same lookupatts')
             if not p.key == self.key:
-                raise ValueError, 'The parts must have the same key'
+                raise ValueError('The parts must have the same key')
         if partitioner is not None:
             self.partitioner = partitioner
         else:
@@ -2243,8 +2268,8 @@ class FactTablePartitioner(BasePartitioner):
         for ft in parts:
             if not (self.keyrefs == ft.keyrefs and \
                         self.measures == ft.measures):
-                raise ValueError, \
-                    'The parts must have the same measures and keyrefs'
+                raise ValueError(\
+                    'The parts must have the same measures and keyrefs')
 
     def getpart(self, row, namemapping={}):
         """Return the relevant part for the given row """

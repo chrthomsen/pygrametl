@@ -31,7 +31,7 @@ import pygrametl
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '1.2'
+__version__ = '2.3a'
 __all__ = ['Step', 'SourceStep', 'MappingStep', 'ValueMappingStep',
            'PrintStep', 'DimensionStep', 'SCDimensionStep', 'RenamingStep', 
            'RenamingFromToStep', 'RenamingToFromStep', 'GarbageStep', 
@@ -188,7 +188,7 @@ class MappingStep(Step):
             if element in row:
                     row[element] = function(row[element])
             elif self.requiretargets:
-                raise KeyError, "%s not found in row" % (element,)
+                raise KeyError("%s not found in row" % (element,))
 
 class ValueMappingStep(Step):
     """A Step that Maps values to other values (e.g., DK -> Denmark)"""
@@ -229,7 +229,7 @@ class ValueMappingStep(Step):
         elif not self.requireinput:
             row[self.attribute] = self.defaultvalue
         else:
-            raise KeyError, "%s not found in row" % (self.attribute,)
+            raise(KeyError, "%s not found in row" % (self.attribute,))
 
 
 class PrintStep(Step):
@@ -411,7 +411,7 @@ class CopyStep(Step):
         """
         Step.__init__(self, None, originaldest, name)
         if copydest is None:
-            raise ValueError, 'copydest is None'
+            raise ValueError('copydest is None')
         self.copydest = copydest
         import copy
         if deepcopy:
