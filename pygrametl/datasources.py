@@ -57,7 +57,7 @@ class SQLSource(object):
     """A class for iterating the result set of a single SQL query."""
 
     def __init__(self, connection, query, names=(), initsql=None, \
-                     cursorarg=None):
+                     cursorarg=None, parameters=None):
         """Arguments:
            - connection: the PEP 249 connection to use. NOT a ConnectionWrapper!
            - query: the query that generates the result
@@ -67,6 +67,8 @@ class SQLSource(object):
              initsql is not returned. Default: None.
            - cursorarg: if not None, this argument is used as an argument when
              the connection's cursor method is called. Default: None.
+           - parameters: if not None, this sequence or mapping of parameters
+             will be sent when the query is executed.
         """
         self.connection = connection
         if cursorarg is not None:
@@ -78,11 +80,12 @@ class SQLSource(object):
         self.query = query
         self.names = names
         self.executed = False
+        self.parameters = parameters
 
     def __iter__(self):
         try:
             if not self.executed:
-                self.cursor.execute(self.query)
+                self.cursor.execute(self.query,self.parameters)
                 names = None
                 if self.names or self.cursor.description:
                     names = self.names or \
