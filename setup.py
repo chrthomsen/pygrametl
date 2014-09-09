@@ -9,7 +9,7 @@ from distutils.core import setup
 
 setup(
     name='pygrametl',
-    version=2.3,
+    version=get_package_version(),
     author='Aalborg University',
     author_email='chr@cs.aau.dk',
     packages=['pygrametl'],

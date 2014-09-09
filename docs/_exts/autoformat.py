@@ -1,5 +1,5 @@
 """Automatic addition of additional markup to the doc strings used by pygrametl,
-   which should allow them to be readable in the source code and in the 
+   which should allow them to be readable in the source code and in the
    documentation after Sphinx has processed them.
 """
 
@@ -85,21 +85,43 @@ def correct_signature(app, what, name, obj, options, signature,
 
 def correct_function_pointers(obj, signature):
     """Manuel mapping of function pointers with addresses to their original
-        names, needed until Sphinx Issue #759 has been resolved.
+        names, it is needed until Sphinx Issue #759 have been resolved.
     """
-    
-    # We start by splitting the signature into a list of parameters, as it might
-    # contain multiple parameters using functions as default parameters.
+
+    # Signatures can belong to either a function, method or object, depending
+    # on what version of python is used. Extration of docstrings from objects
+    # does in some versions of python require accessing the method first.
+    if hasattr(obj, "func_defaults"):
+        filename = obj.__code__.co_filename
+        lineno = obj.__code__.co_firstlineno
+        source_code_line = read_function_signature(filename, lineno)
+    elif hasattr(obj, "__code__"):
+        filename = obj.__code__.co_filename
+        lineno = obj.__code__.co_firstlineno
+        source_code_line = read_function_signature(filename, lineno)
+    else:
+        filename = obj.__init__.__code__.co_filename
+        lineno = obj.__init__.__code__.co_firstlineno
+        source_code_line = read_function_signature(filename, lineno)
+
+    # The line of source code read from the file, and the original signature, is
+    # split into a list of parameters, allowing the function names from the line
+    # of source code read to easily substitute the memory addresses present in
+    # the original signature given by Sphinx
     signature_split = signature.split(',')
-    source_code_line = get_source_code_line(obj, signature)
     source_code_line_split = source_code_line.split(',')
 
-    # We reduce the source code line to just the brackets and the paramters 
+    # Function name, def, self, and the ending colon are stripped to match the
+    # original signature read by Sphinx, making substituting each part trivial
     param_start_index = source_code_line_split[0].find('(')
     source_code_line_split[0] = source_code_line_split[0][param_start_index:]
     source_code_line_split[-1] = source_code_line_split[-1][0:-1]
-    
-    # Finally we substitute the pointers with the matching line from source code 
+
+    if source_code_line_split[0] == '(self':
+         del(source_code_line_split[0])
+         source_code_line_split[0] = '(' + source_code_line_split[0]
+
+    # Finally we substitute the pointers with the matching line from source code
     result_string_list = []
     for sig, source in zip(signature_split, source_code_line_split):
         if '<function ' in sig:
@@ -107,73 +129,37 @@ def correct_function_pointers(obj, signature):
         else:
             result_string_list.append(sig)
 
-    # The function pointer block is just replaced with the function_name 
+    # The function pointer block is just replaced with the function_name
     return ','.join(result_string_list)
 
-def get_source_code_line(obj, signature):
-    """Extracts the original line of source code from the python file, and
-        throws a StandardError if it cannot be found, which properly is a bug in
-        this function, as Sphinx found it in that file.
-    """
+def read_function_signature(filename, lineno):
 
-    #TODO: should be extended to ensure that the line we read is inside the
-    # correct class, to prevent matching of functions that have the same name
-    # and naming of the parameters but placed in another class, as the function
-    # we are looking for
+    # The line number is subtracted by one to make it match the one produced by
+    # the enumerator, as the line number starts from one and the enumerator
+    # from zero
+    lineno = lineno - 1
 
-    # The list of parameter names is computed and used to identify the function
-    # in conjunction with the name, just to be absolutely sure when we pick
-    signature_split = signature.split(',')
-    for index, line in enumerate(signature_split):
-        # Strips the memory addresses of the function pointer parameters
-        if '<function ' in line:
-            line = line[0 : line.find('=')]
-            signature_split[index] = ''.join(ch for ch in line if ch.isalnum())
+    # We read through the file until we line number passed, the reader is then
+    # "activated" and we make a copy of all lines read until we match a ":"
+    # indicating the end of the function signature which is all we need.
+    function_signature = ""
+    file_handle = open(filename)
+    reached_function_signature = False
+    for file_index, line in enumerate(file_handle):
 
-    # Function pointers used as default parameters result in a signature in the
-    # format <function ymdhmsparser at 0x2f45668>, so we extract the name
-    function_pointer_name = signature[signature.find('<function ')+10 :
-                              signature.rfind('at 0x')-1]
+        if file_index == lineno:
+            reached_function_signature = True
 
-    # If the element we are formatting is a object are looking for the __init__,
-    # method, otherwise is it a function or method and we just look for the name
-    if type(obj) is type:
-        function_name = 'def __init__'
-        # The Self pointer is explicit in python, but Sphinx skips it
-        signature_split[0] = signature_split[0][1:]
-        signature_split.insert(0, '(self')
-    else:
-        function_name = 'def ' + obj.__name__
+        if reached_function_signature:
+            function_signature += line.strip()
 
-    # The original source code is read in order to find the original source line
-    source_code_file_name = sys.modules.get(obj.__module__).__file__
-    source_code_file = open(source_code_file_name, 'r')
-
-    #NOTE: changing accumulator to a list might increase performance
-    accumulator = ''
-    correct_method_name = False
-    for line in source_code_file:
-
-        if correct_method_name:
-            accumulator += line
-        elif function_name in line:
-            correct_method_name = True
-            accumulator += line
-        
-        if accumulator and '):' in accumulator:
-            if (all(param in accumulator for param in signature_split)
-                and function_pointer_name in accumulator):
-                source_code_line = ' '.join(accumulator.split())
+            if line.endswith(':\n'):
+                file_handle.close()
                 break
-            accumulator = ''
-            correct_method_name = False
 
-    source_code_file.close()
-    if not source_code_line:
-        raise StandardError("Could not find the function in the source code")
-
-    return source_code_line.replace('(self, ', '(')
-
+    # Finally the all white space is removed from the signature to make it
+    # simpler to process in "correct_function_pointers(obj, signature)"
+    return function_signature#.strip()
 
 def setup(app):
     """Initial setup that connects the plug-in to Sphinx"""

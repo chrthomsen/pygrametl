@@ -32,6 +32,9 @@ sys.dont_write_bytecode=True
 import rtdmockup
 rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
 
+# We import the version extraction script to automatically extract the version
+from version import get_package_version
+
 
 # -- General configuration -----------------------------------------------------
 
@@ -56,14 +59,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pygrametl'
-copyright = u'2009 - 2014'
+copyright = u'2009 - 2014, Aalborg University'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '2.2'
+version = get_package_version()
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -207,7 +210,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'pygrametl.tex', u'pygrametl Documentation',
-   u'Christian Thomsen', 'manual'),
+   u'Aalborg Universitet', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -237,7 +240,7 @@ latex_domain_indices = False
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'pygrametl', u'pygrametl Documentation',
-     [u'Christian Thomsen'], 1)
+     [u'Aalborg Universitet'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -251,7 +254,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'pygrametl', u'pygrametl Documentation',
-   u'Christian Thomsen', 'pygrametl', 'One line description of project.',
+   u'Aalborg Universitet', 'pygrametl', 'One line description of project.',
    'Miscellaneous'),
 ]
 
