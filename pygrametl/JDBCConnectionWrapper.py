@@ -32,7 +32,12 @@ from copy import copy as pcopy
 from datetime import datetime
 from sys import modules
 from threading import Thread
-from Queue import Queue
+
+# Needed for both pip2 and pip3 to be supported
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
 
 import pygrametl
 from pygrametl.FIFODict import FIFODict
@@ -41,7 +46,7 @@ from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.2'
+__version__ = '2.3'
 __all__ = ['JDBCConnectionWrapper', 'BackgroundJDBCConnectionWrapper']
 
 

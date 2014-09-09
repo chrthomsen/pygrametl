@@ -41,9 +41,15 @@ try:
 except ImportError:
     from queue import Empty # Python 3
 
+# Jython 2.5.X specific code
+try:
+    next
+except NameError:
+    from pygrametl import next
+
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3a'
+__version__ = '2.3'
 __all__ = ['CSVSource', 'SQLSource', 'JoiningSource', 'HashJoiningSource', 
            'MergeJoiningSource', 'BackgroundSource', 'ProcessSource', 
            'TransformingSource', 'UnionSource', 'CrossTabbingSource', 
@@ -85,7 +91,10 @@ class SQLSource(object):
     def __iter__(self):
         try:
             if not self.executed:
-                self.cursor.execute(self.query,self.parameters)
+                if self.parameters:
+                    self.cursor.execute(self.query, self.parameters)
+                else:
+                    self.cursor.execute(self.query)
                 names = None
                 if self.names or self.cursor.description:
                     names = self.names or \
@@ -145,7 +154,10 @@ class ProcessSource(object):
             if batch:
                 self.__queue.put(batch)
             self.__queue.put('STOP')
-        except Exception as e:
+        except Exception:
+            # Jython 2.5.X does not support the as syntax required by Python 3
+            e = sys.exc_info()[1]
+
             if batch:
                 self.__queue.put(batch)
             self.__queue.put('EXCEPTION')
@@ -226,7 +238,7 @@ class MergeJoiningSource(object):
         iter1 = self.__src1.__iter__()
         iter2 = self.__src2.__iter__()
 
-        row1 = iter1.next()
+        row1 = next(iter1)
         keyval1 = row1[self.__key1]
         rows2 = self.__getnextrows(iter2)
         keyval2 = rows2[0][self.__key2]
@@ -238,10 +250,10 @@ class MergeJoiningSource(object):
                     resrow = row1.copy()
                     resrow.update(part)
                     yield resrow
-                row1 = iter1.next()
+                row1 = next(iter1)
                 keyval1 = row1[self.__key1]
             elif keyval1 < keyval2:
-                row1 = iter1.next()
+                row1 = next(iter1)
                 keyval1 = row1[self.__key1]
             else: # k1 > k2
                 rows2 = self.__getnextrows(iter2)
@@ -256,7 +268,7 @@ class MergeJoiningSource(object):
             self.__next = None
         while True:
             try:
-                row = iter.next()
+                row = next(iter)
             except StopIteration:
                 if res:
                     return res
@@ -403,7 +415,7 @@ class RoundRobinSource(object):
                 # now return up to __batchsize from cursrc
                 try:
                     for n in range(self.__batchsize):
-                        yield cursrc.next()
+                        yield next(cursrc)
                 except StopIteration:
                     # we're done with this source and can delete it since
                     # we iterate the list as we do

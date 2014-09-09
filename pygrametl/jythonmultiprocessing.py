@@ -28,14 +28,19 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from threading import Thread
-from Queue import Queue
 from pygrametl.jythonsupport import Value
+
+# Needed for both pip2 and pip3 to be supported
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
 
 # NOTE: This module is made for Jython.
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.2'
+__version__ = '2.3'
 __all__ = ['JoinableQueue', 'Process', 'Queue', 'Value']
 
 

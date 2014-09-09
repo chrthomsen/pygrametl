@@ -37,7 +37,9 @@ try:
     from Queue import Empty # Python 2
 except ImportError:
     from queue import Empty # Python 3
+
 import sys
+from sys import version_info
 if sys.platform.startswith('java'):
     # Jython specific code in jythonmultiprocessing
     import pygrametl.jythonmultiprocessing as multiprocessing
@@ -45,11 +47,17 @@ else:
     # Use (C)Python's std. lib.
     import multiprocessing
 
+# Jython 2.5.X specific code
+try:
+    next
+except NameError:
+    from pygrametl import next
+
 import pygrametl
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3a'
+__version__ = '2.3'
 __all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
            'shareconnectionwrapper', 'getsharedsequencefactory']
 
@@ -1006,13 +1014,23 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
                                              toclients)
     userfuncnames = []
     for func in userfuncs:
-        if not (callable(func) and hasattr(func, 'func_name') and \
-                    not func.func_name == '<lambda>'):
-            raise ValueError("Elements in userfunc must be callable and named")
-        if hasattr(SharedConnectionWrapperClient, func.func_name):
-            raise ValueError("Illegal function name: " + func.func_name)
-        setattr(serverCW, '_userfunc_' + func.func_name, func)
-        userfuncnames.append(func.func_name)
+        # Compatability for Python 2 and 3
+        if version_info[0] == 2:
+            if not (callable(func) and hasattr(func, 'func_name') and \
+                        not func.func_name == '<lambda>'):
+                raise ValueError("Elements in userfunc must be callable and named")
+            if hasattr(SharedConnectionWrapperClient, func.func_name):
+                raise ValueError("Illegal function name: " + func.func_name)
+            setattr(serverCW, '_userfunc_' + func.func_name, func)
+            userfuncnames.append(func.func_name)
+        else:
+            if not (callable(func) and hasattr(func, '__name__') and \
+                        not func.__name__ == '<lambda>'):
+                raise ValueError("Elements in userfunc must be callable and named")
+            if hasattr(SharedConnectionWrapperClient, func.__name__):
+                raise ValueError("Illegal function name: " + func.__name__)
+            setattr(serverCW, '_userfunc_' + func.__name__, func)
+            userfuncnames.append(func.__name__)
     serverprocess = multiprocessing.Process(target=serverCW.worker)
     serverprocess.name = 'Process for shared connection wrapper'
     serverprocess.daemon = True
@@ -1076,7 +1094,7 @@ def getsharedsequencefactory(startvalue, intervallen=5000):
         generator = valuedeliverer() # get a unique generator
         # The method called (i.e., the g) by the end-consumer
         def getnextseqval(*ignored):
-            return generator.next()
+            return next(generator)
         return getnextseqval
 
     return factory

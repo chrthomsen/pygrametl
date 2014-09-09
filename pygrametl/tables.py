@@ -40,7 +40,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from functools import reduce
 import locale
 from subprocess import Popen, PIPE
 from sys import version_info
@@ -52,10 +51,16 @@ import pygrametl
 import pygrametl.parallel
 from pygrametl.FIFODict import FIFODict
 
+try:
+    from functools import reduce
+except ImportError:
+    # Jython 2.5.X specific code
+    pass
+
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3b'
-__all__ = ['Dimension', 'CachedDimension', 'BulkDimension'
+__version__ = '2.3'
+__all__ = ['Dimension', 'CachedDimension', 'BulkDimension',
            'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable', 
            'BatchFactTable', 'BulkFactTable', 'SubprocessFactTable', 
            'DecoupledDimension', 'DecoupledFactTable', 
@@ -1508,7 +1513,7 @@ class _BaseBulkloadable(object):
             self.encoding = locale.getpreferredencoding()
         self.dependson = dependson
 
-        if version_info.major == 2:
+        if version_info[0] == 2:
             # Python 2: We ignore the specified encoding
             self._tobytes = lambda data, encoding: str(data)
         else:

@@ -48,7 +48,7 @@ from sys import modules, version_info
 from threading import Thread
 
 
-if version_info.major == 2:
+if version_info[0] == 2:
     import types
     _stringtypes = types.StringTypes  # (str, unicode) on Python 2
     from Queue import Queue
@@ -60,11 +60,11 @@ else: # For Python 3
     _DBBaseException  = Exception
 
 
-from . import FIFODict
+from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3a'
+__version__ = '2.3'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
            'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp', 
@@ -492,6 +492,18 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
 toupper  = lambda s: s.upper()
 tolower  = lambda s: s.lower()
 keepasis = lambda s: s
+
+def next(iterator, default=None):
+    """A version of the built-in next function, for use with
+       implementations of Python older then version 2.6.
+    """
+    try:
+        return iterator.next()
+    except StopIteration:
+        if default:
+            return default
+        else:
+            raise StopIteration
 
 _defaulttargetconnection = None
 

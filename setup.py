@@ -1,11 +1,19 @@
+# Adds the location of the version extraction script also used by sphinx
+import os
+import sys
+sys.path.insert(0, os.path.abspath('docs/_exts'))
+
+# The beginning of the main setup function
+from version import get_package_version
 from distutils.core import setup
 
 setup(
     name='pygrametl',
-    version=2.2,
+    version=2.3,
     author='Aalborg University',
     author_email='chr@cs.aau.dk',
     packages=['pygrametl'],
+    package_data={'pygrametl': ['jythonsupport/Value.class', 'jythonsupport/Value.java']},
     url='http://pygrametl.org/',
     license='BSD',
     description='ETL programming in Python',
