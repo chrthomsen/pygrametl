@@ -64,7 +64,7 @@ from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3'
+__version__ = '2.3.1'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
            'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp', 
@@ -571,7 +571,7 @@ class ConnectionWrapper(object):
                                     rsplit('.', 1)[0]].paramstyle
 
         if not paramstyle == 'pyformat':
-            self.__translations = FIFODict.FIFODict(stmtcachesize)
+            self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, '_translate2' + paramstyle)
             except AttributeError:
@@ -844,7 +844,7 @@ class BackgroundConnectionWrapper(object):
                                     rsplit('.', 1)[0]].paramstyle
 
         if not paramstyle == 'pyformat':
-            self.__translations = FIFODict.FIFODict(stmtcachesize)
+            self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, '_translate2' + paramstyle)
             except AttributeError:
