@@ -1322,8 +1322,7 @@ class FactTable(object):
         # INSERT INTO name (key1, ..., keyn, meas1, ..., measn)
         # VALUES (%(key1)s, ..., %(keyn)s, %(meas1)s, ..., %(measn)s)
         self.insertsql = "INSERT INTO " + name + "(" + \
-            ", ".join(keyrefs) + (measures and ", " or "") + \
-            ", ".join(measures) + ") VALUES (" + \
+            ", ".join(self.all) + ") VALUES (" + \
             ", ".join(["%%(%s)s" % (att,) for att in self.all]) + ")"
 
         # SELECT key1, ..., keyn, meas1, ..., measn FROM name
