@@ -16,7 +16,7 @@
    dim.insert(row=..., namemapping={'order_date':'date'})
 """
 
-# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
+# Copyright (c) 2009-2015, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -59,7 +59,7 @@ except ImportError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3'
+__version__ = '2.3.2'
 __all__ = ['Dimension', 'CachedDimension', 'BulkDimension',
            'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable', 
            'BatchFactTable', 'BulkFactTable', 'SubprocessFactTable', 
@@ -1021,7 +1021,7 @@ class SnowflakedDimension(object):
 
         self.levels = {}
         self.__buildlevels(self.root, 0)
-        self.levellist = range(len(self.levels))
+        self.levellist = list(range(len(self.levels)))
         self.levellist.reverse()
 
         self.expectboguskeyvalues = expectboguskeyvalues
