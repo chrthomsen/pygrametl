@@ -59,12 +59,13 @@ except ImportError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3.2'
+__version__ = '2.4.0a'
 __all__ = ['Dimension', 'CachedDimension', 'BulkDimension',
-           'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable', 
-           'BatchFactTable', 'BulkFactTable', 'SubprocessFactTable', 
-           'DecoupledDimension', 'DecoupledFactTable', 
-           'BasePartitioner', 'DimensionPartitioner', 'FactTablePartitioner']
+           'CachedBulkDimension', 'SlowlyChangingDimension',
+           'SnowflakedDimension', 'FactTable', 'BatchFactTable',
+           'BulkFactTable', 'SubprocessFactTable', 'DecoupledDimension',
+           'DecoupledFactTable', 'BasePartitioner', 'DimensionPartitioner',
+           'FactTablePartitioner']
 
 
 class Dimension(object):
@@ -1676,6 +1677,8 @@ class BulkFactTable(_BaseBulkloadable):
 class BulkDimension(_BaseBulkloadable, CachedDimension):
     """A class for accessing a dimension table. Does caching and bulk loading.
 
+       Unlike CachedBulkDimension, this class always caches all dimension data.
+
        The class caches all dimension members in memory. Newly inserted
        dimension members are also put into the cache. The class does not
        INSERT new dimension members into the underlying database table
@@ -1842,6 +1845,209 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
 
         self._after_insert(row, namemapping, keyval)
         return keyval
+
+
+class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
+
+    """A class for accessing a dimension table. Does caching and bulk loading.
+
+       Unlike BulkDimension, the cache size is configurable and lookups may
+       thus lead to database operations.
+
+       The class caches dimension members in memory. Newly inserted
+       dimension members are also put into the cache. The class does not
+       INSERT new dimension members into the underlying database table
+       immediately when insert or ensure is invoked. Instead, the class does
+       bulk loading of new members. When a certain amount of new dimension
+       members have been inserted (configurable through __init__'s bulksize
+       argument), a user-provided bulkloader method is called.
+
+       It is also possible to use the update and getbyvals methods, but calls
+       of these will invoke the bulkloader first (and performance can
+       degrade). If the dimension table's full rows are cached (by setting
+       __init__'s cachefullrow argument to True), a call of getbykey will only
+       use the cache, but if cachefullrows==False (which is the default), the
+       bulkloader is again invoked first.
+
+       We assume that the DB doesn't change or add any attribute
+       values that are cached.
+       For example, a DEFAULT value in the DB can break this assumption.
+
+    """
+
+    def __init__(self, name, key, attributes, bulkloader, lookupatts=(),
+                 idfinder=None, defaultidvalue=None, rowexpander=None,
+                 cachefullrows=False,
+                 fieldsep='\t', rowsep='\n', nullsubst=None,
+                 tempdest=None, bulksize=5000, cachesize=10000,  
+                 usefilename=False, encoding=None, dependson=(),
+                 targetconnection=None):
+        r"""Arguments:
+           - name: the name of the dimension table in the DW
+           - key: the name of the primary key in the DW
+           - attributes: a sequence of the attribute names in the dimension 
+             table. Should not include the name of the primary key which is
+             given in the key argument.
+           - bulkloader: A method 
+             m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
+             is called to load data from a temporary file into the DW. The
+             argument "attributes" is a list of the names of the columns to 
+             insert values into and show the order in which the attribute 
+             values appear in the temporary file.  The rest of the arguments 
+             are similar to those arguments with identical names that are 
+             described below. The argument "tempdest" can, however, be 
+             1) a string with a filename or 2) a file object. This is 
+             determined by the usefilename argument (see below).             
+           - lookupatts: A subset of the attributes that uniquely identify
+             a dimension members. These attributes are thus used for looking
+             up members. If not given, it is assumed that 
+             lookupatts = attributes
+           - idfinder: A function(row, namemapping) -> key value that assigns
+             a value to the primary key attribute based on the content of the
+             row and namemapping. If not given, it is assumed that the primary
+             key is an integer, and the assigned key value is then the current
+             maximum plus one.
+           - defaultidvalue: An optional value to return when a lookup fails. 
+             This should thus be the ID for a preloaded "Unknown" member.
+           - rowexpander: A function(row, namemapping) -> row. This function
+             is called by ensure before insertion if a lookup of the row fails.
+             This is practical if expensive calculations only have to be done
+             for rows that are not already present. For example, for a date
+             dimension where the full date is used for looking up rows, a
+             rowexpander can be set such that week day, week number, season, 
+             year, etc. are only calculated for dates that are not already
+             represented. If not given, no automatic expansion of rows is
+             done.
+           - cachefullrows: a flag deciding if full rows should be
+             cached. If not, the cache only holds a mapping from
+             lookupattributes to key values. Default: False.
+           - fieldsep: a string used to separate fields in the temporary 
+             file. Default: '\t'
+           - rowsep: a string used to separate rows in the temporary file.
+             Default: '\n'
+           - nullsubst: an optional string used to replace None values.
+             If nullsubst=None, no substitution takes place. Default: None
+           - tempdest: a file object or None. If None a named temporary file
+             is used. Default: None
+           - bulksize: an int deciding the number of rows to load in one
+             bulk operation. Default: 5000
+           - cachesize: the maximum number of rows to cache. If less than or equal
+             to 0, unlimited caching is used. Default: 10000
+           - usefilename: a value deciding if the file should be passed to the
+             bulkloader by its name instead of as a file-like object. This is,
+             e.g., necessary when the bulk loading is invoked through SQL 
+             (instead of directly via a method on the PEP249 driver). It is 
+             also necessary if the bulkloader runs in another process.
+             Default: False
+           - dependson: a sequence of other bulkloadble tables that should
+             be loaded before this instance does bulkloading. Default: ()
+           - targetconnection: The ConnectionWrapper to use. If not given,
+             the default target connection is used.
+           - encoding: a string with the encoding to use. If None, 
+             locale.getpreferredencoding() is used. This argument is
+             ignored under Python 2! Default: None
+        """
+        _BaseBulkloadable.__init__(self, name,
+                                   [key] + [a for a in attributes],  # atts
+                                   bulkloader, fieldsep, rowsep, nullsubst, tempdest,
+                                   bulksize, usefilename, encoding, dependson)
+
+        CachedDimension.__init__(self, name, key, attributes, lookupatts,
+                                 idfinder, defaultidvalue, rowexpander,
+                                 cachesize,  # size
+                                 True,  # prefill
+                                 cachefullrows,
+                                 True,  # cacheoninsert
+                                 targetconnection)
+
+        self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
+		
+
+        self.__localcache = {}
+
+        if nullsubst is None:
+            self._insert = self._insertwithoutnulls
+        else:
+            self._insert = self._insertwithnulls
+
+    def _before_lookup(self, row, namemapping):
+        namesinrow = [(namemapping.get(a) or a) for a in self.lookupatts]
+        searchtuple = tuple([row[n] for n in namesinrow])
+
+        if searchtuple in self.__localcache:
+            return self.__localcache[searchtuple][1]           #CHR aendret - se nedenfor
+        return CachedDimension._before_lookup(self, row, namemapping)
+
+    def _before_getbyvals(self, values, namemapping):
+        self._bulkloadnow()
+        return None
+
+    def _before_update(self, row, namemapping):
+        self._bulkloadnow()
+        return None
+
+    def _bulkloadnow(self):
+        emptydict = {}                                           #CHR nyt
+        for (row, keyval) in self.__localcache.values():         #CHR VAR for data in ...
+            self._after_insert(row, emptydict, keyval)           #CHR VAR self._after_insert(*data)
+        self.__localcache.clear()
+        _BaseBulkloadable._bulkloadnow(self)
+        return
+
+    def getbykey(self, keyvalue):
+        """Lookup and return the row with the given key value.
+
+           If no row is found in the dimension table, the function returns
+           a row where all values (including the key) are None.
+        """
+
+        if not self.cachefullrows:
+            self._bulkloadnow()
+            return CachedDimension.getbykey(self, keyvalue)
+
+        # else we do cache full rows and all rows are cached...
+        if isinstance(keyvalue, dict):
+            keyvalue = keyvalue[self.key]
+
+        row = self._before_getbykey(keyvalue)
+        if row is not None:
+            return row
+        else:
+            # Do not look in the DB; we cache everything
+            return self.emptyrow.copy()
+
+    def lookup(self, row, namemapping={}):
+        return CachedDimension.lookup(self, row, namemapping=namemapping)
+
+    def insert(self, row, namemapping={}):
+        """Insert the given row. Return the new key value.
+
+           Arguments:
+           - row: the row to insert. The dict is not updated. It must contain
+             all attributes, and is allowed to contain more attributes than
+             that.
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+        row = pygrametl.copy(row, **namemapping) #CHR: aendret - gemmer nu altid en kopi af row og haandterer samtidigt namemapping
+        searchtuple = tuple([row[n] for n in self.lookupatts])
+        res = self._before_insert(row, {})
+        if res is not None:
+            return res
+
+        if row.get(self.key) is None:
+            keyval = self.idfinder(row, namemapping)
+            row[self.key] = keyval
+        else:
+            keyval = row[self.key]
+
+        if searchtuple in self.__localcache:
+            return self.__localcache[searchtuple][1]     #CHR: se nedenfor
+
+        self._insert(row, namemapping)
+        self.__localcache[searchtuple] = (row, keyval)  # CHR: gemmer ikke namemapping laengere - er haandteret
+        return keyval
+
+
 
 
 class SubprocessFactTable(object):
