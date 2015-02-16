@@ -1977,7 +1977,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
         if searchtuple in self.__localcache:
             # CHR aendret - se nedenfor
-            return self.__localcache[searchtuple]
+            return self.__localcache[searchtuple][self.key]
         return CachedDimension._before_lookup(self, row, namemapping)
 
     def _before_getbyvals(self, values, namemapping):
