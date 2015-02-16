@@ -1964,6 +1964,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 		
 
         self.__localcache = {}
+        self.__localkeys = {}
 
         if nullsubst is None:
             self._insert = self._insertwithoutnulls
@@ -1975,7 +1976,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         searchtuple = tuple([row[n] for n in namesinrow])
 
         if searchtuple in self.__localcache:
-            return self.__localcache[searchtuple][1]           #CHR aendret - se nedenfor
+            # CHR aendret - se nedenfor
+            return self.__localcache[searchtuple]
         return CachedDimension._before_lookup(self, row, namemapping)
 
     def _before_getbyvals(self, values, namemapping):
@@ -1987,10 +1989,12 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         return None
 
     def _bulkloadnow(self):
-        emptydict = {}                                           #CHR nyt
-        for (row, keyval) in self.__localcache.values():         #CHR VAR for data in ...
-            self._after_insert(row, emptydict, keyval)           #CHR VAR self._after_insert(*data)
+        emptydict = {}  # CHR nyt
+        for key, row in self.__localcache.items():  # CHR VAR for data in ...
+            # CHR VAR self._after_insert(*data)
+            self._after_insert(row, emptydict, key)
         self.__localcache.clear()
+        self.__localkeys.clear()
         _BaseBulkloadable._bulkloadnow(self)
         return
 
@@ -2000,21 +2004,12 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
            If no row is found in the dimension table, the function returns
            a row where all values (including the key) are None.
         """
-
-        if not self.cachefullrows:
-            self._bulkloadnow()
-            return CachedDimension.getbykey(self, keyvalue)
-
-        # else we do cache full rows and all rows are cached...
         if isinstance(keyvalue, dict):
             keyvalue = keyvalue[self.key]
 
-        row = self._before_getbykey(keyvalue)
-        if row is not None:
-            return row
-        else:
-            # Do not look in the DB; we cache everything
-            return self.emptyrow.copy()
+        if keyvalue in self.__localkeys:
+            return self.__localkeys[keyvalue].copy()
+        return CachedDimension.getbykey(self, keyvalue)
 
     def lookup(self, row, namemapping={}):
         return CachedDimension.lookup(self, row, namemapping=namemapping)
@@ -2028,7 +2023,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              that.
            - namemapping: an optional namemapping (see module's documentation)
         """
-        row = pygrametl.copy(row, **namemapping) #CHR: aendret - gemmer nu altid en kopi af row og haandterer samtidigt namemapping
+        row = pygrametl.copy(
+            row, **namemapping)  # CHR: aendret - gemmer nu altid en kopi af row og haandterer samtidigt namemapping
         searchtuple = tuple([row[n] for n in self.lookupatts])
         res = self._before_insert(row, {})
         if res is not None:
@@ -2041,10 +2037,12 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
             keyval = row[self.key]
 
         if searchtuple in self.__localcache:
-            return self.__localcache[searchtuple][1]     #CHR: se nedenfor
+            return self.__localcache[searchtuple]  # CHR: se nedenfor
 
         self._insert(row, namemapping)
-        self.__localcache[searchtuple] = (row, keyval)  # CHR: gemmer ikke namemapping laengere - er haandteret
+        # CHR: gemmer ikke namemapping laengere - er haandteret
+        self.__localcache[searchtuple] = row
+        self.__localkeys[keyval] = row
         return keyval
 
 
