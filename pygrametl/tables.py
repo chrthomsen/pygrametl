@@ -1976,7 +1976,6 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         searchtuple = tuple([row[n] for n in namesinrow])
 
         if searchtuple in self.__localcache:
-            # CHR aendret - se nedenfor
             return self.__localcache[searchtuple][self.key]
         return CachedDimension._before_lookup(self, row, namemapping)
 
@@ -1989,9 +1988,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         return None
 
     def _bulkloadnow(self):
-        emptydict = {}  # CHR nyt
-        for key, row in self.__localkeys.items():  # CHR VAR for data in ...
-            # CHR VAR self._after_insert(*data)
+        emptydict = {}
+        for key, row in self.__localkeys.items():
             self._after_insert(row, emptydict, key)
         self.__localcache.clear()
         self.__localkeys.clear()
@@ -2023,8 +2021,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              that.
            - namemapping: an optional namemapping (see module's documentation)
         """
-        row = pygrametl.copy(
-            row, **namemapping)  # CHR: aendret - gemmer nu altid en kopi af row og haandterer samtidigt namemapping
+        row = pygrametl.copy(row, **namemapping)
         searchtuple = tuple([row[n] for n in self.lookupatts])
         res = self._before_insert(row, {})
         if res is not None:
@@ -2037,10 +2034,9 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
             keyval = row[self.key]
 
         if searchtuple in self.__localcache:
-            return self.__localcache[searchtuple]  # CHR: se nedenfor
+            return self.__localcache[searchtuple]
 
         self._insert(row, namemapping)
-        # CHR: gemmer ikke namemapping laengere - er haandteret
         self.__localcache[searchtuple] = row
         self.__localkeys[keyval] = row
         return keyval
