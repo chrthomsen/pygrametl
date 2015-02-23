@@ -1990,7 +1990,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
     def _bulkloadnow(self):
         emptydict = {}  # CHR nyt
-        for key, row in self.__localcache.items():  # CHR VAR for data in ...
+        for key, row in self.__localkeys.items():  # CHR VAR for data in ...
             # CHR VAR self._after_insert(*data)
             self._after_insert(row, emptydict, key)
         self.__localcache.clear()
