@@ -543,8 +543,7 @@ class SlowlyChangingDimension(Dimension):
              fromatt, and toatt.
            - lookupatts: a sequence with a subset of the attributes that 
              uniquely identify a dimension members. These attributes are thus 
-             used for looking up members. If not given, it is assumed that 
-             lookupatts = attributes
+             used for looking up members.
            - versionatt: the name of the attribute holding the version number
            - fromatt: the name of the attribute telling from when the version
              becomes valid. Not used if None. Default: None
@@ -578,8 +577,6 @@ class SlowlyChangingDimension(Dimension):
              version, not any following versions. Note also that if the member 
              to insert already contains a value for fromatt, minfrom is ignored.
              Default: None.
-             ADDED IN THE AUGUST 2013 RELEASE. The minfrom argument is not 
-             available in previous releases.
            - maxto: the value to use for toatt for new members. Default: None
            - srcdateatt: the name of the attribute in the source data that
              holds a date showing when a version is valid from. The data is
