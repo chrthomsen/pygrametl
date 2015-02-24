@@ -1569,6 +1569,9 @@ class _BaseBulkloadable(object):
 
 
     def _bulkloadnow(self):
+        if self.__count == 0:
+            return
+
         for b in self.dependson:
             b._bulkloadnow()
 
@@ -1584,8 +1587,7 @@ class _BaseBulkloadable(object):
         
     def endload(self):
         """Finalize the load."""
-        if self.__count > 0:
-            self._bulkloadnow()
+        self._bulkloadnow()
         if self.__close:
             try:
                 self.__namedtempfile.close()
