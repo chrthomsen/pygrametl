@@ -118,6 +118,10 @@ class Dimension(object):
         self.key = key
         if lookupatts == ():
             lookupatts = attributes
+        elif not len(lookupatts):
+            raise ValueError("Lookupatts contain no attributes")
+        elif not set(lookupatts) <= set(attributes):
+            raise ValueError("Lookupatts is not a subset of attributes")
         self.all = [key,]
         self.all.extend(attributes)
         self.lookupatts = lookupatts
