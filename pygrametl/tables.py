@@ -342,7 +342,8 @@ class CachedDimension(Dimension):
 
        We assume that the DB doesn't change or add any attribute
        values that are cached.
-       For example, a DEFAULT value in the DB can break this assumption.
+       For example, a DEFAULT value in the DB or automatic type coercion can
+       break this assumption.
     """
 
     def __init__(self, name, key, attributes, lookupatts=(), 
@@ -509,7 +510,8 @@ class CachedDimension(Dimension):
         # After the insert, we can look the row up. Pretend that we 
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
-        # For example, a DEFAULT value in the DB breaks this assumption.
+        # For example, a DEFAULT value in the DB or automatic type coercion can
+        # break this assumption.
         if self.cacheoninsert:
             self._after_lookup(row, namemapping, newkeyvalue)
             if self.cachefullrows:
@@ -633,8 +635,9 @@ class SlowlyChangingDimension(Dimension):
        "Type 1" updates can also be applied for a subset of the attributes.
 
        Caching is used. We assume that the DB doesn't change or add any 
-       attribute values that are cached. For example, a DEFAULT value in the 
-       DB can break this assumption.
+       attribute values that are cached. 
+       For example, a DEFAULT value in the DB or automatic type coercion can
+       break this assumption.
     """
 
     def __init__(self, name, key, attributes, lookupatts, versionatt, 
@@ -1002,7 +1005,8 @@ class SlowlyChangingDimension(Dimension):
         # After the insert, we can look it up. Pretend that we 
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
-        # For example, a DEFAULT value in the DB breaks this assumption.
+        # For example, a DEFAULT value in the DB or automatic type coercion can
+        # break this assumption.
         # Note that we always cache inserted members (in CachedDimension
         # this is an option).
         if self.__cachesize:
@@ -1809,7 +1813,8 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
 
        We assume that the DB doesn't change or add any attribute
        values that are cached.
-       For example, a DEFAULT value in the DB can break this assumption.
+       For example, a DEFAULT value in the DB or automatic type coercion can
+       break this assumption.
     """
 
     def __init__(self, name, key, attributes, bulkloader, lookupatts=(), 
@@ -1983,8 +1988,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
        We assume that the DB doesn't change or add any attribute
        values that are cached.
-       For example, a DEFAULT value in the DB can break this assumption.
-
+       For example, a DEFAULT value in the DB or automatic type coercion can
+       break this assumption.
     """
 
     def __init__(self, name, key, attributes, bulkloader, lookupatts=(),
