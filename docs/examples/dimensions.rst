@@ -272,6 +272,81 @@ all tables created anywhere in the program and commits the current database
 transaction on the database which the :class:`.ConnectionWrapper` is associated
 with.
 
+.. The space in the header is intentional so the two parts can fit in the toc
+
+TypeOneSlowlyChanging Dimension
+-------------------------------
+:class:`.TypeOneSlowlyChangingDimension` allows the creation of a Type 1 slowly
+changing dimension.  The dimension is based on :class:`.CachedDimension`,
+albeit with a few differences. The primary difference between the two classes
+besides the additional method, is that :class:`.TypeOneSlowlyChangingDimension`
+enables caching on insert and disables caching of full rows by default,
+settings that cannot be overridden. This is done in order to minimize the
+amount of database communication needed for
+:meth:`.TypeOneSlowlyChangingDimension.scdensure` in an effort to increase its
+throughput. The class requires a sequence of attributes for lookup
+:attr:`.lookupatts`, as well as a sequence of type 1 attributes
+:attr:`.type1atts`, defaults to all attributes minus lookupatts, which are the
+slowly changing attributes in the dimension and these two sequences of
+attributes need to be disjoint. Caching is used to increase the performance of
+lookups, which assumes that the database does not change or add any attribute
+values that are cached. For example, a DEFAULT value in the database or
+automatic type coercion can break this assumption.
+
+.. code-block:: python
+
+    import psycopg2
+    import pygrametl
+    from pygrametl.tables import TypeOneSlowlyChangingDimension
+
+    # Input is a list of "rows" which in pygrametl is modelled as dict
+    products = [
+        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10'},
+        {'name' : 'Cake and Me', 'category' : 'Cookbook', 'price' : '15'},
+        {'name' : 'French Cooking', 'category' : 'Cookbook', 'price' : '50'},
+        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '20'},
+        {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30'},
+        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15'},
+        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60'}
+        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10'},
+    ]
+
+    # The actual database connection is handled using a PEP 249 connection
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
+                              password='dwpass'""")
+
+    # This ConnectionWrapper will be set as default and is then implicitly used.
+    # A reference to the wrapper is saved to allow for easy access of it later
+    conn = pygrametl.ConnectionWrapper(connection=pgconn)
+
+    # An instance of a Type 1 slowly changing dimension is created with 'price'
+    # as a slowly changing attribute.
+    productDimension = TypeOneSlowlyChangingDimension (
+        name='product',
+        key='productid',
+        attributes=['name', 'category', 'price'],
+        lookupatts=['name'],
+        type1atts=['price'])
+
+    # scdensure determines whether the row already exists in the database
+    # and either inserts a new row, or updates the changed attributes in the
+    # existing row.
+    for row in products:
+        productDimension.scdensure(row)
+
+    # To ensure all cached data is inserted and the transaction committed
+    # both the commit and close function should be called when done
+    conn.commit()
+    conn.close()
+
+The values of the product dimension in this case is used to illustrate a
+situation where a product changes its price. Using a
+:class:`.TypeOneSlowlyChangingDimension`, the rows in the database are updated
+accordingly when a change happens. As opposed to a
+:class:`.SlowlyChangingDimension`, a Type 1 slowly changing dimension does not
+include any history or time stamps, so it is important that the rows are
+introduced in chronological order.
+
 SlowlyChangingDimension
 -----------------------
 :class:`.SlowlyChangingDimension` allows for the creation of either a Type 2

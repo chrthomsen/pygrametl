@@ -61,17 +61,17 @@ __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
 __version__ = '2.4.0a'
 __all__ = ['Dimension', 'CachedDimension', 'BulkDimension',
-           'CachedBulkDimension', 'SlowlyChangingDimension',
-           'SnowflakedDimension', 'FactTable', 'BatchFactTable',
-           'BulkFactTable', 'SubprocessFactTable', 'DecoupledDimension',
-           'DecoupledFactTable', 'BasePartitioner', 'DimensionPartitioner',
-           'FactTablePartitioner']
+           'CachedBulkDimension', 'TypeOneSlowlyChangingDimension',
+           'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable',
+           'BatchFactTable', 'BulkFactTable', 'SubprocessFactTable',
+           'DecoupledDimension', 'DecoupledFactTable', 'BasePartitioner',
+           'DimensionPartitioner', 'FactTablePartitioner']
 
 
 class Dimension(object):
     """A class for accessing a dimension. Does no caching."""
 
-    def __init__(self, name, key, attributes, lookupatts=(), 
+    def __init__(self, name, key, attributes, lookupatts=(),
                  idfinder=None, defaultidvalue=None, rowexpander=None,
                 targetconnection=None):
         """Arguments:
@@ -516,6 +516,115 @@ class CachedDimension(Dimension):
                 tmp = pygrametl.project(self.all, row, namemapping)
                 tmp[self.key] = newkeyvalue
                 self._after_getbykey(newkeyvalue, tmp)
+
+
+class TypeOneSlowlyChangingDimension(CachedDimension):
+    """A class for accessing a slowly changing dimension of "type 1".
+
+       Caching is used. We assume that the DB doesn't change or add any
+       attribute values that are cached.
+       For example, a DEFAULT value in the DB or automatic type coercion can
+       break this assumption.
+    """
+
+    def __init__(self, name, key, attributes, lookupatts, type1atts=(),
+                 cachesize=10000, prefill=False, idfinder=None,
+                 targetconnection=None):
+        """Arguments:
+           - name: the name of the dimension table in the DW
+           - key: the name of the primary key in the DW
+           - attributes: a sequence of the attribute names in the dimension
+             table. Should not include the name of the primary key which is
+             given in the key argument.
+           - lookupatts: A subset of the attributes that uniquely identify
+             a dimension members. These attributes are thus used for looking
+             up members.
+           - type1atts: A sequence of attributes that should have type1 updates
+             applied, it cannot intersect with lookupatts. If not given, it is
+             assumed that type1atts = attributes - lookupatts
+           - cachesize: the maximum number of rows to cache. If less than or
+             equal to 0, unlimited caching is used. Default: 10000
+           - prefill: a flag deciding if the cache should be filled when
+             initialized. Default: False
+           - idfinder: A function(row, namemapping) -> key value that assigns
+             a value to the primary key attribute based on the content of the
+             row and namemapping. If not given, it is assumed that the primary
+             key is an integer, and the assigned key value is then the current
+             maximum plus one.
+           - targetconnection: The ConnectionWrapper to use. If not given,
+             the default target connection is used.
+        """
+        CachedDimension.__init__(self,
+                name=name,
+                key=key,
+                attributes=attributes,
+                lookupatts=lookupatts,
+                idfinder=idfinder,
+                defaultidvalue=None,
+                rowexpander=None,
+                size=cachesize,
+                prefill=prefill,
+                cachefullrows=False,
+                cacheoninsert=True,
+                targetconnection=targetconnection)
+
+        if type1atts == ():
+            type1atts = list(set(attributes) - set(lookupatts))
+        elif not set(type1atts) < set(attributes):
+            raise ValueError("Type1atts is not a subset of attributes")
+        elif set(lookupatts) & set(type1atts):
+            raise ValueError("Intersection between lookupatts and type1atts")
+
+        # Ensures "lookupatts != attributes" as it prevents type 1 updates
+        if not len(type1atts):
+            raise ValueError("Type1atts contain no attributes")
+        self.type1atts = type1atts
+
+    def scdensure(self, row, namemapping={}):
+        """Lookup or insert a version of a slowly changing dimension member.
+
+           .. Note:: Has side-effects on the given row.
+
+           Arguments:
+           - row: a dict containing the attributes for the table. It must
+             contain all attributes if it is the first version of the row to be
+             inserted, updates of existing rows need only contain lookupatts
+             and a subset of type1atts as a missing type1atts is ignored and
+             the existing value left as is in the database.
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+        # NOTE: the "vals2key" cache is kept coherent by "scdensure", as it only
+        # contains "lookupatts" which "scdensure" is prohibited from changing
+
+        keyval = self.lookup(row, namemapping)
+        key = (namemapping.get(self.key) or self.key)
+        if keyval is None:
+            # The first version of the row is inserted
+            keyval = self.insert(row, namemapping)
+            row[key] = keyval
+        else:
+            # The row did exist so we update the type1atts provided
+            row[key] = keyval
+
+            # Takes the user provided namemapping into account and checks what
+            # subset of type1atts should be updated based on the content of row
+            type1atts = []
+            for att in self.type1atts:
+                if (namemapping.get(att) or att) in row:
+                    type1atts.append(att)
+            if not type1atts:
+                return
+
+            # The SQL is constructed to update only the changed values without
+            # the need for looking up the old row to extract the existing values
+            updatesql = "UPDATE " + self.name + " SET " + \
+                ", ".join(["%s = %%(%s)s" % \
+                (att, att) for att in type1atts]) + \
+                " WHERE %s = %%(%s)s" % (key, key)
+
+            # Update is not used, to skip the checks for updates to the caches
+            self.targetconnection.execute(updatesql, row, namemapping)
+        return row[key]
 
 
 class SlowlyChangingDimension(Dimension):
