@@ -349,7 +349,8 @@ class CachedDimension(Dimension):
     def __init__(self, name, key, attributes, lookupatts=(), 
                  idfinder=None, defaultidvalue=None, rowexpander=None,
                  size=10000, prefill=False, cachefullrows=False,
-                 cacheoninsert=True, targetconnection=None):
+                 cacheoninsert=True, usefetchfirst=False,
+                 targetconnection=None):
         """Arguments:
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
@@ -385,6 +386,10 @@ class CachedDimension(Dimension):
              lookupattributes to key values. Default: False.
            - cacheoninsert: a flag deciding if the cache should be updated
              when insertions are done. Default: True
+           - usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+             clause is used when prefil is True. Depending on the used DBMS 
+             and DB driver, this can give significant savings wrt. to time and 
+             memory. Not all DBMSs support this clause yet. Default: False
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
         """
@@ -417,8 +422,11 @@ class CachedDimension(Dimension):
                 sql = "SELECT %s FROM %s" % \
                     (", ".join([key] + [l for l in self.lookupatts]), name)
                 positions = range(1, len(self.lookupatts) + 1)
+            if size > 0 and usefetchfirst:
+                sql += " FETCH FIRST %d ROWS ONLY" % size
 
             self.targetconnection.execute(sql)
+
             if size <= 0:
                 data = self.targetconnection.fetchalltuples()
             else:
@@ -1897,6 +1905,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
                                  True, #prefill 
                                  cachefullrows,
                                  True, #cacheoninsert
+                                 False, #usefetchfirst
                                  targetconnection)
 
         self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
@@ -2075,6 +2084,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
                                  True,  # prefill
                                  cachefullrows,
                                  True,  # cacheoninsert
+                                 False, #usefetchfirst
                                  targetconnection)
 
         self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
