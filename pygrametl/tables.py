@@ -2003,7 +2003,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
     def __init__(self, name, key, attributes, bulkloader, lookupatts=(),
                  idfinder=None, defaultidvalue=None, rowexpander=None,
-                 cachefullrows=False,
+                 usefetchfirst=False, cachefullrows=False,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=5000, cachesize=10000,  
                  usefilename=False, encoding=None, dependson=(),
@@ -2044,6 +2044,10 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              year, etc. are only calculated for dates that are not already
              represented. If not given, no automatic expansion of rows is
              done.
+           - usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+             clause is used when prefil is True. Depending on the used DBMS 
+             and DB driver, this can give significant savings wrt. to time and 
+             memory. Not all DBMSs support this clause yet. Default: False
            - cachefullrows: a flag deciding if full rows should be
              cached. If not, the cache only holds a mapping from
              lookupattributes to key values. Default: False.
@@ -2084,7 +2088,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
                                  True,  # prefill
                                  cachefullrows,
                                  True,  # cacheoninsert
-                                 False, #usefetchfirst
+                                 usefetchfirst,
                                  targetconnection)
 
         self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
