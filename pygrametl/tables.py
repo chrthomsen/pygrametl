@@ -394,9 +394,16 @@ class CachedDimension(Dimension):
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
         """
+        Dimension.__init__(self,
+                name=name,
+                key=key,
+                attributes=attributes,
+                lookupatts=lookupatts,
+                idfinder=idfinder,
+                defaultidvalue=defaultidvalue,
+                rowexpander=rowexpander,
+                targetconnection=targetconnection)
 
-        Dimension.__init__(self, name, key, attributes, lookupatts, idfinder, 
-                           defaultidvalue, rowexpander, targetconnection)
         self.cacheoninsert = cacheoninsert
         self.__prefill = prefill
         self.__size = size
@@ -727,8 +734,15 @@ class SlowlyChangingDimension(Dimension):
         # TODO: Should scdensure just override ensure instead of being a new 
         #       method?
 
-        Dimension.__init__(self, name, key, attributes, lookupatts, 
-                           idfinder, None, None, targetconnection)
+        Dimension.__init__(self,
+                name=name,
+                key=key,
+                attributes=attributes,
+                lookupatts=lookupatts,
+                idfinder=idfinder,
+                defaultidvalue=None,
+                rowexpander=None,
+                targetconnection=targetconnection)
 
         if not versionatt:
             raise ValueError('A version attribute must be given')
@@ -1549,7 +1563,12 @@ class BatchFactTable(FactTable):
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
         """
-        FactTable.__init__(self, name, keyrefs, measures, targetconnection)
+        FactTable.__init__(self,
+                name=name,
+                keyrefs=keyrefs,
+                measures=measures,
+                targetconnection=targetconnection)
+
         self.__batchsize = batchsize
         self.__batch = []
 
@@ -1774,11 +1793,18 @@ class BulkFactTable(_BaseBulkloadable):
              the fact table has foreign keys to some bulk-loaded dimension 
              table). Default: ()
         """
-
-        _BaseBulkloadable.__init__(self, name, 
-                 [k for k in keyrefs] + [m for m in measures],
-                 bulkloader, fieldsep, rowsep, nullsubst,
-                 tempdest, bulksize, usefilename, encoding, dependson)
+        _BaseBulkloadable.__init__(self,
+                name=name,
+                atts=[k for k in keyrefs] + [m for m in measures],
+                bulkloader=bulkloader,
+                fieldsep=fieldsep,
+                rowsep=rowsep,
+                nullsubst=nullsubst,
+                tempdest=tempdest,
+                bulksize=bulksize,
+                usefilename=usefilename,
+                encoding=encoding,
+                dependson=dependson)
 
         if nullsubst is None:
             self.insert = self._insertwithoutnulls
@@ -1894,20 +1920,34 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
            - encoding: a string with the encoding to use. If None, 
              locale.getpreferredencoding() is used. This argument is
              ignored under Python 2! Default: None
-        """ 
-        _BaseBulkloadable.__init__(self, name, 
-                 [key] + [a for a in attributes], #atts
-                 bulkloader, fieldsep, rowsep, nullsubst, tempdest, 
-                 bulksize, usefilename, encoding, dependson)
+        """
+        _BaseBulkloadable.__init__(self,
+                name=name,
+                atts=[key] + [a for a in attributes],
+                bulkloader=bulkloader,
+                fieldsep=fieldsep,
+                rowsep=rowsep,
+                nullsubst=nullsubst,
+                tempdest=tempdest,
+                bulksize=bulksize,
+                usefilename=usefilename,
+                encoding=encoding,
+                dependson=dependson)
 
-        CachedDimension.__init__(self, name, key, attributes, lookupatts, 
-                                 idfinder, defaultidvalue, rowexpander,
-                                 0, # size
-                                 True, #prefill 
-                                 cachefullrows,
-                                 True, #cacheoninsert
-                                 False, #usefetchfirst
-                                 targetconnection)
+        CachedDimension.__init__(self,
+                name=name,
+                key=key,
+                attributes=attributes,
+                lookupatts=lookupatts,
+                idfinder=idfinder,
+                defaultidvalue=defaultidvalue,
+                rowexpander=rowexpander,
+                size=0,
+                prefill=True,
+                cachefullrows=cachefullrows,
+                cacheoninsert=True,
+                usefetchfirst=False,
+                targetconnection=targetconnection)
 
         self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
 
@@ -2078,22 +2118,35 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              locale.getpreferredencoding() is used. This argument is
              ignored under Python 2! Default: None
         """
-        _BaseBulkloadable.__init__(self, name,
-                                   [key] + [a for a in attributes],  # atts
-                                   bulkloader, fieldsep, rowsep, nullsubst, tempdest,
-                                   bulksize, usefilename, encoding, dependson)
+        _BaseBulkloadable.__init__(self,
+                name=name,
+                atts=[key] + [a for a in attributes],
+                bulkloader=bulkloader,
+                fieldsep=fieldsep,
+                rowsep=rowsep,
+                nullsubst=nullsubst,
+                tempdest=tempdest,
+                bulksize=bulksize,
+                usefilename=usefilename,
+                encoding=encoding,
+                dependson=dependson)
 
-        CachedDimension.__init__(self, name, key, attributes, lookupatts,
-                                 idfinder, defaultidvalue, rowexpander,
-                                 cachesize,  # size
-                                 True,  # prefill
-                                 cachefullrows,
-                                 True,  # cacheoninsert
-                                 usefetchfirst,
-                                 targetconnection)
+        CachedDimension.__init__(self,
+                name=name,
+                key=key,
+                attributes=attributes,
+                lookupatts=lookupatts,
+                idfinder=idfinder,
+                defaultidvalue=defaultidvalue,
+                rowexpander=rowexpander,
+                size=cachesize,
+                prefill=True,
+                cachefullrows=cachefullrows,
+                cacheoninsert=True,
+                usefetchfirst=usefetchfirst,
+                targetconnection=targetconnection)
 
         self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
-		
 
         self.__localcache = {}
         self.__localkeys = {}
@@ -2314,10 +2367,15 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
              good performance. 
              Default: 200
         """
-        pygrametl.parallel.Decoupled.__init__(
-            self, dim, returnvalues, consumes,
-            tuple([(0, a) for a in attstoconsume]),
-            batchsize, queuesize, False)
+        pygrametl.parallel.Decoupled.__init__(self,
+                obj=dim,
+                returnvalues=returnvalues,
+                consumes=consumes,
+                directupdatepositions=tuple([(0, a) for a in attstoconsume]),
+                batchsize=batchsize,
+                queuesize=queuesize,
+                autowrap=False)
+
         if dim in pygrametl._alltables:
             pygrametl._alltables.remove(dim) # We add self instead...
         pygrametl._alltables.append(self)
@@ -2388,10 +2446,15 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
              good performance. 
              Default: 200
         """
-        pygrametl.parallel.Decoupled.__init__(
-            self, facttbl, returnvalues, consumes,
-            tuple([(0, a) for a in attstoconsume]),
-            batchsize, queuesize, False)
+        pygrametl.parallel.Decoupled.__init__(self,
+                obj=facttbl,
+                returnvalues=returnvalues,
+                consumes=consumes,
+                directupdatepositions=tuple([(0, a) for a in attstoconsume]),
+                batchsize=batchsize,
+                queuesize=queuesize,
+                autowrap=False)
+
         if facttbl in pygrametl._alltables:
             pygrametl._alltables.remove(facttbl) # We add self instead
         pygrametl._alltables.append(self)
@@ -2492,7 +2555,7 @@ class DimensionPartitioner(BasePartitioner):
              partitioner computes the hash value of each value of the lookupatts
              and adds them together.
         """
-        BasePartitioner.__init__(self, parts)
+        BasePartitioner.__init__(self, parts=parts)
         self.getbyvalsfromall = getbyvalsfromall
         self.lookupatts = parts[0].lookupatts
         self.key = parts[0].key
@@ -2592,7 +2655,7 @@ class FactTablePartitioner(BasePartitioner):
           When partitioner is None, a default partitioner is used. This
           partitioner computes the sum of all the keyrefs values.
         """
-        BasePartitioner.__init__(self, parts)
+        BasePartitioner.__init__(self, parts=parts)
         if partitioner is not None:
             self.partitioner = partitioner
         else:

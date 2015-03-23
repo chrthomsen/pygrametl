@@ -3,7 +3,7 @@
    each step does something with the row.
 """
 
-# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
+# Copyright (c) 2009-2015, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -31,7 +31,7 @@ import pygrametl
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3a'
+__version__ = '2.4.0a'
 __all__ = ['Step', 'SourceStep', 'MappingStep', 'ValueMappingStep',
            'PrintStep', 'DimensionStep', 'SCDimensionStep', 'RenamingStep', 
            'RenamingFromToStep', 'RenamingToFromStep', 'GarbageStep', 
@@ -148,7 +148,7 @@ class SourceStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, next, name)
+        Step.__init__(self, worker=None, next=next, name=name)
         self.source = source
 
     def start(self):
@@ -179,7 +179,7 @@ class MappingStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, next, name)
+        Step.__init__(self, worker=None, next=next, name=name)
         self.targets = targets
         self.requiretargets = requiretargets
 
@@ -215,7 +215,7 @@ class ValueMappingStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, next, name)
+        Step.__init__(self, worker=None, next=next, name=name)
         self.outputatt = outputatt
         self.inputatt = inputatt
         self.mapping = mapping
@@ -247,7 +247,7 @@ class PrintStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, next, name)
+        Step.__init__(self, worker=None, next=next, name=name)
 
     def defaultworker(self, row):
         print(row)
@@ -271,7 +271,7 @@ class DimensionStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, next, name)
+        Step.__init__(self, worker=None, next=next, name=name)
         self.dimension = dimension
         self.keyfield = keyfield
 
@@ -298,7 +298,7 @@ class SCDimensionStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, next, name)
+        Step.__init__(self, worker=None, next=next, name=name)
         self.dimension = dimension
 
     def defaultworker(self, row):
@@ -326,7 +326,7 @@ class RenamingFromToStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, next, name)
+        Step.__init__(self, worker=None, next=next, name=name)
         self.renaming = renaming
 
     def defaultworker(self, row):
@@ -350,7 +350,7 @@ class GarbageStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, None, name)
+        Step.__init__(self, worker=None, next=None, name=name)
 
     def process(self, row):
         return
@@ -375,7 +375,7 @@ class ConditionalStep(Step):
              have the same name, the name is mapped to the instance that was
              created the latest. Default: None
         """
-        Step.__init__(self, None, whentrue, name)
+        Step.__init__(self, worker=None, next=whentrue, name=name)
         self.whenfalse = whenfalse
         self.condition = condition
         self.__nowhere = GarbageStep()
@@ -409,7 +409,7 @@ class CopyStep(Step):
            - deepcopy: Decides if the copy should be deep or not. 
              Default: False
         """
-        Step.__init__(self, None, originaldest, name)
+        Step.__init__(self, worker=None, next=originaldest, name=name)
         if copydest is None:
             raise ValueError('copydest is None')
         self.copydest = copydest
@@ -432,7 +432,7 @@ class AggregatedRow(dict):
 
 class AggregatingStep(Step):
     def __init__(self, aggregator=None, finalizer=None, next=None, name=None):
-        Step.__init__(self, aggregator, next, name)
+        Step.__init__(self, worker=aggregator, next=next, name=name)
         self.finalizer = finalizer or self.defaultfinalizer
 
     def process(self, row):
@@ -453,7 +453,11 @@ class AggregatingStep(Step):
 
 class SumAggregator(AggregatingStep):
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self, None, None, next, name)
+        AggregatingStep.__init__(self,
+                                 aggregator=None,
+                                 finalizer=None,
+                                 next=next,
+                                 name=name)
         self.sum = 0
         self.field = field
 
@@ -467,7 +471,11 @@ class SumAggregator(AggregatingStep):
 
 class AvgAggregator(AggregatingStep):
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self, None, None, next, name)
+        AggregatingStep.__init__(self,
+                                 aggregator=None,
+                                 finalizer=None,
+                                 next=next,
+                                 name=name)
         self.sum = 0
         self.cnt = 0
         self.field = field
@@ -488,7 +496,11 @@ class AvgAggregator(AggregatingStep):
 
 class MaxAggregator(AggregatingStep):
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self, None, None, next, name)
+        AggregatingStep.__init__(self,
+                                 aggregator=None,
+                                 finalizer=None,
+                                 next=next,
+                                 name=name)
         self.max = None
         self.field = field
 
@@ -503,7 +515,11 @@ class MaxAggregator(AggregatingStep):
 
 class MinAggregator(AggregatingStep):
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self, None, None, next, name)
+        AggregatingStep.__init__(self,
+                                 aggregator=None,
+                                 finalizer=None,
+                                 next=next,
+                                 name=name)
         self.min = None
         self.field = field
 
