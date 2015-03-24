@@ -51,17 +51,15 @@ sys.path.insert(0, os.path.abspath(package_path))
 sys.path.insert(0, os.path.abspath(pygrametl_path))
 rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
 
-# Extracts the highest version number of the pygrametl python files
-
-
 def get_package_version():
+    """Extracts the highest version number of the pygrametl python files"""
+
     # The minimum version number is used for the initial value
     version_number = StrictVersion("0.0")
 
     python_files = glob.glob(pygrametl_path + '*.py')
     for python_file in python_files:
-        # The path of each module is computed without suffix and version
-        # extract
+        # The path of each module is computed and its version extracted
         module_name = os.path.basename(python_file)[:-3]
         version = __import__(module_name).__version__
 

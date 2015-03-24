@@ -18,10 +18,6 @@ from os.path import abspath, dirname, join
 import sys
 import os
 
-import rtdmockup
-from version import get_package_version
-
-
 # Make sure we get this copy of pygrametl, and not one on the system
 sys.path.insert(1, dirname(dirname(abspath(__file__))))
 
@@ -33,11 +29,12 @@ sys.path.insert(0, os.path.abspath('_exts'))
 # Prevents the creation of .pyc and .pyo by the Python interpreter
 sys.dont_write_bytecode = True
 
-# We setup mocking of Java code used in the Jython modules used in the
-# framework
+# Creates mockups of Java code used in the Jython modules used in the framework
+import rtdmockup
 rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
 
-# We import the version extraction script to automatically extract the version
+# Imports the version extraction script to automatically extract the version
+from version import get_package_version
 
 
 # -- General configuration -----------------------------------------------
@@ -63,7 +60,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pygrametl'
-copyright = u'2009 - 2014, Aalborg University'
+copyright = u'2009 - 2015, Aalborg University'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

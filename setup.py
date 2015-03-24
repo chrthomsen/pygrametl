@@ -1,13 +1,12 @@
-# Adds the location of the version extraction script also used by sphinx
 from distutils.core import setup
 import os
 import sys
 
-from version import get_package_version
+# Adds the location of the version extraction script also used by sphinx
 sys.path.insert(0, os.path.abspath('docs/_exts'))
+from version import get_package_version
 
 # The beginning of the main setup function
-
 setup(
     name='pygrametl',
     version=get_package_version(),
