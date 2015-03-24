@@ -1,7 +1,7 @@
 """A package for creating Extract-Transform-Load (ETL) programs in Python.
 
    The package contains a number of classes for filling fact tables
-   and dimensions (including snowflaked and slowly changing dimensions), 
+   and dimensions (including snowflaked and slowly changing dimensions),
    classes for extracting data from different sources, classes for defining
    'steps' in an ETL flow, and convenient functions for often-needed ETL
    functionality.
@@ -14,7 +14,7 @@
    - JDBCConnectionWrapper and jythonmultiprocessing for support of Jython
    - aggregators for aggregating data
    - steps for defining steps in an ETL flow
-   - FIFODict for providing a dict with a limited size and where elements are 
+   - FIFODict for providing a dict with a limited size and where elements are
      removed in first-in first-out order
 """
 
@@ -42,39 +42,40 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import copy as pcopy
 from datetime import date, datetime
 from sys import modules, version_info
 from threading import Thread
+
+import copy as pcopy
+from pygrametl.FIFODict import FIFODict
 
 
 if version_info[0] == 2:
     import types
     _stringtypes = types.StringTypes  # (str, unicode) on Python 2
     from Queue import Queue
-    from exceptions import StandardError as _DBBaseException #Used by PEP249,but
-                                                             #not avail. on Py3
-else: # For Python 3
-    _stringtypes = (str,) 
+    from exceptions import Exception as _DBBaseException  # Used by PEP249,but
+    # not avail. on Py3
+else:  # For Python 3
+    _stringtypes = (str,)
     from queue import Queue
-    _DBBaseException  = Exception
+    _DBBaseException = Exception
 
-
-from pygrametl.FIFODict import FIFODict
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
 __version__ = '2.3.1'
-__all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom', 
-           'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr', 
-           'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp', 
-           'getvalue', 'getvalueor', 'setdefaults', 'rowfactory', 'endload', 
-           'today', 'now', 'ymdparser', 'ymdhmsparser', 'datereader', 
-           'datetimereader', 'datespan', 'toupper', 'tolower', 'keepasis', 
+__all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom',
+           'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr',
+           'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp',
+           'getvalue', 'getvalueor', 'setdefaults', 'rowfactory', 'endload',
+           'today', 'now', 'ymdparser', 'ymdhmsparser', 'datereader',
+           'datetimereader', 'datespan', 'toupper', 'tolower', 'keepasis',
            'getdefaulttargetconnection', 'ConnectionWrapper', '_stringtypes']
 
 
 _alltables = []
+
 
 def project(atts, row, renaming={}):
     """Create a new dictionary with a subset of the attributes.
@@ -83,10 +84,10 @@ def project(atts, row, renaming={}):
        - atts is a sequence of attributes in row that should be copied to the
          new result row.
        - row is the original dictionary to copy data from.
-       - renaming is a mapping of names such that for each k in atts, 
+       - renaming is a mapping of names such that for each k in atts,
          the following holds:
 
-         - If k in renaming then result[k] = row[renaming[k]]. 
+         - If k in renaming then result[k] = row[renaming[k]].
          - If k not in renaming then result[k] = row[k].
          - renaming defaults to {}
     """
@@ -106,7 +107,7 @@ def copy(row, **renaming):
        - row the dictionary to copy
        - **renaming allows renamings to be specified in the form
          newname=oldname meaning that in the result, oldname will be
-         renamed to newname. The key oldname must exist in the row argument, 
+         renamed to newname. The key oldname must exist in the row argument,
          but it can be assigned to several newnames in the result as in
          x='repeated', y='repeated'.
     """
@@ -115,9 +116,10 @@ def copy(row, **renaming):
 
     tmp = row.copy()
     res = {}
-    for k,v in renaming.items():
+    for k, v in renaming.items():
         res[k] = row[v]
-        if v in tmp: #needed for renamings like {'x':'repeated', 'y':'repeated'}
+        # needed for renamings like {'x':'repeated', 'y':'repeated'}
+        if v in tmp:
             del tmp[v]
     res.update(tmp)
     return res
@@ -126,7 +128,7 @@ def copy(row, **renaming):
 def renamefromto(row, renaming):
     """Rename keys in a dictionary.
 
-       For each (oldname, newname) in renaming.items(): rename row[oldname] to 
+       For each (oldname, newname) in renaming.items(): rename row[oldname] to
        row[newname].
     """
     if not renaming:
@@ -136,13 +138,13 @@ def renamefromto(row, renaming):
         row[new] = row[old]
         del row[old]
 
-rename = renamefromto # for backwards compatibility
+rename = renamefromto  # for backwards compatibility
 
 
-def renametofrom(row, renaming):    
+def renametofrom(row, renaming):
     """Rename keys in a dictionary.
 
-       For each (newname, oldname) in renaming.items(): rename row[oldname] to 
+       For each (newname, oldname) in renaming.items(): rename row[oldname] to
        row[newname].
     """
     if not renaming:
@@ -152,7 +154,7 @@ def renametofrom(row, renaming):
         row[new] = row[old]
         del row[old]
 
-    
+
 def getint(value, default=None):
     """getint(value[, default]) -> int(value) if possible, else default."""
     try:
@@ -168,6 +170,7 @@ def getlong(value, default=None):
     except Exception:
         return default
 
+
 def getfloat(value, default=None):
     """getfloat(value[, default]) -> float(value) if possible, else default."""
     try:
@@ -175,12 +178,14 @@ def getfloat(value, default=None):
     except Exception:
         return default
 
+
 def getstr(value, default=None):
     """getstr(value[, default]) -> str(value) if possible, else default."""
     try:
         return str(value)
     except Exception:
         return default
+
 
 def getstrippedstr(value, default=None):
     """Convert given value to a string and use .strip() on the result.
@@ -193,6 +198,7 @@ def getstrippedstr(value, default=None):
     except Exception:
         return default
 
+
 def getstrornullvalue(value, nullvalue='None'):
     """Convert a given value different from None to a string.
 
@@ -203,8 +209,9 @@ def getstrornullvalue(value, nullvalue='None'):
     else:
         return str(value)
 
-def getbool(value, default=None, 
-            truevalues=set(( True,  1, '1', 't', 'true',  'True' )), 
+
+def getbool(value, default=None,
+            truevalues=set((True, 1, '1', 't', 'true', 'True')),
             falsevalues=set((False, 0, '0', 'f', 'false', 'False'))):
     """Convert a given value to True, False, or a default value.
 
@@ -218,7 +225,6 @@ def getbool(value, default=None,
         return False
     else:
         return default
-
 
 
 def getdate(targetconnection, ymdstr, default=None):
@@ -239,9 +245,10 @@ def getdate(targetconnection, ymdstr, default=None):
     except Exception:
         return default
 
+
 def gettimestamp(targetconnection, ymdhmsstr, default=None):
     """Converts a string of the form 'yyyy-MM-dd HH:mm:ss' to a Timestamp.
-    
+
        The returned Timestamp is in the given targetconnection's format.
 
        Arguments:
@@ -255,10 +262,11 @@ def gettimestamp(targetconnection, ymdhmsstr, default=None):
         (year, month, day) = datepart.split('-')
         (hour, minute, second) = timepart.split(':')
         modref = targetconnection.getunderlyingmodule()
-        return modref.Timestamp(int(year), int(month), int(day),\
+        return modref.Timestamp(int(year), int(month), int(day),
                                 int(hour), int(minute), int(second))
     except Exception:
         return default
+
 
 def getvalue(row, name, mapping={}):
     """If name in mapping, return row[mapping[name]], else return row[name]."""
@@ -267,6 +275,7 @@ def getvalue(row, name, mapping={}):
     else:
         return row[name]
 
+
 def getvalueor(row, name, mapping={}, default=None):
     """Return the value of name from row using a mapping and a default value."""
     if name in mapping:
@@ -274,18 +283,19 @@ def getvalueor(row, name, mapping={}, default=None):
     else:
         return row.get(name, default)
 
+
 def setdefaults(row, attributes, defaults=None):
     """Set default values for attributes not present in a dictionary.
 
-       Default values are set for "missing" values, existing values are not 
-       updated. 
+       Default values are set for "missing" values, existing values are not
+       updated.
 
        Arguments:
        - row is the dictionary to set default values in
        - attributes is either
            A) a sequence of attribute names in which case defaults must
               be an equally long sequence of these attributes default values or
-           B) a sequence of pairs of the form (attribute, defaultvalue) in 
+           B) a sequence of pairs of the form (attribute, defaultvalue) in
               which case the defaults argument should be None
        - defaults is a sequence of default values (see above)
     """
@@ -304,10 +314,10 @@ def setdefaults(row, attributes, defaults=None):
 
 def rowfactory(source, names, close=True):
     """Generate dicts with key values from names and data values from source.
-    
+
        The given source should provide either next() or fetchone() returning
        a tuple or fetchall() returning a sequence of tuples. For each tuple,
-       a dict is constructed such that the i'th element in names maps to 
+       a dict is constructed such that the i'th element in names maps to
        the i'th value in the tuple.
 
        If close=True (the default), close will be called on source after
@@ -337,6 +347,7 @@ def rowfactory(source, names, close=True):
             except:
                 return
 
+
 def endload():
     """Signal to all Dimension and FactTable objects that all data is loaded."""
     global _alltables
@@ -346,6 +357,8 @@ def endload():
             method()
 
 _today = None
+
+
 def today(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
     """Return the date of the first call this method as a datetime.date object.
     """
@@ -356,6 +369,8 @@ def today(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
     return _today
 
 _now = None
+
+
 def now(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
     """Return the time of the first call this method as a datetime.datetime.
     """
@@ -365,8 +380,9 @@ def now(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
     _now = datetime.now()
     return _now
 
+
 def ymdparser(ymdstr):
-    """Convert a string of the form 'yyyy-MM-dd' to a datetime.date. 
+    """Convert a string of the form 'yyyy-MM-dd' to a datetime.date.
 
        If the input is None, the return value is also None.
     """
@@ -375,8 +391,9 @@ def ymdparser(ymdstr):
     (year, month, day) = ymdstr.split('-')
     return date(int(year), int(month), int(day))
 
+
 def ymdhmsparser(ymdhmsstr):
-    """Convert a string 'yyyy-MM-dd HH:mm:ss' to a datetime.datetime. 
+    """Convert a string 'yyyy-MM-dd HH:mm:ss' to a datetime.datetime.
 
        If the input is None, the return value is also None.
     """
@@ -385,7 +402,7 @@ def ymdhmsparser(ymdhmsstr):
     (datepart, timepart) = ymdhmsstr.strip().split(' ')
     (year, month, day) = datepart.split('-')
     (hour, minute, second) = timepart.split(':')
-    return datetime(int(year), int(month), int(day),\
+    return datetime(int(year), int(month), int(day),
                     int(hour), int(minute), int(second))
 
 
@@ -401,12 +418,12 @@ def datereader(dateattribute, parsingfunction=ymdparser):
        - parsingfunction: the parsing function that converts the string
          to a datetime.date
     """
-    def readerfunction(targetconnection, row, namemapping = {}):
+    def readerfunction(targetconnection, row, namemapping={}):
         atttouse = (namemapping.get(dateattribute) or dateattribute)
-        return parsingfunction(row[atttouse]) # a datetime.date
-    
+        return parsingfunction(row[atttouse])  # a datetime.date
+
     return readerfunction
-    
+
 
 def datetimereader(datetimeattribute, parsingfunction=ymdhmsparser):
     """Return a function that converts a certain dict member to a datetime
@@ -420,17 +437,17 @@ def datetimereader(datetimeattribute, parsingfunction=ymdhmsparser):
        - parsingfunction: the parsing function that converts the string
          to a datetime.datetime
     """
-    def readerfunction(targetconnection, row, namemapping = {}):
+    def readerfunction(targetconnection, row, namemapping={}):
         atttouse = (namemapping.get(datetimeattribute) or datetimeattribute)
-        return parsingfunction(row[atttouse]) # a datetime.datetime
+        return parsingfunction(row[atttouse])  # a datetime.datetime
 
     return readerfunction
 
 
 def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
-             key='dateid', 
-             strings={'date':'%Y-%m-%d', 'monthname':'%B', 'weekday':'%A'},
-             ints={'year':'%Y', 'month':'%m', 'day':'%d'},
+             key='dateid',
+             strings={'date': '%Y-%m-%d', 'monthname': '%B', 'weekday': '%A'},
+             ints={'year': '%Y', 'month': '%m', 'day': '%d'},
              expander=None):
     """Return a generator yielding dicts for all dates in an interval.
 
@@ -456,11 +473,11 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
     """
 
     for arg in (fromdate, todate):
-        if not ((type(arg) in _stringtypes and arg.count('-') == 2)\
-                    or isinstance(arg, date)):
-            raise ValueError(\
-            "fromdate and today must be datetime.dates or " + \
-            "YYYY-MM-DD formatted strings")
+        if not ((type(arg) in _stringtypes and arg.count('-') == 2)
+                or isinstance(arg, date)):
+            raise ValueError(
+                "fromdate and today must be datetime.dates or " +
+                "YYYY-MM-DD formatted strings")
 
     (year, month, day) = fromdate.split('-')
     fromdate = date(int(year), int(month), int(day))
@@ -489,9 +506,10 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
         yield res
 
 
-toupper  = lambda s: s.upper()
-tolower  = lambda s: s.lower()
+toupper = lambda s: s.upper()
+tolower = lambda s: s.lower()
 keepasis = lambda s: s
+
 
 def next(iterator, default=None):
     """A version of the built-in next function, for use with
@@ -507,18 +525,21 @@ def next(iterator, default=None):
 
 _defaulttargetconnection = None
 
+
 def getdefaulttargetconnection():
     """Return the default target connection"""
     global _defaulttargetconnection
     return _defaulttargetconnection
 
+
 class ConnectionWrapper(object):
+
     """Provide a uniform representation of different database connection types.
 
-       All Dimensions and FactTables communicate with the data warehouse using 
+       All Dimensions and FactTables communicate with the data warehouse using
        a ConnectionWrapper. In this way, the code for loading the DW does not
-       have to care about which parameter format is used.  
-       
+       have to care about which parameter format is used.
+
        pygrametl's code uses the 'pyformat' but the ConnectionWrapper performs
        translations of the SQL to use 'named', 'qmark', 'format', or 'numeric'
        if the user's database connection needs this. Note that the
@@ -532,9 +553,9 @@ class ConnectionWrapper(object):
     """
 
     def __init__(self, connection, stmtcachesize=1000, paramstyle=None):
-        """Create a ConnectionWrapper around the given PEP 249 connection 
+        """Create a ConnectionWrapper around the given PEP 249 connection
 
-           If no default ConnectionWrapper already exists, the new 
+           If no default ConnectionWrapper already exists, the new
            ConnectionWrapper is set as the default.
 
            Arguments:
@@ -542,8 +563,8 @@ class ConnectionWrapper(object):
            - stmtcachesize: A number deciding how many translated statements to
              cache. A statement needs to be translated when the connection
              does not use 'pyformat' to specify parameters. When 'pyformat' is
-             used, stmtcachesize is ignored as no statements need to be 
-             translated. 
+             used, stmtcachesize is ignored as no statements need to be
+             translated.
            - paramstyle: A string holding the name of the PEP 249 connection's
              paramstyle. If None, pygrametl will try to find the paramstyle
              automatically (an AttributeError can be raised if that fails).
@@ -562,28 +583,27 @@ class ConnectionWrapper(object):
                 # this way if the first approach didn't work
                 try:
                     paramstyle = \
-                        modules[self.__connection.__class__.__module__.\
-                                    split('.')[0]].paramstyle
+                        modules[self.__connection.__class__.__module__.
+                                split('.')[0]].paramstyle
                 except AttributeError:
                     # To support, e.g., mysql.connector connections
                     paramstyle = \
-                        modules[self.__connection.__class__.__module__.\
-                                    rsplit('.', 1)[0]].paramstyle
+                        modules[self.__connection.__class__.__module__.
+                                rsplit('.', 1)[0]].paramstyle
 
         if not paramstyle == 'pyformat':
             self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, '_translate2' + paramstyle)
             except AttributeError:
-                raise InterfaceError("The paramstyle '%s' is not supported" %\
-                    paramstyle)
+                raise InterfaceError("The paramstyle '%s' is not supported" %
+                                     paramstyle)
         else:
             self.__translate = None
 
         global _defaulttargetconnection
         if _defaulttargetconnection is None:
             _defaulttargetconnection = self
-
 
     def execute(self, stmt, arguments=None, namemapping=None, translate=True):
         """Execute a statement.
@@ -592,7 +612,7 @@ class ConnectionWrapper(object):
            - stmt: the statement to execute
            - arguments: a mapping with the arguments (default: None)
            - namemapping: a mapping of names such that if stmt uses %(arg)s
-             and namemapping[arg]=arg2, the value arguments[arg2] is used 
+             and namemapping[arg]=arg2, the value arguments[arg2] is used
              instead of arguments[arg]
            - translate: decides if translation from 'pyformat' to the
              undlying connection's format should take place. Default: True
@@ -610,13 +630,14 @@ class ConnectionWrapper(object):
             # reuse the statement (but create new attribute sequences if needed)
             # for the remaining paramter sets
             newstmt = self.__translate(stmt, params[0])[0]
-            if type(self.__translations[stmt]) == str:
+            if isinstance(self.__translations[stmt], str):
                 # The paramstyle is 'named' in this case and we don't have to
                 # put parameters into sequences
                 self.__cursor.executemany(newstmt, params)
             else:
                 # We need to extract attributes and put them into sequences
-                names = self.__translations[stmt][1] # The attributes to extract
+                # The attributes to extract
+                names = self.__translations[stmt][1]
                 newparams = [[p[n] for n in names] for p in params]
                 self.__cursor.executemany(newstmt, newparams)
         else:
@@ -632,13 +653,13 @@ class ConnectionWrapper(object):
         res = stmt
         while True:
             start = res.find('%(')
-            if start == -1: 
+            if start == -1:
                 break
             end = res.find(')s', start)
-            if end == -1: 
+            if end == -1:
                 break
-            name = res[start+2 : end]
-            res = res.replace(res[start:end+2], ':' + name)
+            name = res[start + 2: end]
+            res = res.replace(res[start:end + 2], ':' + name)
         self.__translations[stmt] = res
         return (res, row)
 
@@ -655,11 +676,12 @@ class ConnectionWrapper(object):
             if start == -1:
                 break
             end = newstmt.find(')s', start)
-            if end == -1: 
+            if end == -1:
                 break
-            name = newstmt[start+2 : end]
+            name = newstmt[start + 2: end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end+2], '?',1)#Replace once!
+            newstmt = newstmt.replace(
+                newstmt[start:end +2],'?',1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -677,15 +699,14 @@ class ConnectionWrapper(object):
             if start == -1:
                 break
             end = newstmt.find(')s', start)
-            if end == -1: 
+            if end == -1:
                 break
-            name = newstmt[start+2 : end]
+            name = newstmt[start + 2: end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end+2], ':' + str(cnt))
+            newstmt = newstmt.replace(newstmt[start:end + 2], ':' + str(cnt))
             cnt += 1
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
-        
 
     def _translate2format(self, stmt, row=None):
         # Translate %(name)s to %s and build a list of attributes to extract
@@ -700,22 +721,26 @@ class ConnectionWrapper(object):
             if start == -1:
                 break
             end = newstmt.find(')s', start)
-            if end == -1: 
+            if end == -1:
                 break
-            name = newstmt[start+2 : end]
+            name = newstmt[start + 2: end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end+2],'%s',1)#Replace once!
+            newstmt = newstmt.replace(
+                newstmt[
+                    start:end +
+                    2],
+                '%s',
+                1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
-
 
     def rowfactory(self, names=None):
         """Return a generator object returning result rows (i.e. dicts)."""
         rows = self.__cursor
         self.__cursor = self.__connection.cursor()
         if names is None:
-            if rows.description is None: # no query was executed ...
-                return (nothing for nothing in []) # a generator with no rows
+            if rows.description is None:  # no query was executed ...
+                return (nothing for nothing in [])  # a generator with no rows
             else:
                 names = [self.nametranslator(t[0]) for t in rows.description]
         return rowfactory(rows, names, True)
@@ -725,11 +750,12 @@ class ConnectionWrapper(object):
         if self.__cursor.description is None:
             return {}
         if names is None:
-            names = [self.nametranslator(t[0]) \
-                         for t in self.__cursor.description]
+            names = [self.nametranslator(t[0])
+                     for t in self.__cursor.description]
         values = self.__cursor.fetchone()
         if values is None:
-            return dict([(n, None) for n in names])#A row with each att = None
+            # A row with each att = None
+            return dict([(n, None) for n in names])
         else:
             return dict(zip(names, values))
 
@@ -795,7 +821,7 @@ class ConnectionWrapper(object):
         # In case the ConnectionWrapper is pickled (to be sent to another
         # process), we need to create a new cursor when it is unpickled.
         res = self.__dict__.copy()
-        del res['_ConnectionWrapper__cursor'] # a dirty trick, but...
+        del res['_ConnectionWrapper__cursor']  # a dirty trick, but...
         return res
 
     def __setstate__(self, dict):
@@ -804,14 +830,15 @@ class ConnectionWrapper(object):
 
 
 class BackgroundConnectionWrapper(object):
+
     """An alternative implementation of the ConnectionWrapper for experiments.
        This implementation communicates with the database by using a
        separate thread.
 
-       It is likely better to use ConnectionWrapper og a shared 
+       It is likely better to use ConnectionWrapper og a shared
        ConnectionWrapper (see pygrametl.parallel).
 
-       This class offers the same methods as ConnectionWrapper. The 
+       This class offers the same methods as ConnectionWrapper. The
        documentation is not repeated here.
     """
     _SINGLE = 1
@@ -835,21 +862,21 @@ class BackgroundConnectionWrapper(object):
                 # this way if the first approach didn't work
                 try:
                     paramstyle = \
-                        modules[self.__connection.__class__.__module__.\
-                                    split('.')[0]].paramstyle
+                        modules[self.__connection.__class__.__module__.
+                                split('.')[0]].paramstyle
                 except AttributeError:
                     # To support, e.g., mysql.connector connections
                     paramstyle = \
-                        modules[self.__connection.__class__.__module__.\
-                                    rsplit('.', 1)[0]].paramstyle
+                        modules[self.__connection.__class__.__module__.
+                                rsplit('.', 1)[0]].paramstyle
 
         if not paramstyle == 'pyformat':
             self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, '_translate2' + paramstyle)
             except AttributeError:
-                raise InterfaceError("The paramstyle '%s' is not supported" %\
-                    paramstyle)
+                raise InterfaceError("The paramstyle '%s' is not supported" %
+                                     paramstyle)
         else:
             self.__translate = None
 
@@ -860,14 +887,12 @@ class BackgroundConnectionWrapper(object):
         t.daemon = True
         t.start()
 
-
     def execute(self, stmt, arguments=None, namemapping=None, translate=True):
         if namemapping and arguments:
             arguments = copy(arguments, **namemapping)
         if self.__translate and translate:
             (stmt, arguments) = self.__translate(stmt, arguments)
-        self.__queue.put((self._SINGLE, self.__cursor, stmt, arguments)) 
-
+        self.__queue.put((self._SINGLE, self.__cursor, stmt, arguments))
 
     def executemany(self, stmt, params, translate=True):
         if self.__translate and translate:
@@ -875,15 +900,20 @@ class BackgroundConnectionWrapper(object):
             # reuse the statement (but create new attribute sequences if needed)
             # for the remaining paramter sets
             newstmt = self.__translate(stmt, params[0])[0]
-            if type(self.__translations[stmt]) == str:
+            if isinstance(self.__translations[stmt], str):
                 # The paramstyle is 'named' in this case and we don't have to
                 # put parameters into sequences
                 self.__queue.put((self._MANY, self.__cursor, newstmt, params))
             else:
                 # We need to extract attributes and put them into sequences
-                names = self.__translations[stmt][1] # The attributes to extract
+                # The attributes to extract
+                names = self.__translations[stmt][1]
                 newparams = [[p[n] for n in names] for p in params]
-                self.__queue.put((self._MANY,self.__cursor, newstmt, newparams))
+                self.__queue.put(
+                    (self._MANY,
+                     self.__cursor,
+                     newstmt,
+                     newparams))
         else:
             # for pyformat when no translation is necessary
             self.__queue.put((self._MANY, self.__cursor, stmt, params))
@@ -900,8 +930,8 @@ class BackgroundConnectionWrapper(object):
             if start == -1:
                 break
             end = res.find(')s', start)
-            name = res[start+2 : end]
-            res = res.replace(res[start:end+2], ':' + name)
+            name = res[start + 2: end]
+            res = res.replace(res[start:end + 2], ':' + name)
         self.__translations[stmt] = res
         return (res, row)
 
@@ -918,9 +948,10 @@ class BackgroundConnectionWrapper(object):
             if start == -1:
                 break
             end = newstmt.find(')s', start)
-            name = newstmt[start+2 : end]
+            name = newstmt[start + 2: end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end+2], '?',1)#Replace once!
+            newstmt = newstmt.replace(
+                newstmt[start:end + 2],'?',1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -938,13 +969,12 @@ class BackgroundConnectionWrapper(object):
             if start == -1:
                 break
             end = newstmt.find(')s', start)
-            name = newstmt[start+2 : end]
+            name = newstmt[start + 2: end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end+2], ':' + str(cnt))
+            newstmt = newstmt.replace(newstmt[start:end + 2], ':' + str(cnt))
             cnt += 1
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
-        
 
     def _translate2format(self, stmt, row=None):
         # Translate %(name)s to %s and build a list of attributes to extract
@@ -959,20 +989,20 @@ class BackgroundConnectionWrapper(object):
             if start == -1:
                 break
             end = newstmt.find(')s', start)
-            name = newstmt[start+2 : end]
+            name = newstmt[start + 2: end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end+2],'%s',1)#Replace once!
+            newstmt = newstmt.replace(
+                newstmt[start:end + 2],'%s',1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
-
 
     def rowfactory(self, names=None):
         self.__queue.join()
         rows = self.__cursor
         self.__cursor = self.__connection.cursor()
         if names is None:
-            if rows.description is None: # no query was executed ...
-                return (nothing for nothing in []) # a generator with no rows
+            if rows.description is None:  # no query was executed ...
+                return (nothing for nothing in [])  # a generator with no rows
             else:
                 names = [self.nametranslator(t[0]) for t in rows.description]
         return rowfactory(rows, names, True)
@@ -982,11 +1012,12 @@ class BackgroundConnectionWrapper(object):
         if self.__cursor.description is None:
             return {}
         if names is None:
-            names = [self.nametranslator(t[0]) \
-                         for t in self.__cursor.description]
+            names = [self.nametranslator(t[0])
+                     for t in self.__cursor.description]
         values = self.__cursor.fetchone()
         if values is None:
-            return dict([(n, None) for n in names])#A row with each att = None
+            # A row with each att = None
+            return dict([(n, None) for n in names])
         else:
             return dict(zip(names, values))
 
@@ -1052,7 +1083,7 @@ class BackgroundConnectionWrapper(object):
         # In case the ConnectionWrapper is pickled (to be sent to another
         # process), we need to create a new cursor when it is unpickled.
         res = self.__dict__.copy()
-        del res['_ConnectionWrapper__cursor'] # a dirty trick, but...
+        del res['_ConnectionWrapper__cursor']  # a dirty trick, but...
 
     def __setstate__(self, dict):
         self.__dict__.update(dict)
@@ -1070,6 +1101,7 @@ class BackgroundConnectionWrapper(object):
 
 class Error(_DBBaseException):
     pass
+
 
 class InterfaceError(Error):
     pass

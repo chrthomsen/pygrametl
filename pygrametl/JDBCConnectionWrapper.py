@@ -1,4 +1,4 @@
-"""This module holds a ConnectionWrapper that is used with a 
+"""This module holds a ConnectionWrapper that is used with a
    JDBC Connection. The module should only be used when running Jython.
 """
 
@@ -26,12 +26,15 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import java.sql as jdbc
-
 from copy import copy as pcopy
 from datetime import datetime
 from sys import modules
 from threading import Thread
+
+import java.sql as jdbc
+import pygrametl
+from pygrametl.FIFODict import FIFODict
+
 
 # Needed for both pip2 and pip3 to be supported
 try:
@@ -39,8 +42,6 @@ try:
 except ImportError:
     from queue import Queue
 
-import pygrametl
-from pygrametl.FIFODict import FIFODict
 
 # NOTE: This module is made for Jython.
 
@@ -51,11 +52,12 @@ __all__ = ['JDBCConnectionWrapper', 'BackgroundJDBCConnectionWrapper']
 
 
 class JDBCConnectionWrapper(object):
+
     """Wrap a JDBC Connection.
 
-       All Dimension and FactTable communicate with the data warehouse using 
+       All Dimension and FactTable communicate with the data warehouse using
        a ConnectionWrapper. In this way, the code for loading the DW does not
-       have to care about which parameter format is used.  
+       have to care about which parameter format is used.
        This ConnectionWrapper is a special one for JDBC in Jython.
     """
 
@@ -97,11 +99,11 @@ class JDBCConnectionWrapper(object):
             if start == -1:
                 break
             end = newsql.find(')s', start)
-            if end == -1: 
+            if end == -1:
                 break
-            name = newsql[start+2 : end]
+            name = newsql[start + 2: end]
             names.append(name)
-            newsql = newsql.replace(newsql[start:end+2], '?', 1)
+            newsql = newsql.replace(newsql[start:end + 2], '?', 1)
 
         ps = self.__jdbcconn.prepareStatement(newsql)
 
@@ -109,7 +111,7 @@ class JDBCConnectionWrapper(object):
         types = []
         parmeta = ps.getParameterMetaData()
         for i in range(len(names)):
-            types.append(parmeta.getParameterType(i+1))
+            types.append(parmeta.getParameterType(i + 1))
 
         self.__prepstmts[sql] = (ps, names, types)
 
@@ -121,7 +123,8 @@ class JDBCConnectionWrapper(object):
             self.__preparejdbcstmt(sql)
         (ps, names, types) = self.__prepstmts[sql]
 
-        for pos in range(len(names)): # Not very Pythonic, but we're doing Java
+        # Not very Pythonic, but we're doing Java
+        for pos in range(len(names)):
             if args[names[pos]] is None:
                 ps.setNull(pos + 1, types[pos])
             else:
@@ -144,8 +147,8 @@ class JDBCConnectionWrapper(object):
         names = []
         types = []
         for col in range(meta.getColumnCount()):
-            names.append(meta.getColumnName(col+1))
-            types.append(meta.getColumnType(col+1))
+            names.append(meta.getColumnName(col + 1))
+            types.append(meta.getColumnType(col + 1))
         return (names, types)
 
     def __readresultrow(self):
@@ -153,26 +156,26 @@ class JDBCConnectionWrapper(object):
             return None
         result = []
         for i in range(len(self.__resulttypes)):
-            e = self.__resulttypes[i] # Not Pythonic, but we need i for JDBC
-            if e in (jdbc.Types.CHAR, jdbc.Types.VARCHAR, 
+            e = self.__resulttypes[i]  # Not Pythonic, but we need i for JDBC
+            if e in (jdbc.Types.CHAR, jdbc.Types.VARCHAR,
                      jdbc.Types.LONGVARCHAR):
-                result.append(self.__resultset.getString(i+1))
+                result.append(self.__resultset.getString(i + 1))
             elif e in (jdbc.Types.BIT, jdbc.Types.BOOLEAN):
-                result.append(self.__resultset.getBool(i+1))
-            elif e in (jdbc.Types.TINYINT, jdbc.Types.SMALLINT, 
+                result.append(self.__resultset.getBool(i + 1))
+            elif e in (jdbc.Types.TINYINT, jdbc.Types.SMALLINT,
                        jdbc.Types.INTEGER):
-                result.append(self.__resultset.getInt(i+1))
+                result.append(self.__resultset.getInt(i + 1))
             elif e in (jdbc.Types.BIGINT, ):
-                result.append(self.__resultset.getLong(i+1))
+                result.append(self.__resultset.getLong(i + 1))
             elif e in (jdbc.Types.DATE, ):
-                result.append(self.__resultset.getDate(i+1))
+                result.append(self.__resultset.getDate(i + 1))
             elif e in (jdbc.Types.TIMESTAMP, ):
-                result.append(self.__resultset.getTimestamp(i+1))
+                result.append(self.__resultset.getTimestamp(i + 1))
             elif e in (jdbc.Types.TIME, ):
-                result.append(self.__resultset.getTime(i+1))
+                result.append(self.__resultset.getTime(i + 1))
             else:
                 # Try this and hope for the best...
-                result.append(self.__resultset.getString(i+1))
+                result.append(self.__resultset.getString(i + 1))
         return tuple(result)
 
     def execute(self, stmt, arguments=None, namemapping=None, ignored=None):
@@ -182,9 +185,9 @@ class JDBCConnectionWrapper(object):
            - stmt: the statement to execute
            - arguments: a mapping with the arguments. Default: None.
            - namemapping: a mapping of names such that if stmt uses %(arg)s
-             and namemapping[arg]=arg2, the value arguments[arg2] is used 
+             and namemapping[arg]=arg2, the value arguments[arg2] is used
              instead of arguments[arg]
-           - ignored: An ignored argument only present to accept the same 
+           - ignored: An ignored argument only present to accept the same
              number of arguments as ConnectionWrapper.execute
         """
         if namemapping and arguments:
@@ -197,7 +200,7 @@ class JDBCConnectionWrapper(object):
            Arguments:
            - stmt: the statement to execute
            - params: a sequence of arguments
-           - ignored: An ignored argument only present to accept the same 
+           - ignored: An ignored argument only present to accept the same
              number of arguments as ConnectionWrapper.executemany
         """
         for paramset in params:
@@ -262,7 +265,7 @@ class JDBCConnectionWrapper(object):
 
     def rowcount(self):
         """Not implemented. Return 0. Should return the size of the result."""
-        return 0 
+        return 0
 
     def getunderlyingmodule(self):
         """Return a reference to the underlying connection's module."""
@@ -298,23 +301,25 @@ class JDBCConnectionWrapper(object):
 # BackgroundJDBCConnectionWrapper is added for experiments. It is quite similar
 # to JDBCConnectionWrapper and one of them may be removed.
 
+
 class BackgroundJDBCConnectionWrapper(object):
+
     """Wrap a JDBC Connection and do all DB communication in the background.
 
-       All Dimension and FactTable communicate with the data warehouse using 
+       All Dimension and FactTable communicate with the data warehouse using
        a ConnectionWrapper. In this way, the code for loading the DW does not
        have to care about which parameter format is used.
-       This ConnectionWrapper is a special one for JDBC in Jython and does DB 
+       This ConnectionWrapper is a special one for JDBC in Jython and does DB
        communication from a Thread.
 
        .. Note::
-          BackgroundJDBCConnectionWrapper is added for experiments. 
-          It is quite similar to JDBCConnectionWrapper and one of them may be 
+          BackgroundJDBCConnectionWrapper is added for experiments.
+          It is quite similar to JDBCConnectionWrapper and one of them may be
           removed.
     """
 
     def __init__(self, jdbcconn, stmtcachesize=20):
-        """Create a ConnectionWrapper around the given JDBC connection 
+        """Create a ConnectionWrapper around the given JDBC connection
 
            Arguments:
            - jdbcconn: An open JDBC Connection (not a PEP249 Connection)
@@ -353,11 +358,11 @@ class BackgroundJDBCConnectionWrapper(object):
             if start == -1:
                 break
             end = newsql.find(')s', start)
-            if end == -1: 
+            if end == -1:
                 break
-            name = newsql[start+2 : end]
+            name = newsql[start + 2: end]
             names.append(name)
-            newsql = newsql.replace(newsql[start:end+2], '?', 1)
+            newsql = newsql.replace(newsql[start:end + 2], '?', 1)
 
         ps = self.__jdbcconn.prepareStatement(newsql)
 
@@ -365,7 +370,7 @@ class BackgroundJDBCConnectionWrapper(object):
         types = []
         parmeta = ps.getParameterMetaData()
         for i in range(len(names)):
-            types.append(parmeta.getParameterType(i+1))
+            types.append(parmeta.getParameterType(i + 1))
 
         self.__prepstmts[sql] = (ps, names, types)
 
@@ -377,7 +382,8 @@ class BackgroundJDBCConnectionWrapper(object):
             self.__preparejdbcstmt(sql)
         (ps, names, types) = self.__prepstmts[sql]
 
-        for pos in range(len(names)): # Not very Pythonic, but we're doing Java
+        # Not very Pythonic, but we're doing Java
+        for pos in range(len(names)):
             if args[names[pos]] is None:
                 ps.setNull(pos + 1, types[pos])
             else:
@@ -400,8 +406,8 @@ class BackgroundJDBCConnectionWrapper(object):
         names = []
         types = []
         for col in range(meta.getColumnCount()):
-            names.append(meta.getColumnName(col+1))
-            types.append(meta.getColumnType(col+1))
+            names.append(meta.getColumnName(col + 1))
+            types.append(meta.getColumnType(col + 1))
         return (names, types)
 
     def __readresultrow(self):
@@ -409,26 +415,26 @@ class BackgroundJDBCConnectionWrapper(object):
             return None
         result = []
         for i in range(len(self.__resulttypes)):
-            e = self.__resulttypes[i] # Not Pythonic, but we need i for JDBC
-            if e in (jdbc.Types.CHAR, jdbc.Types.VARCHAR, 
+            e = self.__resulttypes[i]  # Not Pythonic, but we need i for JDBC
+            if e in (jdbc.Types.CHAR, jdbc.Types.VARCHAR,
                      jdbc.Types.LONGVARCHAR):
-                result.append(self.__resultset.getString(i+1))
+                result.append(self.__resultset.getString(i + 1))
             elif e in (jdbc.Types.BIT, jdbc.Types.BOOLEAN):
-                result.append(self.__resultset.getBool(i+1))
-            elif e in (jdbc.Types.TINYINT, jdbc.Types.SMALLINT, 
+                result.append(self.__resultset.getBool(i + 1))
+            elif e in (jdbc.Types.TINYINT, jdbc.Types.SMALLINT,
                        jdbc.Types.INTEGER):
-                result.append(self.__resultset.getInt(i+1))
+                result.append(self.__resultset.getInt(i + 1))
             elif e in (jdbc.Types.BIGINT, ):
-                result.append(self.__resultset.getLong(i+1))
+                result.append(self.__resultset.getLong(i + 1))
             elif e in (jdbc.Types.DATE, ):
-                result.append(self.__resultset.getDate(i+1))
+                result.append(self.__resultset.getDate(i + 1))
             elif e in (jdbc.Types.TIMESTAMP, ):
-                result.append(self.__resultset.getTimestamp(i+1))
+                result.append(self.__resultset.getTimestamp(i + 1))
             elif e in (jdbc.Types.TIME, ):
-                result.append(self.__resultset.getTime(i+1))
+                result.append(self.__resultset.getTime(i + 1))
             else:
                 # Try this and hope for the best...
-                result.append(self.__resultset.getString(i+1))
+                result.append(self.__resultset.getString(i + 1))
         return tuple(result)
 
     def execute(self, stmt, arguments=None, namemapping=None, ignored=None):
@@ -438,9 +444,9 @@ class BackgroundJDBCConnectionWrapper(object):
            - stmt: the statement to execute
            - arguments: a mapping with the arguments. Default: None.
            - namemapping: a mapping of names such that if stmt uses %(arg)s
-             and namemapping[arg]=arg2, the value arguments[arg2] is used 
+             and namemapping[arg]=arg2, the value arguments[arg2] is used
              instead of arguments[arg]
-           - ignored: An ignored argument only present to accept the same 
+           - ignored: An ignored argument only present to accept the same
              number of arguments as ConnectionWrapper.execute
         """
         if namemapping and arguments:
@@ -455,7 +461,7 @@ class BackgroundJDBCConnectionWrapper(object):
            Arguments:
            - stmt: the statement to execute
            - params: a sequence of arguments
-           - ignored: An ignored argument only present to accept the same 
+           - ignored: An ignored argument only present to accept the same
              number of arguments as ConnectionWrapper.executemany
         """
         for paramset in params:
@@ -525,7 +531,7 @@ class BackgroundJDBCConnectionWrapper(object):
 
     def rowcount(self):
         """Not implemented. Return 0. Should return the size of the result."""
-        return 0 
+        return 0
 
     def getunderlyingmodule(self):
         """Return a reference to the underlying connection's module."""
@@ -562,9 +568,10 @@ class BackgroundJDBCConnectionWrapper(object):
         else:
             return tuple(self.__resultnames)
 
+
 def Date(year, month, day):
     date = '%s-%s-%s' % \
-        (str(year).zfill(4), str(month).zfill(2), str(day).zfill(2)) 
+        (str(year).zfill(4), str(month).zfill(2), str(day).zfill(2))
     return jdbc.Date.valueOf(date)
 
 

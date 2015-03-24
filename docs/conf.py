@@ -12,10 +12,15 @@
 # serve to show the default.
 
 
-# -- Interpreter configuration -------------------------------------------------
+# -- Interpreter configuration -------------------------------------------
 
-import sys, os
 from os.path import abspath, dirname, join
+import sys
+import os
+
+import rtdmockup
+from version import get_package_version
+
 
 # Make sure we get this copy of pygrametl, and not one on the system
 sys.path.insert(1, dirname(dirname(abspath(__file__))))
@@ -26,17 +31,16 @@ sys.path.insert(1, dirname(dirname(abspath(__file__))))
 sys.path.insert(0, os.path.abspath('_exts'))
 
 # Prevents the creation of .pyc and .pyo by the Python interpreter
-sys.dont_write_bytecode=True
+sys.dont_write_bytecode = True
 
-# We setup mocking of Java code used in the Jython modules used in the framework
-import rtdmockup
+# We setup mocking of Java code used in the Jython modules used in the
+# framework
 rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
 
 # We import the version extraction script to automatically extract the version
-from version import get_package_version
 
 
-# -- General configuration -----------------------------------------------------
+# -- General configuration -----------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #needs_sphinx = '1.0'
@@ -105,12 +109,13 @@ pygments_style = 'sphinx'
 #modindex_common_prefix = []
 
 
-# -- Options for Autodoc -------------------------------------------------------
+# -- Options for Autodoc -------------------------------------------------
 
-# Both the class’ and the __init__ method’s docstring are concatenated and inserted.
+# Both the class’ and the __init__ method’s docstring are concatenated and
+# inserted.
 autoclass_content = 'both'
 
-# -- Options for HTML output ---------------------------------------------------
+# -- Options for HTML output ---------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -190,27 +195,27 @@ html_static_path = ['_static']
 htmlhelp_basename = 'pygrametldoc'
 
 
-# -- Options for LaTeX output --------------------------------------------------
+# -- Options for LaTeX output --------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    #'papersize': 'letterpaper',
 
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    #'pointsize': '10pt',
 
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    #'preamble': '',
 
-# Removes the index from the finnished pdf
-'printindex' : ''
+    # Removes the index from the finnished pdf
+    'printindex': ''
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'pygrametl.tex', u'pygrametl Documentation',
-   u'Aalborg Universitet', 'manual'),
+    ('index', 'pygrametl.tex', u'pygrametl Documentation',
+     u'Aalborg Universitet', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -234,7 +239,7 @@ latex_documents = [
 latex_domain_indices = False
 
 
-# -- Options for manual page output --------------------------------------------
+# -- Options for manual page output --------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
@@ -247,15 +252,15 @@ man_pages = [
 #man_show_urls = False
 
 
-# -- Options for Texinfo output ------------------------------------------------
+# -- Options for Texinfo output ------------------------------------------
 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'pygrametl', u'pygrametl Documentation',
-   u'Aalborg Universitet', 'pygrametl', 'One line description of project.',
-   'Miscellaneous'),
+    ('index', 'pygrametl', u'pygrametl Documentation',
+     u'Aalborg Universitet', 'pygrametl', 'One line description of project.',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -266,4 +271,3 @@ texinfo_domain_indices = False
 
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 #texinfo_show_urls = 'footnote'
-

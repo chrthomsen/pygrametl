@@ -30,6 +30,7 @@
 import re
 import sys
 
+
 def correct_docstring(app, what, name, obj, options, lines):
     """Makes some correction to the markup, this should keep it readable in
         the source files, and having the output formatted using Sphinx.
@@ -42,14 +43,16 @@ def correct_docstring(app, what, name, obj, options, lines):
         if '\\t' in value or '\\n' in value:
             lines[index] = lines[index].replace("\\", "\\\\")
 
-        # Escapes * in argument descriptions to stop Sphinx using them as markup
+        # Escapes * in argument descriptions to stop Sphinx using them as
+        # markup
         if '*' in value:
             lines[index] = escape_star(value)
 
         # Formatting of the arguments header with bold and a newline
         if value == 'Arguments:' or value == 'Keyword arguments:':
             lines[index] = '**' + value + '**'
-            lines.insert(index+1, '')
+            lines.insert(index + 1, '')
+
 
 def escape_star(line):
     """Escape all unmatched stars (*) so Sphinx know they aren't markup"""
@@ -82,6 +85,7 @@ def correct_signature(app, what, name, obj, options, signature,
 
     # Side effects are discarded, so we have to return a tuple with new strings
     return(signature, return_annotation)
+
 
 def correct_function_pointers(obj, signature):
     """Manuel mapping of function pointers with addresses to their original
@@ -118,10 +122,11 @@ def correct_function_pointers(obj, signature):
     source_code_line_split[-1] = source_code_line_split[-1][0:-1]
 
     if source_code_line_split[0] == '(self':
-         del(source_code_line_split[0])
-         source_code_line_split[0] = '(' + source_code_line_split[0]
+        del(source_code_line_split[0])
+        source_code_line_split[0] = '(' + source_code_line_split[0]
 
-    # Finally we substitute the pointers with the matching line from source code
+    # Finally we substitute the pointers with the matching line from source
+    # code
     result_string_list = []
     for sig, source in zip(signature_split, source_code_line_split):
         if '<function ' in sig:
@@ -131,6 +136,7 @@ def correct_function_pointers(obj, signature):
 
     # The function pointer block is just replaced with the function_name
     return ','.join(result_string_list)
+
 
 def read_function_signature(filename, lineno):
 
@@ -159,7 +165,8 @@ def read_function_signature(filename, lineno):
 
     # Finally the all white space is removed from the signature to make it
     # simpler to process in "correct_function_pointers(obj, signature)"
-    return function_signature#.strip()
+    return function_signature  # .strip()
+
 
 def setup(app):
     """Initial setup that connects the plug-in to Sphinx"""

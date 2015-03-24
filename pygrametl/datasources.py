@@ -28,8 +28,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from csv import DictReader
-
 import sys
+
+
 if sys.platform.startswith('java'):
     # Jython specific code
     from pygrametl.jythonmultiprocessing import Queue, Process
@@ -37,9 +38,9 @@ else:
     from multiprocessing import Queue, Process
 
 try:
-    from Queue import Empty # Python 2
+    from Queue import Empty  # Python 2
 except ImportError:
-    from queue import Empty # Python 3
+    from queue import Empty  # Python 3
 
 # Jython 2.5.X specific code
 try:
@@ -50,9 +51,9 @@ except NameError:
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
 __version__ = '2.3'
-__all__ = ['CSVSource', 'SQLSource', 'JoiningSource', 'HashJoiningSource', 
-           'MergeJoiningSource', 'BackgroundSource', 'ProcessSource', 
-           'TransformingSource', 'UnionSource', 'CrossTabbingSource', 
+__all__ = ['CSVSource', 'SQLSource', 'JoiningSource', 'HashJoiningSource',
+           'MergeJoiningSource', 'BackgroundSource', 'ProcessSource',
+           'TransformingSource', 'UnionSource', 'CrossTabbingSource',
            'FilteringSource', 'DynamicForEachSource', 'RoundRobinSource']
 
 
@@ -60,10 +61,11 @@ CSVSource = DictReader
 
 
 class SQLSource(object):
+
     """A class for iterating the result set of a single SQL query."""
 
-    def __init__(self, connection, query, names=(), initsql=None, \
-                     cursorarg=None, parameters=None):
+    def __init__(self, connection, query, names=(), initsql=None,
+                 cursorarg=None, parameters=None):
         """Arguments:
            - connection: the PEP 249 connection to use. NOT a ConnectionWrapper!
            - query: the query that generates the result
@@ -110,8 +112,8 @@ class SQLSource(object):
                     # psycopg2 cursor.
                     names = [t[0] for t in self.cursor.description]
                 if len(names) != len(data[0]):
-                    raise ValueError(\
-                        "Incorrect number of names provided. " + \
+                    raise ValueError(
+                        "Incorrect number of names provided. " +
                         "%d given, %d needed." % (len(names), len(data[0])))
                 for row in data:
                     yield dict(zip(names, row))
@@ -123,6 +125,7 @@ class SQLSource(object):
 
 
 class ProcessSource(object):
+
     """A class for iterating another source in a separate process"""
 
     def __init__(self, source, batchsize=500, queuesize=20):
@@ -133,7 +136,7 @@ class ProcessSource(object):
            - queuesize: the maximum number of batches that can wait in a queue
              between the processes. 0 means unlimited. Default: 20
         """
-        if type(batchsize) != int or batchsize < 1:
+        if not isinstance(batchsize, int) or batchsize < 1:
             raise ValueError('batchsize must be a positive integer')
         self.__source = source
         self.__batchsize = batchsize
@@ -143,7 +146,7 @@ class ProcessSource(object):
         p.start()
 
     def __worker(self):
-        batch = []    
+        batch = []
         try:
             for row in self.__source:
                 batch.append(row)
@@ -175,12 +178,13 @@ class ProcessSource(object):
             for row in data:
                 yield row
 
-BackgroundSource = ProcessSource # for compatability
-# The old thread-based BackgroundSource has been removed and 
+BackgroundSource = ProcessSource  # for compatability
+# The old thread-based BackgroundSource has been removed and
 # replaced by ProcessSource
 
 
 class HashJoiningSource(object):
+
     """A class for equi-joining two data sources."""
 
     def __init__(self, src1, key1, src2, key2):
@@ -215,10 +219,11 @@ class HashJoiningSource(object):
                 yield newrow
 
 
-JoiningSource = HashJoiningSource # for compatability
+JoiningSource = HashJoiningSource  # for compatability
 
 
 class MergeJoiningSource(object):
+
     """A class for merge-joining two sorted data sources"""
 
     def __init__(self, src1, key1, src2, key2):
@@ -243,7 +248,7 @@ class MergeJoiningSource(object):
         rows2 = self.__getnextrows(iter2)
         keyval2 = rows2[0][self.__key2]
 
-        while True: # At one point there will be a StopIteration
+        while True:  # At one point there will be a StopIteration
             if keyval1 == keyval2:
                 # Output rows
                 for part in rows2:
@@ -255,7 +260,7 @@ class MergeJoiningSource(object):
             elif keyval1 < keyval2:
                 row1 = next(iter1)
                 keyval1 = row1[self.__key1]
-            else: # k1 > k2
+            else:  # k1 > k2
                 rows2 = self.__getnextrows(iter2)
                 keyval2 = rows2[0][self.__key2]
 
@@ -275,7 +280,7 @@ class MergeJoiningSource(object):
                 else:
                     raise
             if keyval is None:
-                keyval = row[self.__key2] # for the first row in this round
+                keyval = row[self.__key2]  # for the first row in this round
             if row[self.__key2] == keyval:
                 res.append(row)
             else:
@@ -284,12 +289,13 @@ class MergeJoiningSource(object):
 
 
 class TransformingSource(object):
+
     """A source that applies functions to the rows from another source"""
 
     def __init__(self, source, *transformations):
         """Arguments:
         - source: a data source
-        - *transformations: the transformations to apply. Must be callables 
+        - *transformations: the transformations to apply. Must be callables
           of the form func(row) where row is a dict. Will be applied in the
           given order.
         """
@@ -304,13 +310,14 @@ class TransformingSource(object):
 
 
 class CrossTabbingSource(object):
+
     """A source that produces a crosstab from another source"""
 
     def __init__(self, source, rowvaluesatt, colvaluesatt, values,
                  aggregator=None, nonevalue=0, sortrows=False):
         """Arguments:
         - source: the data source to pull data from
-        - rowvaluesatt: the name of the attribute that holds the values that 
+        - rowvaluesatt: the name of the attribute that holds the values that
           appear as rows in the result
         - colvaluesatt: the name of the attribute that holds the values that
           appear as columns in the result
@@ -333,11 +340,11 @@ class CrossTabbingSource(object):
             self.__aggregator = aggregator
         self.__nonevalue = nonevalue
         self.__sortrows = sortrows
-        self.__allcolumns = set()  
+        self.__allcolumns = set()
         self.__allrows = set()
-        
+
     def __iter__(self):
-        for data in self.__source: # first we iterate over all source data ...
+        for data in self.__source:  # first we iterate over all source data ...
             row = data[self.__rowvaluesatt]
             col = data[self.__colvaluesatt]
             self.__allrows.add(row)
@@ -345,9 +352,9 @@ class CrossTabbingSource(object):
             self.__aggregator.process((row, col), data[self.__values])
 
         # ... and then we build result rows
-        for row in (self.__sortrows and sorted(self.__allrows) \
-                        or self.__allrows): 
-            res = {self.__rowvaluesatt : row}
+        for row in (self.__sortrows and sorted(self.__allrows)
+                    or self.__allrows):
+            res = {self.__rowvaluesatt: row}
             for col in self.__allcolumns:
                 res[col] = \
                     self.__aggregator.finish((row, col), self.__nonevalue)
@@ -355,6 +362,7 @@ class CrossTabbingSource(object):
 
 
 class FilteringSource(object):
+
     """A source that applies a filter to another source"""
 
     def __init__(self, source, filter=bool):
@@ -375,6 +383,7 @@ class FilteringSource(object):
 
 
 class UnionSource(object):
+
     """A source to union other sources (possibly with different types of rows).
     All rows are read from the 1st source before rows are read from the 2nd
     source and so on (to interleave the rows, use a RoundRobinSource)
@@ -393,24 +402,26 @@ class UnionSource(object):
 
 
 class RoundRobinSource(object):
+
     """A source that reads sets of rows from sources in round robin-fashion"""
 
     def __init__(self, sources, batchsize=500):
         """Arguments:
            - sources: a sequence of data sources
            - batchsize: the amount of rows to read from a data source before
-             going to the next data source. Must be positive (to empty a source 
+             going to the next data source. Must be positive (to empty a source
              before going to the next, use UnionSource)
         """
         self.__sources = [iter(src) for src in sources]
-        self.__sources.reverse() # we iterate it from the back in __iter__
+        self.__sources.reverse()  # we iterate it from the back in __iter__
         if not batchsize > 0:
             raise ValueError("batchsize must be positive")
         self.__batchsize = batchsize
 
     def __iter__(self):
         while self.__sources:
-            for i in range(len(self.__sources)-1, -1, -1): #iterate from back
+            # iterate from back
+            for i in range(len(self.__sources) - 1, -1, -1):
                 cursrc = self.__sources[i]
                 # now return up to __batchsize from cursrc
                 try:
@@ -424,6 +435,7 @@ class RoundRobinSource(object):
 
 
 class DynamicForEachSource(object):
+
     """A source that for each given argument creates a new source that
     will be iterated by this source.
 
@@ -434,14 +446,15 @@ class DynamicForEachSource(object):
     returns a new source to iterate. A DynamicForEachSource instance can be
     given to several ProcessSource instances.
     """
+
     def __init__(self, seq, callee):
         """Arguments:
-           - seq: a sequence with the elements for each of which a unique source 
+           - seq: a sequence with the elements for each of which a unique source
              must be created. the elements are given (one by one) to callee.
            - callee: a function f(e) that must accept elements as those in the
              seq argument. the function should return a source which then will
              be iterated by this source. the function is called once for every
-             element in seq. 
+             element in seq.
         """
         self.__queue = Queue()  # a multiprocessing.Queue
         if not callable(callee):

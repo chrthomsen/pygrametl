@@ -27,13 +27,15 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from distutils.version import StrictVersion
+import glob
 import os
 import sys
-import glob
-import rtdmockup
-from distutils.version import StrictVersion
 
-# The location of the package source is different depending on if the script is 
+import rtdmockup
+
+
+# The location of the package source is different depending on if the script is
 # called by either conf.py or setup.py, so we adjust the path to suit both
 if os.path.exists('./conf.py'):
     package_path = '../'
@@ -43,20 +45,23 @@ else:
     # The script cannot operate without accesses to source files
     raise IOError('could not determine correct path of the pygrametl folder')
 
-# The Java elements in pygrametl must be mocked, using the module rtdmockup 
+# The Java elements in pygrametl must be mocked, using the module rtdmockup
 pygrametl_path = package_path + 'pygrametl/'
 sys.path.insert(0, os.path.abspath(package_path))
 sys.path.insert(0, os.path.abspath(pygrametl_path))
 rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
 
 # Extracts the highest version number of the pygrametl python files
+
+
 def get_package_version():
     # The minimum version number is used for the initial value
-    version_number = StrictVersion("0.0") 
+    version_number = StrictVersion("0.0")
 
     python_files = glob.glob(pygrametl_path + '*.py')
     for python_file in python_files:
-        # The path of each module is computed without suffix and version extract
+        # The path of each module is computed without suffix and version
+        # extract
         module_name = os.path.basename(python_file)[:-3]
         version = __import__(module_name).__version__
 
@@ -65,7 +70,7 @@ def get_package_version():
             strict_version = StrictVersion(version + '1')
         else:
             strict_version = StrictVersion(version)
-        
+
         # If a higher version number is found then that it is used
         if strict_version > version_number:
             version_number = strict_version
