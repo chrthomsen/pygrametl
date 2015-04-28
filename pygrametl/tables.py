@@ -291,7 +291,7 @@ class Dimension(object):
            - namemapping: an optional namemapping (see module's documentation)
         """
         res = self.lookup(row, namemapping)
-        if res is not None:
+        if res is not None and res != self.defaultidvalue:
             return res
         else:
             if self.rowexpander:
@@ -468,7 +468,8 @@ class CachedDimension(Dimension):
         return self.__vals2key.get(searchtuple, None)
 
     def _after_lookup(self, row, namemapping, resultkey):
-        if resultkey is not None:
+        if resultkey is not None and (self.defaultidvalue is None or 
+                                      resultkey != self.defaultidvalue):
             namesinrow = [(namemapping.get(a) or a) for a in self.lookupatts]
             searchtuple = tuple([row[n] for n in namesinrow])
             self.__vals2key[searchtuple] = resultkey
@@ -1719,7 +1720,8 @@ class _BaseBulkloadable(object):
             return
 
         for b in self.dependson:
-            b._bulkloadnow()
+            if hasattr(b, '_bulkloadnow'):
+                b._bulkloadnow()
 
         self.tempdest.flush()
         self.tempdest.seek(0)
@@ -2217,7 +2219,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
             return res
 
         if row.get(self.key) is None:
-            keyval = self.idfinder(row, namemapping)
+            keyval = self.idfinder(row, {})
             row[self.key] = keyval
         else:
             keyval = row[self.key]
@@ -2225,7 +2227,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         if searchtuple in self.__localcache:
             return self.__localcache[searchtuple]
 
-        self._insert(row, namemapping)
+        self._insert(row, {})
         self.__localcache[searchtuple] = row
         self.__localkeys[keyval] = row
         return keyval
