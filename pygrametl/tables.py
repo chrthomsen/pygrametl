@@ -551,7 +551,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
 
     def __init__(self, name, key, attributes, lookupatts, type1atts=(),
                  cachesize=10000, prefill=False, idfinder=None,
-                 targetconnection=None):
+                 usefetchfirst=False, targetconnection=None):
         """Arguments:
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
@@ -573,6 +573,10 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
              row and namemapping. If not given, it is assumed that the primary
              key is an integer, and the assigned key value is then the current
              maximum plus one.
+           - usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+             clause is used when prefil is True. Depending on the used DBMS
+             and DB driver, this can give significant savings wrt. to time and
+             memory. Not all DBMSs support this clause yet. Default: False
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
         """
@@ -588,6 +592,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                                  prefill=prefill,
                                  cachefullrows=False,
                                  cacheoninsert=True,
+                                 usefetchfirst=usefetchfirst,
                                  targetconnection=targetconnection)
 
         if type1atts == ():
@@ -667,7 +672,7 @@ class SlowlyChangingDimension(Dimension):
                  toatt=None, tofinder=None, minfrom=None, maxto=None,
                  srcdateatt=None, srcdateparser=pygrametl.ymdparser,
                  type1atts=(), cachesize=10000, prefill=False, idfinder=None,
-                 targetconnection=None):
+                 usefetchfirst=False, targetconnection=None):
         """Arguments:
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
@@ -734,6 +739,10 @@ class SlowlyChangingDimension(Dimension):
              row and namemapping. If not given, it is assumed that the primary
              key is an integer, and the assigned key value is then the current
              maximum plus one.
+           - usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+             clause is used when prefil is True. Depending on the used DBMS
+             and DB driver, this can give significant savings wrt. to time and
+             memory. Not all DBMSs support this clause yet. Default: False
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
         """
@@ -796,9 +805,9 @@ class SlowlyChangingDimension(Dimension):
                 (name, toatt, toatt, key, key)
 
         if prefill:
-            self.__prefillcaches()
+            self.__prefillcaches(usefetchfirst)
 
-    def __prefillcaches(self):
+    def __prefillcaches(self, usefetchfirst):
         args = None
         if self.toatt:
             # We can use the toatt to see if rows are still current.
@@ -824,8 +833,12 @@ class SlowlyChangingDimension(Dimension):
                 (', '.join(['B.%s AS %s' % (att, att) for att in self.all]),
                  newestversions, self.name, joincond)
 
-        # sql is a statement that fetches the newest versions. Fill the caches
+        # sql is a statement that fetches the newest versions from the database
+        # in order to fill the caches, the FETCH FIRST clause is for a finite
+        # cache, if the user set the flag that it is supported by the database.
         positions = [self.all.index(att) for att in self.lookupatts]
+        if self.__cachesize > 0 and usefetchfirst:
+            sql += ' FETCH FIRST %d ROWS ONLY' % self.__cachesize
         self.targetconnection.execute(sql, args)
         for rawrow in self.targetconnection.fetchmanytuples(self.__cachesize):
             self.rowcache[rawrow[0]] = rawrow
