@@ -134,10 +134,11 @@ differs from DBMS to DBMS.
 
 .. py:function:: func(name, attributes, fieldsep, rowsep, nullval, filehandle):
 
-    Expected signature of a bulk loader function passed to 
-    :class:`.BulkFactTable`, the exact value passed to the function by 
-    :class:`.BulkFactTable` depends upon the parameters passed when the was 
-    object instantiated, see the API documentation for more information.
+    Expected signature of a bulk loader function passed to
+    :class:`.BulkFactTable`, the exact value passed to the function by
+    :class:`.BulkFactTable` depends upon the parameters passed when the was
+    object instantiated. For more information about bulkloading see
+    :ref:`bulkloading`.
 
     **Arguments:**
 

@@ -48,6 +48,7 @@ Code Examples
    examples/datasources
    examples/dimensions
    examples/facttable
+   examples/bulkloading
    examples/parallel
    examples/jython
 
@@ -76,4 +77,3 @@ API
     * :ref:`genindex`
     * :ref:`modindex`
     * :ref:`search`
-

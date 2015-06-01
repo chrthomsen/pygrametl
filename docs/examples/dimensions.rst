@@ -12,7 +12,7 @@ parallel capabilities of pygrametl see :ref:`parallel`. In the following
 examples we use PostgreSQL as a database management system and psycopg2 as the
 database driver.
 
-All of these classes are currently implemented in the  
+All of these classes are currently implemented in the
 :mod:`.pygrametl.tables` module.
 
 Dimension
@@ -31,13 +31,13 @@ must be specified, along with the primary key of the table, as well as the
 columns in the table. In addition to these required parameters, a subset of
 columns to be used for looking up keys can also be specified, as well as a
 function for computing the primary key, a default return value if a lookup
-fails, and a function for expanding a row automatically. 
+fails, and a function for expanding a row automatically.
 
 .. code-block:: python
 
     import psycopg2
     import pygrametl
-    from pygrametl.tables import Dimension 
+    from pygrametl.tables import Dimension
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
@@ -52,15 +52,15 @@ fails, and a function for expanding a row automatically.
     ]
 
     # The actual database connection is handled using a PEP 249 connection
-    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
     # This ConnectionWrapper will be set as default and is then implicitly used.
     # A reference to the wrapper is saved to allow for easy access of it later
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
-    # The instance of Dimension connects to the table "product" in the 
-    # database using the default connection wrapper we just created, the 
+    # The instance of Dimension connects to the table "product" in the
+    # database using the default connection wrapper we just created, the
     # argument "lookupatts" specifies the column which needs to match
     # when doing a lookup of the key from this dimension
     productDimension = Dimension(
@@ -88,24 +88,25 @@ CachedDimension
 :class:`.CachedDimension` expands the standard dimension with a cache, allowing
 for lower latency when when performing lookups as the number of round trips to
 the database can be decreased. To control what is cached, three additional
-parameters have been added to the initialiser method. The parameter `prefill`
-indicates that the cache should be filled with data from the database on
-initialisation, while `cachefullrows` determines whether only the primary key
-and columns defined by `lookuparts`, or entire rows should be cached. Lastly
-the parameter `cacheoninsert` specifies if newly inserted rows should be
-cached. To ensure that the cache is kept consistent, no changes or additions
-should be performed on the rows by the database, a default value set by the
-database is an example of a simple-to-miss violation of this.
+parameters have been added to the initialiser method. The parameter
+:attr:`.prefill` indicates that the cache should be filled with data from the
+database on initialisation, while :attr:`.cachefullrows` determines whether
+only the primary key and columns defined by :attr:`.lookuparts`, or entire rows
+should be cached. Lastly the parameter :attr:`.cacheoninsert` specifies if
+newly inserted rows should be cached. To ensure that the cache is kept
+consistent, no changes or additions should be performed on the rows by the
+database, a default value set by the database is an example of a simple-to-miss
+violation of this.
 
 .. code-block:: python
 
     import psycopg2
     import pygrametl
-    from pygrametl.datasources import CSVSource 
+    from pygrametl.datasources import CSVSource
     from pygrametl.tables import CachedDimension, FactTable
 
     # The actual database connection is handled using a PEP 249 connection
-    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
     # This ConnectionWrapper will be set as default and is then implicitly used.
@@ -113,7 +114,7 @@ database is an example of a simple-to-miss violation of this.
     conn = pygrametl.ConnectionWrapper(pgconn)
 
     # The cached dimension is initialised with data from the product table in
-    # the database, allowing for more efficient lookups of keys for the fact 
+    # the database, allowing for more efficient lookups of keys for the fact
     # table, at the cost of requiring it to already contain the necessary data
     productDimension = CachedDimension(
         name='product',
@@ -133,48 +134,54 @@ database is an example of a simple-to-miss violation of this.
     # method with the information read from the sales.csv file. The second
     # argument renames the column product_name from the CSV file to name
     for row in sales:
-        
+
         # Looking up a key in the cached dimension checks if a row containing
-        # a matching value of the attributes defined as lookupatts is present, 
-        # if a match cannot be found the actual database table is checked for 
+        # a matching value of the attributes defined as lookupatts is present,
+        # if a match cannot be found the actual database table is checked for
         # a match
         row['productid'] = productDimension.lookup(row, {"name":"product_name"})
         factTable.insert(row)
 
-    # To ensure that all information is loaded and that the database connection 
-    # is terminated correctly the current transaction should be committed 
+    # To ensure that all information is loaded and that the database connection
+    # is terminated correctly the current transaction should be committed
     conn.commit()
     conn.close()
 
 The example shows how to utilise :class:`.CachedDimension` to improve
-performance of `lookup` when finding the value of a key for insertion into the
-fact table. The :class:`.CachedDimension` caches the values from the product
-dimension locally, allowing increased performance when looking up keys as
-fewer, or none if all rows are cached, round trips are made to the database.
+performance of :meth:`lookup` when finding the value of a key for insertion
+into the fact table. The :class:`.CachedDimension` caches the values from the
+product dimension locally, allowing increased performance when looking up keys
+as fewer, or none if all rows are cached, round trips are made to the database.
 
 BulkDimension
 -------------
 :class:`.BulkDimension` is a dimension specialised for increased throughput
 when performing insertions by inserting rows in bulk from a file, in addition
-to quick lookups through an in-memory cache. To support, this the database must
+to quick lookups through an in-memory cache. To support this the database must
 not perform transformations in order to not create inconsistencies between the
 cache and the database table. Another aspect of :class:`.BulkDimension` is that
-`update`, `getbyvals`, and `getbykey` by default forces a call to `endload`
-which inserts all cached values into the database using a user defined bulk
-loading function, so calling these functions might often lead to a decrease in
-performance. Calls of lookup and ensure will only use the cache and does not
-invoke any database operations.  To support caching to disk, multiple
-additional parameters have been added to the class initialiser method allowing
-control of the temporary file used to store rows, such as specific delimiters
-and the number of facts to be bulk loaded. All of these parameters provide a
-default value except for :attr:`.bulkloader`.  This parameter must be passed a
-function to be called for each batch of rows to be loaded, this is necessary as
-the exact way to perform bulk loading differs from DBMS to DBMS. 
+:meth:`update`, :meth:`getbyvals` forces a call to :meth:`endload` which
+inserts all rows stored in the local file into the database using a user
+defined bulk loading function so calling these functions often, will negate the
+benefit of bulk loading. The method :meth:`getbykey` also forces the dimension
+to bulk load by default, but can use a cache if :attr:`.cachefullrows` is
+enabled at the cost of additional memory.  Calls of lookup and ensure will only
+use the cache and does not invoke any database operations, as the class caches
+all rows using an infinite cache.  If the dataset is too large to be cached in
+memory then use the class :class:`.CachedBulkDimension` instead, which supports
+bulk loading using a finite cache. To support bulk loading from a file on disk,
+multiple additional parameters have been added to the class initialiser method
+allowing control of the temporary file used to store rows, such as specific
+delimiters and the number of facts to be bulk loaded. All of these parameters
+provide a default value except for :attr:`.bulkloader`. This parameter must be
+passed a function to be called for each batch of rows to be loaded, this is
+necessary as the exact way to perform bulk loading differs from DBMS to DBMS.
 
 .. py:function:: func(name, attributes, fieldsep, rowsep, nullval, filehandle):
 
-    Expected signature of a bulk loader function passed to 
-    :class:`.BulkDimension`. See the API documentation for more information.
+    Expected signature of a bulk loader function passed to
+    :class:`.BulkDimension`. For more information about bulkloading see
+    :ref:`bulkloading`.
 
     **Arguments:**
 
@@ -194,11 +201,11 @@ the exact way to perform bulk loading differs from DBMS to DBMS.
 
 .. code-block:: python
 
-    import sqlite3 
+    import sqlite3
     import psycopg2
     import pygrametl
-    from pygrametl.datasources import SQLSource 
-    from pygrametl.tables import BulkDimension 
+    from pygrametl.datasources import SQLSource
+    from pygrametl.tables import BulkDimension
 
     # The actual database connection is handled using a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
@@ -208,17 +215,17 @@ the exact way to perform bulk loading differs from DBMS to DBMS.
     # A reference to the wrapper is saved to allow for easy access of it later
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
-    # How to perform the bulk loading using psycopg2 is defined as this function 
+    # How to perform the bulk loading using psycopg2 is defined as this function
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
         cursor = conn.cursor()
         # psycopg2 does not accept the default value used for null substitutes
-        # bv BulkDimension, which is None, so we just ignore it as we have no 
+        # bv BulkDimension, which is None, so we just ignore it as we have no
         # null values that we wish to substitute for a more descriptive value
-        cursor.copy_from(file=filehandle, table=name, sep=fieldsep, 
+        cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
                          columns=attributes)
 
     # In addition to arguments needed for a Dimension, a reference to the
-    # bulk loader defined above must also be passed, so a BulkDimension 
+    # bulk loader defined above must also be passed, so a BulkDimension
     # can use it
     productDimension = BulkDimension(
         name='product',
@@ -227,7 +234,7 @@ the exact way to perform bulk loading differs from DBMS to DBMS.
         lookupatts=['name'],
         bulkloader=pgbulkloader)
 
-    # A PEP249 connection is sufficient for an SQLSource so we do not need 
+    # A PEP249 connection is sufficient for an SQLSource so we do not need
     # to create a new instance of ConnectionWrapper to read from the database
     sqconn = sqlite3.connect("product_catalog.db")
 
@@ -236,7 +243,7 @@ the exact way to perform bulk loading differs from DBMS to DBMS.
     sqlSource = SQLSource(connection=sqconn, query="SELECT * FROM product")
 
     # Inserting data from a data source into a BulkDimension is performed just
-    # like any other dimension type in pygrametl, as the interface is the same 
+    # like any other dimension type in pygrametl, as the interface is the same
     for row in sqlSource:
         productDimension.insert(row)
 
@@ -245,8 +252,8 @@ the exact way to perform bulk loading differs from DBMS to DBMS.
     conn.commit()
     conn.close()
 
-    # The commit here is strictly not necessary as no writes have been 
-    # performed, but it is performed to be sure that the connection is 
+    # The commit here is strictly not necessary as no writes have been
+    # performed, but it is performed to be sure that the connection is
     # terminated correctly
     sqconn.commit()
     sqconn.close()
@@ -254,23 +261,58 @@ the exact way to perform bulk loading differs from DBMS to DBMS.
 This example shows how to use :class:`.BulkDimension` to effectively load the
 contents of a local SQLite database into a data warehouse dimension located on
 the network. This process is a good use case for :class:`.BulkDimension` as no
-calls to `Update`, `getbykey` or `getbyval` are needed so the caches can be
-filled before they are loaded into the data warehouse. As the data warehouse is
-located on another machine many round trips to perform single insertions to it
-may become a necessary bottleneck.  The severity of this problem is decreased
-by the use of local cache, as much larger amounts of data is loaded for each
-round trip to the database through the use of the bulk loading function, which
-uses the `copy_from` method to load multiple rows while performing a insertion
-for each. A downside, however, of using :class:`.BulkDimension` to cache rows
-is that some data might not be inserted into the database after when the last
-row is given to the :class:`.BulkDimension` object, as data is only loaded into
-the database when the cache is filled. To load the contents manually, the
-method :meth:`.BulkDimension.endload()` must be called, this can quickly become
+calls to :meth:`update`, :meth:`getbykey` or :meth:`getbyval` are needed so the
+caches can be filled before they are loaded into the data warehouse. As the
+data warehouse is located on another machine many round trips to perform single
+insertions to it may become a necessary bottleneck.  The severity of this
+problem is decreased by the use of local cache, as much larger amounts of data
+is loaded for each round trip to the database through the use of the bulk
+loading function, which uses the :meth:`copy_from` method to load multiple rows
+while performing a insertion for each. A downside, however, of using
+:class:`.BulkDimension` to cache rows is that some data might not be inserted
+into the database after when the last row is given to the
+:class:`.BulkDimension` object, as data is only loaded into the database when
+the cache is filled. To load the contents manually, the method
+:meth:`.BulkDimension.endload()` must be called, this can quickly become
 non-trivial so a simpler solution is to use the method
-:meth:`.ConnectionWrapper.commit()`, which calls `endload()` and `commit()` on
-all tables created anywhere in the program and commits the current database
-transaction on the database which the :class:`.ConnectionWrapper` is associated
-with.
+:meth:`.ConnectionWrapper.commit()`, which calls :meth:`endload` and
+:meth:`commit` on all tables created anywhere in the program and commits the
+current database transaction on the database which the
+:class:`.ConnectionWrapper` is associated with.
+
+CachedBulkDimension
+-------------------
+:class:`.CachedBulkDimension` is very similar to the class
+:class:`.BulkDimension` and is also intended for bulk loading a dimension.
+However it is optimised for and uses a finite sized cache, instead of one of
+infinite size. This allows it to be used with a dataset too large to be cached
+entirely in main memory. This comes at the cost of the possibility of
+:meth:`lookup` and :meth:`ensure` having to go to the database instead of using
+the cache. The method :meth:`getbykey` also no longer needs to force loading of
+the data in the file if :attr:`.cachefullrows` is not enabled. This is due to
+:class:`.CachedBulkDimension` using a local cache for the rows currently in the
+file. All rows in the file are cached as there is no guarantee that the cache
+on :class:`CachedDimension` would not overwrite the cached version of the rows
+in the file due to it's cache being full, forcing the need of an additional
+cache to ensure :meth:`lookup` and :meth:`getbykey` can locate rows before they
+are loaded into the database. The method :meth:`insert` first caches rows in
+the local cache, and only when the rows in the file are loaded into the
+database are the data moved to the cache on :class:`CachedBulkDimension`, in
+which :meth:`lookup` also stores rows if the method had to query the database
+for them.
+
+Due to the use of two caches, the caching by :class:`.CachedBulkDimension` is
+controlled by two parameters. The parameter :attr:`.cachesize` can be set to
+control the size of the cache for rows loaded into the database, while the
+parameter :attr:`.bulksize` controls the number of rows stored in the file
+before the dimension bulk loads. As the rows in the file are all cached in a
+separate cache, the memory consumption will change in correspondence to both
+these values.
+
+.. note::
+    If rows with matching lookupatts are passed to insert() during the same
+    bulk, will only the first be inserted. The second call to insert() will
+    just return the key for the first row as it is stored in the local cache.
 
 .. The space in the header is intentional so the two parts can fit in the toc
 
@@ -285,13 +327,13 @@ settings that cannot be overridden. This is done in order to minimize the
 amount of database communication needed for
 :meth:`.TypeOneSlowlyChangingDimension.scdensure` in an effort to increase its
 throughput. The class requires a sequence of attributes for lookup
-:attr:`.lookupatts`, as well as a sequence of type 1 attributes
-:attr:`.type1atts`, defaults to all attributes minus lookupatts, which are the
-slowly changing attributes in the dimension and these two sequences of
-attributes need to be disjoint. Caching is used to increase the performance of
-lookups, which assumes that the database does not change or add any attribute
-values that are cached. For example, a DEFAULT value in the database or
-automatic type coercion can break this assumption.
+:attr:`.lookupatts`, as well as a sequence of type 1 slowly changing attributes
+:attr:`.type1atts`. If not given will :attr:`.type1atts` default to all
+attributes minus :attr:`.lookupatts`, as these two sequences of attributes need
+to be disjoint.  Caching is used to increase the performance of lookups, which
+assumes that the database does not change or add any attribute values that are
+cached. For example, a DEFAULT value in the database or automatic type coercion
+can break this assumption.
 
 .. code-block:: python
 
@@ -373,7 +415,7 @@ inserted rows; an assumption the use of default values can break.
 
     import psycopg2
     import pygrametl
-    from pygrametl.tables import SlowlyChangingDimension 
+    from pygrametl.tables import SlowlyChangingDimension
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
@@ -396,7 +438,7 @@ inserted rows; an assumption the use of default values can break.
     ]
 
     # The actual database connection is handled using a PEP 249 connection
-    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
     # This ConnectionWrapper will be set as default and is then implicitly used.
@@ -405,15 +447,15 @@ inserted rows; an assumption the use of default values can break.
 
     # The slowly changing dimension is created as type 2 only, as a new row is
     # inserted with a from and to timestamps for each change in the dataset
-    # without changing any attributes in the existing rows, except validto 
+    # without changing any attributes in the existing rows, except validto
     # which is a time stamp indicating when the row is no longer valid.
     # As additional parameters, the object is initialised with information
-    # about which attribute holds a time stamp for when the row's validity 
+    # about which attribute holds a time stamp for when the row's validity
     # starts and ends. The parameter fromfinder is also given, which is must be
-    # set to the function that should be used to compute the time stamp for 
-    # when the row becomes valid and given as input the name of the row which 
-    # value it should use. In this example, the function datareader from 
-    # pygrametl is used which converts time stamp from a string to a Python 
+    # set to the function that should be used to compute the time stamp for
+    # when the row becomes valid and given as input the name of the row which
+    # value it should use. In this example, the function datareader from
+    # pygrametl is used which converts time stamp from a string to a Python
     # datetime.date object to simplify the conversion to the Postgres Date type.
     productDimension = SlowlyChangingDimension (
         name='product',
@@ -505,14 +547,14 @@ dimension. This feature should however be considered experimental.
     ]
 
     # The actual database connection is handled using a PEP 249 connection
-    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
     # This ConnectionWrapper will be set as default and is then implicitly used.
     # A reference to the wrapper is saved to allow for easy access of it later
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
-    # The product dimension is in the database represented as a Snowflaked 
+    # The product dimension is in the database represented as a Snowflaked
     # dimension, so a dimension object is created for each table
     productTable = Dimension(
         name='product',
@@ -542,7 +584,7 @@ dimension. This feature should however be considered experimental.
     # foreign key relations to tables in the Snowflaked dimension, a list must
     # be passed as the second part of the tuple with a Dimension object for
     # each table the first argument references through its foreign keys.
-    productDimension = SnowflakedDimension(references=[(productTable, categoryTable), 
+    productDimension = SnowflakedDimension(references=[(productTable, categoryTable),
                                             (categoryTable, priceTable)])
 
     # Using a SnowflakedDimension is done through the same interface as the
@@ -602,7 +644,7 @@ needs to be computed based on the contents of the rows the object operates on.
     ]
 
     # The actual database connection is handled using a PEP 249 connection
-    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
     # This ConnectionWrapper will be set as default and is then implicitly used,
@@ -616,7 +658,7 @@ needs to be computed based on the contents of the rows the object operates on.
     productTable = SlowlyChangingDimension(
         name='product',
         key='productid',
-        attributes=['name', 'price', 'validfrom', 'validto', 'version', 
+        attributes=['name', 'price', 'validfrom', 'validto', 'version',
             'categoryid'],
         lookupatts=['name'],
         fromatt='validfrom',

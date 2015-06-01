@@ -30,11 +30,6 @@ here: :ref:`parallel`.
     
     Data Warehouse example
 
-
-:Authors:
-    | Christoffer Moesgaard <cmoesgaard@gmail.com> 
-    | Søren Kejser Jensen <devel@kejserjensen.dk>
-
 Input Data
 ----------
 Most pygrametl abstractions either produce, consume or operate on data in
