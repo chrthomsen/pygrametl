@@ -349,8 +349,8 @@ can break this assumption.
         {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '20'},
         {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30'},
         {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60'}
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10'},
+        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60'},
+        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
