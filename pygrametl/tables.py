@@ -733,7 +733,7 @@ class SlowlyChangingDimension(Dimension):
            - cachesize: the maximum size of the cache. 0 disables caching
              and values smaller than 0 allows unlimited caching
            - prefill: decides if the cache should be prefilled with the newest
-             versions. Default: False. NB: This is a new argument in ver. 0.2.0.
+             versions. Default: False.
            - idfinder: a function(row, namemapping) -> key value that assigns
              a value to the primary key attribute based on the content of the
              row and namemapping. If not given, it is assumed that the primary
@@ -978,8 +978,8 @@ class SlowlyChangingDimension(Dimension):
                     self.targetconnection.execute(
                         self.updatetodatesql, {
                             self.key: keyval, self.toatt: toattval})
-                # Only cache the newest version - this is new in ver. 0.2.0!
-                if keyval in self.rowcache:
+                # Only cache the newest version
+                if self.__cachesize and keyval in self.rowcache:
                     del self.rowcache[keyval]
             else:
                 # Update the row dict by giving version and dates and the key

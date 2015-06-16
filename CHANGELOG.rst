@@ -32,6 +32,9 @@ Unreleased
   Using ``defaultidvalue`` no longer causes ``Dimension.ensure`` to fail to
   insert correctly, or make ``CachedDimension.ensure`` produce duplicates.
 
+  Using ``SlowlyChangingDimension`` with the cache disabled no longer causes a
+  crash in ``SlowlyChangingDimension.scdensure``.
+
 Version 2.3.2
 -------------
 **Fixed**
