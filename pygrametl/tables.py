@@ -1670,7 +1670,11 @@ class _BaseBulkloadable(object):
             self.encoding = encoding
         else:
             self.encoding = locale.getpreferredencoding()
-        self.dependson = dependson
+
+        # Ensure objects that are not tables, are not silently removed
+        if not (set(dependson) <= set(pygrametl._alltables)):
+            raise ValueError("Dependson must contain tables only")
+        self.dependson = filter(lambda b: hasattr(b, '_bulkloadnow'), dependson)
 
         if version_info[0] == 2:
             # Python 2: We ignore the specified encoding
@@ -1733,8 +1737,7 @@ class _BaseBulkloadable(object):
             return
 
         for b in self.dependson:
-            if hasattr(b, '_bulkloadnow'):
-                b._bulkloadnow()
+            b._bulkloadnow()
 
         self.tempdest.flush()
         self.tempdest.seek(0)
