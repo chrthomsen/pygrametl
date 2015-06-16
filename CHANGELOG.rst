@@ -1,5 +1,8 @@
 Unreleased
 ----------
+**Note**
+  This is the last version to support versions of Python 2 older than 2.7
+
 **Added**
   ``TypeOneSlowlyChangingDimension`` a new class that adds support for
   efficient loading and updating of a type 1 exclusive slowly changing
@@ -7,6 +10,8 @@ Unreleased
 
   ``CachedBulkLoadingDimension`` a new class that supports bulk loading a
   dimension without requiring the caching of all rows that are loaded.
+
+  Alternative implementation of `FIFODict` based on an `OrderedDict`.
 
   Dimension classes with finite caches can now be prefilled more efficiently
   using the "FETCH FIRST" SQL statement for increased performance.
