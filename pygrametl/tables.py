@@ -551,7 +551,8 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
 
     def __init__(self, name, key, attributes, lookupatts, type1atts=(),
                  cachesize=10000, prefill=False, idfinder=None,
-                 usefetchfirst=False, targetconnection=None):
+                 usefetchfirst=False, cachefullrows=False,
+                 targetconnection=None):
         """Arguments:
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
@@ -577,8 +578,12 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
              clause is used when prefil is True. Depending on the used DBMS
              and DB driver, this can give significant savings wrt. to time and
              memory. Not all DBMSs support this clause yet. Default: False
-           - targetconnection: The ConnectionWrapper to use. If not given,
-             the default target connection is used.
+           - cachefullrows: a flag deciding if full rows should be cached. If
+             not, the cache only holds a mapping from lookupattributes to key
+             values, and from key to the type 1 slowly changing attributes.
+             Default: False.
+           - targetconnection: The ConnectionWrapper to use. If not given, the
+             default target connection is used.
         """
         CachedDimension.__init__(self,
                                  name=name,
@@ -590,7 +595,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                                  rowexpander=None,
                                  size=cachesize,
                                  prefill=prefill,
-                                 cachefullrows=False,
+                                 cachefullrows=cachefullrows,
                                  cacheoninsert=True,
                                  usefetchfirst=usefetchfirst,
                                  targetconnection=targetconnection)
@@ -606,6 +611,28 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         if not len(type1atts):
             raise ValueError("Type1atts contain no attributes")
         self.type1atts = type1atts
+
+        # If entire rows are cached then we do not need a cache for type1atts
+        if not cachefullrows:
+            if cachesize > 0:
+                self.__key2sca = FIFODict(cachesize)
+            else:
+                self.__key2sca = {}
+
+            if prefill:
+                sql = "SELECT %s FROM %s" % \
+                        (", ".join([key] + [l for l in self.type1atts]), name)
+                if cachesize > 0 and usefetchfirst:
+                    sql += " FETCH FIRST %d ROWS ONLY" % cachesize
+                self.targetconnection.execute(sql)
+
+                if cachesize <= 0:
+                    data = self.targetconnection.fetchalltuples()
+                else:
+                    data = self.targetconnection.fetchmanytuples(cachesize)
+
+                for row in data:
+                    self.__key2sca[row[0]] = row[1:]
 
     def scdensure(self, row, namemapping={}):
         """Lookup or insert a version of a slowly changing dimension member.
@@ -633,26 +660,78 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
             # The row did exist so we update the type1atts provided
             row[key] = keyval
 
-            # Takes the user provided namemapping into account and checks what
-            # subset of type1atts should be updated based on the content of row
-            type1atts = []
+            # Checks if the new row contains any type1atts
+            type1atts = set()
             for att in self.type1atts:
                 if (namemapping.get(att) or att) in row:
-                    type1atts.append(att)
+                    type1atts.add(att)
             if not type1atts:
-                return
+                return row[key]
 
-            # The SQL is constructed to update only the changed values without
-            # the need for looking up the old row to extract the existing
-            # values
+            # Checks if any of the type1atts in the row are different
+            if not self.cachefullrows and keyval in self.__key2sca:
+                oldrow = dict(zip(self.type1atts, self.__key2sca[keyval]))
+            else:
+                oldrow = self.getbykey(keyval)
+
+            tmptype1atts = set()
+            for att in type1atts:
+                rowatt = row[(namemapping.get(att) or att)]
+                if oldrow[att] != rowatt:
+                    tmptype1atts.add(att)
+                    oldrow[att] = rowatt # Saved for updating the cache
+            type1atts = tmptype1atts
+            if not type1atts:
+                return row[key]
+
+            # Updates only the type1atts that were changed in the row, the
+            # update method is not used as lookupatts can never change
             updatesql = "UPDATE " + self.name + " SET " + \
                         ", ".join(["%s = %%(%s)s" % \
                          (att, att) for att in type1atts]) + \
                          " WHERE %s = %%(%s)s" % (key, key)
 
-            # Update is not used, to skip the checks for updates to the caches
             self.targetconnection.execute(updatesql, row, namemapping)
+
+            # Updates the caches that could be invalidated by scdensure
+            if self.cachefullrows:
+                self._after_getbykey(keyval, oldrow)
+            else:
+                self.__key2sca[keyval] = tuple([oldrow.get(att) for att in
+                                                self.type1atts])
         return row[key]
+
+    def _after_getbykey(self, keyvalue, resultrow):
+        if self.cachefullrows:
+            CachedDimension._after_getbykey(self, keyvalue, resultrow)
+        elif resultrow[self.key] is not None:
+            self.__key2sca[keyvalue] = \
+                    tuple([resultrow[a] for a in self.type1atts])
+
+    def _after_update(self, row, namemapping):
+        CachedDimension._after_update(self, row, namemapping)
+
+        # Checks if changes were performed to the locally cached type1atts
+        keyvalue = row[(namemapping.get(self.key) or self.key)]
+        if self.cachefullrows or keyvalue not in self.__key2sca:
+            return
+
+        # A cached value could have been changed so the local cache is updated,
+        # as the value is changed in place no rows are moved in the cache.
+        oldtype1vals = dict(zip(self.type1atts, self.__key2sca[keyvalue]))
+        namesinrow = [(namemapping.get(a) or a) for a in self.type1atts]
+        self.__key2sca[keyvalue] = \
+            tuple([(row.get(n) or oldtype1vals.get(n)) for n in namesinrow])
+
+    def _after_insert(self, row, namemapping, newkeyvalue):
+        CachedDimension._after_insert(self, row, namemapping, newkeyvalue)
+        # NB: Here we assume that the DB doesn't change or add anything. For
+        # example, a DEFAULT value in the DB or automatic type coercion can
+        # break this assumption.
+        if not self.cachefullrows:
+            tmp = pygrametl.project(self.type1atts, row, namemapping)
+            self.__key2sca[newkeyvalue] = \
+                    tuple([tmp[a] for a in self.type1atts])
 
 
 class SlowlyChangingDimension(Dimension):
