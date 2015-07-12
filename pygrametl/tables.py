@@ -287,7 +287,8 @@ class Dimension(object):
 
            Arguments:
            - row: the row to lookup or insert. Must contain the lookup
-             attributes.
+             attributes. Key is not required to be present but will be added
+             using idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         res = self.lookup(row, namemapping)
@@ -304,7 +305,8 @@ class Dimension(object):
            Arguments:
            - row: the row to insert. The dict is not updated. It must contain
              all attributes, and is allowed to contain more attributes than
-             that.
+             that. Key is not required to be present but will be added using
+             idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         res = self._before_insert(row, namemapping)
@@ -644,7 +646,8 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
              contain all attributes if it is the first version of the row to be
              inserted, updates of existing rows need only contain lookupatts
              and a subset of type1atts as a missing type1atts is ignored and
-             the existing value left as is in the database.
+             the existing value left as is in the database. Key is not required
+             to be present but will be added using idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         # NOTE: the "vals2key" cache is kept coherent by "scdensure", as it only
@@ -1413,7 +1416,8 @@ class SnowflakedDimension(object):
 
            Arguments:
            - row: the row to lookup or insert. Must contain the lookup
-             attributes.
+             attributes. Key is not required to be present but will be added
+             using idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         (key, ignored) = self.__ensure_helper(self.root, row, namemapping,
@@ -1433,7 +1437,8 @@ class SnowflakedDimension(object):
 
            Arguments:
            - row: the row to lookup or insert. Must contain the lookup
-             attributes.
+             attributes. Key is not required to be present but will be added
+             using idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         key = self._before_insert(row, namemapping)
@@ -1509,7 +1514,9 @@ class SnowflakedDimension(object):
            .. Note:: Has side-effects on the given row.
 
            Arguments:
-           - row: a dict containing the attributes for the member.
+           - row: a dict containing the attributes for the member. Key is not
+             required to be present but will be added using idfinder if
+             missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         # Still experimental!!! For now we require that only the
@@ -2094,7 +2101,8 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
            Arguments:
            - row: the row to insert. The dict is not updated. It must contain
              all attributes, and is allowed to contain more attributes than
-             that.
+             that. Key is not required to be present but will be added using
+             idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         res = self._before_insert(row, namemapping)
@@ -2304,7 +2312,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
            Arguments:
            - row: the row to insert. The dict is not updated. It must contain
              all attributes, and is allowed to contain more attributes than
-             that.
+             that. Key is not required to be present but will be added using
+             idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
         row = pygrametl.copy(row, **namemapping)
