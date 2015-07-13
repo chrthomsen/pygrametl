@@ -322,9 +322,8 @@ TypeOneSlowlyChanging Dimension
 changing dimension.  The dimension is based on :class:`.CachedDimension`,
 albeit with a few differences. The primary difference between the two classes
 besides the additional method, is that :class:`.TypeOneSlowlyChangingDimension`
-enables caching on insert and disables caching of full rows by default,
-settings that cannot be overridden. This is done in order to minimize the
-amount of database communication needed for
+enables caching on insert by default, a setting that cannot be overridden. This
+is done in order to minimize the amount of database communication needed for
 :meth:`.TypeOneSlowlyChangingDimension.scdensure` in an effort to increase its
 throughput. The class requires a sequence of attributes for lookup
 :attr:`.lookupatts`, as well as a sequence of type 1 slowly changing attributes
