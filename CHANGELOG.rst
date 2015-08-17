@@ -11,13 +11,14 @@ Unreleased
   ``CachedBulkLoadingDimension`` a new class that supports bulk loading a
   dimension without requiring the caching of all rows that are loaded.
 
-  Alternative implementation of `FIFODict` based on an `OrderedDict`.
+  Alternative implementation of ``FIFODict`` based on an ``OrderedDict``.
+  (Thanks to Alexey Kuzmenko).
 
   Dimension classes with finite caches can now be prefilled more efficiently
   using the "FETCH FIRST" SQL statement for increased performance.
 
   Examples on how to perform bulk loading in MySQL, Oracle Database, and
-  Microsoft SQL Server.
+  Microsoft SQL Server. (Thanks to Alexey Kuzmenko).
 
 **Changed**
   It is now verified that ``lookupatts`` is a subset of all attributes.
@@ -32,10 +33,11 @@ Unreleased
 
 **Fixed**
   Using ``dependson`` no longer causes crashes due to multiple loads of a
-  table.
+  table. (Thanks to Alexey Kuzmenko).
 
   Using ``defaultidvalue`` no longer causes ``Dimension.ensure`` to fail to
   insert correctly, or make ``CachedDimension.ensure`` produce duplicates.
+  (Thanks to Alexey Kuzmenko).
 
   Using ``SlowlyChangingDimension`` with the cache disabled no longer causes a
   crash in ``SlowlyChangingDimension.scdensure``.
@@ -52,7 +54,7 @@ Version 2.3.2
 Version 2.3.1
 -------------
 **Fixed**
-  Using other parameter styles then ``pyformat`` no longer causes a crash in
+  Using other parameter styles than ``pyformat`` no longer causes a crash in
   ``ConnectionWrapper``.
 
 Version 2.3
@@ -62,8 +64,13 @@ Version 2.3
 
   Added code examples for all classes in pygrametl except ``Steps``.
 
-  Pygrametl now officially supports Python 2.6.X, Python 2.7.X, Python 3,
+  pygrametl now officially supports Python 2.6.X, Python 2.7.X, Python 3,
   Jython 2.5.X and Jython 2.7.X.
+  
+  ``BulkDimension`` a new class that supports bulk loading of dimension tables.
+  
+  ``_BaseBulkloadable`` with common functionality for ``BulkFactTable`` and
+  ``BulkDimension``.
 
   ``SQLSource`` can now pass parameters to the cursor's ``execute`` function.
 
