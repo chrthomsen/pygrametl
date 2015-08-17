@@ -134,12 +134,47 @@ For Microsoft SQL Server we can use the `BULK INSERT
 <https://msdn.microsoft.com/en-us/library/ms188365.aspx>`_ functionality
 included in Transact-SQL.
 
+There are a number of things to be aware of when using pygrametl with SQL
+Server. If the file used for bulk loading is located on a machine running
+Windows, the file must be copied before bulk loading, as the locks placed on
+the file by the OS and pygrametl, prevents SQL Server from opening it directly.
+Copying the file can be done e.g. using `shutil.copyfile
+<https://docs.python.org/2/library/shutil.html#shutil.copyfile>`_.
+
+By default, BULK INSERT ignores column names and the number and order of
+columns must also match the table you are inserting into. This can be overcome
+by adding a `format file
+<https://msdn.microsoft.com/en-us/library/ms178129.aspx>`_.  In this case we
+create a `non-XML format file
+<https://msdn.microsoft.com/en-us/library/ms191479.aspx>`_.
+
+A simple example of bulk loading in SQL Server along with the creation of a
+format file, is seen below:
+
 .. code-block:: python
 
-    #pymssql
     def sqlserverbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
-        global connection
-        cursor = connection.cursor()
-        sql = "BULK INSERT %s FROM '%s' WITH (FIELDTERMINATOR = '%s', ROWTERMINATOR = '%s')" % \
-                (name, filehandle, fieldsep, rowsep,)
+        global msconn
+        cursor = msconn.cursor()
+
+        # Copy the tempdest
+        shutil.copyfile(filehandle, r'd:\dw\tmpfilecopy')
+
+        # Create format file
+        fmt = open(r'd:\dw\format.fmt', 'w+')
+        # 12.0 corresponds to the version of the bcp utility being used by SQL Server.
+        # For more information, see the above link on non-XML format files.
+        fmt.write("12.0\r\n%d\r\n" % len(attributes))
+        count = 0
+        sep = "\\t"
+        for a in attributes:
+            count += 1
+            if count == len(attributes): sep = "\\n"
+            # For information regarding the format values, 
+            # see the above link on non-XML format files.
+            fmt.write('%d SQLCHAR 0 8000 "%s" %d %s "Latin1_General_100_CI_AS_SC"\r\n' % (count, sep, count, a))
+        fmt.close()
+
+        sql = "BULK INSERT %s FROM '%s' WITH (FORMATFILE = '%s', FIELDTERMINATOR = '%s', ROWTERMINATOR = '%s')" % \
+                (name, r'd:\dw\tmpfilecopy', r'd:\dw\format.fmt', fieldsep, rowsep,)
         cursor.execute(sql)
