@@ -46,6 +46,7 @@ from sys import version_info
 import tempfile
 from time import sleep
 import types
+from os import path
 
 import pygrametl
 from pygrametl.FIFODict import FIFODict
@@ -1744,6 +1745,12 @@ class _BaseBulkloadable(object):
             self.__close = True
             self.__namedtempfile = tempfile.NamedTemporaryFile()
             tempdest = self.__namedtempfile.file
+            self.__filename = self.__namedtempfile.name
+        else:
+            if usefilename and not path.exists(tempdest.name):
+                raise ValueError("Usefilename cannot be used with invalid "\
+                    "tempdest path '%s'" % tempdest.name)
+            self.__filename = tempdest.name
         self.fieldsep = fieldsep
         self.rowsep = rowsep
         self.nullsubst = nullsubst
@@ -1775,6 +1782,7 @@ class _BaseBulkloadable(object):
     def __preparetempfile(self):
         self.__namedtempfile = tempfile.NamedTemporaryFile()
         self.tempdest = self.__namedtempfile.file
+        self.__filename = self.__namedtempfile.name
         self.__ready = True
 
     def _insertwithnulls(self, row, namemapping={}):
@@ -1829,8 +1837,7 @@ class _BaseBulkloadable(object):
         self.tempdest.seek(0)
         self.bulkloader(self.name, self.atts,
                         self.fieldsep, self.rowsep, self.nullsubst,
-                        self.usefilename and self.__namedtempfile.name or
-                        self.tempdest)
+                        self.usefilename and self.__filename or self.tempdest)
         self.tempdest.seek(0)
         self.tempdest.truncate(0)
         self.__count = 0
@@ -1850,6 +1857,7 @@ class _BaseBulkloadable(object):
             # We need to make a private tempfile
             self.__namedtempfile = tempfile.NamedTemporaryFile()
             self.tempdest = self.__namedtempfile.file
+            self.__filename = self.__namedtempfile.name
 
 
 class BulkFactTable(_BaseBulkloadable):
