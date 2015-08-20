@@ -20,7 +20,7 @@ setup(
     url='http://pygrametl.org/',
     license='BSD',
     description='ETL programming in Python',
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     classifiers=[
                 'Development Status :: 4 - Beta',
                 'Development Status :: 5 - Production/Stable',
