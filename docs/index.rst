@@ -14,7 +14,7 @@ The package's modules are:
 *   **datasources** for access to different data sources
 *   **tables** for giving easy and abstracted access to dimension and fact tables
 *   **parallel** for parallelizing ETL operations
-*   **JDBCConnectionWrapper** and jythonmultiprocessing for support of Jython
+*   **JDBCConnectionWrapper** and **jythonmultiprocessing** for support of Jython
 *   **aggregators** for aggregating data
 *   **steps** for defining steps in an ETL flow
 *   **FIFODict** for providing a dict with a limited size and where elements are removed in first-in first-out order
@@ -25,9 +25,11 @@ Pygrametl is currently maintained at Aalborg University in Denmark by the follow
 :Library Maintainer:
     | Christian Thomsen <chr@cs.aau.dk>
 
-:Documentation Maintainers:
-    | Christoffer Moesgaard <cmoesgaard@gmail.com> 
+:Documentation Maintainer:
     | Søren Kejser Jensen <devel@kejserjensen.dk>
+
+:Former Maintainers:
+    | Christoffer Moesgaard <cmoesgaard@gmail.com>
 
 Getting started
 ===============

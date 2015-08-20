@@ -1,5 +1,9 @@
 Unreleased
 ----------
+Nothing at the moment.
+
+Version 2.4
+-----------
 **Note**
   This is the last version to support versions of Python 2 older than 2.7
 
@@ -41,6 +45,10 @@ Unreleased
 
   Using ``SlowlyChangingDimension`` with the cache disabled no longer causes a
   crash in ``SlowlyChangingDimension.scdensure``.
+
+  Using ``BulkDimension``, ``CachedBulkDimension`` or ``BulkFactTable`` with
+  ``tempdest`` and ``usefilename`` no longer causes a crash in
+  ``_BaseBulkloadable._bulkloadnow``.
 
 Version 2.3.2
 -------------
