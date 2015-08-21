@@ -48,22 +48,22 @@ Setup
 Using pygrametl with Jython requires a few extra steps compared to CPython, as
 Jython is less integrated with Python's package management system, and the JVM
 needs access to the necessary libraries. First, install pygrametl either
-through `PyPI <https://pypi.python.org/pypi/pygrametl/>`_ or by checking out
-the latest development version from `Google Code
-<https://code.google.com/p/pygrametl/>`_, for more information about
+through `PyPI <https://pypi.python.org/pypi/pygrametl/>`_ or by downloading the
+latest development version from `Github
+<https://github.com/chrthomsen/pygrametl>`_, for more information about
 installation of pygrametl for CPython see :ref:`install`.
 
 After pygrametl has been installed, the install location must be added to the
-environment variable 'JYTHONPATH', as Jython purposely does not read the
+environment variable ``JYTHONPATH``, as Jython purposely does not read the
 locations used by CPython as a default. The default pip install directory
 depends on the operating system, and whether packages are installed locally or
 globally, check the output of the pip install command or its log for precise
 information about where the packages are installed.  The method for setting
 this variable depends on your operating system. On most Unix-like systems , the
-variable can be set in '~/.profile', which will be sourced on login. On
+variable can be set in ``~/.profile``, which will be sourced on login. On
 Windows, environment variables can be changed through the System setting in in
-the Control Panel. The module path can also be set programmatically through the
-method :meth:`.sys.path`
+the Control Panel. The module path can also be set programmatically through
+:attr:`.sys.path`.
 
 Usage
 -----
@@ -71,7 +71,7 @@ Jython can in most cases be used as a replacement for Jython, with the
 exception of C-Extensions which Jython replaces with the capability to use
 libraries from languages targeting the JVM such as Java, Scala or Clojure.  To
 accesses JVM libraries, they must be added to the JVM classpath by using the
-'-J-cp' command line option. For more information about Jython's command line
+``-J-cp`` command line option. For more information about Jython's command line
 flags, see `Jython CLI <http://jython.org/docs/using/cmdline.html>`_.
 
 .. code-block:: python
@@ -110,4 +110,3 @@ The other Jython module, :mod:`.jythonmultiprocessing`, is even simpler to use
 as pygrametl's parallel module :mod:`.parallel` imports either it, or CPythons
 built-in :mod:`.multiprocessing` module depending on whether Jython or CPython
 is used. 
-

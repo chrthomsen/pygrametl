@@ -32,12 +32,11 @@ Installing Pygrametl
 Pygrametl can either be installed from `PyPI
 <https://pypi.python.org/pypi/pygrametl/>`_ using a package manager such as
 `Pip <https://pip.pypa.io/>`_ or `Conda <http://conda.pydata.org/>`_, or by
-manually checking out the latest development version from the official `Google
-Code repository <https://code.google.com/p/pygrametl/>`_.  Installing pygrametl
+manually checking out the latest development version from the official `Github
+repository <https://github.com/chrthomsen/pygrametl>`_.  Installing pygrametl
 from PyPI is currently the simplest way to install pygrametl as the process is
 automated by the package manager. Bug fixes and new experimental features are,
-however, of course available first at the `Google Code repository
-<https://code.google.com/p/pygrametl/>`_.
+however, of course available first at the Github repository.
 
 Install from PyPI With Pip
 ##########################
@@ -77,21 +76,21 @@ package from PyPI using Conda with a only few commands. ::
 After the installation process is completed, the folder containing the package
 template can be deleted, as it is only used for building the package.
 
-Install from Google Code
-########################
+Install from Github
+###################
 In order to get the latest development version the source code can be
-downloaded from the official `Google Code repository
-<https://code.google.com/p/pygrametl/>`_. The project currently uses Subversion
-as version control system, so the source can be checked out using the following
+downloaded from the official `Github repository
+<https://github.com/chrthomsen/pygrametl>`_. The project currently uses Git as
+version control system, so the repository can be cloned using the following
 command. ::
 
-    # Checks out the pygrametl source code from Goolge Code
-    $ svn checkout http://pygrametl.googlecode.com/svn/trunk/ pygrametl
+    # Clone the pygrametl repository from Github
+    $ git clone https://github.com/chrthomsen/pygrametl.git
 
-In order for Python to import the modules, it be added to ``sys.path``
+In order for Python to import the modules, it be added to :attr:`.sys.path`
 either directly in the source code of your Python programs, or by setting
-``PYTHONPATH`` if CPython is used, or ``JYTHONPATH`` if Jython is used.
-More information about how `Python modules
+``PYTHONPATH`` if CPython is used, or ``JYTHONPATH`` if Jython is used.  More
+information about how `Python modules
 <http://docs.python.org/2/tutorial/modules.html#the-module-search-path>`_ and
 `Jython Modules
 <http://www.jython.org/jythonbook/en/1.0/ModulesPackages.html#module-search-path-and-loading>`_
@@ -117,7 +116,7 @@ variable ``JYTHONPATH`` if Jython is used. By including the location of
 pygrametl in these variables, it is available to all instances of that Python
 implementation just like any built-in Python library. As an alternative, the
 path to pygrametl can be set on a program to program basis, by adding the path
-of pygrametl to ``sys.path``, before importing the package in your code.
+of pygrametl to :attr:`.sys.path`, before importing the package in your code.
 
 .. code-block:: python
 
