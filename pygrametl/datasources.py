@@ -60,6 +60,46 @@ __all__ = ['CSVSource', 'SQLSource', 'JoiningSource', 'HashJoiningSource',
 CSVSource = DictReader
 
 
+class TypedCSVSource(DictReader):
+    """A class for iterating a CSV file and type cast the values."""
+
+    def __init__(self, cvsfile, casts, fieldnames=None, restkey=None, 
+                 restval=None, dialect='excel', *args, **kwds):
+        """Arguments:
+           - cvsfile: An iterable object such as as file. Passed on to 
+             csv.DictReader
+           - casts: A dict mapping from attribute names to functions to apply
+             to these names, e.g., {'id':int, 'salary':float}
+           - fieldnames: An optional sequence of attribute names. Passed on to 
+             csv.DictReader
+           - restkey: Passed on to csv.DictReader
+           - restval: Passed on to csv.DictReader
+           - dialect: Passed on to csv.DictReader
+           - *args: Passed on to csv.DictReader
+           - **kwds: Passed on to csv.DictReader
+        """
+        DictReader.__init__(self, cvsfile, fieldnames=fieldnames, 
+                            restkey=restkey, restval=restval, dialect=dialect, 
+                            *args, **kwds)
+
+        if not type(casts) == dict:
+            raise TypeError("The casts argument must be a dict")
+        self._casts = casts
+
+
+    def __next__(self): # For Python 3
+        row = DictReader.__next__(self)
+        for (att, func) in self._casts.items():
+            row[att] = func(row[att])
+        return row
+
+    def next(self): # For Python 2
+        row = DictReader.next(self)
+        for (att, func) in self._casts.items():
+            row[att] = func(row[att])
+        return row
+    
+
 class SQLSource(object):
 
     """A class for iterating the result set of a single SQL query."""
