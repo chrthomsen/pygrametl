@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="UTF-8">
+        <title>pygrametl</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-30772056-1']);
+          _gaq.push(['_setDomainName', 'cs.aau.dk']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+    </head>
+
+    <body>
+        <section class="page-header">
+            <h1 class="project-name">pygrametl</h1>
+            <h2 class="project-tagline">ETL programming in Python</h2>
+            <a href="https://github.com/chrthomsen/pygrametl" class="btn">View on GitHub</a>
+            <a href="https://github.com/chrthomsen/pygrametl/zipball/master" class="btn">Download .zip</a>
+            <a href="https://github.com/chrthomsen/pygrametl/tarball/master" class="btn">Download .tar.gz</a>
+        </section>
+
+
+        <section class="main-content">
+            <!-- Introduction Section -->
+            <h1><a id="pygrametl---etl-programming-in-python" class="anchor" href="#pygrametl---etl-programming-in-python" aria-hidden="true"><span class="octicon octicon-link"></span></a>pygrametl - ETL programming in Python</h1>
+            <p>pygrametl (pronounced py-gram-e-t-l) is a Python framework which offers commonly used functionality for development of Extract-Transform-Load (ETL) processes. It is open source released under a BSD license. It works both with CPython and Jython such that you also can use existing Java code and JDBC drivers in your ETL program.</p>
+
+            <p>When using pygrametl, the developer codes the ETL process in Python code. This turns out to be very efficient, also when compared to drawing the process in a graphical user interface (GUI).</p>
+
+            <p>Concretely, the developer creates an object for each dimension and fact table. (S)he can then easily add new members by <code>dimension.insert(row)</code> where row is a dict holding the values to insert. This is a very simple example, but pygrametl also supports much more complicated scenarios. For example, it is possible to create a single object for a snowflaked dimension. It is then still possible to add a new dimension member with a single method call as in <code>snowflake.insert(row)</code>. This will automatically do the necessary lookups and insertions in the tables participating in the snowflake.</p>
+
+            <p>pygrametl also supports slowly changing dimensions. Again, the programmer only has to invoke a single method: <code>scdim.scdensure(row)</code>. This will perform the needed updates of both type 1 (i.e., overwrites) and type 2 (i.e., addition of new versions).</p>
+
+            <p>pygrametl was first made publicly available in 2009. Since then, we have made multiple improvements and added new features. Version 2.4 was released in August 2015 and extended support for slowly changing dimensions and bulk loading. Today, pygrametl is used both in proof of concepts and in production systems in different sectors such as healthcare, finance, and transport.</p>
+
+
+            <!-- Installation Section -->
+            <h2><a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+            <p>You can install pygrametl from pypi with the following command.</p>
+
+            <pre><code>$ pip install pygrametl</code></pre>
+
+            <p>The currently developed version of pygrametl is available at <a href="https://github.com/chrthomsen/pygrametl">GitHub</a>.</p>
+
+            <pre><code>$ git clone https://github.com/chrthomsen/pygrametl.git</code></pre>
+
+            <p>For more information about installation see the <a href="doc/quickstart/install.html">Install Guide</a>.</p>
+
+
+            <!-- Example Program Section -->
+            <h2><a id="example-program" class="anchor" href="#example-program" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Program</h2>
+            <p>Here you can see a complete example of a pygrametl program. The ETL program extracts data from two CSV files and joins their content before it is loaded into a data warehouse with the following schema.</p>
+
+            <p><center><img src="assets/schema.svg" alt="Schema"></center></p>
+
+            <p>The schema consists of a facttable, in the form of the <code>testresults</code>, and three dimensions test, time and page. The test and time dimensions are each represented as a single table, <code>test</code> and <code>date</code>. The page dimension is slowly changing and snowflaked into five tables, <code>page</code>, <code>domain</code>, <code>topleveldomain</code>, <code>serverversion</code> and <code>server</code>.</p>
+
+            <p>The code can be seen below and has a few functions defined in the top. After the functions, the pygrametl <code>Dimension</code>, <code>FactTable</code>, and <code>Source</code> objects are created. Using these objects, the main method only requires 10 lines of code to load the data warehouse. Note how easy it is to fill the page dimension even though it is slowly changing and snowflaked.</p>
+
+            <!-- NOTE: Added indention to the source code example is present on the rendered page, so don't add indention to the source code -->
+            <div class="highlight highlight-source-python"><pre><span class="pl-c"># This is code for loading the data warehouse from the running example</span>
+<span class="pl-c"># presented in C. Thomsen &amp; T.B. Pedersen: "pygrametl: A Powerful Programming</span>
+<span class="pl-c"># Framework for Extract--Transform--Load Programmers"</span>
+<span class="pl-c">#</span>
+<span class="pl-c"># It is made to be used with PostgreSQL and psycopg2 but you can</span>
+<span class="pl-c"># modify it to work with another DBMS.</span>
+
+
+<span class="pl-c">#</span>
+<span class="pl-c">#  Copyright (c) 2009, 2010 Christian Thomsen ( chr @ cs . aau . dk )</span>
+<span class="pl-c">#</span>
+<span class="pl-c">#  This file is free software: you may copy, redistribute and/or modify it</span>
+<span class="pl-c">#  under the terms of the GNU General Public License version 2</span>
+<span class="pl-c">#  as published by the Free Software Foundation.</span>
+<span class="pl-c">#</span>
+<span class="pl-c">#  This file is distributed in the hope that it will be useful, but</span>
+<span class="pl-c">#  WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="pl-c">#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="pl-c">#  General Public License for more details.</span>
+<span class="pl-c">#</span>
+<span class="pl-c">#  You should have received a copy of the GNU General Public License</span>
+<span class="pl-c">#  along with this program.  If not, see http://www.gnu.org/licenses.</span>
+<span class="pl-c">#</span>
+
+
+<span class="pl-k">import</span> datetime
+<span class="pl-k">import</span> sys
+<span class="pl-k">import</span> time
+
+<span class="pl-c"># In this example, we use psycopg2. You can change it to another driver,</span>
+<span class="pl-c"># but then the method pgcopybulkloader won't work as we use driver-specific</span>
+<span class="pl-c"># code there.</span>
+<span class="pl-c"># You can make another function or declare facttbl (see further below) to</span>
+<span class="pl-c"># be a BatchFactTable such that you don't need special</span>
+<span class="pl-c"># bulk loading methods.</span>
+
+<span class="pl-k">import</span> psycopg2
+
+<span class="pl-c"># Depending on your system, you might have to do something like this</span>
+<span class="pl-c"># where you append the path where pygrametl is installed</span>
+sys.path.append(<span class="pl-s"><span class="pl-pds">'</span>/home/me/code<span class="pl-pds">'</span></span>)
+
+<span class="pl-k">import</span> pygrametl
+<span class="pl-k">from</span> pygrametl.datasources <span class="pl-k">import</span> CSVSource, MergeJoiningSource
+<span class="pl-k">from</span> pygrametl.tables <span class="pl-k">import</span> CachedDimension, SnowflakedDimension,\
+    SlowlyChangingDimension, BulkFactTable
+
+
+<span class="pl-c"># Connection to the target data warehouse:</span>
+pgconn <span class="pl-k">=</span> psycopg2.connect(<span class="pl-smi">user</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>me<span class="pl-pds">'</span></span>)
+connection <span class="pl-k">=</span> pygrametl.ConnectionWrapper(pgconn)
+connection.setasdefault()
+connection.execute(<span class="pl-s"><span class="pl-pds">'</span>set search_path to pygrametlexa<span class="pl-pds">'</span></span>)
+
+
+<span class="pl-c"># Methods</span>
+<span class="pl-k">def</span> <span class="pl-en">pgcopybulkloader</span>(<span class="pl-smi">name</span>, <span class="pl-smi">atts</span>, <span class="pl-smi">fieldsep</span>, <span class="pl-smi">rowsep</span>, <span class="pl-smi">nullval</span>, <span class="pl-smi">filehandle</span>):
+    <span class="pl-c"># Here we use driver-specific code to get fast bulk loading.</span>
+    <span class="pl-c"># You can change this method if you use another driver or you can</span>
+    <span class="pl-c"># use the FactTable or BatchFactTable classes (which don't require</span>
+    <span class="pl-c"># use of driver-specifc code) instead of the BulkFactTable class.</span>
+    <span class="pl-k">global</span> connection
+    curs <span class="pl-k">=</span> connection.cursor()
+    curs.copy_from(<span class="pl-smi">file</span><span class="pl-k">=</span>filehandle, <span class="pl-smi">table</span><span class="pl-k">=</span>name, <span class="pl-smi">sep</span><span class="pl-k">=</span>fieldsep,
+                   <span class="pl-smi">null</span><span class="pl-k">=</span><span class="pl-c1">str</span>(nullval), <span class="pl-smi">columns</span><span class="pl-k">=</span>atts)
+
+<span class="pl-k">def</span> <span class="pl-en">datehandling</span>(<span class="pl-smi">row</span>, <span class="pl-smi">namemapping</span>):
+    <span class="pl-c"># This method is called from ensure(row) when the lookup of a date fails.</span>
+    <span class="pl-c"># In the Real World, you would probably prefill the date dimension, but</span>
+    <span class="pl-c"># we use this to illustrate "rowexpanders" that make it possible to</span>
+    <span class="pl-c"># calculate derived attributes on demand (such that the - possibly</span>
+    <span class="pl-c"># expensive - calculations only are done when needed and not for each</span>
+    <span class="pl-c"># seen data row).</span>
+    <span class="pl-c">#</span>
+    <span class="pl-c"># Here, we calculate all date related fields and add them to the row.</span>
+    date <span class="pl-k">=</span> pygrametl.getvalue(row, <span class="pl-s"><span class="pl-pds">'</span>date<span class="pl-pds">'</span></span>, namemapping)
+    (year, month, day, hour, minute, second, weekday, dayinyear, dst) <span class="pl-k">=</span> \
+        time.strptime(date, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%Y</span>-<span class="pl-c1">%m</span>-<span class="pl-c1">%d</span><span class="pl-pds">"</span></span>)
+    (isoyear, isoweek, isoweekday) <span class="pl-k">=</span> \
+        datetime.date(year, month, day).isocalendar()
+    row[<span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> day
+    row[<span class="pl-s"><span class="pl-pds">'</span>month<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> month
+    row[<span class="pl-s"><span class="pl-pds">'</span>year<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> year
+    row[<span class="pl-s"><span class="pl-pds">'</span>week<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> isoweek
+    row[<span class="pl-s"><span class="pl-pds">'</span>weekyear<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> isoyear
+    row[<span class="pl-s"><span class="pl-pds">'</span>dateid<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> dayinyear <span class="pl-k">+</span> <span class="pl-c1">366</span> <span class="pl-k">*</span> (year <span class="pl-k">-</span> <span class="pl-c1">1990</span>) <span class="pl-c">#Support dates from 1990</span>
+    <span class="pl-k">return</span> row
+
+
+<span class="pl-k">def</span> <span class="pl-en">extractdomaininfo</span>(<span class="pl-smi">row</span>):
+    <span class="pl-c"># Take the 'www.domain.org' part from 'http://www.domain.org/page.html'</span>
+    <span class="pl-c"># We also the host name ('www') in the domain in this example.</span>
+    domaininfo <span class="pl-k">=</span> row[<span class="pl-s"><span class="pl-pds">'</span>url<span class="pl-pds">'</span></span>].split(<span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>)[<span class="pl-k">-</span><span class="pl-c1">2</span>]
+    row[<span class="pl-s"><span class="pl-pds">'</span>domain<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> domaininfo
+    <span class="pl-c"># Take the top level which is the last part of the domain</span>
+    row[<span class="pl-s"><span class="pl-pds">'</span>topleveldomain<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> domaininfo.split(<span class="pl-s"><span class="pl-pds">'</span>.<span class="pl-pds">'</span></span>)[<span class="pl-k">-</span><span class="pl-c1">1</span>]
+
+<span class="pl-k">def</span> <span class="pl-en">extractserverinfo</span>(<span class="pl-smi">row</span>):
+    <span class="pl-c"># Find the server name from a string like "ServerName/Version"</span>
+    row[<span class="pl-s"><span class="pl-pds">'</span>server<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> row[<span class="pl-s"><span class="pl-pds">'</span>serverversion<span class="pl-pds">'</span></span>].split(<span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>)[<span class="pl-c1">0</span>]
+
+<span class="pl-c"># Dimension and fact table objects</span>
+topleveldim <span class="pl-k">=</span> CachedDimension(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>topleveldomain<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">key</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>topleveldomainid<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">attributes</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>topleveldomain<span class="pl-pds">'</span></span>])
+
+domaindim <span class="pl-k">=</span> CachedDimension(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>domain<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">key</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>domainid<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">attributes</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>domain<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>topleveldomainid<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">lookupatts</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>domain<span class="pl-pds">'</span></span>])
+
+serverdim <span class="pl-k">=</span> CachedDimension(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>server<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">key</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>serverid<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">attributes</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>server<span class="pl-pds">'</span></span>])
+
+serverversiondim <span class="pl-k">=</span> CachedDimension(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>serverversion<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">key</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>serverversionid<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">attributes</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>serverversion<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>serverid<span class="pl-pds">'</span></span>])
+
+pagedim <span class="pl-k">=</span> SlowlyChangingDimension(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>page<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">key</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>pageid<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">attributes</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>url<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>size<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>validfrom<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>validto<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>version<span class="pl-pds">'</span></span>,
+                <span class="pl-s"><span class="pl-pds">'</span>domainid<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>serverversionid<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">lookupatts</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>url<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">versionatt</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>version<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">fromatt</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>validfrom<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">toatt</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>validto<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">srcdateatt</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>lastmoddate<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">cachesize</span><span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span>)
+
+pagesf <span class="pl-k">=</span> SnowflakedDimension(
+    [(pagedim, (serverversiondim, domaindim)),
+     (serverversiondim, serverdim),
+     (domaindim, topleveldim)
+     ])
+
+testdim <span class="pl-k">=</span> CachedDimension(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">key</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>testid<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">attributes</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>testname<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>testauthor<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">lookupatts</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>testname<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">prefill</span><span class="pl-k">=</span><span class="pl-c1">True</span>,
+    <span class="pl-smi">defaultidvalue</span><span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span>)
+
+datedim <span class="pl-k">=</span> CachedDimension(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>date<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">key</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>dateid<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">attributes</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>date<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>day<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>month<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>year<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>week<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>weekyear<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">lookupatts</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>date<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">rowexpander</span><span class="pl-k">=</span>datehandling)
+
+facttbl <span class="pl-k">=</span> BulkFactTable(
+    <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>testresults<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">keyrefs</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>pageid<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>testid<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>dateid<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">measures</span><span class="pl-k">=</span>[<span class="pl-s"><span class="pl-pds">'</span>errors<span class="pl-pds">'</span></span>],
+    <span class="pl-smi">bulkloader</span><span class="pl-k">=</span>pgcopybulkloader,
+    <span class="pl-smi">bulksize</span><span class="pl-k">=</span><span class="pl-c1">5000000</span>)
+
+
+<span class="pl-c"># Data sources - change the path if you have your files somewhere else</span>
+<span class="pl-c"># The buffer size is set to 16384 B, as it performed better than any alternatives we tested</span>
+downloadlog <span class="pl-k">=</span> CSVSource(<span class="pl-c1">file</span>(<span class="pl-s"><span class="pl-pds">'</span>./DownloadLog.csv<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>r<span class="pl-pds">'</span></span>, <span class="pl-c1">16384</span>),
+                        <span class="pl-smi">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\t</span><span class="pl-pds">'</span></span>)
+
+testresults <span class="pl-k">=</span> CSVSource(<span class="pl-c1">file</span>(<span class="pl-s"><span class="pl-pds">'</span>./TestResults.csv<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>r<span class="pl-pds">'</span></span>, <span class="pl-c1">16384</span>),
+                        <span class="pl-smi">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\t</span><span class="pl-pds">'</span></span>)
+
+inputdata <span class="pl-k">=</span> MergeJoiningSource(downloadlog, <span class="pl-s"><span class="pl-pds">'</span>localfile<span class="pl-pds">'</span></span>,
+                               testresults, <span class="pl-s"><span class="pl-pds">'</span>localfile<span class="pl-pds">'</span></span>)
+
+<span class="pl-k">def</span> <span class="pl-en">main</span>():
+    <span class="pl-k">for</span> row <span class="pl-k">in</span> inputdata:
+        extractdomaininfo(row)
+        extractserverinfo(row)
+        row[<span class="pl-s"><span class="pl-pds">'</span>size<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> pygrametl.getint(row[<span class="pl-s"><span class="pl-pds">'</span>size<span class="pl-pds">'</span></span>]) <span class="pl-c"># Convert to an int</span>
+        <span class="pl-c"># Add the data to the dimension tables and the fact table</span>
+        row[<span class="pl-s"><span class="pl-pds">'</span>pageid<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> pagesf.scdensure(row)
+        row[<span class="pl-s"><span class="pl-pds">'</span>dateid<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> datedim.ensure(row, {<span class="pl-s"><span class="pl-pds">'</span>date<span class="pl-pds">'</span></span>:<span class="pl-s"><span class="pl-pds">'</span>downloaddate<span class="pl-pds">'</span></span>})
+        row[<span class="pl-s"><span class="pl-pds">'</span>testid<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> testdim.lookup(row, {<span class="pl-s"><span class="pl-pds">'</span>testname<span class="pl-pds">'</span></span>:<span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>})
+        facttbl.insert(row)
+    connection.commit()
+
+<span class="pl-k">if</span> <span class="pl-c1">__name__</span> <span class="pl-k">==</span> <span class="pl-s"><span class="pl-pds">'</span>__main__<span class="pl-pds">'</span></span>:
+    main()</pre></div>
+
+
+                <!-- Documentation Section -->
+                <h2><a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+                <p>The documentation, including <a href="doc/quickstart/install.html">installation</a> and <a href="doc/quickstart/beginner.html">beginner</a> guides, are available online <a href="doc/index.html">here</a>.</p>
+
+                <p>In addition to the documentation multiple papers have been published on pygrametl. The papers provide a more detailed description of the foundational ideas behind pygrametl, but is obviously not keep up to date with changes and improvements implemented in the framework, for such see the documentation.</p>
+                <ul>
+                    <li><b>pygrametl: A Powerful Programming Framework for Extract-Transform-Load Programmers - DOLAP'09</b><br>
+                           by Christian, Thomsen and Torben Bach Pedersen<br>
+                           in <i>Proceedings of the ACM 12th international workshop on Data warehousing and OLAP</i><br>
+                           Download: <a href="http://dl.acm.org/citation.cfm?id=1651301">Publication</a>, <a href="assets/pygrametlexa.zip">Examples and Data Generator</a></li>
+                    <br>
+                    <li><b>pygrametl: A Powerful Programming Framework for Extract–Transform–Load Programmers - Technical Report</b><br>
+                           by Christian, Thomsen and Torben Bach Pedersen<br>
+                           Download: <a href="http://dbtr.cs.aau.dk/DBPublications/DBTR-25.pdf">Publication</a></li>
+                    <br>
+                    <li><b>Easy and Effective Parallel Programmable ETL - DOLAP'11</b><br>
+                        by Christian, Thomsen and Torben Bach Pedersen<br>
+                        in <i>Proceedings of the ACM 14th international workshop on Data Warehousing and OLAP</i><br>
+                        Download: <a href="http://dl.acm.org/citation.cfm?id=2064684">Publication</a>, <a href="assets/exaprogs.zip">Examples and Data Generator</a></li>
+                </ul>
+                <p>If you use pygrametl in academia, please cite the relevant paper(s) above.</p>
+
+
+                <!-- Contact Information Section -->
+                <h2><a id="contact-information" class="anchor" href="#contact-information" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contact Information</h2>
+                <p>Questions? Comments? Bug reports? Suggestions? Please tell us what you think!<p>
+
+                <p>Send an email to <b>chr</b> <i>AT</i> <b>cs</b> <i>DOT</i> <b>aau</b> <i>DOT</i> <b>dk</b>.</p>
+
+                <p>We would also like (but don't require!) to know if you choose to use/not to use pygrametl. Again if you use pygrametl in academia, please cite the relevant paper(s) above.</p>
+
+
+                <footer class="site-footer">
+                    <span class="site-footer-owner"><a href="https://github.com/chrthomsen/pygrametl">pygrametl</a> is maintained by
+                        <a href="https://github.com/chrthomsen">Christian Thomsen</a>, <a href="https://github.com/OveAnd">Ove Andersen</a>, and <a href="https://github.com/skejserjensen">S&oslashren Kejser Jensen</a>.</span>
+                    <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+                </footer>
+        </section>
+    </body>
+</html>

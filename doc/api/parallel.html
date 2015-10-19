@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallel &mdash; pygrametl 2.4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="next" title="JDBCConnectionWrapper" href="jdbcconnectionwrapper.html" />
+    <link rel="prev" title="Tables" href="tables.html" />
+ 
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-30772056-1']);
+  _gaq.push(['_setDomainName', 'cs.aau.dk']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jdbcconnectionwrapper.html" title="JDBCConnectionWrapper"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pygrametl.parallel">
+<span id="parallel"></span><h1>Parallel<a class="headerlink" href="#module-pygrametl.parallel" title="Permalink to this headline">¶</a></h1>
+<p>This module contains methods and classes for making parallel ETL flows.
+Note that this module in many cases will give better results with Jython
+(where it uses threads) than with CPython (where it uses processes).</p>
+<p>Warning: This is still experimental and things may be changed drastically.
+If you have ideas, comments, bug reports, etc., please report them to
+Christian Thomsen (<a class="reference external" href="mailto:chr&#37;&#52;&#48;cs&#46;aau&#46;dk">chr<span>&#64;</span>cs<span>&#46;</span>aau<span>&#46;</span>dk</a>)</p>
+<dl class="function">
+<dt id="pygrametl.parallel.splitpoint">
+<code class="descclassname">pygrametl.parallel.</code><code class="descname">splitpoint</code><span class="sig-paren">(</span><em>*arg</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.parallel.splitpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be used as an annotation to make a function run in a separate process.</p>
+<p>Each call of a &#64;splitpoint annotated function f involves adding the
+request (and arguments, if any) to a shared queue. This can be
+relatively expensive if f only uses little computation time.
+The benefits from &#64;splitpoint are thus best obtained for a function f
+which is time-consuming. To wait for all splitpoints to finish their
+computations, call endsplits().</p>
+<p>&#64;splitpoint can be used as in the following examples:</p>
+<div class="line-block">
+<div class="line">&#64;splitpoint</div>
+<div class="line">def f(args):</div>
+</div>
+<blockquote>
+<div><cite>The simplest case. Makes f run in a separate process.
+All calls of f will return None immediately and f will be
+invoked in the separate process.</cite></div></blockquote>
+<div class="line-block">
+<div class="line">&#64;splitpoint()</div>
+<div class="line">def g(args):</div>
+</div>
+<blockquote>
+<div><cite>With parentheses. Has the same effect as the previous example.</cite></div></blockquote>
+<div class="line-block">
+<div class="line">&#64;splitpoint(output=queue, instances=2, queuesize=200)</div>
+<div class="line">def h(args):</div>
+</div>
+<blockquote>
+<div><cite>With keyword arguments. It is not required that
+all of keyword arguments above are given.</cite></div></blockquote>
+<p><strong>Keyword arguments:</strong></p>
+<ul class="simple">
+<li>output: If given, it should be a queue-like object (offering the
+.put(obj) method). The annotated function&#8217;s results will then be put
+in the output</li>
+<li>instances: Determines how many processes should run the function.
+Each of the processes will have the value parallel.splitno set to
+a unique value between 0 (incl.) and instances (excl.).</li>
+<li>queuesize: Given as an argument to a multiprocessing.JoinableQueue
+which holds arguments to the annotated function while they wait for
+an idle process that will pass them on to the annotated function.
+The argument decides the maximum number of calls that can wait in the
+queue. 0 means unlimited. Default: 0</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="pygrametl.parallel.endsplits">
+<code class="descclassname">pygrametl.parallel.</code><code class="descname">endsplits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.parallel.endsplits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for all splitpoints to finish</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pygrametl.parallel.createflow">
+<code class="descclassname">pygrametl.parallel.</code><code class="descname">createflow</code><span class="sig-paren">(</span><em>*functions</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.parallel.createflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a flow of functions running in different processes.</p>
+<p>A Flow object ready for use is returned.</p>
+<p>A flow consists of several functions running in several processes.
+A flow created by</p>
+<blockquote>
+<div>flow = createflow(f1, f2, f3)</div></blockquote>
+<p>uses three processes. Data can be inserted into the flow by calling it
+as in flow(data). The argument data is then first processed by f1(data),
+then f2(data), and finally f3(data). Return values from f1, f2, and f3
+are <em>not</em> preserved, but their side-effects are. The functions in a flow
+should all accept the same number of arguments (*args are also okay).</p>
+<p>Internally, a Flow object groups calls together in batches to reduce
+communication costs (see also the description of arguments below).
+In the example above, f1 could thus work on one batch, while f2 works
+on another batch and so on. Flows are thus good to use even if there
+are many calls of relatively fast functions.</p>
+<p>When no more data is to be inserted into a flow, it should be closed
+by calling its close method.</p>
+<p>Data processed by a flow can be fetched by calling get/getall or simply
+iterating the flow. This can both be done by the process that inserted
+data into the flow or by another (possibly concurrent) process. All
+data in a flow should be fetched again as it otherwise will remain in
+memory .</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>*functions: A sequence of functions of sequences of functions.
+Each element in the sequence will be executed in a separate process.
+For example, the argument (f1, (f2, f3), f4) leads to that
+f1 executes in process-1, f2 and f3 execute in process-2, and f4
+executes in process-3.
+The functions in the sequence should all accept the same number of
+arguments.</li>
+<li>**options: keyword arguments configuring details. The considered
+options are:<ul>
+<li>batchsize: an integer deciding how many function calls are &#8220;grouped
+together&#8221; before they are passed on between processes. The default
+is 500.</li>
+<li>queuesize: an integer deciding the maximum number of batches
+that can wait in a JoinableQueue between two different processes.
+0 means that there is no limit.
+The default is 25.</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.parallel.Decoupled">
+<em class="property">class </em><code class="descclassname">pygrametl.parallel.</code><code class="descname">Decoupled</code><span class="sig-paren">(</span><em>obj</em>, <em>returnvalues=True</em>, <em>consumes=()</em>, <em>directupdatepositions=()</em>, <em>batchsize=500</em>, <em>queuesize=200</em>, <em>autowrap=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.parallel.Decoupled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="pygrametl.parallel.Decoupled.shutdowndecoupled">
+<code class="descname">shutdowndecoupled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.parallel.Decoupled.shutdowndecoupled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Let the Decoupled instance finish its tasks and stop it.</p>
+<p>The Decoupled instance should not be used after this.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pygrametl.parallel.shareconnectionwrapper">
+<code class="descclassname">pygrametl.parallel.</code><code class="descname">shareconnectionwrapper</code><span class="sig-paren">(</span><em>targetconnection</em>, <em>maxclients=10</em>, <em>userfuncs=()</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.parallel.shareconnectionwrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Share a ConnectionWrapper between several processes/threads.</p>
+<p>When Decoupled objects are used, they can try to update the DW at the same
+time. They can use several ConnectionWrappers to avoid race conditions, but
+this is not transactionally safe. Instead, they can use a &#8220;shared&#8221;
+ConnectionWrapper obtained through this function.</p>
+<p>When a ConnectionWrapper is shared, it is executing in a separate process
+(or thread, in case Jython is used) and ensuring that only one operation
+takes place at the time. This is hidden from the users of the shared
+ConnectionWrapper.  They see an interface similar to the normal
+ConnectionWrapper.</p>
+<p>When this method is called, it returns a SharedConnectionWrapperClient
+which can be used as a normal ConnectionWrapper. Each process
+(i.e., each Decoupled object) should, however, get a unique
+SharedConnectionWrapperClient by calling copy() on the returned
+SharedConnectionWrapperClient.</p>
+<p>Note that a shared ConnectionWrapper needs to hold the complete result of
+each query in memory until it is fetched by the process that executed the
+query. Again, this is hidden from the users.</p>
+<p>It is also possible to add methods to a shared ConnectionWrapper when it
+is created. When this is done and the method is invoked, no other
+operation will modify the DW at the same time. If, for example,
+the functions foo and bar are added to a shared ConnectionWrapper (by
+passing the argument userfuncs=(foo, bar) to shareconnectionwrapper),
+the returned SharedConnectionWrapperClient will offer the methods
+foo and bar which when called will be running in the separate process
+for the shared ConnectionWrapper. This is particularly useful for
+user-defined bulk loaders as used by BulkFactTable:</p>
+<dl class="docutils">
+<dt>def bulkload():</dt>
+<dd><cite>DBMS-specific code here.
+No other DW operation should take place concurrently</cite></dd>
+</dl>
+<p>scw = shareconnectionwrapper(ConnectionWrapper(...), userfuncs=(bulkload,))</p>
+<p>facttbl = BulkFact(..., bulkloader=scw.copy().bulkload)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The SharedConnectionWrapper must be copied using .copy().</p>
+</div>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>targetconnection: a pygrametl ConnectionWrapper</li>
+<li>maxclients: the maximum number of concurrent clients. Default: 10</li>
+<li>userfuncs: a sequence of functions to add to the shared
+ConnectionWrapper. Default: ()</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="pygrametl.parallel.getsharedsequencefactory">
+<code class="descclassname">pygrametl.parallel.</code><code class="descname">getsharedsequencefactory</code><span class="sig-paren">(</span><em>startvalue</em>, <em>intervallen=5000</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.parallel.getsharedsequencefactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a factory for parallel readers of a sequence.</p>
+<p>Returns a callable f. When f() is called, it returns a callable g.
+Whenever g(*args) is called, it returns a unique int from a sequence
+(if several g&#8217;s are created, the order of the calls may lead to that
+the returned ints are not ordered, but they will be unique). The
+arguments to g are ignored, but accepted. Thus g can be used as
+idfinder for [Decoupled]Dimensions.</p>
+<p>The different g&#8217;s can be used safely from different processes and
+threads.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>startvalue: The first value to return. If None, 0 is assumed.</li>
+<li>intervallen: The amount of numbers that a single g from above
+can return before synchronization is needed to get a new amount.
+Default: 5000.</li>
+</ul>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tables.html"
+                        title="previous chapter">Tables</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="jdbcconnectionwrapper.html"
+                        title="next chapter">JDBCConnectionWrapper</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/parallel.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jdbcconnectionwrapper.html" title="JDBCConnectionWrapper"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2009 - 2015, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

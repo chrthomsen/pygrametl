@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pygrametl - ETL Development in Python &mdash; pygrametl 2.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pygrametl 2.4 documentation" href="#" />
+    <link rel="next" title="Install Guide" href="quickstart/install.html" />
+ 
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-30772056-1']);
+  _gaq.push(['_setDomainName', 'cs.aau.dk']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quickstart/install.html" title="Install Guide"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pygrametl 2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pygrametl-etl-development-in-python">
+<h1>Pygrametl - ETL Development in Python<a class="headerlink" href="#pygrametl-etl-development-in-python" title="Permalink to this headline">¶</a></h1>
+<p><em>pygrametl</em> is a package for creating Extract-Transform-Load (ETL) programs in Python.</p>
+<p>The package contains a number of classes for filling fact tables
+and dimensions (including snowflaked and slowly changing dimensions),
+classes for extracting data from different sources, classes for defining
+&#8216;steps&#8217; in an ETL flow, and convenient functions for often-needed ETL
+functionality.</p>
+<p>The package&#8217;s modules are:</p>
+<ul class="simple">
+<li><strong>datasources</strong> for access to different data sources</li>
+<li><strong>tables</strong> for giving easy and abstracted access to dimension and fact tables</li>
+<li><strong>parallel</strong> for parallelizing ETL operations</li>
+<li><strong>JDBCConnectionWrapper</strong> and <strong>jythonmultiprocessing</strong> for support of Jython</li>
+<li><strong>aggregators</strong> for aggregating data</li>
+<li><strong>steps</strong> for defining steps in an ETL flow</li>
+<li><strong>FIFODict</strong> for providing a dict with a limited size and where elements are removed in first-in first-out order</li>
+</ul>
+<p>Pygrametl is currently maintained at Aalborg University in Denmark by the following people:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Library Maintainer:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><div class="first last line-block">
+<div class="line">Christian Thomsen &lt;<a class="reference external" href="mailto:chr&#37;&#52;&#48;cs&#46;aau&#46;dk">chr<span>&#64;</span>cs<span>&#46;</span>aau<span>&#46;</span>dk</a>&gt;</div>
+</div>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Documentation Maintainer:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><div class="first last line-block">
+<div class="line">Søren Kejser Jensen &lt;<a class="reference external" href="mailto:devel&#37;&#52;&#48;kejserjensen&#46;dk">devel<span>&#64;</span>kejserjensen<span>&#46;</span>dk</a>&gt;</div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Former Maintainers:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><div class="first last line-block">
+<div class="line">Christoffer Moesgaard &lt;<a class="reference external" href="mailto:cmoesgaard&#37;&#52;&#48;gmail&#46;com">cmoesgaard<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart/install.html">Install Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart/beginner.html">Beginner Guide</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="code-examples">
+<h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/database.html">Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/datasources.html">Data sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/dimensions.html">Dimensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/facttable.html">Fact Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/bulkloading.html">Bulk Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parallel.html">Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/jython.html">Jython</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/pygrametl.html">pygrametl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/datasources.html">Datasources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/tables.html">Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/parallel.html">Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/jdbcconnectionwrapper.html">JDBCConnectionWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/jythonmultiprocessing.html">Jythonmultiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/aggregators.html">Aggregators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/steps.html">Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/fifodict.html">FIFODict</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pygrametl - ETL Development in Python</a><ul>
+<li><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li><a class="reference internal" href="#code-examples">Code Examples</a></li>
+<li><a class="reference internal" href="#api">API</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="quickstart/install.html"
+                        title="next chapter">Install Guide</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quickstart/install.html" title="Install Guide"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pygrametl 2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2009 - 2015, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

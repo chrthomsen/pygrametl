@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Datasources &mdash; pygrametl 2.4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="next" title="Tables" href="tables.html" />
+    <link rel="prev" title="pygrametl" href="pygrametl.html" />
+ 
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-30772056-1']);
+  _gaq.push(['_setDomainName', 'cs.aau.dk']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pygrametl.html" title="pygrametl"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pygrametl.datasources">
+<span id="datasources"></span><h1>Datasources<a class="headerlink" href="#module-pygrametl.datasources" title="Permalink to this headline">¶</a></h1>
+<p>This module holds classes that can be used as data soures. Note that it is
+easy to create other data sources: A data source must be iterable and
+provide dicts that map from attribute names to attribute values.</p>
+<dl class="attribute">
+<dt id="pygrametl.datasources.CSVSource">
+<code class="descclassname">pygrametl.datasources.</code><code class="descname">CSVSource</code><a class="headerlink" href="#pygrametl.datasources.CSVSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">DictReader</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.SQLSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">SQLSource</code><span class="sig-paren">(</span><em>connection</em>, <em>query</em>, <em>names=()</em>, <em>initsql=None</em>, <em>cursorarg=None</em>, <em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.SQLSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class for iterating the result set of a single SQL query.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>connection: the PEP 249 connection to use. NOT a ConnectionWrapper!</li>
+<li>query: the query that generates the result</li>
+<li>names: names of attributes in the result. If not set,
+the names from the database are used. Default: ()</li>
+<li>initsql: SQL that is executed before the query. The result of this
+initsql is not returned. Default: None.</li>
+<li>cursorarg: if not None, this argument is used as an argument when
+the connection&#8217;s cursor method is called. Default: None.</li>
+<li>parameters: if not None, this sequence or mapping of parameters
+will be sent when the query is executed.</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pygrametl.datasources.JoiningSource">
+<code class="descclassname">pygrametl.datasources.</code><code class="descname">JoiningSource</code><a class="headerlink" href="#pygrametl.datasources.JoiningSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pygrametl.datasources.HashJoiningSource" title="pygrametl.datasources.HashJoiningSource"><code class="xref py py-class docutils literal"><span class="pre">HashJoiningSource</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.HashJoiningSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">HashJoiningSource</code><span class="sig-paren">(</span><em>src1</em>, <em>key1</em>, <em>src2</em>, <em>key2</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.HashJoiningSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class for equi-joining two data sources.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>src1: the first source. This source is iterated row by row.</li>
+<li>key1: the attribute of the first source to use in the join</li>
+<li>src2: the second source. The rows of this source are all loaded
+into memory.</li>
+<li>key2: the attriubte of the second source to use in the join.</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.MergeJoiningSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">MergeJoiningSource</code><span class="sig-paren">(</span><em>src1</em>, <em>key1</em>, <em>src2</em>, <em>key2</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.MergeJoiningSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class for merge-joining two sorted data sources</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>src1: a data source</li>
+<li>key1: the attribute to use from src1</li>
+<li>src2: a data source</li>
+<li>key2: the attribute to use from src2</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pygrametl.datasources.BackgroundSource">
+<code class="descclassname">pygrametl.datasources.</code><code class="descname">BackgroundSource</code><a class="headerlink" href="#pygrametl.datasources.BackgroundSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.ProcessSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">ProcessSource</code><span class="sig-paren">(</span><em>source</em>, <em>batchsize=500</em>, <em>queuesize=20</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.ProcessSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class for iterating another source in a separate process</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>source: the source to iterate</li>
+<li>batchsize: the number of rows passed from the worker process each
+time it passes on a batch of rows. Must be positive. Default: 500</li>
+<li>queuesize: the maximum number of batches that can wait in a queue
+between the processes. 0 means unlimited. Default: 20</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.TransformingSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">TransformingSource</code><span class="sig-paren">(</span><em>source</em>, <em>*transformations</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.TransformingSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A source that applies functions to the rows from another source</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>source: a data source</li>
+<li>*transformations: the transformations to apply. Must be callables
+of the form func(row) where row is a dict. Will be applied in the
+given order.</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.UnionSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">UnionSource</code><span class="sig-paren">(</span><em>*sources</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.UnionSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A source to union other sources (possibly with different types of rows).
+All rows are read from the 1st source before rows are read from the 2nd
+source and so on (to interleave the rows, use a RoundRobinSource)</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>*sources: The sources to union in the order they should be used.</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.CrossTabbingSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">CrossTabbingSource</code><span class="sig-paren">(</span><em>source</em>, <em>rowvaluesatt</em>, <em>colvaluesatt</em>, <em>values</em>, <em>aggregator=None</em>, <em>nonevalue=0</em>, <em>sortrows=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.CrossTabbingSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A source that produces a crosstab from another source</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>source: the data source to pull data from</li>
+<li>rowvaluesatt: the name of the attribute that holds the values that
+appear as rows in the result</li>
+<li>colvaluesatt: the name of the attribute that holds the values that
+appear as columns in the result</li>
+<li>values: the name of the attribute that holds the values to aggregate</li>
+<li>aggregator: the aggregator to use (see pygrametl.aggregators). If not
+given, pygrametl.aggregators.Sum is used to sum the values</li>
+<li>nonevalue: the value to return when there is no data to aggregate.
+Default: 0</li>
+<li>sortrows: A boolean deciding if the rows should be sorted.
+Default: False</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.FilteringSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">FilteringSource</code><span class="sig-paren">(</span><em>source</em>, <em>filter=&lt;type 'bool'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.FilteringSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A source that applies a filter to another source</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>source: the source to filter</li>
+<li>filter: a callable f(row). If the result is a True value,
+the row is passed on. If not, the row is discarded.
+Default: bool, i.e., Python&#8217;s standard boolean conversion which
+removes empty rows.</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.DynamicForEachSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">DynamicForEachSource</code><span class="sig-paren">(</span><em>seq</em>, <em>callee</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.DynamicForEachSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A source that for each given argument creates a new source that
+will be iterated by this source.</p>
+<p>For example, useful for directories where a CSVSource should be created
+for each file.</p>
+<p>The user must provide a function that when called with a single argument,
+returns a new source to iterate. A DynamicForEachSource instance can be
+given to several ProcessSource instances.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>seq: a sequence with the elements for each of which a unique source
+must be created. the elements are given (one by one) to callee.</li>
+<li>callee: a function f(e) that must accept elements as those in the
+seq argument. the function should return a source which then will
+be iterated by this source. the function is called once for every
+element in seq.</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="pygrametl.datasources.RoundRobinSource">
+<em class="property">class </em><code class="descclassname">pygrametl.datasources.</code><code class="descname">RoundRobinSource</code><span class="sig-paren">(</span><em>sources</em>, <em>batchsize=500</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datasources.RoundRobinSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A source that reads sets of rows from sources in round robin-fashion</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>sources: a sequence of data sources</li>
+<li>batchsize: the amount of rows to read from a data source before
+going to the next data source. Must be positive (to empty a source
+before going to the next, use UnionSource)</li>
+</ul>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="pygrametl.html"
+                        title="previous chapter">pygrametl</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tables.html"
+                        title="next chapter">Tables</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/datasources.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pygrametl.html" title="pygrametl"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2009 - 2015, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
