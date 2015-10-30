@@ -61,7 +61,7 @@ except ImportError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.4'
+__version__ = '2.4.1'
 __all__ = ['Dimension', 'CachedDimension', 'BulkDimension',
            'CachedBulkDimension', 'TypeOneSlowlyChangingDimension',
            'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable',
@@ -870,7 +870,7 @@ class SlowlyChangingDimension(Dimension):
             self.keycache = {}
         # else cachesize == 0 and we do not create any caches
         self.__cachesize = cachesize
-        self.__prefill = prefill
+        self.__prefill = cachesize and prefill #no prefilling if no caching
 
         # Check that versionatt, fromatt and toatt are also declared as
         # attributes
@@ -887,7 +887,7 @@ class SlowlyChangingDimension(Dimension):
                 "UPDATE %s SET %s = %%(%s)s WHERE %s = %%(%s)s" % \
                 (name, toatt, toatt, key, key)
 
-        if prefill:
+        if self.__prefill:
             self.__prefillcaches(usefetchfirst)
 
     def __prefillcaches(self, usefetchfirst):
@@ -923,7 +923,13 @@ class SlowlyChangingDimension(Dimension):
         if self.__cachesize > 0 and usefetchfirst:
             sql += ' FETCH FIRST %d ROWS ONLY' % self.__cachesize
         self.targetconnection.execute(sql, args)
-        for rawrow in self.targetconnection.fetchmanytuples(self.__cachesize):
+
+        if self.__cachesize < 0:
+            allrawrows = self.targetconnection.fetchalltuples()
+        else: 
+            allrawrows = self.targetconnection.fetchmanytuples(self.__cachesize)
+
+        for rawrow in allrawrows:
             self.rowcache[rawrow[0]] = rawrow
             t = tuple([rawrow[i] for i in positions])
             self.keycache[t] = rawrow[0]
