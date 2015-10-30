@@ -105,7 +105,7 @@ being an alias for it.
 
     # ResultsFile.csv contain name, age, score
     resultsSource = TypedCSVSource(
-                                csvfile=open('ResultsFile.txt', 'r', 16384), \
+                                f=open('ResultsFile.txt', 'r', 16384), \
                                 casts={'age' : int, 'score' : float}, \
                                 delimiter=',')
 
