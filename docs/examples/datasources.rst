@@ -91,6 +91,31 @@ In the above example, a CSVSource is created from a file delimited by commas,
 using a buffer size of 16384. This particular buffer size is used as it
 performed better than the alternatives we evaluated it against.
 
+TypedCSVSource
+--------------
+The class :class:`.TypedCSVSource` extends :class:`.CSVSource` with automatic
+type casts by wrapping `csv.DictReader
+<http://docs.python.org/2/library/csv.html#csv.DictReader>`_  instead of simply
+being an alias for it.
+
+.. code-block:: python
+
+    import pygrametl
+    from pygrametl.datasources import TypedCSVSource
+
+    # ResultsFile.csv contain name, age, score
+    resultsSource = TypedCSVSource(
+                                csvfile=open('ResultsFile.txt', 'r', 16384), \
+                                casts={'age' : int, 'score' : float}, \
+                                delimiter=',')
+
+In the above example, a :class:`.TypedCSVSource` is created from a file
+delimited by commas, using a buffer size of 16384. This particular buffer size
+is used as it performed better than the alternatives we evaluated it against. A
+dictionary is passed as the second providing information about what type each
+column should be cast to. A cast is not performed for the name column as
+:class:`.TypedCSVSource` uses strings as the default.
+
 MergeJoiningSource
 ------------------
 
