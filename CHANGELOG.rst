@@ -1,6 +1,13 @@
 Unreleased
 ----------
-Nothing at the moment.
+**Added**
+  ``TypedCSVSource`` a new class that reads a CSV file (by means of
+  csv.DictReader) and performs user-specified casts (or other function calls)
+  on the values before returning the rows.
+
+**Fixed**
+  Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
+  crash.
 
 Version 2.4
 -----------
