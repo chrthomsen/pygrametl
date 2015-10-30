@@ -50,11 +50,12 @@ except NameError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3'
-__all__ = ['CSVSource', 'SQLSource', 'JoiningSource', 'HashJoiningSource',
-           'MergeJoiningSource', 'BackgroundSource', 'ProcessSource',
-           'TransformingSource', 'UnionSource', 'CrossTabbingSource',
-           'FilteringSource', 'DynamicForEachSource', 'RoundRobinSource']
+__version__ = '2.4.1'
+__all__ = ['CSVSource', 'TypedCSVSource', 'SQLSource', 'JoiningSource',
+           'HashJoiningSource', 'MergeJoiningSource', 'BackgroundSource',
+           'ProcessSource', 'TransformingSource', 'UnionSource',
+           'CrossTabbingSource', 'FilteringSource', 'DynamicForEachSource',
+           'RoundRobinSource']
 
 
 CSVSource = DictReader
@@ -63,27 +64,29 @@ CSVSource = DictReader
 class TypedCSVSource(DictReader):
     """A class for iterating a CSV file and type cast the values."""
 
-    def __init__(self, cvsfile, casts, fieldnames=None, restkey=None, 
+    def __init__(self, f, casts, fieldnames=None, restkey=None, 
                  restval=None, dialect='excel', *args, **kwds):
         """Arguments:
-           - cvsfile: An iterable object such as as file. Passed on to 
+           - f: An iterable object such as as file. Passed on to 
              csv.DictReader
            - casts: A dict mapping from attribute names to functions to apply
              to these names, e.g., {'id':int, 'salary':float}
-           - fieldnames: An optional sequence of attribute names. Passed on to 
-             csv.DictReader
+           - fieldnames: Passed on to csv.DictReader
            - restkey: Passed on to csv.DictReader
            - restval: Passed on to csv.DictReader
            - dialect: Passed on to csv.DictReader
            - *args: Passed on to csv.DictReader
            - **kwds: Passed on to csv.DictReader
         """
-        DictReader.__init__(self, cvsfile, fieldnames=fieldnames, 
+        DictReader.__init__(self, f=f, fieldnames=fieldnames, 
                             restkey=restkey, restval=restval, dialect=dialect, 
                             *args, **kwds)
 
         if not type(casts) == dict:
             raise TypeError("The casts argument must be a dict")
+        for v in casts.values():
+            if not callable(v):
+                raise TypeError("The values in casts must be callable")
         self._casts = casts
 
 
