@@ -9,6 +9,9 @@ Unreleased
   Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
   crash.
 
+  Problem with double use of namemappings in _before_update in CachedDimension
+  and SlowlyChangingDimension fixed. (Thanks to Alexey Kuzmenko).
+
 Version 2.4
 -----------
 **Note**

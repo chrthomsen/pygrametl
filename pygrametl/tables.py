@@ -494,16 +494,14 @@ class CachedDimension(Dimension):
         # We have to remove old values from the caches.
         key = (namemapping.get(self.key) or self.key)
         for att in self.lookupatts:
-            if ((att in namemapping and 
-                 namemapping[att] in row) or att in row):
+            if ((att in namemapping and namemapping[att] in row) 
+                or att in row):
                 # A lookup attribute is about to be changed and we should make
                 # sure that the cache does not map from the old value.  Here,
                 # we can only see the new value, but we can get the old lookup
                 # values by means of the key:
                 oldrow = self.getbykey(row[key])
-                namesinrow = [(namemapping.get(a) or a)
-                              for a in self.lookupatts]
-                searchtuple = tuple([oldrow[n] for n in namesinrow])
+                searchtuple = tuple([oldrow[n] for n in self.lookupatts])
                 if searchtuple in self.__vals2key:
                     del self.__vals2key[searchtuple]
                 break
@@ -1117,9 +1115,7 @@ class SlowlyChangingDimension(Dimension):
                 # we can only see the new value, but we can get the old lookup
                 # values by means of the key:
                 oldrow = self.getbykey(row[key])
-                namesinrow = [(namemapping.get(a) or a)
-                              for a in self.lookupatts]
-                searchtuple = tuple([oldrow[n] for n in namesinrow])
+                searchtuple = tuple([oldrow[n] for n in self.lookupatts])
                 if searchtuple in self.keycache:
                     del self.keycache[searchtuple]
                 break
