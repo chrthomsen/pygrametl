@@ -329,14 +329,15 @@ def rowfactory(source, names, close=True):
 
     try:
         if nextfunc is not None:
-            try:
-                tmp = nextfunc()
-                if tmp is None:
+            while True:
+                try:
+                    tmp = nextfunc()
+                    if tmp is None:
+                        return
+                    else:
+                        yield dict(zip(names, tmp))
+                except (StopIteration, IndexError):
                     return
-                else:
-                    yield dict(zip(names, tmp))
-            except (StopIteration, IndexError):
-                return
         else:
             for row in source.fetchall():
                 yield dict(zip(names, row))
