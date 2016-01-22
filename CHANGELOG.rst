@@ -12,6 +12,12 @@ Unreleased
   Problem with double use of namemappings in _before_update in CachedDimension
   and SlowlyChangingDimension fixed. (Thanks to Alexey Kuzmenko).
 
+  Problem with rowfactory only returning one row fixed. 
+  (Thanks to Alexey Kuzmenko).
+
+  Problem with JDBCConnectionWrapper.rowfactory returning dicts with incorrect
+  keys fixed. (GitHub issue #5).
+
 Version 2.4
 -----------
 **Note**

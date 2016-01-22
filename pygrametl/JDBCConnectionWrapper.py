@@ -212,7 +212,7 @@ class JDBCConnectionWrapper(object):
             if self.__resultnames is None:
                 return
             else:
-                names = [self.nametranslator(t[0]) for t in self.__resultnames]
+                names = [self.nametranslator(t) for t in self.__resultnames]
         empty = (None, ) * len(self.__resultnames)
         while True:
             tuple = self.fetchonetuple()
@@ -225,7 +225,7 @@ class JDBCConnectionWrapper(object):
         if self.__resultset is None:
             return {}
         if names is None:
-            names = [self.nametranslator(t[0]) for t in self.__resultnames]
+            names = [self.nametranslator(t) for t in self.__resultnames]
         values = self.fetchonetuple()
         return dict(zip(names, values))
 
@@ -474,7 +474,7 @@ class BackgroundJDBCConnectionWrapper(object):
             if self.__resultnames is None:
                 return
             else:
-                names = [self.nametranslator(t[0]) for t in self.__resultnames]
+                names = [self.nametranslator(t) for t in self.__resultnames]
         empty = (None, ) * len(self.__resultnames)
         while True:
             tuple = self.fetchonetuple()
@@ -488,7 +488,7 @@ class BackgroundJDBCConnectionWrapper(object):
         if self.__resultset is None:
             return {}
         if names is None:
-            names = [self.nametranslator(t[0]) for t in self.__resultnames]
+            names = [self.nametranslator(t) for t in self.__resultnames]
         values = self.fetchonetuple()
         return dict(zip(names, values))
 
