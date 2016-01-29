@@ -22,14 +22,13 @@ The package's modules are:
 
 Pygrametl is currently maintained at Aalborg University in Denmark by the following people:
 
-:Library Maintainer:
-    | Christian Thomsen <chr@cs.aau.dk>
+**Maintainers**
+    - Christian Thomsen <chr@cs.aau.dk>
+    - Ove Andersen <ove.andersen.oa@gmail.com>
+    - Søren Kejser Jensen <devel@kejserjensen.dk>
 
-:Documentation Maintainer:
-    | Søren Kejser Jensen <devel@kejserjensen.dk>
-
-:Former Maintainers:
-    | Christoffer Moesgaard <cmoesgaard@gmail.com>
+**Former Maintainers**
+    - Christoffer Moesgaard <cmoesgaard@gmail.com>
 
 Getting started
 ===============
