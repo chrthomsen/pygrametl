@@ -121,6 +121,9 @@ def copy(row, **renaming):
         # needed for renamings like {'x':'repeated', 'y':'repeated'}
         if v in tmp:
             del tmp[v]
+    for k in renaming.keys():
+        # Avoid overwriting renamed values with old values
+        tmp.pop(k, None)
     res.update(tmp)
     return res
 
