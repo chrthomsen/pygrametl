@@ -18,6 +18,9 @@ Unreleased
   Problem with JDBCConnectionWrapper.rowfactory returning dicts with incorrect
   keys fixed. (GitHub issue #5).
 
+  Problem with ``TypeOneSlowlyChangingDimension`` caching None after an update
+  if a namemapping mapped to an attribute not in the update row fixed.
+
 Version 2.4
 -----------
 **Note**

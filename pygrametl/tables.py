@@ -721,9 +721,8 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         # A cached value could have been changed so the local cache is updated,
         # as the value is changed in place no rows are moved in the cache.
         oldtype1vals = dict(zip(self.type1atts, self.__key2sca[keyvalue]))
-        namesinrow = [(namemapping.get(a) or a) for a in self.type1atts]
-        self.__key2sca[keyvalue] = \
-            tuple([(row.get(n) or oldtype1vals.get(n)) for n in namesinrow])
+        self.__key2sca[keyvalue] = tuple([row.get(namemapping.get(a, a)) or \
+                oldtype1vals[a] for a in self.type1atts])
 
     def _after_insert(self, row, namemapping, newkeyvalue):
         CachedDimension._after_insert(self, row, namemapping, newkeyvalue)
