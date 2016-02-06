@@ -1626,12 +1626,16 @@ class FactTable(object):
     def ensure(self, row, compare=False, namemapping={}):
         """Ensure that a fact is present (insert it if it is not already there).
 
+           Return True if a fact with identical values for keyrefs attributes
+           was already present in the fact table; False if not.
+
            Arguments:
            - row: a dict at least containing the attributes of the fact table
            - compare: a flag deciding if measure vales from a fact that was
              looked up are compared to those in the given row. If True and
              differences are found, a ValueError is raised. Default: False
            - namemapping: an optional namemapping (see module's documentation)
+
         """
         res = self.lookup(row, namemapping)
         if not res:
@@ -1639,9 +1643,14 @@ class FactTable(object):
             return False
         elif compare:
             for m in self.measures:
-                if m in row and row[m] != res.get(m):
+                mappedm = namemapping.get(m, m)
+                if mappedm in row and row[mappedm] != res.get(m):
                     raise ValueError(
-                        "The existing fact has different measure values")
+                        "The existing fact has a different measure value" +\
+                        " for '" + m + "': " + str(res.get(m)) +\
+                        " instead of " + str(row.get(mappedm)) +\ 
+                        " as in the given row"
+                    )
         return True
 
     def endload(self):

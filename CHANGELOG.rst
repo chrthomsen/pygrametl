@@ -23,6 +23,9 @@ Unreleased
 
   Problem in __init__.copy fixed.
 
+  Namemapping now used when comparing measure values in FactTable.ensure
+  with compare=True.
+
 Version 2.4
 -----------
 **Note**
