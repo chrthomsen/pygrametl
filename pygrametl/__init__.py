@@ -18,10 +18,10 @@
      removed in first-in first-out order
 """
 
-# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
+# Copyright (c) 2009-2016, Aalborg University (chr@cs.aau.dk)
 # All rights reserved.
 
-# Redistribution and use in source anqd binary forms, with or without
+# Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 
 # - Redistributions of source code must retain the above copyright notice, this
@@ -64,7 +64,7 @@ else:  # For Python 3
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.3.1'
+__version__ = '2.4.1'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom',
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr',
            'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp',

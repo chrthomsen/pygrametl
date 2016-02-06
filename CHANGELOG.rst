@@ -21,6 +21,8 @@ Unreleased
   Problem with ``TypeOneSlowlyChangingDimension`` caching None after an update
   if a namemapping mapped to an attribute not in the update row fixed.
 
+  Problem in __init__.copy fixed.
+
 Version 2.4
 -----------
 **Note**
