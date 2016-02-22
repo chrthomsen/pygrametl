@@ -781,9 +781,13 @@ class ConnectionWrapper(object):
 
     def fetchalltuples(self):
         """Return all result tuples"""
-        if self.__cursor.description is None:
-            return []
-        return self.__cursor.fetchall()
+        if self.__cursor.description is not None:
+            while True:
+                results = self.__cursor.fetchmany(200)
+                if not results:
+                    break
+                for row in results:
+                    yield row
 
     def rowcount(self):
         """Return the size of the result."""
@@ -1043,9 +1047,13 @@ class BackgroundConnectionWrapper(object):
 
     def fetchalltuples(self):
         self.__queue.join()
-        if self.__cursor.description is None:
-            return []
-        return self.__cursor.fetchall()
+        if self.__cursor.description is not None:
+            while True:
+                results = self.__cursor.fetchmany(200)
+                if not results:
+                    break
+                for row in results:
+                    yield row
 
     def rowcount(self):
         self.__queue.join()

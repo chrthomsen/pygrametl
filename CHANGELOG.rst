@@ -5,6 +5,10 @@ Unreleased
   csv.DictReader) and performs user-specified casts (or other function calls)
   on the values before returning the rows.
 
+**Changed**
+  Generator used in ConnectionWrapper.fetchalltuples to reduce memory
+  consumption. (Thanks to Alexey Kuzmenko)
+
 **Fixed**
   Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
   crash.
