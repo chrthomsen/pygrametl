@@ -12,6 +12,8 @@ Unreleased
   ``SlowlyChangingDimension`` can sometimes avoid deleting from the cache on
   updates, now checked in the same way as in ``CachedDimension``
 
+  rowfactory now tries to use fetchmany. (Suggested by Alexey Kuzmenko).
+
 **Fixed**
   Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
   crash.

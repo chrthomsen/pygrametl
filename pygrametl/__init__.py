@@ -318,14 +318,34 @@ def setdefaults(row, attributes, defaults=None):
 def rowfactory(source, names, close=True):
     """Generate dicts with key values from names and data values from source.
 
-       The given source should provide either next() or fetchone() returning
-       a tuple or fetchall() returning a sequence of tuples. For each tuple,
-       a dict is constructed such that the i'th element in names maps to
-       the i'th value in the tuple.
+       The given source should provide A) fetchmany returning the next set of
+       rows, B) next() or fetchone() returning a tuple, or C) fetchall()
+       returning a sequence of tuples. For each tuple, a dict is constructed
+       such that the i'th element in names maps to the i'th value in the
+       tuple.
 
        If close=True (the default), close will be called on source after
        fetching all tuples.
+
     """
+    # Try fetchmany
+    if hasattr(source, 'fetchmany'):
+        try:
+            while True:
+                l = source.fetchmany(200)
+                if not l:
+                    break
+                for tmp in l:
+                    yield dict(zip(names, tmp))
+        finally:
+            if close:
+                try:
+                    source.close()
+                except:
+                    return
+            return
+
+    # Try next and fetchone and otherwise fetchall
     nextfunc = getattr(source, 'next', None)
     if nextfunc is None:
         nextfunc = getattr(source, 'fetchone', None)
