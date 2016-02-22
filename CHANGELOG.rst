@@ -9,6 +9,9 @@ Unreleased
   Generator used in ConnectionWrapper.fetchalltuples to reduce memory
   consumption. (Thanks to Alexey Kuzmenko)
 
+  ``SlowlyChangingDimension`` can sometimes avoid deleting from the cache on
+  updates, now checked in the same way as in ``CachedDimension``
+
 **Fixed**
   Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
   crash.

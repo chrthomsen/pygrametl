@@ -494,8 +494,7 @@ class CachedDimension(Dimension):
         # We have to remove old values from the caches.
         key = (namemapping.get(self.key) or self.key)
         for att in self.lookupatts:
-            if ((att in namemapping and namemapping[att] in row) 
-                or att in row):
+            if (att in namemapping and namemapping[att] in row) or att in row:
                 # A lookup attribute is about to be changed and we should make
                 # sure that the cache does not map from the old value.  Here,
                 # we can only see the new value, but we can get the old lookup
@@ -1108,7 +1107,7 @@ class SlowlyChangingDimension(Dimension):
         # We have to remove old values from the caches.
         key = (namemapping.get(self.key) or self.key)
         for att in self.lookupatts:
-            if (att in namemapping or att in row):
+            if (att in namemapping and namemapping[att] in row) or att in row:
                 # A lookup attribute is about to be changed and we should make
                 # sure that the cache does not map from the old value.  Here,
                 # we can only see the new value, but we can get the old lookup
@@ -1648,7 +1647,7 @@ class FactTable(object):
                     raise ValueError(
                         "The existing fact has a different measure value" +\
                         " for '" + m + "': " + str(res.get(m)) +\
-                        " instead of " + str(row.get(mappedm)) +\ 
+                        " instead of " + str(row.get(mappedm)) +\
                         " as in the given row"
                     )
         return True
