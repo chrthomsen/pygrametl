@@ -46,8 +46,8 @@ the data warehouse. The relation contains data as shown below.
     ----------------------------------------------------------------
     Nineteen Eighty-Four,   Novel,      Aalborg,    2005/08/05  50
     Calvin and Hobbes One,  Comic,      Aalborg,    2005/08/05  25
-    The Silver Spoon,       Cockbook,   Aalborg,    2005/08/14  5
-    The Silver Spoon,       Cockbook,   Odense,     2005/09/01  7
+    The Silver Spoon,       Cookbook,   Aalborg,    2005/08/14  5
+    The Silver Spoon,       Cookbook,   Odense,     2005/09/01  7
     ....
 
 

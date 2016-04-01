@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Parallel &mdash; pygrametl 2.4 documentation</title>
+    <title>Parallel &mdash; pygrametl 2.4.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,28 +23,24 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
     <link rel="next" title="Jython" href="jython.html" />
     <link rel="prev" title="Bulk Loading" href="bulkloading.html" />
  
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30772056-1']);
-  _gaq.push(['_setDomainName', 'cs.aau.dk']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+  
 </script>
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
+  <body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -59,36 +55,36 @@
         <li class="right" >
           <a href="bulkloading.html" title="Bulk Loading"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="parallel">
 <span id="id1"></span><h1>Parallel<a class="headerlink" href="#parallel" title="Permalink to this headline">¶</a></h1>
 <p><em>pygrametl</em> contains multiple abstractions to simplify the creation of parallel
 ETL flow, in order to take advantage of modern multi-core and multi-processor
-systems. Firstly, any <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><code class="xref py py-mod docutils literal"><span class="pre">datasources</span></code></a> can be read in a separate process
-using <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></code></a>. Further parallelism can be archived by
+systems. Firstly, any <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><tt class="xref py py-mod docutils literal"><span class="pre">datasources</span></tt></a> can be read in a separate process
+using <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a>. Further parallelism can be archived by
 decoupling tables from the main process of execution, and allowing these
 decoupled tables to communicate with each other without interrupting the main
 process. Tables can also be partitioned so operations on large tables can be
 performed by multiple processes. Both decoupled tables and partitioning tables
-can be found in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal"><span class="pre">tables</span></code></a> module. To support database connections from
-multiple decoupled tables the <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></code></a>, or
-<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal"><span class="pre">JDBCConnectionWrapper</span></code></a> must be used, wrapped by the function
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal"><span class="pre">shareconnectionwrapper()</span></code></a> to prevent inconsistencies when used by
+can be found in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">tables</span></tt></a> module. To support database connections from
+multiple decoupled tables the <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a>, or
+<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">JDBCConnectionWrapper</span></tt></a> must be used, wrapped by the function
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><tt class="xref py py-func docutils literal"><span class="pre">shareconnectionwrapper()</span></tt></a> to prevent inconsistencies when used by
 multiple decoupled tables.</p>
 <p>pygrametl also provides abstractions for running functions in parallel.  The
-decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><code class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></code></a> can be used to annotate functions which should
+decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><tt class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></tt></a> can be used to annotate functions which should
 run in a separate process. This supplements the decoupled tables, as many
 transformation are done in a set of functions before they are inserted into a
 database table. Splitpoints can be synchronised using the function
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><code class="xref py py-func docutils literal"><span class="pre">endsplits()</span></code></a>. The function <code class="xref py py-func docutils literal"><span class="pre">createflow()</span></code> can be used to create a
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><tt class="xref py py-func docutils literal"><span class="pre">endsplits()</span></tt></a>. The function <tt class="xref py py-func docutils literal"><span class="pre">createflow()</span></tt> can be used to create a
 sequence of functions that run in a separate process. In a flow a row is given
 to first function, then the second, and so forth. This also means changes to
 the passed row is done using side effects while the return values are ignored.</p>
@@ -97,14 +93,14 @@ Jython should be used rather than CPython, as it allows threads to be used
 instead of processes for performing operations in parallel. The term process is
 used to denote both a process and a thread, depending on the Python
 implementation in question. For more information on using pygrametl on
-Jython, see <a class="reference internal" href="jython.html#jython"><span>Jython</span></a>.</p>
+Jython, see <a class="reference internal" href="jython.html#jython"><em>Jython</em></a>.</p>
 <div class="section" id="processsource">
 <h2>ProcessSource<a class="headerlink" href="#processsource" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></code></a> is a special data source allowing other data sources to
+<p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a> is a special data source allowing other data sources to
 be iterated through in a separate process. A data source in pygrametl is a
 set of abstraction allowing access to multiple types of data through a normal
 Python iterator, for more information about data sources in general see
-<a class="reference internal" href="datasources.html#datasources"><span>Data sources</span></a>.</p>
+<a class="reference internal" href="datasources.html#datasources"><em>Data sources</em></a>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span><span class="p">,</span> <span class="n">CachedDimension</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">ProcessSource</span><span class="p">,</span> \
@@ -165,9 +161,9 @@ Python iterator, for more information about data sources in general see
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Here we use a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></code></a> to transform a set of rows from the
+<p>Here we use a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a> to transform a set of rows from the
 <em>sales</em> csv file while we fill the <em>products</em> dimension with data. As the use
-of a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></code></a> adds additional overhead to the iterator, seeing
+of a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a> adds additional overhead to the iterator, seeing
 as rows must be transferred in batches from another process, other computations
 should be performed in between the creation and use of the source to allow for
 data to be read, transformed and transferred.</p>
@@ -175,25 +171,25 @@ data to be read, transformed and transferred.</p>
 <div class="section" id="decoupled-tables">
 <h2>Decoupled Tables<a class="headerlink" href="#decoupled-tables" title="Permalink to this headline">¶</a></h2>
 <p>A decoupled table in pygrametl is a proxy for an instance of another table
-class defined in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal"><span class="pre">tables</span></code></a> module. Currently two different classes
-exist for decoupled tables, <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><code class="xref py py-class docutils literal"><span class="pre">DecoupledDimension</span></code></a> and
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><code class="xref py py-class docutils literal"><span class="pre">DecoupledFactTable</span></code></a>. The two classes behave nearly identically with
+class defined in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">tables</span></tt></a> module. Currently two different classes
+exist for decoupled tables, <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledDimension</span></tt></a> and
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledFactTable</span></tt></a>. The two classes behave nearly identically with
 one implementing the interface of a dimension and the other the interface of a
 fact table. When a method is called on one of the two classes, a message is
 sent to the actual table object, and if the method has a return value an
-instance of the class <code class="xref py py-class docutils literal"><span class="pre">FutureResult</span></code> is returned. This instance is a
+instance of the class <tt class="xref py py-class docutils literal"><span class="pre">FutureResult</span></tt> is returned. This instance is a
 handle to the actual result when it becomes available. In order to get the
 actual result, the instance can be given directly to a method accepting a row
 which would force the method to block until a value is ready or, alternatively,
 the entire decoupled can be consumed by another decoupled table. When a
 decoupled table is consumed by another decoupled table, the values are
-extracted from an instance of <code class="xref py py-class docutils literal"><span class="pre">FutureResult</span></code> by the table that needs it
+extracted from an instance of <tt class="xref py py-class docutils literal"><span class="pre">FutureResult</span></tt> by the table that needs it
 without blocking the caller of methods on that table. It should however be
-noted that any rows passed to an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><code class="xref py py-class docutils literal"><span class="pre">DecoupledFactTable</span></code></a> or
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><code class="xref py py-class docutils literal"><span class="pre">DecoupledDimension</span></code></a> should only contain the attributes directly needed
-by the table, as having additional key/value pairs in the <code class="xref py py-class docutils literal"><span class="pre">dict</span></code> can
+noted that any rows passed to an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledFactTable</span></tt></a> or
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledDimension</span></tt></a> should only contain the attributes directly needed
+by the table, as having additional key/value pairs in the <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt> can
 make pygrametl insert the row before the actual values are ready, leading to
-instances of the class <code class="xref py py-class docutils literal"><span class="pre">FutureResult</span></code> being passed to the database instead,
+instances of the class <tt class="xref py py-class docutils literal"><span class="pre">FutureResult</span></tt> being passed to the database instead,
 which in nearly every case is undesirable.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span><span class="p">,</span> <span class="n">CachedDimension</span><span class="p">,</span>\
@@ -268,16 +264,16 @@ which in nearly every case is undesirable.</p>
 for real world application, tuning of queues and buffers should be done to
 match the underlying hardware in order to maximize the performance of the
 parallel ETL flow.  Although the example uses an instance of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal"><span class="pre">FactTable</span></code></a> for simplicity, it is supported for
-all types of dimensions and fact tables, except <a class="reference internal" href="../api/tables.html#pygrametl.tables.SubprocessFactTable" title="pygrametl.tables.SubprocessFactTable"><code class="xref py py-class docutils literal"><span class="pre">SubprocessFactTable</span></code></a>
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">FactTable</span></tt></a> for simplicity, it is supported for
+all types of dimensions and fact tables, except <a class="reference internal" href="../api/tables.html#pygrametl.tables.SubprocessFactTable" title="pygrametl.tables.SubprocessFactTable"><tt class="xref py py-class docutils literal"><span class="pre">SubprocessFactTable</span></tt></a>
 on CPython as it already runs in its own process. Decoupling of tables
 requiring large amount of processing when their methods are called, like a
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a>, can help increase performance due to not
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a>, can help increase performance due to not
 blocking the main process while waiting on the database performing the joins.</p>
 <p>If any user-defined functions needs to access the database and be synchronised
 with the decoupled tables, it must be passed to
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal"><span class="pre">shareconnectionwrapper()</span></code></a>.  An example of such a function is the bulk
-loader used for pygrametl&#8217;s <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></code></a>.</p>
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><tt class="xref py py-func docutils literal"><span class="pre">shareconnectionwrapper()</span></tt></a>.  An example of such a function is the bulk
+loader used for pygrametl&#8217;s <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt></a>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 <span class="kn">from</span> <span class="nn">pygrametl.parallel</span> <span class="kn">import</span> <span class="n">shareconnectionwrapper</span>
@@ -309,13 +305,13 @@ other tables, it can be beneficial to partition it into multiple parts,
 allowing operations to be conducted on one table in parallel reducing the time
 needed to process that particular table. pygrametl supports partitioning of
 tables through multiple features. First, the classes
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.DimensionPartitioner" title="pygrametl.tables.DimensionPartitioner"><code class="xref py py-class docutils literal"><span class="pre">DimensionPartitioner</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTablePartitioner" title="pygrametl.tables.FactTablePartitioner"><code class="xref py py-class docutils literal"><span class="pre">FactTablePartitioner</span></code></a> automates the
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.DimensionPartitioner" title="pygrametl.tables.DimensionPartitioner"><tt class="xref py py-class docutils literal"><span class="pre">DimensionPartitioner</span></tt></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTablePartitioner" title="pygrametl.tables.FactTablePartitioner"><tt class="xref py py-class docutils literal"><span class="pre">FactTablePartitioner</span></tt></a> automates the
 partitioning of rows into multiple decoupled dimensions or fact tables. How to
 do the partitioning is determined by a partitioning function with the signature
 <cite>func(dict)</cite>. If no function is passed, then a default partitioning function is
 used as documented in the API. Second, to ensure that unique surrogate keys are
 assigned to all rows in a partitioned table, a shared sequence factory can be
-created through the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.getsharedsequencefactory" title="pygrametl.parallel.getsharedsequencefactory"><code class="xref py py-func docutils literal"><span class="pre">getsharedsequencefactory()</span></code></a>. Each parallel process is
+created through the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.getsharedsequencefactory" title="pygrametl.parallel.getsharedsequencefactory"><tt class="xref py py-func docutils literal"><span class="pre">getsharedsequencefactory()</span></tt></a>. Each parallel process is
 then given a sequence of unique numbers to use as surrogate keys, ensuring that
 all surrogate keys are unique despite being assigned by separate processes.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
@@ -423,19 +419,19 @@ fact table in the database, so a simple auto incrementing integer is fine.</p>
 <div class="section" id="splitpoints">
 <h2>Splitpoints<a class="headerlink" href="#splitpoints" title="Permalink to this headline">¶</a></h2>
 <p>As CPU-intensive operations are often performed in user defined functions, the
-decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><code class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></code></a> is provided. This decorator functions in much the
+decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><tt class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></tt></a> is provided. This decorator functions in much the
 same way as decoupled classes does for tables, as a number of processes are
 spawned to run the function. The first time a functions with a decorator is
 called, a process is created to handle the call. This is done until the number
 of created process match the argument given to the decorator. If no process is
-available, the call and its arguments are added to a <code class="xref py py-class docutils literal"><span class="pre">queue</span></code> and sent
+available, the call and its arguments are added to a <tt class="xref py py-class docutils literal"><span class="pre">queue</span></tt> and sent
 to a process when one is idle. The number of processes to spawn can be passed
 to the decorator, allowing more processes to be created for functions with a
 longer running time. If a split function calls another function that requires
 synchronisation it can be annotated with a new split point with <em>one</em> as
 argument, specifying that only one process is allowed to call this function at
 a time. To ensure all annotated functions are finished, the function
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><code class="xref py py-func docutils literal"><span class="pre">endsplits()</span></code></a> must be called, which joins all processes created by split
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><tt class="xref py py-func docutils literal"><span class="pre">endsplits()</span></tt></a> must be called, which joins all processes created by split
 points up to that point.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span>
@@ -496,10 +492,10 @@ expensive function is annotated with a splitpoint given the argument 5,
 allowing five processes to run the function at the same time. The second
 splitpoint without argument ensures that only one process is allowed to execute
 that function at the same time, so even though it is called from
-<code class="xref py py-func docutils literal"><span class="pre">performExpensiveTransformation()</span></code> only one process can insert rows into
+<tt class="xref py py-func docutils literal"><span class="pre">performExpensiveTransformation()</span></tt> only one process can insert rows into
 the fact table at the same time. Should the table operations become a
 bottleneck it could be partitioned over multiple table classes. To ensure that
-all split points have finished execution, the function <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><code class="xref py py-func docutils literal"><span class="pre">endsplits()</span></code></a> is
+all split points have finished execution, the function <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><tt class="xref py py-func docutils literal"><span class="pre">endsplits()</span></tt></a> is
 executed, which joins all split points, before the database transaction is
 committed.</p>
 <p>As splitpoint annotated functions run in a separate processes, returned values
@@ -560,12 +556,12 @@ pygrametl consists of multiple functions that can be called with the same
 interface, which is grouped together with each function running in its own
 separate process, and with each function called in sequence. A flow can be
 created from multiple different functions that, however, must be callable
-through the same interface, using the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.createflow" title="pygrametl.parallel.createflow"><code class="xref py py-func docutils literal"><span class="pre">createflow()</span></code></a> function. After a
+through the same interface, using the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.createflow" title="pygrametl.parallel.createflow"><tt class="xref py py-func docutils literal"><span class="pre">createflow()</span></tt></a> function. After a
 flow is created it can be called just like any other function. Internally, the
 arguments are passed from the first function to the last. As the arguments are
 passed from one function to another, the side effects on each row are available
 to the next function, white returned values on the other hand are ignored.
-Unlike <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><code class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></code></a>, the arguments are passed in batches instead of
+Unlike <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><tt class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></tt></a>, the arguments are passed in batches instead of
 single values leading to less locking and synchronisation between the
 processes.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
@@ -633,7 +629,7 @@ contributing to the transformation on rows from the input csv file. Combining
 the functions into a flow, creates a new process for each function in order to
 increase throughput, while bundling data transfers to decrease the number of
 times data needs to be moved from one process to the next. Calling the flow is
-done in the function <code class="xref py py-func docutils literal"><span class="pre">producer()</span></code>, which runs in a separate process using a
+done in the function <tt class="xref py py-func docutils literal"><span class="pre">producer()</span></tt>, which runs in a separate process using a
 splitpoint so the main process can insert rows into the database. It is done
 just like a normal function call with the row as argument, as both functions in
 the flow has an interface accepting one argument, the row.</p>
@@ -644,7 +640,7 @@ the flow has an interface accepting one argument, the row.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -664,14 +660,12 @@ the flow has an interface accepting one argument, the row.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="jython.html"
                         title="next chapter">Jython</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/examples/parallel.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/parallel.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -688,7 +682,7 @@ the flow has an interface accepting one argument, the row.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -703,12 +697,12 @@ the flow has an interface accepting one argument, the row.</p>
         <li class="right" >
           <a href="bulkloading.html" title="Bulk Loading"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Install Guide &mdash; pygrametl 2.4 documentation</title>
+    <title>Install Guide &mdash; pygrametl 2.4.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,28 +23,24 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
     <link rel="next" title="Beginner Guide" href="beginner.html" />
     <link rel="prev" title="Pygrametl - ETL Development in Python" href="../index.html" />
  
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30772056-1']);
-  _gaq.push(['_setDomainName', 'cs.aau.dk']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+  
 </script>
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
+  <body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -59,14 +55,14 @@
         <li class="right" >
           <a href="../index.html" title="Pygrametl - ETL Development in Python"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="install-guide">
 <span id="install"></span><h1>Install Guide<a class="headerlink" href="#install-guide" title="Permalink to this headline">¶</a></h1>
@@ -74,7 +70,7 @@
 mandatory dependencies. This short guide contains all the information needed to
 get the framework up and running on CPython, pygrametl also runs on top of
 the JVM based Python implementation, Jython. For more information about running
-pygrametl on Jython see <a class="reference internal" href="../examples/jython.html#jython"><span>Jython</span></a>.</p>
+pygrametl on Jython see <a class="reference internal" href="../examples/jython.html#jython"><em>Jython</em></a>.</p>
 <div class="section" id="installing-a-python-implementation">
 <h2>Installing a Python Implementation<a class="headerlink" href="#installing-a-python-implementation" title="Permalink to this headline">¶</a></h2>
 <p>Pygrametl requires an implementation of the Python programming language to run.
@@ -153,9 +149,9 @@ command.</p>
 $ git clone https://github.com/chrthomsen/pygrametl.git
 </pre></div>
 </div>
-<p>In order for Python to import the modules, it be added to <code class="xref py py-attr docutils literal"><span class="pre">sys.path</span></code>
+<p>In order for Python to import the modules, it be added to <tt class="xref py py-attr docutils literal"><span class="pre">sys.path</span></tt>
 either directly in the source code of your Python programs, or by setting
-<code class="docutils literal"><span class="pre">PYTHONPATH</span></code> if CPython is used, or <code class="docutils literal"><span class="pre">JYTHONPATH</span></code> if Jython is used.  More
+<tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> if CPython is used, or <tt class="docutils literal"><span class="pre">JYTHONPATH</span></tt> if Jython is used.  More
 information about how <a class="reference external" href="http://docs.python.org/2/tutorial/modules.html#the-module-search-path">Python modules</a> and
 <a class="reference external" href="http://www.jython.org/jythonbook/en/1.0/ModulesPackages.html#module-search-path-and-loading">Jython Modules</a>
 are located can be found in the two links provided.</p>
@@ -165,8 +161,8 @@ are located can be found in the two links provided.</p>
 <h2>Verifying installation<a class="headerlink" href="#verifying-installation" title="Permalink to this headline">¶</a></h2>
 <p>A simple way to verify that pygrametl has been installed correctly and is
 accessible to the Python interpreter, is to start the interpreter in
-interactive mode from the command line and run the command <code class="docutils literal"><span class="pre">import</span>
-<span class="pre">pygrametl</span></code>.</p>
+interactive mode from the command line and run the command <tt class="docutils literal"><span class="pre">import</span>
+<span class="pre">pygrametl</span></tt>.</p>
 <div class="highlight-python"><div class="highlight"><pre>Python 2.7.6 (default, Feb 26 2014, 12:07:17)
 [GCC 4.8.2 20140206 (prerelease)] on linux2
 Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
@@ -174,14 +170,14 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 &gt;&gt;&gt;
 </pre></div>
 </div>
-<p>If this fails with the message <code class="docutils literal"><span class="pre">ImportError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">pygrametl</span></code> then
+<p>If this fails with the message <tt class="docutils literal"><span class="pre">ImportError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">pygrametl</span></tt> then
 verify that the install location of the package is included in either the
-environment variable, <code class="docutils literal"><span class="pre">PYTHONPATH</span></code> if CPython is used, or the environment
-variable <code class="docutils literal"><span class="pre">JYTHONPATH</span></code> if Jython is used. By including the location of
+environment variable, <tt class="docutils literal"><span class="pre">PYTHONPATH</span></tt> if CPython is used, or the environment
+variable <tt class="docutils literal"><span class="pre">JYTHONPATH</span></tt> if Jython is used. By including the location of
 pygrametl in these variables, it is available to all instances of that Python
 implementation just like any built-in Python library. As an alternative, the
 path to pygrametl can be set on a program to program basis, by adding the path
-of pygrametl to <code class="xref py py-attr docutils literal"><span class="pre">sys.path</span></code>, before importing the package in your code.</p>
+of pygrametl to <tt class="xref py py-attr docutils literal"><span class="pre">sys.path</span></tt>, before importing the package in your code.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># The path to the to the pygramelt library is added to the path used by the</span>
 <span class="c"># by the Python interpreter when libraries are being imported, this must be</span>
 <span class="c"># done in all program using a module not included in the global Python path</span>
@@ -199,7 +195,7 @@ of pygrametl to <code class="xref py py-attr docutils literal"><span class="pre"
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -222,14 +218,12 @@ of pygrametl to <code class="xref py py-attr docutils literal"><span class="pre"
   <h4>Next topic</h4>
   <p class="topless"><a href="beginner.html"
                         title="next chapter">Beginner Guide</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/quickstart/install.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/quickstart/install.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -246,7 +240,7 @@ of pygrametl to <code class="xref py py-attr docutils literal"><span class="pre"
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -261,12 +255,12 @@ of pygrametl to <code class="xref py py-attr docutils literal"><span class="pre"
         <li class="right" >
           <a href="../index.html" title="Pygrametl - ETL Development in Python"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

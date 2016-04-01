@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Fact Tables &mdash; pygrametl 2.4 documentation</title>
+    <title>Fact Tables &mdash; pygrametl 2.4.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,28 +23,24 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
     <link rel="next" title="Bulk Loading" href="bulkloading.html" />
     <link rel="prev" title="Dimensions" href="dimensions.html" />
  
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30772056-1']);
-  _gaq.push(['_setDomainName', 'cs.aau.dk']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+  
 </script>
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
+  <body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -59,33 +55,33 @@
         <li class="right" >
           <a href="dimensions.html" title="Dimensions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="fact-tables">
 <span id="facttables"></span><h1>Fact Tables<a class="headerlink" href="#fact-tables" title="Permalink to this headline">¶</a></h1>
 <p><em>pygrametl</em> provides multiple classes for representing fact tables, in order
 to support both serial and parallel loading of facts into the table. For more
-information about the parallel capabilities of pygrametl see <a class="reference internal" href="parallel.html#parallel"><span>Parallel</span></a>.
+information about the parallel capabilities of pygrametl see <a class="reference internal" href="parallel.html#parallel"><em>Parallel</em></a>.
 In the following examples we use PostgreSQL and psycopg2 as the database driver.</p>
 <p>All of these classes are currently implemented in the
-<a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal"><span class="pre">pygrametl.tables</span></code></a> module.</p>
+<a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">pygrametl.tables</span></tt></a> module.</p>
 <div class="section" id="facttable">
 <h2>FactTable<a class="headerlink" href="#facttable" title="Permalink to this headline">¶</a></h2>
 <p>The most basic class for performing operations on the fact table is the class
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal"><span class="pre">FactTable</span></code></a>. However, this class perform an insert in the database
-whenever the <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.insert" title="pygrametl.tables.FactTable.insert"><code class="xref py py-meth docutils literal"><span class="pre">FactTable.insert()</span></code></a> method is called, which can very quickly
-become a bottleneck. Using the <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal"><span class="pre">FactTable</span></code></a> class is very simple and
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">FactTable</span></tt></a>. However, this class perform an insert in the database
+whenever the <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.insert" title="pygrametl.tables.FactTable.insert"><tt class="xref py py-meth docutils literal"><span class="pre">FactTable.insert()</span></tt></a> method is called, which can very quickly
+become a bottleneck. Using the <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">FactTable</span></tt></a> class is very simple and
 only requires that an appropriate table has been created in the database
 beforehand, and that a connection to the database has been created using an
-instance of the class <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></code></a>.</p>
-<p>For more information about database connections see <a class="reference internal" href="database.html#database"><span>Database</span></a></p>
+instance of the class <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a>.</p>
+<p>For more information about database connections see <a class="reference internal" href="database.html#database"><em>Database</em></a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span>
@@ -107,21 +103,21 @@ instance of the class <a class="reference internal" href="../api/pygrametl.html#
 </pre></div>
 </div>
 <p>The above example shows the three step process needed to connect an instance of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal"><span class="pre">FactTable</span></code></a> to an existing database table. First a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a>
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">FactTable</span></tt></a> to an existing database table. First a <span class="target" id="index-0"></span><a class="pep reference external" href="http://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a>
 connection is created which performs the actual database operations, then an
-instance of the <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></code></a> is created as a uniform wrapper
+instance of the <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a> is created as a uniform wrapper
 around the PEP connection which is set as the default database connection for
-pygrametl.  Lastly a <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal"><span class="pre">FactTable</span></code></a> is created as a representation of the
+pygrametl.  Lastly a <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">FactTable</span></tt></a> is created as a representation of the
 actual database table.</p>
 <p>Operations on the fact table are done using three methods, each taking as their
-primary arguments two <code class="xref py py-class docutils literal"><span class="pre">dict</span></code>. The first is used as a row where the keys
+primary arguments two <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt>. The first is used as a row where the keys
 match the column names of the table, while the second is a set of name mappings
 used to rename keys in a row if they do not match the database table.</p>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.insert" title="pygrametl.tables.FactTable.insert"><code class="xref py py-meth docutils literal"><span class="pre">FactTable.insert()</span></code></a> inserts new facts directly into the fact table when
-they are passed to the method. <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.lookup" title="pygrametl.tables.FactTable.lookup"><code class="xref py py-meth docutils literal"><span class="pre">FactTable.lookup()</span></code></a> checks if the database
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.insert" title="pygrametl.tables.FactTable.insert"><tt class="xref py py-meth docutils literal"><span class="pre">FactTable.insert()</span></tt></a> inserts new facts directly into the fact table when
+they are passed to the method. <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.lookup" title="pygrametl.tables.FactTable.lookup"><tt class="xref py py-meth docutils literal"><span class="pre">FactTable.lookup()</span></tt></a> checks if the database
 contains a fact with the given combination of keys referencing the dimensions.
-The last method <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.ensure" title="pygrametl.tables.FactTable.ensure"><code class="xref py py-meth docutils literal"><span class="pre">FactTable.ensure()</span></code></a> combines <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.lookup" title="pygrametl.tables.FactTable.lookup"><code class="xref py py-meth docutils literal"><span class="pre">FactTable.lookup()</span></code></a>
-and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.insert" title="pygrametl.tables.FactTable.insert"><code class="xref py py-meth docutils literal"><span class="pre">FactTable.insert()</span></code></a> by first ensuring that a fact does not already
+The last method <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.ensure" title="pygrametl.tables.FactTable.ensure"><tt class="xref py py-meth docutils literal"><span class="pre">FactTable.ensure()</span></tt></a> combines <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.lookup" title="pygrametl.tables.FactTable.lookup"><tt class="xref py py-meth docutils literal"><span class="pre">FactTable.lookup()</span></tt></a>
+and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable.insert" title="pygrametl.tables.FactTable.insert"><tt class="xref py py-meth docutils literal"><span class="pre">FactTable.insert()</span></tt></a> by first ensuring that a fact does not already
 exist in the table before inserting it. An example of each function and the
 automatic name mapping can be seen below, where the fact table from the last
 example is reused.</p>
@@ -159,48 +155,48 @@ example is reused.</p>
 </div>
 <div class="section" id="batchfacttable">
 <h2>BatchFactTable<a class="headerlink" href="#batchfacttable" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BatchFactTable" title="pygrametl.tables.BatchFactTable"><code class="xref py py-class docutils literal"><span class="pre">BatchFactTable</span></code></a> is a specialised version of <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal"><span class="pre">FactTable</span></code></a> which
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BatchFactTable" title="pygrametl.tables.BatchFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BatchFactTable</span></tt></a> is a specialised version of <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">FactTable</span></tt></a> which
 inserts facts into the fact table in batches, instead of one at the time,
 thereby reducing the number of statements executed against the database,
 improving the overall performance of the ETL application. The size of each
 batch inserted into the database is determined by an additional argument to the
-class initialiser method. The <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></code></a> must be called
+class initialiser method. The <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><tt class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></tt></a> must be called
 after all facts have been inserted into the fact table to both ensure that the
 last batch is loaded into the database from memory, and that the transaction is
 committed.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">To keep <code class="xref py py-meth docutils literal"><span class="pre">BatchFactTable.lookup()</span></code> and
-<code class="xref py py-meth docutils literal"><span class="pre">BatchFactTable.ensure()</span></code> consistent with all facts inserted into
+<p class="last">To keep <tt class="xref py py-meth docutils literal"><span class="pre">BatchFactTable.lookup()</span></tt> and
+<tt class="xref py py-meth docutils literal"><span class="pre">BatchFactTable.ensure()</span></tt> consistent with all facts inserted into
 the fact table, both methods force an insertion of facts. Use of
 these method can therefore reduce the benefit of batching insertions.</p>
 </div>
 </div>
 <div class="section" id="bulkfacttable">
 <h2>BulkFactTable<a class="headerlink" href="#bulkfacttable" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></code></a> also performs insertion in batches but writes facts to
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt></a> also performs insertion in batches but writes facts to
 a temporary file instead of keeping them in memory, allowing for batched
 insertions to be limited by disk space instead of memory. This however prevents
 database lookups to be performed consistently without reading the temporary
-file store on disk as well, so the methods <code class="xref py py-meth docutils literal"><span class="pre">BulkFactTable.lookup()</span></code> and
-<code class="xref py py-meth docutils literal"><span class="pre">BulkFactTable.ensure()</span></code> are not available. Like the other table classes,
-the method <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></code></a> must be called to ensure that the
+file store on disk as well, so the methods <tt class="xref py py-meth docutils literal"><span class="pre">BulkFactTable.lookup()</span></tt> and
+<tt class="xref py py-meth docutils literal"><span class="pre">BulkFactTable.ensure()</span></tt> are not available. Like the other table classes,
+the method <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><tt class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></tt></a> must be called to ensure that the
 remaining set of facts are inserted into the fact table, and that the
 transaction is committed. Multiple additional parameters are added to the class
 initialiser method allowing control over the temporary file used to store
 facts, such as specific delimiters and the number of facts to be bulk loaded. All
-of these parameters provide a default value except for <code class="xref py py-attr docutils literal"><span class="pre">bulkloader</span></code>.
+of these parameters provide a default value except for <tt class="xref py py-attr docutils literal"><span class="pre">bulkloader</span></tt>.
 This parameter must be passed a function to be called for each batch of facts
 to be loaded, this is necessary as the exact way to perform bulk loading
 differs from DBMS to DBMS.</p>
 <dl class="function">
 <dt>
-<code class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</code></dt>
+<tt class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</tt></dt>
 <dd><p>Expected signature of a bulk loader function passed to
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></code></a>, the exact value passed to the function by
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></code></a> depends upon the parameters passed when the was
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt></a>, the exact value passed to the function by
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt></a> depends upon the parameters passed when the was
 object instantiated. For more information about bulkloading see
-<a class="reference internal" href="bulkloading.html#bulkloading"><span>Bulk Loading</span></a>.</p>
+<a class="reference internal" href="bulkloading.html#bulkloading"><em>Bulk Loading</em></a>.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>name: the name of the fact table in the data warehouse.</li>
@@ -208,17 +204,17 @@ object instantiated. For more information about bulkloading see
 the primary key of the fact table, as well as the measures.</li>
 <li>fieldsep: the string used to separate fields in the temporary file.</li>
 <li>rowsep: the string used to separate rows in the temporary file.</li>
-<li>nullval: if the <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></code></a> was passed a string to substitute
+<li>nullval: if the <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt></a> was passed a string to substitute
 None values with, then it will be passed, if not then None is passed.</li>
 <li>filehandle: either the name of the file or the file object itself,
-depending upon on the value of <code class="xref py py-attr docutils literal"><span class="pre">BulkFactTable.usefilename</span></code>. Using
+depending upon on the value of <tt class="xref py py-attr docutils literal"><span class="pre">BulkFactTable.usefilename</span></tt>. Using
 the filename is necessary if the bulk loading is invoked through SQL
 (instead of directly via a method on the PEP249 driver). It is also
 necessary if the bulkloader runs in another process.</li>
 </ul>
 </dd></dl>
 
-<p>In the following example we use a <code class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></code> to load facts into a
+<p>In the following example we use a <tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt> to load facts into a
 data warehouse, with the bulk loading itself done by our own bulk loading
 function. For information about how to perform bulk loading using other DBMS
 than PostresSQL see the documentation for that particular DBMS and the database
@@ -269,7 +265,7 @@ driver used.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -287,14 +283,12 @@ driver used.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="bulkloading.html"
                         title="next chapter">Bulk Loading</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/examples/facttable.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/facttable.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -311,7 +305,7 @@ driver used.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -326,12 +320,12 @@ driver used.</p>
         <li class="right" >
           <a href="dimensions.html" title="Dimensions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Steps &mdash; pygrametl 2.4 documentation</title>
+    <title>Steps &mdash; pygrametl 2.4.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,28 +23,24 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
     <link rel="next" title="FIFODict" href="fifodict.html" />
     <link rel="prev" title="Aggregators" href="aggregators.html" />
  
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30772056-1']);
-  _gaq.push(['_setDomainName', 'cs.aau.dk']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+  
 </script>
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
+  <body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -59,14 +55,14 @@
         <li class="right" >
           <a href="aggregators.html" title="Aggregators"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="module-pygrametl.steps">
 <span id="steps"></span><h1>Steps<a class="headerlink" href="#module-pygrametl.steps" title="Permalink to this headline">¶</a></h1>
@@ -75,8 +71,8 @@ Steps can be connected such that a row flows from step to step and
 each step does something with the row.</p>
 <dl class="class">
 <dt id="pygrametl.steps.Step">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">Step</code><span class="sig-paren">(</span><em>worker=None</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.Step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">Step</tt><big>(</big><em>worker=None</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>The basic class for steps in an ETL flow.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -94,26 +90,26 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.Step.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.Step.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.Step.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the Step&#8217;s operation on the given row.</p>
 <p>Inheriting classes should implement this method.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="pygrametl.steps.Step.getstep">
-<em class="property">classmethod </em><code class="descname">getstep</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.Step.getstep" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">getstep</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#pygrametl.steps.Step.getstep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Step instance with the given name</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.steps.Step.name">
-<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.Step.name" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.steps.Step.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the name of the Step instance</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.steps.Step.process">
-<code class="descname">process</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.Step.process" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.Step.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the Step&#8217;s operation on the given row.</p>
 <p>If the row is not explicitly redirected (see _redirect), it will
 be passed on the the next step if this has been set.</p>
@@ -123,8 +119,8 @@ be passed on the the next step if this has been set.</p>
 
 <dl class="class">
 <dt id="pygrametl.steps.SourceStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">SourceStep</code><span class="sig-paren">(</span><em>source</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.SourceStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">SourceStep</tt><big>(</big><em>source</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.SourceStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that iterates over a data source and gives each row to the
 next step. The start method must be called.</p>
 <p><strong>Arguments:</strong></p>
@@ -142,7 +138,7 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.SourceStep.start">
-<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.SourceStep.start" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">start</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.steps.SourceStep.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the iteration of the source&#8217;s rows and pass them on.</p>
 </dd></dl>
 
@@ -150,8 +146,8 @@ created the latest. Default: None</li>
 
 <dl class="class">
 <dt id="pygrametl.steps.MappingStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">MappingStep</code><span class="sig-paren">(</span><em>targets</em>, <em>requiretargets=True</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.MappingStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">MappingStep</tt><big>(</big><em>targets</em>, <em>requiretargets=True</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.MappingStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that applies functions to attributes in rows.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -174,15 +170,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.MappingStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.MappingStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.MappingStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.ValueMappingStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">ValueMappingStep</code><span class="sig-paren">(</span><em>outputatt</em>, <em>inputatt</em>, <em>mapping</em>, <em>requireinput=True</em>, <em>defaultvalue=None</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.ValueMappingStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">ValueMappingStep</tt><big>(</big><em>outputatt</em>, <em>inputatt</em>, <em>mapping</em>, <em>requireinput=True</em>, <em>defaultvalue=None</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.ValueMappingStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that Maps values to other values (e.g., DK -&gt; Denmark)</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -207,15 +203,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.ValueMappingStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.ValueMappingStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.ValueMappingStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.PrintStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">PrintStep</code><span class="sig-paren">(</span><em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.PrintStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">PrintStep</tt><big>(</big><em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.PrintStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that prints each given row.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -231,15 +227,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.PrintStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.PrintStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.PrintStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.DimensionStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">DimensionStep</code><span class="sig-paren">(</span><em>dimension</em>, <em>keyfield=None</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.DimensionStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">DimensionStep</tt><big>(</big><em>dimension</em>, <em>keyfield=None</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.DimensionStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that performs ensure(row) on a given dimension for each row.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -258,15 +254,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.DimensionStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.DimensionStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.DimensionStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.SCDimensionStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">SCDimensionStep</code><span class="sig-paren">(</span><em>dimension</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.SCDimensionStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">SCDimensionStep</tt><big>(</big><em>dimension</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.SCDimensionStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that performs scdensure(row) on a given dimension for each row.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -285,21 +281,21 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.SCDimensionStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.SCDimensionStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.SCDimensionStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pygrametl.steps.RenamingStep">
-<code class="descclassname">pygrametl.steps.</code><code class="descname">RenamingStep</code><a class="headerlink" href="#pygrametl.steps.RenamingStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#pygrametl.steps.RenamingFromToStep" title="pygrametl.steps.RenamingFromToStep"><code class="xref py py-class docutils literal"><span class="pre">RenamingFromToStep</span></code></a></p>
+<tt class="descclassname">pygrametl.steps.</tt><tt class="descname">RenamingStep</tt><a class="headerlink" href="#pygrametl.steps.RenamingStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pygrametl.steps.RenamingFromToStep" title="pygrametl.steps.RenamingFromToStep"><tt class="xref py py-class docutils literal"><span class="pre">RenamingFromToStep</span></tt></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.RenamingFromToStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">RenamingFromToStep</code><span class="sig-paren">(</span><em>renaming</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.RenamingFromToStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">RenamingFromToStep</tt><big>(</big><em>renaming</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.RenamingFromToStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>Step that performs renamings of attributes in rows.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -321,15 +317,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.RenamingFromToStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.RenamingFromToStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.RenamingFromToStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.RenamingToFromStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">RenamingToFromStep</code><span class="sig-paren">(</span><em>renaming</em>, <em>next=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.RenamingToFromStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.RenamingFromToStep" title="pygrametl.steps.RenamingFromToStep"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.RenamingFromToStep</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">RenamingToFromStep</tt><big>(</big><em>renaming</em>, <em>next=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.RenamingToFromStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.RenamingFromToStep" title="pygrametl.steps.RenamingFromToStep"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.RenamingFromToStep</span></tt></a></p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>name: A name for the Step instance. This is used when another
@@ -350,15 +346,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.RenamingToFromStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.RenamingToFromStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.RenamingToFromStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.GarbageStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">GarbageStep</code><span class="sig-paren">(</span><em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.GarbageStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">GarbageStep</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.GarbageStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that does nothing. Rows are neither modified nor passed on.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -369,15 +365,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.GarbageStep.process">
-<code class="descname">process</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.GarbageStep.process" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.GarbageStep.process" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.ConditionalStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">ConditionalStep</code><span class="sig-paren">(</span><em>condition</em>, <em>whentrue</em>, <em>whenfalse=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.ConditionalStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">ConditionalStep</tt><big>(</big><em>condition</em>, <em>whentrue</em>, <em>whenfalse=None</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.ConditionalStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that redirects rows based on a condition.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -398,15 +394,15 @@ created the latest. Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.ConditionalStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.ConditionalStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.ConditionalStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.steps.CopyStep">
-<em class="property">class </em><code class="descclassname">pygrametl.steps.</code><code class="descname">CopyStep</code><span class="sig-paren">(</span><em>originaldest</em>, <em>copydest</em>, <em>deepcopy=False</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.CopyStep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><code class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></code></a></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.steps.</tt><tt class="descname">CopyStep</tt><big>(</big><em>originaldest</em>, <em>copydest</em>, <em>deepcopy=False</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#pygrametl.steps.CopyStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.steps.Step" title="pygrametl.steps.Step"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.steps.Step</span></tt></a></p>
 <p>A Step that copies each row and passes on the copy and the original</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -428,14 +424,14 @@ Default: False</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.steps.CopyStep.defaultworker">
-<code class="descname">defaultworker</code><span class="sig-paren">(</span><em>row</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.CopyStep.defaultworker" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">defaultworker</tt><big>(</big><em>row</em><big>)</big><a class="headerlink" href="#pygrametl.steps.CopyStep.defaultworker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.steps.connectsteps">
-<code class="descclassname">pygrametl.steps.</code><code class="descname">connectsteps</code><span class="sig-paren">(</span><em>*steps</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.steps.connectsteps" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">pygrametl.steps.</tt><tt class="descname">connectsteps</tt><big>(</big><em>*steps</em><big>)</big><a class="headerlink" href="#pygrametl.steps.connectsteps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a.next = b, b.next = c, etc. when given the steps a, b, c, ...</p>
 </dd></dl>
 
@@ -445,7 +441,7 @@ Default: False</li>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="aggregators.html"
@@ -453,14 +449,12 @@ Default: False</li>
   <h4>Next topic</h4>
   <p class="topless"><a href="fifodict.html"
                         title="next chapter">FIFODict</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/api/steps.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/steps.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -477,7 +471,7 @@ Default: False</li>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -492,12 +486,12 @@ Default: False</li>
         <li class="right" >
           <a href="aggregators.html" title="Aggregators"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

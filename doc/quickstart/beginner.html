@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Beginner Guide &mdash; pygrametl 2.4 documentation</title>
+    <title>Beginner Guide &mdash; pygrametl 2.4.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,28 +23,24 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
     <link rel="next" title="Database" href="../examples/database.html" />
     <link rel="prev" title="Install Guide" href="install.html" />
  
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30772056-1']);
-  _gaq.push(['_setDomainName', 'cs.aau.dk']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+  
 </script>
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
+  <body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -59,54 +55,54 @@
         <li class="right" >
           <a href="install.html" title="Install Guide"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="beginner-guide">
 <span id="beginner"></span><h1>Beginner Guide<a class="headerlink" href="#beginner-guide" title="Permalink to this headline">¶</a></h1>
 <p>The following is a small getting started guide, showcasing the various
 constructs in <em>pygrametl</em> and how to utilise them in order to create a simple
-ETL flow for a made-up example. The example used is shown in <a class="reference internal" href="#dwexample"><span>Data Warehouse example</span></a>,
+ETL flow for a made-up example. The example used is shown in <a class="reference internal" href="#dwexample"><em>Data Warehouse example</em></a>,
 and is a small data warehouse represented as a star schema with three
 dimensions. Firstly, a book dimension for storing the name and genre of a book
 sold, then a location dimension with the city and state of the store, and lastly,
 the time dimension with day, month and year of a sale. To keep the example
 simple, none of dimension are snowflaked, nor do they contain any slowly changing
 attributes. Both of these are however supported by pygrametl through
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a>. In
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a>. In
 addition, pygrametl also contains support for creating high level
 multiprocess or multithreaded ETL flow, depending on the implementation of Python used.
 For more information about support for parallel ETL flows can be found
-here: <a class="reference internal" href="../examples/parallel.html#parallel"><span>Parallel</span></a>.</p>
+here: <a class="reference internal" href="../examples/parallel.html#parallel"><em>Parallel</em></a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">When using pygrametl, we strongly encourage you to use named parameters
 when instantiating classes, in order to improve readability, and to prevent
 future errors in the event of changes to the API</p>
 </div>
-<div class="figure align-center" id="id1">
-<span id="dwexample"></span><img alt="bookstore data warehouse example" src="../_images/example.svg" /><p class="caption"><span class="caption-text">Data Warehouse example</span></p>
+<div class="figure align-center" id="dwexample">
+<img alt="bookstore data warehouse example" src="../_images/example.svg" /><p class="caption">Data Warehouse example</p>
 </div>
 <div class="section" id="input-data">
 <h2>Input Data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h2>
 <p>Most pygrametl abstractions either produce, consume or operate on data in
-<cite>rows</cite>, where a row is a Python <code class="xref py py-class docutils literal"><span class="pre">dict</span></code> with the keys as &#8220;columns&#8221; and
+<cite>rows</cite>, where a row is a Python <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt> with the keys as &#8220;columns&#8221; and
 the values being the data the row contains. For more information about each
-available data source, refer to <a class="reference internal" href="../examples/datasources.html#datasources"><span>Data sources</span></a>.</p>
+available data source, refer to <a class="reference internal" href="../examples/datasources.html#datasources"><em>Data sources</em></a>.</p>
 <p>We use data from a database relation containing sales records, in order to load
 the data warehouse. The relation contains data as shown below.</p>
 <div class="highlight-none"><div class="highlight"><pre>book,                   genre,      store,      timestamp,  sale
 ----------------------------------------------------------------
 Nineteen Eighty-Four,   Novel,      Aalborg,    2005/08/05  50
 Calvin and Hobbes One,  Comic,      Aalborg,    2005/08/05  25
-The Silver Spoon,       Cockbook,   Aalborg,    2005/08/14  5
-The Silver Spoon,       Cockbook,   Odense,     2005/09/01  7
+The Silver Spoon,       Cookbook,   Aalborg,    2005/08/14  5
+The Silver Spoon,       Cookbook,   Odense,     2005/09/01  7
 ....
 </pre></div>
 </div>
@@ -126,14 +122,14 @@ Odense,     Region of Southern Denmark
 <p>The ETL flow is designed to run on CPython and use Postgresql as database
 management system, but can easily be run on other implementations such as
 Jython, by changing a few CPython specific components, such as the database
-driver and <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.SQLSource" title="pygrametl.datasources.SQLSource"><code class="xref py py-class docutils literal"><span class="pre">SQLSource</span></code></a>, as the C-based database drivers used by CPython
+driver and <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.SQLSource" title="pygrametl.datasources.SQLSource"><tt class="xref py py-class docutils literal"><span class="pre">SQLSource</span></tt></a>, as the C-based database drivers used by CPython
 are incompatible with most other implementations. For more information about
-running pygrametl on Jython see <a class="reference internal" href="../examples/jython.html#jython"><span>Jython</span></a>.</p>
+running pygrametl on Jython see <a class="reference internal" href="../examples/jython.html#jython"><em>Jython</em></a>.</p>
 <p>We start by importing the various functions and classes needed for the simple
 ETL flow. Two parts of pygrametl need to be imported. The means to read
 data from the sales database as well as from the CSV file is imported from the
-module <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><code class="xref py py-mod docutils literal"><span class="pre">datasources</span></code></a>. Classes for interacting with the fact
-table and the various dimensions are imported from <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal"><span class="pre">tables</span></code></a>.</p>
+module <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><tt class="xref py py-mod docutils literal"><span class="pre">datasources</span></tt></a>. Classes for interacting with the fact
+table and the various dimensions are imported from <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">tables</span></tt></a>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># psycopg2 is a database driver allowing CPython to access Postgresql</span>
 <span class="kn">import</span> <span class="nn">psycopg2</span>
 
@@ -153,13 +149,13 @@ table and the various dimensions are imported from <a class="reference internal"
 data, as well as a connection to actual data warehouses is needed. As we use
 CPython, we use a PEP 249 connection for this. As the data warehouse connection
 must be shared by multiple different pygrametl abstractions in the ETL flow, we
-create an instance of <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></code></a>, as the first instance of
+create an instance of <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a>, as the first instance of
 this class is set as the default connection for pygrametl&#8217;s abstractions,
 allowing it to be used without having to pass it directly to each abstraction
 that needs it. This is not needed for the connection to the sales database as
 it is only needed by one abstraction, so in that case we just use the PEP 249
 connection directly. For more information about database connections in
-pygrametl see <a class="reference internal" href="../examples/database.html#database"><span>Database</span></a>.</p>
+pygrametl see <a class="reference internal" href="../examples/database.html#database"><em>Database</em></a>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># Creation of a database connection to the sales database with a simple</span>
 <span class="c"># connection string, specifying the necessary host, username and passowrd</span>
 <span class="n">sales_string</span> <span class="o">=</span> <span class="s">&quot;host=&#39;10.0.0.12&#39; dbname=&#39;sale&#39; user=&#39;user&#39; password=&#39;pass&#39;&quot;</span>
@@ -179,7 +175,7 @@ pygrametl see <a class="reference internal" href="../examples/database.html#data
 <p>To get data into the ETL flow, two data sources are created. One for the
 database containing the sales data, and one for the CSV file containing the
 region information. For more information about the various data sources see
-<a class="reference internal" href="../examples/datasources.html#datasources"><span>Data sources</span></a>.</p>
+<a class="reference internal" href="../examples/datasources.html#datasources"><em>Data sources</em></a>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># As the location dimension stores the name of a location in the attribute</span>
 <span class="c"># &quot;city&quot; instead of in the attribute &quot;store&quot; as in the input data from the</span>
 <span class="c"># sales relation, a sequence of names matching the number of attributes in</span>
@@ -201,7 +197,7 @@ region information. For more information about the various data sources see
 well as an object for the fact table. Pygrametl contains multiple different
 types of dimension and fact table object abstractions. In this example we use
 the simplest ones. For more information about the more advanced dimension and
-fact table objects, see <a class="reference internal" href="../examples/dimensions.html#dimensions"><span>Dimensions</span></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><span>Fact Tables</span></a>.</p>
+fact table objects, see <a class="reference internal" href="../examples/dimensions.html#dimensions"><em>Dimensions</em></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><em>Fact Tables</em></a>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># An instance of Dimension is created for each dimension in the data</span>
 <span class="c"># warehouse. For each table, the name of the table, the primary key of</span>
 <span class="c"># the table, and a list of non key attributes in the table, are added.</span>
@@ -264,8 +260,8 @@ data needed, and the data needs to exist in the dimension in order for a
 foreign key to be computed for the fact table. The other two dimensions are
 built during the insertion of facts, as the needed data is included in the
 sales data from the database. To ensure that the data is committed to the
-database, the method <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></code></a> is called, before
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.close" title="pygrametl.ConnectionWrapper.close"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.close()</span></code></a> which closes the connection to the database.</p>
+database, the method <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><tt class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></tt></a> is called, before
+<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.close" title="pygrametl.ConnectionWrapper.close"><tt class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.close()</span></tt></a> which closes the connection to the database.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># The Location dimension is filled with data from the CSV file, as the file</span>
 <span class="c"># contains information for both columns in the table. If the dimension was</span>
 <span class="c"># filled using the sales database, it would be necessary to update the</span>
@@ -333,10 +329,10 @@ pygrametl. A combined, less commented version, can be seen below, but as this
 is only a very small example, the caching or bulk loading built into some of
 the more advanced dimension and fact table classes has not been used. In
 anything but very small ETL flows, these should however be used. See
-<a class="reference internal" href="../examples/dimensions.html#dimensions"><span>Dimensions</span></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><span>Fact Tables</span></a> for more information. Pygrametl also
+<a class="reference internal" href="../examples/dimensions.html#dimensions"><em>Dimensions</em></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><em>Fact Tables</em></a> for more information. Pygrametl also
 provides a set of simple abstractions for performing operations in parallel on
 multi-core systems, in order to increase the throughput of a ETL program. For
-more information about parallelism, see <a class="reference internal" href="../examples/parallel.html#parallel"><span>Parallel</span></a>.</p>
+more information about parallelism, see <a class="reference internal" href="../examples/parallel.html#parallel"><em>Parallel</em></a>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">SQLSource</span><span class="p">,</span> <span class="n">CSVSource</span>
@@ -436,7 +432,7 @@ more information about parallelism, see <a class="reference internal" href="../e
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -453,14 +449,12 @@ more information about parallelism, see <a class="reference internal" href="../e
   <h4>Next topic</h4>
   <p class="topless"><a href="../examples/database.html"
                         title="next chapter">Database</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/quickstart/beginner.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/quickstart/beginner.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -477,7 +471,7 @@ more information about parallelism, see <a class="reference internal" href="../e
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -492,12 +486,12 @@ more information about parallelism, see <a class="reference internal" href="../e
         <li class="right" >
           <a href="install.html" title="Install Guide"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

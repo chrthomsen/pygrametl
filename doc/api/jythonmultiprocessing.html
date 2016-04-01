@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Jythonmultiprocessing &mdash; pygrametl 2.4 documentation</title>
+    <title>Jythonmultiprocessing &mdash; pygrametl 2.4.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,28 +23,24 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
     <link rel="next" title="Aggregators" href="aggregators.html" />
     <link rel="prev" title="JDBCConnectionWrapper" href="jdbcconnectionwrapper.html" />
  
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30772056-1']);
-  _gaq.push(['_setDomainName', 'cs.aau.dk']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+  
 </script>
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
+  <body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -59,14 +55,14 @@
         <li class="right" >
           <a href="jdbcconnectionwrapper.html" title="JDBCConnectionWrapper"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="module-pygrametl.jythonmultiprocessing">
 <span id="jythonmultiprocessing"></span><h1>Jythonmultiprocessing<a class="headerlink" href="#module-pygrametl.jythonmultiprocessing" title="Permalink to this headline">¶</a></h1>
@@ -75,19 +71,19 @@ With this, pygrametl can be made to use multiprocessing, but actually use
 threads when used from Jython (where there is no GIL).</p>
 <dl class="class">
 <dt id="pygrametl.jythonmultiprocessing.JoinableQueue">
-<em class="property">class </em><code class="descclassname">pygrametl.jythonmultiprocessing.</code><code class="descname">JoinableQueue</code><span class="sig-paren">(</span><em>maxsize=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.JoinableQueue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Queue.Queue</span></code></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.jythonmultiprocessing.</tt><tt class="descname">JoinableQueue</tt><big>(</big><em>maxsize=0</em><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.JoinableQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">queue.Queue</span></tt></p>
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.JoinableQueue.close">
-<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.JoinableQueue.close" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.JoinableQueue.close" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.jythonmultiprocessing.Process">
-<em class="property">class </em><code class="descclassname">pygrametl.jythonmultiprocessing.</code><code class="descname">Process</code><span class="sig-paren">(</span><em>group=None</em>, <em>target=None</em>, <em>name=None</em>, <em>args=()</em>, <em>kwargs=None</em>, <em>verbose=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">threading.Thread</span></code></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.jythonmultiprocessing.</tt><tt class="descname">Process</tt><big>(</big><em>group=None</em>, <em>target=None</em>, <em>name=None</em>, <em>args=()</em>, <em>kwargs=None</em>, <em>*</em>, <em>daemon=None</em><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">threading.Thread</span></tt></p>
 <p>This constructor should always be called with keyword arguments. Arguments are:</p>
 <p><em>group</em> should be None; reserved for future extension when a ThreadGroup
 class is implemented.</p>
@@ -103,41 +99,52 @@ the base class constructor (Thread.__init__()) before doing anything
 else to the thread.</p>
 <dl class="attribute">
 <dt id="pygrametl.jythonmultiprocessing.Process.daemon">
-<code class="descname">daemon</code><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process.daemon" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">daemon</tt><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process.daemon" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pygrametl.jythonmultiprocessing.Process.name">
-<code class="descname">name</code><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process.name" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">name</tt><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pygrametl.jythonmultiprocessing.Process.pid">
-<code class="descname">pid</code><em class="property"> = '&lt;n/a&gt;'</em><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process.pid" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pid</tt><em class="property"> = '&lt;n/a&gt;'</em><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Process.pid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.jythonmultiprocessing.Queue">
-<em class="property">class </em><code class="descclassname">pygrametl.jythonmultiprocessing.</code><code class="descname">Queue</code><span class="sig-paren">(</span><em>maxsize=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a queue object with a given maximum size.</p>
+<em class="property">class </em><tt class="descclassname">pygrametl.jythonmultiprocessing.</tt><tt class="descname">Queue</tt><big>(</big><em>maxsize=0</em><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>Create a queue object with a given maximum size.</p>
 <p>If maxsize is &lt;= 0, the queue size is infinite.</p>
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.empty">
-<code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.empty" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">empty</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the queue is empty, False otherwise (not reliable!).</p>
+<p>This method is likely to be removed at some point.  Use qsize() == 0
+as a direct substitute, but be aware that either approach risks a race
+condition where a queue can grow before the result of empty() or
+qsize() can be used.</p>
+<p>To create code that needs to wait for all queued tasks to be
+completed, the preferred technique is to use the join() method.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.full">
-<code class="descname">full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.full" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">full</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.full" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if the queue is full, False otherwise (not reliable!).</p>
+<p>This method is likely to be removed at some point.  Use qsize() &gt;= n
+as a direct substitute, but be aware that either approach risks a race
+condition where a queue can shrink before the result of full() or
+qsize() can be used.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>block=True</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.get" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get</tt><big>(</big><em>block=True</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove and return an item from the queue.</p>
 <p>If optional args &#8216;block&#8217; is true and &#8216;timeout&#8217; is None (the default),
 block if necessary until an item is available. If &#8216;timeout&#8217; is
@@ -150,7 +157,7 @@ in that case).</p>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.get_nowait">
-<code class="descname">get_nowait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.get_nowait" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_nowait</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.get_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove and return an item from the queue without blocking.</p>
 <p>Only get an item if one is immediately available. Otherwise
 raise the Empty exception.</p>
@@ -158,7 +165,7 @@ raise the Empty exception.</p>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.join">
-<code class="descname">join</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.join" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">join</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocks until all items in the Queue have been gotten and processed.</p>
 <p>The count of unfinished tasks goes up whenever an item is added to the
 queue. The count goes down whenever a consumer thread calls task_done()
@@ -168,7 +175,7 @@ to indicate the item was retrieved and all work on it is complete.</p>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.put">
-<code class="descname">put</code><span class="sig-paren">(</span><em>item</em>, <em>block=True</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.put" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">put</tt><big>(</big><em>item</em>, <em>block=True</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put an item into the queue.</p>
 <p>If optional args &#8216;block&#8217; is true and &#8216;timeout&#8217; is None (the default),
 block if necessary until a free slot is available. If &#8216;timeout&#8217; is
@@ -181,7 +188,7 @@ is ignored in that case).</p>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.put_nowait">
-<code class="descname">put_nowait</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.put_nowait" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">put_nowait</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.put_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put an item into the queue without blocking.</p>
 <p>Only enqueue the item if a free slot is immediately available.
 Otherwise raise the Full exception.</p>
@@ -189,13 +196,13 @@ Otherwise raise the Full exception.</p>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.qsize">
-<code class="descname">qsize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.qsize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">qsize</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.qsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the approximate size of the queue (not reliable!).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.jythonmultiprocessing.Queue.task_done">
-<code class="descname">task_done</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.task_done" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">task_done</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Queue.task_done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate that a formerly enqueued task is complete.</p>
 <p>Used by Queue consumer threads.  For each get() used to fetch a task,
 a subsequent call to task_done() tells the queue that the processing
@@ -211,8 +218,8 @@ placed in the queue.</p>
 
 <dl class="class">
 <dt id="pygrametl.jythonmultiprocessing.Value">
-<em class="property">class </em><code class="descclassname">pygrametl.jythonmultiprocessing.</code><code class="descname">Value</code><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<em class="property">class </em><tt class="descclassname">pygrametl.jythonmultiprocessing.</tt><tt class="descname">Value</tt><a class="headerlink" href="#pygrametl.jythonmultiprocessing.Value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 </dd></dl>
 
 </div>
@@ -221,7 +228,7 @@ placed in the queue.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="jdbcconnectionwrapper.html"
@@ -229,14 +236,12 @@ placed in the queue.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="aggregators.html"
                         title="next chapter">Aggregators</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/api/jythonmultiprocessing.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/jythonmultiprocessing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -253,7 +258,7 @@ placed in the queue.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -268,12 +273,12 @@ placed in the queue.</p>
         <li class="right" >
           <a href="jdbcconnectionwrapper.html" title="JDBCConnectionWrapper"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Dimensions &mdash; pygrametl 2.4 documentation</title>
+    <title>Dimensions &mdash; pygrametl 2.4.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4',
+        VERSION:     '2.4.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,28 +23,24 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
     <link rel="next" title="Fact Tables" href="facttable.html" />
     <link rel="prev" title="Data sources" href="datasources.html" />
  
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30772056-1']);
-  _gaq.push(['_setDomainName', 'cs.aau.dk']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+  
 </script>
 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
+  <body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -59,14 +55,14 @@
         <li class="right" >
           <a href="datasources.html" title="Data sources"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="dimensions">
 <span id="id1"></span><h1>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this headline">¶</a></h1>
@@ -76,23 +72,23 @@ snowflake schemas as well as type 2 or a combined type 1 and type 2 slowly
 changing dimension. A slowly changing dimension that is only type 1 is
 currently not supported. The abstractions can be used both for serial and
 parallel loading of data into the dimensions. For more information about the
-parallel capabilities of pygrametl see <a class="reference internal" href="parallel.html#parallel"><span>Parallel</span></a>. In the following
+parallel capabilities of pygrametl see <a class="reference internal" href="parallel.html#parallel"><em>Parallel</em></a>. In the following
 examples we use PostgreSQL as a database management system and psycopg2 as the
 database driver.</p>
 <p>All of these classes are currently implemented in the
-<a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal"><span class="pre">pygrametl.tables</span></code></a> module.</p>
+<a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">pygrametl.tables</span></tt></a> module.</p>
 <div class="section" id="dimension">
 <h2>Dimension<a class="headerlink" href="#dimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> is the simplest abstraction pygrametl provides for
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> is the simplest abstraction pygrametl provides for
 interaction with dimensions in a data warehouse. For each of the dimensions in
-a data warehouse a instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> is created, which provides
+a data warehouse a instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> is created, which provides
 an interface for performing operations on the table, such as insertions or
 looking up keys, while abstracting away the database connection and queries.
-Using <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> is a two-step process. First, an instance of
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></code></a> is created with a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> database connection
+Using <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> is a two-step process. First, an instance of
+<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a> is created with a <span class="target" id="index-0"></span><a class="pep reference external" href="http://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> database connection
 which is automatically set as the default connection and used by
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> for interacting with the database. For more information
-about database connections see <a class="reference internal" href="database.html#database"><span>Database</span></a>. Second, the name of the table
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> for interacting with the database. For more information
+about database connections see <a class="reference internal" href="database.html#database"><em>Database</em></a>. Second, the name of the table
 must be specified, along with the primary key of the table, as well as the
 columns in the table. In addition to these required parameters, a subset of
 columns to be used for looking up keys can also be specified, as well as a
@@ -140,23 +136,23 @@ fails, and a function for expanding a row automatically.</p>
 </pre></div>
 </div>
 <p>In this very simple example, a set of rows with product information is loaded
-into the product dimension, using an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> created
+into the product dimension, using an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> created
 with information on the table in database. The list of product information can
 then be inserted into the database using the method
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension.insert" title="pygrametl.tables.Dimension.insert"><code class="xref py py-meth docutils literal"><span class="pre">Dimension.insert()</span></code></a>. Afterwards the database must be committed and the
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension.insert" title="pygrametl.tables.Dimension.insert"><tt class="xref py py-meth docutils literal"><span class="pre">Dimension.insert()</span></tt></a>. Afterwards the database must be committed and the
 transaction closed to ensure that the data is correctly written to the
 database.</p>
 </div>
 <div class="section" id="cacheddimension">
 <h2>CachedDimension<a class="headerlink" href="#cacheddimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></code></a> expands the standard dimension with a cache, allowing
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></tt></a> expands the standard dimension with a cache, allowing
 for lower latency when when performing lookups as the number of round trips to
 the database can be decreased. To control what is cached, three additional
 parameters have been added to the initialiser method. The parameter
-<code class="xref py py-attr docutils literal"><span class="pre">prefill</span></code> indicates that the cache should be filled with data from the
-database on initialisation, while <code class="xref py py-attr docutils literal"><span class="pre">cachefullrows</span></code> determines whether
-only the primary key and columns defined by <code class="xref py py-attr docutils literal"><span class="pre">lookuparts</span></code>, or entire rows
-should be cached. Lastly the parameter <code class="xref py py-attr docutils literal"><span class="pre">cacheoninsert</span></code> specifies if
+<tt class="xref py py-attr docutils literal"><span class="pre">prefill</span></tt> indicates that the cache should be filled with data from the
+database on initialisation, while <tt class="xref py py-attr docutils literal"><span class="pre">cachefullrows</span></tt> determines whether
+only the primary key and columns defined by <tt class="xref py py-attr docutils literal"><span class="pre">lookuparts</span></tt>, or entire rows
+should be cached. Lastly the parameter <tt class="xref py py-attr docutils literal"><span class="pre">cacheoninsert</span></tt> specifies if
 newly inserted rows should be cached. To ensure that the cache is kept
 consistent, no changes or additions should be performed on the rows by the
 database, a default value set by the database is an example of a simple-to-miss
@@ -209,41 +205,41 @@ violation of this.</p>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The example shows how to utilise <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></code></a> to improve
-performance of <code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code> when finding the value of a key for insertion
-into the fact table. The <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></code></a> caches the values from the
+<p>The example shows how to utilise <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></tt></a> to improve
+performance of <tt class="xref py py-meth docutils literal"><span class="pre">lookup()</span></tt> when finding the value of a key for insertion
+into the fact table. The <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></tt></a> caches the values from the
 product dimension locally, allowing increased performance when looking up keys
 as fewer, or none if all rows are cached, round trips are made to the database.</p>
 </div>
 <div class="section" id="bulkdimension">
 <h2>BulkDimension<a class="headerlink" href="#bulkdimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> is a dimension specialised for increased throughput
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> is a dimension specialised for increased throughput
 when performing insertions by inserting rows in bulk from a file, in addition
 to quick lookups through an in-memory cache. To support this the database must
 not perform transformations in order to not create inconsistencies between the
-cache and the database table. Another aspect of <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> is that
-<code class="xref py py-meth docutils literal"><span class="pre">update()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">getbyvals()</span></code> forces a call to <code class="xref py py-meth docutils literal"><span class="pre">endload()</span></code> which
+cache and the database table. Another aspect of <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> is that
+<tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">getbyvals()</span></tt> forces a call to <tt class="xref py py-meth docutils literal"><span class="pre">endload()</span></tt> which
 inserts all rows stored in the local file into the database using a user
 defined bulk loading function so calling these functions often, will negate the
-benefit of bulk loading. The method <code class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></code> also forces the dimension
-to bulk load by default, but can use a cache if <code class="xref py py-attr docutils literal"><span class="pre">cachefullrows</span></code> is
+benefit of bulk loading. The method <tt class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></tt> also forces the dimension
+to bulk load by default, but can use a cache if <tt class="xref py py-attr docutils literal"><span class="pre">cachefullrows</span></tt> is
 enabled at the cost of additional memory.  Calls of lookup and ensure will only
 use the cache and does not invoke any database operations, as the class caches
 all rows using an infinite cache.  If the dataset is too large to be cached in
-memory then use the class <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></code></a> instead, which supports
+memory then use the class <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></tt></a> instead, which supports
 bulk loading using a finite cache. To support bulk loading from a file on disk,
 multiple additional parameters have been added to the class initialiser method
 allowing control of the temporary file used to store rows, such as specific
 delimiters and the number of facts to be bulk loaded. All of these parameters
-provide a default value except for <code class="xref py py-attr docutils literal"><span class="pre">bulkloader</span></code>. This parameter must be
+provide a default value except for <tt class="xref py py-attr docutils literal"><span class="pre">bulkloader</span></tt>. This parameter must be
 passed a function to be called for each batch of rows to be loaded, this is
 necessary as the exact way to perform bulk loading differs from DBMS to DBMS.</p>
 <dl class="function">
 <dt>
-<code class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</code></dt>
+<tt class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</tt></dt>
 <dd><p>Expected signature of a bulk loader function passed to
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a>. For more information about bulkloading see
-<a class="reference internal" href="bulkloading.html#bulkloading"><span>Bulk Loading</span></a>.</p>
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a>. For more information about bulkloading see
+<a class="reference internal" href="bulkloading.html#bulkloading"><em>Bulk Loading</em></a>.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>name: the name of the dimension table in the data warehouse.</li>
@@ -251,10 +247,10 @@ necessary as the exact way to perform bulk loading differs from DBMS to DBMS.</p
 table.</li>
 <li>fieldsep: the string used to separate fields in the temporary file.</li>
 <li>rowsep: the string used to separate rows in the temporary file.</li>
-<li>nullval: if the <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> was passed a string to substitute
+<li>nullval: if the <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> was passed a string to substitute
 None values with, then it will be passed, if not then None is passed.</li>
 <li>filehandle: either the name of the file or the file object itself,
-depending upon on the value of <code class="xref py py-attr docutils literal"><span class="pre">BulkDimension.usefilename</span></code>. Using
+depending upon on the value of <tt class="xref py py-attr docutils literal"><span class="pre">BulkDimension.usefilename</span></tt>. Using
 the filename is necessary if the bulk loading is invoked through SQL
 (instead of directly via a method on the PEP249 driver). It is also
 necessary if the bulkloader runs in another process.</li>
@@ -319,52 +315,52 @@ necessary if the bulkloader runs in another process.</li>
 <span class="n">sqconn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This example shows how to use <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> to effectively load the
+<p>This example shows how to use <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> to effectively load the
 contents of a local SQLite database into a data warehouse dimension located on
-the network. This process is a good use case for <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> as no
-calls to <code class="xref py py-meth docutils literal"><span class="pre">update()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></code> or <code class="xref py py-meth docutils literal"><span class="pre">getbyval()</span></code> are needed so the
+the network. This process is a good use case for <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> as no
+calls to <tt class="xref py py-meth docutils literal"><span class="pre">update()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></tt> or <tt class="xref py py-meth docutils literal"><span class="pre">getbyval()</span></tt> are needed so the
 caches can be filled before they are loaded into the data warehouse. As the
 data warehouse is located on another machine many round trips to perform single
 insertions to it may become a necessary bottleneck.  The severity of this
 problem is decreased by the use of local cache, as much larger amounts of data
 is loaded for each round trip to the database through the use of the bulk
-loading function, which uses the <code class="xref py py-meth docutils literal"><span class="pre">copy_from()</span></code> method to load multiple rows
+loading function, which uses the <tt class="xref py py-meth docutils literal"><span class="pre">copy_from()</span></tt> method to load multiple rows
 while performing a insertion for each. A downside, however, of using
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> to cache rows is that some data might not be inserted
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> to cache rows is that some data might not be inserted
 into the database after when the last row is given to the
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> object, as data is only loaded into the database when
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> object, as data is only loaded into the database when
 the cache is filled. To load the contents manually, the method
-<code class="xref py py-meth docutils literal"><span class="pre">BulkDimension.endload()</span></code> must be called, this can quickly become
+<tt class="xref py py-meth docutils literal"><span class="pre">BulkDimension.endload()</span></tt> must be called, this can quickly become
 non-trivial so a simpler solution is to use the method
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></code></a>, which calls <code class="xref py py-meth docutils literal"><span class="pre">endload()</span></code> and
-<code class="xref py py-meth docutils literal"><span class="pre">commit()</span></code> on all tables created anywhere in the program and commits the
+<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><tt class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></tt></a>, which calls <tt class="xref py py-meth docutils literal"><span class="pre">endload()</span></tt> and
+<tt class="xref py py-meth docutils literal"><span class="pre">commit()</span></tt> on all tables created anywhere in the program and commits the
 current database transaction on the database which the
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></code></a> is associated with.</p>
+<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a> is associated with.</p>
 </div>
 <div class="section" id="cachedbulkdimension">
 <h2>CachedBulkDimension<a class="headerlink" href="#cachedbulkdimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></code></a> is very similar to the class
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></code></a> and is also intended for bulk loading a dimension.
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></tt></a> is very similar to the class
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a> and is also intended for bulk loading a dimension.
 However it is optimised for and uses a finite sized cache, instead of one of
 infinite size. This allows it to be used with a dataset too large to be cached
 entirely in main memory. This comes at the cost of the possibility of
-<code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">ensure()</span></code> having to go to the database instead of using
-the cache. The method <code class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></code> also no longer needs to force loading of
-the data in the file if <code class="xref py py-attr docutils literal"><span class="pre">cachefullrows</span></code> is not enabled. This is due to
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></code></a> using a local cache for the rows currently in the
+<tt class="xref py py-meth docutils literal"><span class="pre">lookup()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">ensure()</span></tt> having to go to the database instead of using
+the cache. The method <tt class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></tt> also no longer needs to force loading of
+the data in the file if <tt class="xref py py-attr docutils literal"><span class="pre">cachefullrows</span></tt> is not enabled. This is due to
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></tt></a> using a local cache for the rows currently in the
 file. All rows in the file are cached as there is no guarantee that the cache
-on <code class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></code> would not overwrite the cached version of the rows
+on <tt class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></tt> would not overwrite the cached version of the rows
 in the file due to it&#8217;s cache being full, forcing the need of an additional
-cache to ensure <code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></code> can locate rows before they
-are loaded into the database. The method <code class="xref py py-meth docutils literal"><span class="pre">insert()</span></code> first caches rows in
+cache to ensure <tt class="xref py py-meth docutils literal"><span class="pre">lookup()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">getbykey()</span></tt> can locate rows before they
+are loaded into the database. The method <tt class="xref py py-meth docutils literal"><span class="pre">insert()</span></tt> first caches rows in
 the local cache, and only when the rows in the file are loaded into the
-database are the data moved to the cache on <code class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></code>, in
-which <code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code> also stores rows if the method had to query the database
+database are the data moved to the cache on <tt class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></tt>, in
+which <tt class="xref py py-meth docutils literal"><span class="pre">lookup()</span></tt> also stores rows if the method had to query the database
 for them.</p>
-<p>Due to the use of two caches, the caching by <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></code></a> is
-controlled by two parameters. The parameter <code class="xref py py-attr docutils literal"><span class="pre">cachesize</span></code> can be set to
+<p>Due to the use of two caches, the caching by <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></tt></a> is
+controlled by two parameters. The parameter <tt class="xref py py-attr docutils literal"><span class="pre">cachesize</span></tt> can be set to
 control the size of the cache for rows loaded into the database, while the
-parameter <code class="xref py py-attr docutils literal"><span class="pre">bulksize</span></code> controls the number of rows stored in the file
+parameter <tt class="xref py py-attr docutils literal"><span class="pre">bulksize</span></tt> controls the number of rows stored in the file
 before the dimension bulk loads. As the rows in the file are all cached in a
 separate cache, the memory consumption will change in correspondence to both
 these values.</p>
@@ -377,17 +373,17 @@ just return the key for the first row as it is stored in the local cache.</p>
 </div>
 <div class="section" id="typeoneslowlychanging-dimension">
 <h2>TypeOneSlowlyChanging Dimension<a class="headerlink" href="#typeoneslowlychanging-dimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a> allows the creation of a Type 1 slowly
-changing dimension.  The dimension is based on <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></code></a>,
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">TypeOneSlowlyChangingDimension</span></tt></a> allows the creation of a Type 1 slowly
+changing dimension.  The dimension is based on <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedDimension</span></tt></a>,
 albeit with a few differences. The primary difference between the two classes
-besides the additional method, is that <a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a>
+besides the additional method, is that <a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">TypeOneSlowlyChangingDimension</span></tt></a>
 enables caching on insert by default, a setting that cannot be overridden. This
 is done in order to minimize the amount of database communication needed for
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal"><span class="pre">TypeOneSlowlyChangingDimension.scdensure()</span></code></a> in an effort to increase its
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure"><tt class="xref py py-meth docutils literal"><span class="pre">TypeOneSlowlyChangingDimension.scdensure()</span></tt></a> in an effort to increase its
 throughput. The class requires a sequence of attributes for lookup
-<code class="xref py py-attr docutils literal"><span class="pre">lookupatts</span></code>, as well as a sequence of type 1 slowly changing attributes
-<code class="xref py py-attr docutils literal"><span class="pre">type1atts</span></code>. If not given will <code class="xref py py-attr docutils literal"><span class="pre">type1atts</span></code> default to all
-attributes minus <code class="xref py py-attr docutils literal"><span class="pre">lookupatts</span></code>, as these two sequences of attributes need
+<tt class="xref py py-attr docutils literal"><span class="pre">lookupatts</span></tt>, as well as a sequence of type 1 slowly changing attributes
+<tt class="xref py py-attr docutils literal"><span class="pre">type1atts</span></tt>. If not given will <tt class="xref py py-attr docutils literal"><span class="pre">type1atts</span></tt> default to all
+attributes minus <tt class="xref py py-attr docutils literal"><span class="pre">lookupatts</span></tt>, as these two sequences of attributes need
 to be disjoint.  Caching is used to increase the performance of lookups, which
 assumes that the database does not change or add any attribute values that are
 cached. For example, a DEFAULT value in the database or automatic type coercion
@@ -439,28 +435,28 @@ can break this assumption.</p>
 </div>
 <p>The values of the product dimension in this case is used to illustrate a
 situation where a product changes its price. Using a
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a>, the rows in the database are updated
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">TypeOneSlowlyChangingDimension</span></tt></a>, the rows in the database are updated
 accordingly when a change happens. As opposed to a
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a>, a Type 1 slowly changing dimension does not
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a>, a Type 1 slowly changing dimension does not
 include any history or time stamps, so it is important that the rows are
 introduced in chronological order.</p>
 </div>
 <div class="section" id="slowlychangingdimension">
 <h2>SlowlyChangingDimension<a class="headerlink" href="#slowlychangingdimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a> allows for the creation of either a Type 2
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a> allows for the creation of either a Type 2
 slowly changing dimension, or a combined Type 1 and Type 2 slowly changing
 dimension. To support this functionality, multiple additional attributes have
-been added to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a> compared to
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a>, in order to control how the slowly changing dimension
-should operate. However, only the additional parameter <code class="xref py py-attr docutils literal"><span class="pre">versionatt</span></code> is
-required for the creation of a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a>. This
+been added to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a> compared to
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a>, in order to control how the slowly changing dimension
+should operate. However, only the additional parameter <tt class="xref py py-attr docutils literal"><span class="pre">versionatt</span></tt> is
+required for the creation of a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a>. This
 parameter indicates which of the dimensions attribute holds version number of
-the <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a>. In addition to the methods provided by
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a>, the method <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.scdensure" title="pygrametl.tables.SlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal"><span class="pre">SlowlyChangingDimension.scdensure()</span></code></a> is
-also available.  This method is similar to <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension.ensure" title="pygrametl.tables.Dimension.ensure"><code class="xref py py-meth docutils literal"><span class="pre">Dimension.ensure()</span></code></a> in that it
+the <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a>. In addition to the methods provided by
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a>, the method <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.scdensure" title="pygrametl.tables.SlowlyChangingDimension.scdensure"><tt class="xref py py-meth docutils literal"><span class="pre">SlowlyChangingDimension.scdensure()</span></tt></a> is
+also available.  This method is similar to <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension.ensure" title="pygrametl.tables.Dimension.ensure"><tt class="xref py py-meth docutils literal"><span class="pre">Dimension.ensure()</span></tt></a> in that it
 performs a combined lookup and insertion. If the row is already available then
 the primary key is returned, if the row is not available, then it is inserted
-into the dimension. The method <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.lookup" title="pygrametl.tables.SlowlyChangingDimension.lookup"><code class="xref py py-meth docutils literal"><span class="pre">SlowlyChangingDimension.lookup()</span></code></a> is also
+into the dimension. The method <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.lookup" title="pygrametl.tables.SlowlyChangingDimension.lookup"><tt class="xref py py-meth docutils literal"><span class="pre">SlowlyChangingDimension.lookup()</span></tt></a> is also
 changed slightly as it returns the newest version of a particular row, instead
 of just the single one available, which is the case for a regular dimension. To
 improve the performance of lookups for a slowly changing dimension, caching is
@@ -536,23 +532,23 @@ inserted rows; an assumption the use of default values can break.</p>
 </pre></div>
 </div>
 <p>As the values of the product dimension in this case have changing prices, a
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a> is used to automate the changes a new row
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a> is used to automate the changes a new row
 might incur on an existing row. The product information itself is also extended
 with time stamps indicating valid time for the price of that particular
-product.  When creating the instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a>
+product.  When creating the instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a>
 information about how these time stamps should be interpreted is provided to
 the instance. In this case is it fairly simple, as the time stamp provided in
-the data is simple enough to be converted directly to <code class="xref py py-class docutils literal"><span class="pre">datetime.date</span></code>
+the data is simple enough to be converted directly to <tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>
 object which can be inserted into the Postgres database in a column of type
 Date, to automate this conversion, the parameter
-<code class="xref py py-attr docutils literal"><span class="pre">SlowlyChangingDimension.fromfinder</span></code> is set to the function
-<code class="xref py py-func docutils literal"><span class="pre">pygrametl.datareader()</span></code> which constructs the <code class="xref py py-class docutils literal"><span class="pre">datetime.date</span></code>
+<tt class="xref py py-attr docutils literal"><span class="pre">SlowlyChangingDimension.fromfinder</span></tt> is set to the function
+<tt class="xref py py-func docutils literal"><span class="pre">pygrametl.datareader()</span></tt> which constructs the <tt class="xref py py-class docutils literal"><span class="pre">datetime.date</span></tt>
 object. However for more complicated ETL flows, a user defined function could
 be created to perform more complicated creations of time stamps based on the
 input data. The function in such a situation should follow the same interface
-as the function generated by <code class="xref py py-func docutils literal"><span class="pre">pygrametl.datareader()</span></code>. When performing the
-actual insertion of rows the method <code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension.scdensure</span></code>
-is used instead of <code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension.insert</span></code> as it first
+as the function generated by <tt class="xref py py-func docutils literal"><span class="pre">pygrametl.datareader()</span></tt>. When performing the
+actual insertion of rows the method <tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension.scdensure</span></tt>
+is used instead of <tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension.insert</span></tt> as it first
 performs a lookup to verify that an existing version of the row is not already
 present. If a row is already present, this row is updated with the from
 timestamp inserted into its to time attribute indicating when this version of
@@ -561,24 +557,24 @@ new row indicating that this is a newer version of an existing row.</p>
 </div>
 <div class="section" id="snowflakeddimension">
 <h2>SnowflakedDimension<a class="headerlink" href="#snowflakeddimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> allows for use of a data warehouse represented as
-a snowflake dimension, through the same interface as <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a>.
-Instantiation of a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> is however different.  Instead
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> allows for use of a data warehouse represented as
+a snowflake dimension, through the same interface as <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a>.
+Instantiation of a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> is however different.  Instead
 of requiring all arguments to be passed to the constructor of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> itself, a <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> object should be
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> itself, a <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> object should be
 created for each table in the snowflaked dimension. These objects are then
-passed to the initialiser of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> in the sequence of
+passed to the initialiser of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> in the sequence of
 the order in which tables have foreign keys to the next table, e.g. (a1, a2)
 should be passed if a1 has a foreign key to a2. To support this, each foreign
 key must have the same name as the primary key it references. The only
-additional configuration supported by <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> is
-<code class="xref py py-attr docutils literal"><span class="pre">expectboguskeyvalues</span></code> that indicates if a key that is used as lookup
+additional configuration supported by <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> is
+<tt class="xref py py-attr docutils literal"><span class="pre">expectboguskeyvalues</span></tt> that indicates if a key that is used as lookup
 attribute in a lower level of the hierarch does not have a matching primary
 key. Support for slowly changing dimensions of Type 2 or a combined Type 1 and
-Type 2 is provided by using an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a> as
-the root of snowflaked dimension instead of an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a>.
+Type 2 is provided by using an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a> as
+the root of snowflaked dimension instead of an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a>.
 Currently only the root dimension need to be an instance of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a> to support a slowly changing snowflaked
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a> to support a slowly changing snowflaked
 dimension. This feature should however be considered experimental.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
@@ -655,15 +651,15 @@ like in the examples shown for the other type of dimensions provided by
 pygrametl. It is instead represented as a snowflake schema where the dimension
 is split into multiple tables to achieve more normalisation and reduce
 redundancy in the dimension. To support this, a combination of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> is used. As multiple
-tables need to be represented, an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> is created
-for each. An instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> is then created to
-aggregate the created instances of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> and represent the
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> is used. As multiple
+tables need to be represented, an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> is created
+for each. An instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> is then created to
+aggregate the created instances of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> and represent the
 Snowflaked dimension through one interface instead of manually interacting with
 each table on its own. Interacting with a Snowflaked dimension is then done
 through the same interface as presented by the other dimensions provided by
 pygrametl, with the caveat that some methods have side effects on the rows
-provided to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> object, as foreign key relations
+provided to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> object, as foreign key relations
 needs to be computed based on the contents of the rows the object operates on.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
@@ -731,12 +727,12 @@ needs to be computed based on the contents of the rows the object operates on.</
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>A <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a> and a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></code></a> can be
+<p>A <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a> and a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> can be
 combined if necessary, with the restriction that all slowly changing attributes
-must be placed in the root table. To do this, the <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> instance
+must be placed in the root table. To do this, the <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> instance
 connecting to the root table has to be changed to an instance of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></code></a> and the necessary attributes added to the
-database table. Afterwards <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension.scdensure" title="pygrametl.tables.SnowflakedDimension.scdensure"><code class="xref py py-meth docutils literal"><span class="pre">SnowflakedDimension.scdensure()</span></code></a> can be used
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a> and the necessary attributes added to the
+database table. Afterwards <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension.scdensure" title="pygrametl.tables.SnowflakedDimension.scdensure"><tt class="xref py py-meth docutils literal"><span class="pre">SnowflakedDimension.scdensure()</span></tt></a> can be used
 to insert and lookup rows while ensuring that the slowly changing attributes
 are updated correctly.</p>
 </div>
@@ -746,7 +742,7 @@ are updated correctly.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -768,14 +764,12 @@ are updated correctly.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="facttable.html"
                         title="next chapter">Fact Tables</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/examples/dimensions.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/dimensions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -792,7 +786,7 @@ are updated correctly.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -807,12 +801,12 @@ are updated correctly.</p>
         <li class="right" >
           <a href="datasources.html" title="Data sources"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.4 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
