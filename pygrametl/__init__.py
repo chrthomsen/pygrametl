@@ -1,4 +1,4 @@
-"""A package for creating Extract-Transform-Load (ETL) programs in Python.
+"""A package for creating Extract-Transform-Load (ETL) udbudsberegner in Python.
 
    The package contains a number of classes for filling fact tables
    and dimensions (including snowflaked and slowly changing dimensions),
@@ -280,7 +280,8 @@ def getvalue(row, name, mapping={}):
 
 
 def getvalueor(row, name, mapping={}, default=None):
-    """Return the value of name from row using a mapping and a default value."""
+    """Return the value of name from row using a mapping and a default value.
+    """
     if name in mapping:
         return row.get(mapping[name], default)
     else:
@@ -373,7 +374,8 @@ def rowfactory(source, names, close=True):
 
 
 def endload():
-    """Signal to all Dimension and FactTable objects that all data is loaded."""
+    """Signal to all Dimension and FactTable objects that all data is loaded.
+    """
     global _alltables
     for t in _alltables:
         method = getattr(t, 'endload', None)
@@ -497,8 +499,8 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
     """
 
     for arg in (fromdate, todate):
-        if not ((type(arg) in _stringtypes and arg.count('-') == 2)
-                or isinstance(arg, date)):
+        if not ((type(arg) in _stringtypes and arg.count('-') == 2) or
+                isinstance(arg, date)):
             raise ValueError(
                 "fromdate and today must be datetime.dates or " +
                 "YYYY-MM-DD formatted strings")
@@ -521,18 +523,22 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
         d = date.fromordinal(i)
         res = {}
         res[key] = int(d.strftime('%Y%m%d'))
-        for (att, format) in strings.iteritems():
-            res[att] = d.strftime(format)
-        for (att, format) in ints.iteritems():
-            res[att] = int(d.strftime(format))
+        for (att, attformat) in strings.iteritems():
+            res[att] = d.strftime(attformat)
+        for (att, attformat) in ints.iteritems():
+            res[att] = int(d.strftime(attformat))
         if expander is not None:
             expander(d, res)
         yield res
 
 
-toupper = lambda s: s.upper()
-tolower = lambda s: s.lower()
-keepasis = lambda s: s
+def toupper(s): return s.upper()
+
+
+def tolower(s): return s.lower()
+
+
+def keepasis(s): return s
 
 
 def next(iterator, default=None):
@@ -651,8 +657,8 @@ class ConnectionWrapper(object):
         """Execute a sequence of statements."""
         if self.__translate and translate:
             # Idea: Translate the statement for the first parameter set. Then
-            # reuse the statement (but create new attribute sequences if needed)
-            # for the remaining paramter sets
+            # reuse the statement (but create new attribute sequences if
+            # needed) for the remaining paramter sets
             newstmt = self.__translate(stmt, params[0])[0]
             if isinstance(self.__translations[stmt], str):
                 # The paramstyle is 'named' in this case and we don't have to
@@ -705,7 +711,7 @@ class ConnectionWrapper(object):
             name = newstmt[start + 2: end]
             names.append(name)
             newstmt = newstmt.replace(
-                newstmt[start:end +2],'?',1)  # Replace once!
+                newstmt[start:end + 2], '?', 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -852,8 +858,8 @@ class ConnectionWrapper(object):
         del res['_ConnectionWrapper__cursor']  # a dirty trick, but...
         return res
 
-    def __setstate__(self, dict):
-        self.__dict__.update(dict)
+    def __setstate__(self, dictdata):
+        self.__dict__.update(dictdata)
         self.__cursor = self.__connection.cursor()
 
 
@@ -925,8 +931,8 @@ class BackgroundConnectionWrapper(object):
     def executemany(self, stmt, params, translate=True):
         if self.__translate and translate:
             # Idea: Translate the statement for the first parameter set. Then
-            # reuse the statement (but create new attribute sequences if needed)
-            # for the remaining paramter sets
+            # reuse the statement (but create new attribute sequences if
+            # needed) for the remaining paramter sets
             newstmt = self.__translate(stmt, params[0])[0]
             if isinstance(self.__translations[stmt], str):
                 # The paramstyle is 'named' in this case and we don't have to
@@ -979,7 +985,7 @@ class BackgroundConnectionWrapper(object):
             name = newstmt[start + 2: end]
             names.append(name)
             newstmt = newstmt.replace(
-                newstmt[start:end + 2],'?',1)  # Replace once!
+                newstmt[start:end + 2], '?', 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -1020,7 +1026,7 @@ class BackgroundConnectionWrapper(object):
             name = newstmt[start + 2: end]
             names.append(name)
             newstmt = newstmt.replace(
-                newstmt[start:end + 2],'%s',1)  # Replace once!
+                newstmt[start:end + 2], '%s', 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -1117,8 +1123,8 @@ class BackgroundConnectionWrapper(object):
         res = self.__dict__.copy()
         del res['_ConnectionWrapper__cursor']  # a dirty trick, but...
 
-    def __setstate__(self, dict):
-        self.__dict__.update(dict)
+    def __setstate__(self, dictdata):
+        self.__dict__.update(dictdata)
         self.__cursor = self.__connection.cursor()
 
     def __worker(self):

@@ -64,10 +64,10 @@ CSVSource = DictReader
 class TypedCSVSource(DictReader):
     """A class for iterating a CSV file and type cast the values."""
 
-    def __init__(self, csvfile, casts, fieldnames=None, restkey=None, 
+    def __init__(self, csvfile, casts, fieldnames=None, restkey=None,
                  restval=None, dialect='excel', *args, **kwds):
         """Arguments:
-           - f: An iterable object such as as file. Passed on to 
+           - f: An iterable object such as as file. Passed on to
              csv.DictReader
            - casts: A dict mapping from attribute names to functions to apply
              to these names, e.g., {'id':int, 'salary':float}
@@ -78,8 +78,8 @@ class TypedCSVSource(DictReader):
            - *args: Passed on to csv.DictReader
            - **kwds: Passed on to csv.DictReader
         """
-        DictReader.__init__(self, csvfile, fieldnames=fieldnames, 
-                            restkey=restkey, restval=restval, dialect=dialect, 
+        DictReader.__init__(self, csvfile, fieldnames=fieldnames,
+                            restkey=restkey, restval=restval, dialect=dialect,
                             *args, **kwds)
 
         if not type(casts) == dict:
@@ -89,19 +89,18 @@ class TypedCSVSource(DictReader):
                 raise TypeError("The values in casts must be callable")
         self._casts = casts
 
-
-    def __next__(self): # For Python 3
+    def __next__(self):  # For Python 3
         row = DictReader.__next__(self)
         for (att, func) in self._casts.items():
             row[att] = func(row[att])
         return row
 
-    def next(self): # For Python 2
+    def next(self):  # For Python 2
         row = DictReader.next(self)
         for (att, func) in self._casts.items():
             row[att] = func(row[att])
         return row
-    
+
 
 class SQLSource(object):
 
@@ -110,7 +109,8 @@ class SQLSource(object):
     def __init__(self, connection, query, names=(), initsql=None,
                  cursorarg=None, parameters=None):
         """Arguments:
-           - connection: the PEP 249 connection to use. NOT a ConnectionWrapper!
+           - connection: the PEP 249 connection to use. NOT a
+             ConnectionWrapper!
            - query: the query that generates the result
            - names: names of attributes in the result. If not set,
              the names from the database are used. Default: ()
@@ -307,7 +307,7 @@ class MergeJoiningSource(object):
                 rows2 = self.__getnextrows(iter2)
                 keyval2 = rows2[0][self.__key2]
 
-    def __getnextrows(self, iter):
+    def __getnextrows(self, iterval):
         res = []
         keyval = None
         if self.__next is not None:
@@ -316,7 +316,7 @@ class MergeJoiningSource(object):
             self.__next = None
         while True:
             try:
-                row = next(iter)
+                row = next(iterval)
             except StopIteration:
                 if res:
                     return res
@@ -395,8 +395,8 @@ class CrossTabbingSource(object):
             self.__aggregator.process((row, col), data[self.__values])
 
         # ... and then we build result rows
-        for row in (self.__sortrows and sorted(self.__allrows)
-                    or self.__allrows):
+        for row in (self.__sortrows and sorted(self.__allrows) or
+                    self.__allrows):
             res = {self.__rowvaluesatt: row}
             for col in self.__allcolumns:
                 res[col] = \
@@ -468,7 +468,7 @@ class RoundRobinSource(object):
                 cursrc = self.__sources[i]
                 # now return up to __batchsize from cursrc
                 try:
-                    for n in range(self.__batchsize):
+                    for _ in range(self.__batchsize):
                         yield next(cursrc)
                 except StopIteration:
                     # we're done with this source and can delete it since
@@ -492,8 +492,9 @@ class DynamicForEachSource(object):
 
     def __init__(self, seq, callee):
         """Arguments:
-           - seq: a sequence with the elements for each of which a unique source
-             must be created. the elements are given (one by one) to callee.
+           - seq: a sequence with the elements for each of which a unique
+             source must be created. the elements are given (one by one) to
+             callee.
            - callee: a function f(e) that must accept elements as those in the
              seq argument. the function should return a source which then will
              be iterated by this source. the function is called once for every

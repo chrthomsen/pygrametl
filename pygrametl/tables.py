@@ -41,12 +41,12 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import locale
+from os import path
 from subprocess import Popen, PIPE
 from sys import version_info
 import tempfile
 from time import sleep
 import types
-from os import path
 
 import pygrametl
 from pygrametl.FIFODict import FIFODict
@@ -61,13 +61,35 @@ except ImportError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.4.1'
-__all__ = ['Dimension', 'CachedDimension', 'BulkDimension',
+__version__ = '2.5.0'
+__all__ = ['definequote', 'Dimension', 'CachedDimension', 'BulkDimension',
            'CachedBulkDimension', 'TypeOneSlowlyChangingDimension',
            'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable',
            'BatchFactTable', 'BulkFactTable', 'SubprocessFactTable',
            'DecoupledDimension', 'DecoupledFactTable', 'BasePartitioner',
            'DimensionPartitioner', 'FactTablePartitioner']
+
+
+def _quote(x): return x
+
+
+def definequote(quotechar):
+    """Defines the global quote function, for for wrapping an identifier with
+       quotes.
+    :param quotechar: If None, do not wrap identifier. If a string, prepend and
+        append quotechar to identifier. If a tuple of two strings, prepend with
+        first element and append with last.
+    """
+    global _quote
+    if quotechar is None:
+        def _quote(x): return x
+    elif isinstance(quotechar, str):
+        def _quote(x): return quotechar + x + quotechar
+    elif isinstance(quotechar, tuple) and len(quotechar) == 2:
+        def _quote(x): return quotechar[0] + x + quotechar[1]
+    else:
+        raise AttributeError(
+            "Expected either a string or a tuple of two strings")
 
 
 class Dimension(object):
@@ -131,32 +153,35 @@ class Dimension(object):
         self.lookupatts = lookupatts
         self.defaultidvalue = defaultidvalue
         self.rowexpander = rowexpander
+        self.quote = _quote
+        self.quotelist = lambda x: [self.quote(xn) for xn in x]
         pygrametl._alltables.append(self)
 
         # Now create the SQL that we will need...
 
         # This gives "SELECT key FROM name WHERE lookupval1 = %(lookupval1)s
         #             AND lookupval2 = %(lookupval2)s AND ..."
-        self.keylookupsql = "SELECT " + key + " FROM " + name + " WHERE " + \
-            " AND ".join(["%s = %%(%s)s" % (lv, lv) for lv in lookupatts])
+        self.keylookupsql = "SELECT " + self.quote(key) + " FROM " + name + \
+            " WHERE " + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv)
+                                      for lv in lookupatts])
 
         # This gives "SELECT key, att1, att2, ... FROM NAME WHERE key =
         # %(key)s"
-        self.rowlookupsql = "SELECT " + ", ".join(self.all) +  \
-            " FROM %s WHERE %s = %%(%s)s" % (name, key, key)
+        self.rowlookupsql = "SELECT " + ", ".join(self.quotelist(self.all))  \
+            + " FROM %s WHERE %s = %%(%s)s" % (name, self.quote(key), key)
 
         # This gives "INSERT INTO name(key, att1, att2, ...)
         #             VALUES (%(key)s, %(att1)s, %(att2)s, ...)"
-        self.insertsql = "INSERT INTO " + name + "(%s" % (key,) + \
+        self.insertsql = "INSERT INTO " + name + "(%s" % (self.quote(key),) + \
             (attributes and ", " or "") + \
-            ", ".join(attributes) + ") VALUES (" + \
+            ", ".join(self.quotelist(attributes)) + ") VALUES (" + \
             ", ".join(["%%(%s)s" % (att,) for att in self.all]) + ")"
 
         if idfinder is not None:
             self.idfinder = idfinder
         else:
             self.targetconnection.execute("SELECT MAX(%s) FROM %s" %
-                                          (key, name))
+                                          (self.quote(key), name))
             self.__maxid = self.targetconnection.fetchonetuple()[0]
             if self.__maxid is None:
                 self.__maxid = 0
@@ -228,9 +253,10 @@ class Dimension(object):
         # the values dict are used in the WHERE clause.
         attstouse = [a for a in self.attributes
                      if a in values or a in namemapping]
-        sql = "SELECT " + ", ".join(self.all) + " FROM " + self.name + \
-            " WHERE " + \
-            " AND ".join(["%s = %%(%s)s" % (att, att) for att in attstouse])
+        sql = "SELECT " + ", ".join(self.quotelist(self.all)) + " FROM " +\
+            self.name + " WHERE " + \
+            " AND ".join(["%s = %%(%s)s" % (self.quote(att), att)
+                          for att in attstouse])
 
         self.targetconnection.execute(sql, values, namemapping)
 
@@ -269,8 +295,9 @@ class Dimension(object):
             return
 
         sql = "UPDATE " + self.name + " SET " + \
-            ", ".join(["%s = %%(%s)s" % (att, att) for att in attstouse]) + \
-            " WHERE %s = %%(%s)s" % (self.key, self.key)
+            ", ".join(["%s = %%(%s)s" % (self.quote(att), att) for att
+                       in attstouse]) + \
+            " WHERE %s = %%(%s)s" % (self.quote(self.key), self.key)
         self.targetconnection.execute(sql, row, namemapping)
         self._after_update(row, namemapping)
 
@@ -428,11 +455,14 @@ class CachedDimension(Dimension):
                 positions = tuple([self.all.index(att)
                                    for att in self.lookupatts])
                 # select the key and all attributes
-                sql = "SELECT %s FROM %s" % (", ".join(self.all), name)
+                sql = "SELECT %s FROM %s" % (
+                    ", ".join(self.quotelist(self.all)), name)
             else:
                 # select the key and the lookup attributes
                 sql = "SELECT %s FROM %s" % \
-                    (", ".join([key] + [l for l in self.lookupatts]), name)
+                    (", ".join(
+                        self.quotelist([key] + [l for l in self.lookupatts])),
+                     name)
                 positions = range(1, len(self.lookupatts) + 1)
             if size > 0 and usefetchfirst:
                 sql += " FETCH FIRST %d ROWS ONLY" % size
@@ -471,7 +501,7 @@ class CachedDimension(Dimension):
         return self.__vals2key.get(searchtuple, None)
 
     def _after_lookup(self, row, namemapping, resultkey):
-        if resultkey is not None and (self.defaultidvalue is None or 
+        if resultkey is not None and (self.defaultidvalue is None or
                                       resultkey != self.defaultidvalue):
             namesinrow = [(namemapping.get(a) or a) for a in self.lookupatts]
             searchtuple = tuple([row[n] for n in namesinrow])
@@ -618,10 +648,9 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                 self.__key2sca = FIFODict(cachesize)
             else:
                 self.__key2sca = {}
-
             if prefill:
                 sql = "SELECT %s FROM %s" % \
-                        (", ".join([key] + [l for l in self.type1atts]), name)
+                    (", ".join(self.quotelist([key] + self.type1atts)), name)
                 if cachesize > 0 and usefetchfirst:
                     sql += " FETCH FIRST %d ROWS ONLY" % cachesize
                 self.targetconnection.execute(sql)
@@ -648,8 +677,9 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
              to be present but will be added using idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
-        # NOTE: the "vals2key" cache is kept coherent by "scdensure", as it only
-        # contains "lookupatts" which "scdensure" is prohibited from changing
+        # NOTE: the "vals2key" cache is kept coherent by "scdensure", as it
+        # only contains "lookupatts" which "scdensure" is prohibited from
+        # changing
 
         keyval = self.lookup(row, namemapping)
         key = (namemapping.get(self.key) or self.key)
@@ -680,7 +710,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                 rowatt = row[(namemapping.get(att) or att)]
                 if oldrow[att] != rowatt:
                     tmptype1atts.add(att)
-                    oldrow[att] = rowatt # Saved for updating the cache
+                    oldrow[att] = rowatt  # Saved for updating the cache
             type1atts = tmptype1atts
             if not type1atts:
                 return row[key]
@@ -688,9 +718,10 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
             # Updates only the type1atts that were changed in the row, the
             # update method is not used as lookupatts can never change
             updatesql = "UPDATE " + self.name + " SET " + \
-                        ", ".join(["%s = %%(%s)s" % \
-                         (att, att) for att in type1atts]) + \
-                         " WHERE %s = %%(%s)s" % (key, key)
+                        ", ".join(["%s = %%(%s)s" %
+                                   (self.quote(att), att)
+                                   for att in type1atts]) + \
+                " WHERE %s = %%(%s)s" % (self.quote(key), key)
 
             self.targetconnection.execute(updatesql, row, namemapping)
 
@@ -707,7 +738,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
             CachedDimension._after_getbykey(self, keyvalue, resultrow)
         elif resultrow[self.key] is not None:
             self.__key2sca[keyvalue] = \
-                    tuple([resultrow[a] for a in self.type1atts])
+                tuple([resultrow[a] for a in self.type1atts])
 
     def _after_update(self, row, namemapping):
         CachedDimension._after_update(self, row, namemapping)
@@ -720,8 +751,9 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         # A cached value could have been changed so the local cache is updated,
         # as the value is changed in place no rows are moved in the cache.
         oldtype1vals = dict(zip(self.type1atts, self.__key2sca[keyvalue]))
-        self.__key2sca[keyvalue] = tuple([row.get(namemapping.get(a, a)) or \
-                oldtype1vals[a] for a in self.type1atts])
+        self.__key2sca[keyvalue] = tuple([row.get(namemapping.get(a, a)) or
+                                          oldtype1vals[a] for a in
+                                          self.type1atts])
 
     def _after_insert(self, row, namemapping, newkeyvalue):
         CachedDimension._after_insert(self, row, namemapping, newkeyvalue)
@@ -731,7 +763,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         if not self.cachefullrows:
             tmp = pygrametl.project(self.type1atts, row, namemapping)
             self.__key2sca[newkeyvalue] = \
-                    tuple([tmp[a] for a in self.type1atts])
+                tuple([tmp[a] for a in self.type1atts])
 
 
 class SlowlyChangingDimension(Dimension):
@@ -793,7 +825,8 @@ class SlowlyChangingDimension(Dimension):
              NULL for the 1st version, set minfrom to a tuple holding a single
              element which is None: (None,). Note that minto affects the 1st
              version, not any following versions. Note also that if the member
-             to insert already contains a value for fromatt, minfrom is ignored.
+             to insert already contains a value for fromatt, minfrom is
+             ignored.
              Default: None.
            - maxto: the value to use for toatt for new members. Default: None
            - srcdateatt: the name of the attribute in the source data that
@@ -866,7 +899,7 @@ class SlowlyChangingDimension(Dimension):
             self.keycache = {}
         # else cachesize == 0 and we do not create any caches
         self.__cachesize = cachesize
-        self.__prefill = cachesize and prefill #no prefilling if no caching
+        self.__prefill = cachesize and prefill  # no prefilling if no caching
 
         # Check that versionatt, fromatt and toatt are also declared as
         # attributes
@@ -876,12 +909,12 @@ class SlowlyChangingDimension(Dimension):
                                  (var,))
 
         # Now extend the SQL from Dimension such that we use the versioning
-        self.keylookupsql += " ORDER BY %s DESC" % (versionatt,)
+        self.keylookupsql += " ORDER BY %s DESC" % (self.quote(versionatt),)
 
         if toatt:
             self.updatetodatesql = \
                 "UPDATE %s SET %s = %%(%s)s WHERE %s = %%(%s)s" % \
-                (name, toatt, toatt, key, key)
+                (name, self.quote(toatt), toatt, self.quote(key), key)
 
         if self.__prefill:
             self.__prefillcaches(usefetchfirst)
@@ -893,8 +926,9 @@ class SlowlyChangingDimension(Dimension):
             # Select all attributes from the rows where maxto is set to the
             # default value (which may be NULL)
             sql = 'SELECT %s FROM %s WHERE %s %s' % \
-                  (', '.join(self.all), self.name, self.toatt,
-                  self.maxto is None and 'IS NULL' or '= %(maxto)s')
+                  (', '.join(self.quotelist(self.all)), self.name,
+                   self.quote(self.toatt),
+                   self.maxto is None and 'IS NULL' or '= %(maxto)s')
             if self.maxto is not None:
                 args = {'maxto': self.maxto}
         else:
@@ -902,14 +936,17 @@ class SlowlyChangingDimension(Dimension):
             # do a join to get the right rows.
             lookupattlist = ', '.join(self.lookupatts)
             newestversions = ('SELECT %s, MAX(%s) AS %s FROM %s GROUP BY %s' %
-                (lookupattlist, self.versionatt, self.versionatt, self.name,
-                 lookupattlist))
-            joincond = ' AND '.join(['A.%s = B.%s' % (att, att) for att in
-                                     [l for l in self.lookupatts] +
+                              (self.quote(lookupattlist),
+                               self.quotelist(self.versionatt),
+                               self.quotelist(self.versionatt), self.name,
+                               self.quotelist(lookupattlist)))
+            joincond = ' AND '.join(['A.%s = B.%s' % (self.quote(att), att)
+                                     for att in [l for l in self.lookupatts] +
                                      [self.versionatt]
                                      ])
             sql = 'SELECT %s FROM (%s) AS A, %s AS B WHERE %s' %\
-                (', '.join(['B.%s AS %s' % (att, att) for att in self.all]),
+                (', '.join(['B.%s AS %s' % (self.quote(att), att)
+                            for att in self.all]),
                  newestversions, self.name, joincond)
 
         # sql is a statement that fetches the newest versions from the database
@@ -922,8 +959,9 @@ class SlowlyChangingDimension(Dimension):
 
         if self.__cachesize < 0:
             allrawrows = self.targetconnection.fetchalltuples()
-        else: 
-            allrawrows = self.targetconnection.fetchmanytuples(self.__cachesize)
+        else:
+            allrawrows = self.targetconnection.fetchmanytuples(
+                self.__cachesize)
 
         for rawrow in allrawrows:
             self.rowcache[rawrow[0]] = rawrow
@@ -1009,21 +1047,22 @@ class SlowlyChangingDimension(Dimension):
                     if self.srcdateatt is None:  # We don't compare dates then
                         continue
                     else:
-                        # We have to compare the dates in row[..] and other[..].
+                        # We have to compare the dates in row[..] and other[..]
                         # We have to make sure that the dates are of comparable
                         # types.
                         rdt = self.srcdateparser(row[srcdateatt])
                         if rdt == other[self.fromatt]:
                             continue  # no change in the "from attribute"
                         elif isinstance(rdt, type(other[self.fromatt])):
-                            # they are not equal but are of the same type, so we
-                            # are dealing with a new date
+                            # they are not equal but are of the same type, so
+                            # we are dealing with a new date
                             addnewversion = True
                         else:
                             # They have different types (and are thus not
                             # equal). Try to convert to strings and see if they
                             # are equal.
-                            modref = self.targetconnection.getunderlyingmodule()
+                            modref = (self.targetconnection
+                                      .getunderlyingmodule())
                             rowdate = modref.Date(rdt.year, rdt.month, rdt.day)
                             if str(rowdate).strip('\'"') != \
                                     str(other[self.fromatt]).strip('\'"'):
@@ -1148,10 +1187,11 @@ class SlowlyChangingDimension(Dimension):
         updatekeys = [e[0] for e in self.targetconnection.fetchalltuples()]
         updatekeys.reverse()
         # Generate SQL for the update
-        valparts = ", ".join(["%s = %%(%s)s" % (k, k) for k in updates])
+        valparts = ", ".join(
+            ["%s = %%(%s)s" % (self.quote(k), k) for k in updates])
         keyparts = ", ".join([str(k) for k in updatekeys])
         sql = "UPDATE %s SET %s WHERE %s IN (%s)" % \
-            (self.name, valparts, self.key, keyparts)
+            (self.name, valparts, self.quote(self.key), keyparts)
         self.targetconnection.execute(sql, updates)
         # Remove from our own cache
         for key in updatekeys:
@@ -1234,7 +1274,7 @@ class SnowflakedDimension(object):
         # Check that all dimensions in dims are reachable from the root
         dimscopy = dims.copy()
         dimscopy.remove(self.root)
-        for (tbl, targets) in self.refs.items():
+        for (_, targets) in self.refs.items():
             for target in targets:
                 # It is safe to use remove as each dim is only referenced once
                 dimscopy.remove(target)
@@ -1255,10 +1295,11 @@ class SnowflakedDimension(object):
         if len(self.allnames) != len(set(self.allnames)):
             raise ValueError("Duplicated attribute names found")
 
-        self.alljoinssql = "SELECT " + ", ".join(self.allnames) + \
+        self.alljoinssql = "SELECT " + \
+            ", ".join(self.root.quotelist(self.allnames)) + \
             " FROM " + " NATURAL JOIN ".join(map(lambda d: d.name, dims))
         self.rowlookupsql = self.alljoinssql + " WHERE %s.%s = %%(%s)s" % \
-            (self.root.name, self.root.key, self.root.key)
+            (self.root.name, self.root.quote(self.root.key), self.root.key)
 
         self.levels = {}
         self.__buildlevels(self.root, 0)
@@ -1353,7 +1394,8 @@ class SnowflakedDimension(object):
             attstouse = [a for a in self.allnames
                          if a in values or a in namemapping]
             sqlwhere = " WHERE " + \
-                " AND ".join(["%s = %%(%s)s" % (att, att) for att in attstouse])
+                " AND ".join(["%s = %%(%s)s" % (self.root.quote(att), att)
+                              for att in attstouse])
             self.targetconnection.execute(self.alljoinssql + sqlwhere,
                                           values, namemapping)
             res = [r for r in self.targetconnection.rowfactory(self.allnames)]
@@ -1421,8 +1463,7 @@ class SnowflakedDimension(object):
              using idfinder if missing.
            - namemapping: an optional namemapping (see module's documentation)
         """
-        (key, ignored) = self.__ensure_helper(self.root, row, namemapping,
-                                              False)
+        (key, _) = self.__ensure_helper(self.root, row, namemapping, False)
         return key
 
     def insert(self, row, namemapping={}):
@@ -1526,8 +1567,8 @@ class SnowflakedDimension(object):
         # that those between those nodes and the root (incl.) were also
         # SCDs.
         for dim in self.levels.get(1, []):
-            (keyval, ignored) = self.__ensure_helper(dim, row, namemapping,
-                                                     False)
+            (keyval, _) = self.__ensure_helper(dim, row, namemapping,
+                                               False)
             row[(namemapping.get(dim.key) or dim.key)] = keyval
 
         row[(namemapping.get(self.root.key) or self.root.key)] = \
@@ -1557,18 +1598,21 @@ class FactTable(object):
         self.all = [k for k in keyrefs] + [m for m in measures]
         pygrametl._alltables.append(self)
 
+        self.quote = _quote
+        self.quotelist = lambda x: [self.quote(xn) for xn in x]
         # Create SQL
 
         # INSERT INTO name (key1, ..., keyn, meas1, ..., measn)
         # VALUES (%(key1)s, ..., %(keyn)s, %(meas1)s, ..., %(measn)s)
         self.insertsql = "INSERT INTO " + name + "(" + \
-            ", ".join(self.all) + ") VALUES (" + \
+            ", ".join(self.quotelist(self.all)) + ") VALUES (" + \
             ", ".join(["%%(%s)s" % (att,) for att in self.all]) + ")"
 
         # SELECT key1, ..., keyn, meas1, ..., measn FROM name
         # WHERE key1 = %(key1)s AND ... keyn = %(keyn)s
-        self.lookupsql = "SELECT " + ",".join(self.all) + " FROM " + name + \
-            " WHERE " + " AND ".join(["%s = %%(%s)s" % (k, k)
+        self.lookupsql = "SELECT " + ",".join(self.quotelist(self.all)) + \
+            " FROM " + name + \
+            " WHERE " + " AND ".join(["%s = %%(%s)s" % (self.quote(k), k)
                                       for k in self.keyrefs])
 
     def insert(self, row, namemapping={}):
@@ -1645,9 +1689,9 @@ class FactTable(object):
                 mappedm = namemapping.get(m, m)
                 if mappedm in row and row[mappedm] != res.get(m):
                     raise ValueError(
-                        "The existing fact has a different measure value" +\
-                        " for '" + m + "': " + str(res.get(m)) +\
-                        " instead of " + str(row.get(mappedm)) +\
+                        "The existing fact has a different measure value" +
+                        " for '" + m + "': " + str(res.get(m)) +
+                        " instead of " + str(row.get(mappedm)) +
                         " as in the given row"
                     )
         return True
@@ -1723,8 +1767,8 @@ class _BaseBulkloadable(object):
              are similar to those arguments with identical names that are given
              to _BaseBulkloadable.__init__ as described here. The argument
              "tempdest" can, however, be 1) a string with a filename or
-             2) a file object. This is determined by the usefilename argument to
-             _BaseBulkloadable.__init__ (see below).
+             2) a file object. This is determined by the usefilename argument
+             to _BaseBulkloadable.__init__ (see below).
            - fieldsep: a string used to separate fields in the temporary
              file. Default: '\t'
            - rowsep: a string used to separate rows in the temporary file.
@@ -1743,7 +1787,8 @@ class _BaseBulkloadable(object):
              ignored under Python 2! Default: None
            - dependson: a sequence of other bulkloadble tables that should
              be loaded before this instance does bulkloading (e.g., if
-             a fact table has foreign keys to some bulkloaded dimension tables).
+             a fact table has foreign keys to some bulkloaded dimension
+             tables).
              Default: ()
         """
 
@@ -1757,8 +1802,8 @@ class _BaseBulkloadable(object):
             self.__filename = self.__namedtempfile.name
         else:
             if usefilename and not path.exists(tempdest.name):
-                raise ValueError("Usefilename cannot be used with invalid "\
-                    "tempdest path '%s'" % tempdest.name)
+                raise ValueError("Usefilename cannot be used with invalid "
+                                 "tempdest path '%s'" % tempdest.name)
             self.__filename = tempdest.name
         self.fieldsep = fieldsep
         self.rowsep = rowsep
@@ -1776,7 +1821,8 @@ class _BaseBulkloadable(object):
         # Ensure objects that are not tables, are not silently removed
         if not (set(dependson) <= set(pygrametl._alltables)):
             raise ValueError("Dependson must contain tables only")
-        self.dependson = filter(lambda b: hasattr(b, '_bulkloadnow'), dependson)
+        self.dependson = filter(
+            lambda b: hasattr(b, '_bulkloadnow'), dependson)
 
         if version_info[0] == 2:
             # Python 2: We ignore the specified encoding
@@ -1811,8 +1857,8 @@ class _BaseBulkloadable(object):
         self.__count += 1
         self.tempdest.write(
             self._tobytes(
-                          "%s%s" % (self.fieldsep.join(data), self.rowsep),
-                          self.encoding))
+                "%s%s" % (self.fieldsep.join(data), self.rowsep),
+                self.encoding))
         if self.__count == self.bulksize:
             self._bulkloadnow()
 
@@ -1871,7 +1917,7 @@ class _BaseBulkloadable(object):
 
 class BulkFactTable(_BaseBulkloadable):
 
-    """Class for addition of facts to a fact table. Reads are not supported. """
+    """Class for addition of facts to a fact table. Reads are not supported."""
 
     def __init__(self, name, keyrefs, measures, bulkloader,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
@@ -1922,7 +1968,8 @@ class BulkFactTable(_BaseBulkloadable):
         """
         _BaseBulkloadable.__init__(self,
                                    name=name,
-                                   atts=[k for k in keyrefs] + [m for m in measures],
+                                   atts=[k for k in keyrefs] +
+                                   [m for m in measures],
                                    bulkloader=bulkloader,
                                    fieldsep=fieldsep,
                                    rowsep=rowsep,
@@ -2228,8 +2275,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              is used. Default: None
            - bulksize: an int deciding the number of rows to load in one
              bulk operation. Default: 5000
-           - cachesize: the maximum number of rows to cache. If less than or equal
-             to 0, unlimited caching is used. Default: 10000
+           - cachesize: the maximum number of rows to cache. If less than or
+             equal to 0, unlimited caching is used. Default: 10000
            - usefilename: a value deciding if the file should be passed to the
              bulkloader by its name instead of as a file-like object. This is,
              e.g., necessary when the bulk loading is invoked through SQL
@@ -2479,7 +2526,8 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
              should be kept such that they can be fetched by the caller or
              another Decoupled instance
            - consumes: a sequence of Decoupled objects from which to fetch
-             returnvalues (that are used to replace FutureResults in arguments).
+             returnvalues (that are used to replace FutureResults in
+             arguments).
              Default: ()
            - attstoconsume: a sequence of the attribute names in rows that
              should have FutureResults replaced by actual return values. Does
@@ -2498,9 +2546,9 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
                                               obj=dim,
                                               returnvalues=returnvalues,
                                               consumes=consumes,
-                                              directupdatepositions=
-                                                tuple([(0, a) for a in
-                                                       attstoconsume]),
+                                              directupdatepositions=tuple(
+                                                  [(0, a) for a in
+                                                   attstoconsume]),
                                               batchsize=batchsize,
                                               queuesize=queuesize,
                                               autowrap=False)
@@ -2514,7 +2562,8 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
         return self._enqueue('lookup', row, namemapping)
 
     def getbykey(self, keyvalue):
-        """Invoke getbykey on the decoupled Dimension in the separate process"""
+        """Invoke getbykey on the decoupled Dimension in the separate
+           process"""
         return self._enqueue('getbykey', keyvalue)
 
     def getbyvals(self, row, namemapping={}):
@@ -2534,8 +2583,8 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
            return when all waiting method calls have been executed
         """
         # first add 'endload' to the batch and then send the batch
-        self._enqueuenoreturn('endload')  
-        self._endbatch()                 
+        self._enqueuenoreturn('endload')
+        self._endbatch()
         self._join()
         return None
 
@@ -2558,11 +2607,13 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
                  attstoconsume=(), batchsize=500, queuesize=200):
         """Arguments:
            - facttbl: the FactTable object to use in a separate process
-           - returnvalues: decides if return values from method calls on facttbl
+           - returnvalues: decides if return values from method calls on
+            facttbl
              should be kept such that they can be fetched by the caller or
              another Decoupled instance
            - consumes: a sequence of Decoupled objects from which to fetch
-             returnvalues (that are used to replace FutureResults in arguments).
+             returnvalues (that are used to replace FutureResults in
+             arguments).
              Default: ()
            - attstoconsume: a sequence of the attribute names in rows that
              should have FutureResults replaced by actual return values. Does
@@ -2581,8 +2632,9 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
                                               obj=facttbl,
                                               returnvalues=returnvalues,
                                               consumes=consumes,
-                                              directupdatepositions=tuple([(0,
-                                                                            a) for a in attstoconsume]),
+                                              directupdatepositions=tuple(
+                                                  [(0, a) for a in
+                                                   attstoconsume]),
                                               batchsize=batchsize,
                                               queuesize=queuesize,
                                               autowrap=False)
@@ -2683,12 +2735,12 @@ class DimensionPartitioner(BasePartitioner):
              first part, i.e., parts[0] (when getbybalsfromall = False).
              Default: False
            - partitioner: None or a callable p(dict) -> int where the argument
-             is a dict mapping from the names of the lookupatts to the values of
-             the lookupatts. The resulting int is used to determine which part
-             a given row should be handled by.
+             is a dict mapping from the names of the lookupatts to the values
+             of the lookupatts. The resulting int is used to determine which
+             part a given row should be handled by.
              When partitioner is None, a default partitioner is used. This
-             partitioner computes the hash value of each value of the lookupatts
-             and adds them together.
+             partitioner computes the hash value of each value of the
+             lookupatts and adds them together.
         """
         BasePartitioner.__init__(self, parts=parts)
         self.getbyvalsfromall = getbyvalsfromall

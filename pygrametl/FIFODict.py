@@ -160,7 +160,7 @@ class FIFODictOrderedDict:
             raise TypeError("finalizer must be None or a callable")
 
         self.__size = size
-        self.__data =  OrderedDict()
+        self.__data = OrderedDict()
         self.__finalizer = finalizer
 
     def add(self, key, val):

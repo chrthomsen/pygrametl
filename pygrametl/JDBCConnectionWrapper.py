@@ -27,7 +27,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from copy import copy as pcopy
-from datetime import datetime
 from sys import modules
 from threading import Thread
 
@@ -215,10 +214,10 @@ class JDBCConnectionWrapper(object):
                 names = [self.nametranslator(t) for t in self.__resultnames]
         empty = (None, ) * len(self.__resultnames)
         while True:
-            tuple = self.fetchonetuple()
-            if tuple == empty:
+            datatupe = self.fetchonetuple()
+            if datatupe == empty:
                 return
-            yield dict(zip(names, tuple))
+            yield dict(zip(names, datatupe))
 
     def fetchone(self, names=None):
         """Return one result row (i.e. dict)."""
@@ -244,7 +243,7 @@ class JDBCConnectionWrapper(object):
             return []
         empty = (None, ) * len(self.__resultnames)
         result = []
-        for i in range(cnt):
+        for _ in range(cnt):
             tmp = self.fetchonetuple()
             if tmp == empty:
                 break
@@ -477,10 +476,10 @@ class BackgroundJDBCConnectionWrapper(object):
                 names = [self.nametranslator(t) for t in self.__resultnames]
         empty = (None, ) * len(self.__resultnames)
         while True:
-            tuple = self.fetchonetuple()
-            if tuple == empty:
+            datatupe = self.fetchonetuple()
+            if datatupe == empty:
                 return
-            yield dict(zip(names, tuple))
+            yield dict(zip(names, datatupe))
 
     def fetchone(self, names=None):
         """Return one result row (i.e. dict)."""
@@ -509,7 +508,7 @@ class BackgroundJDBCConnectionWrapper(object):
             return []
         empty = (None, ) * len(self.__resultnames)
         result = []
-        for i in range(cnt):
+        for _ in range(cnt):
             tmp = self.fetchonetuple()
             if tmp == empty:
                 break

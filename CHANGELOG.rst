@@ -5,6 +5,9 @@ Unreleased
   csv.DictReader) and performs user-specified casts (or other function calls)
   on the values before returning the rows.
 
+  Added ``definequote`` function to enable quoting of SQL identifiers in all
+  tables.
+
 **Changed**
   Generator used in ConnectionWrapper.fetchalltuples to reduce memory
   consumption. (Thanks to Alexey Kuzmenko)

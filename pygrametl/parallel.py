@@ -37,6 +37,8 @@ from sys import version_info
 import sys
 
 import pygrametl
+
+
 try:
     from Queue import Empty  # Python 2
 except ImportError:
@@ -112,7 +114,7 @@ def _getexitfunction():
                     # We take it as a signal to kill all
                     for p in pids:
                         # we don't know which signals exist; use 9
-                        os.kill(p, 9)  
+                        os.kill(p, 9)
                     return
 
         terminatorprocess = multiprocessing.Process(target=terminatorfunction)
@@ -922,7 +924,7 @@ class SharedConnectionWrapperServer(object):
         self.__toclients = toclients
         self.__wrapped = wrapped
         # as (names, [tuples])
-        self.__results = [(None, None) for q in toclients]  
+        self.__results = [(None, None) for q in toclients]
 
     def __senddata(self, client, amount=0):
         # Returns (column names, rows)
