@@ -214,10 +214,10 @@ class JDBCConnectionWrapper(object):
                 names = [self.nametranslator(t) for t in self.__resultnames]
         empty = (None, ) * len(self.__resultnames)
         while True:
-            datatupe = self.fetchonetuple()
-            if datatupe == empty:
+            datatuple = self.fetchonetuple()
+            if datatuple == empty:
                 return
-            yield dict(zip(names, datatupe))
+            yield dict(zip(names, datatuple))
 
     def fetchone(self, names=None):
         """Return one result row (i.e. dict)."""
@@ -476,10 +476,10 @@ class BackgroundJDBCConnectionWrapper(object):
                 names = [self.nametranslator(t) for t in self.__resultnames]
         empty = (None, ) * len(self.__resultnames)
         while True:
-            datatupe = self.fetchonetuple()
-            if datatupe == empty:
+            datatuple = self.fetchonetuple()
+            if datatuple == empty:
                 return
-            yield dict(zip(names, datatupe))
+            yield dict(zip(names, datatuple))
 
     def fetchone(self, names=None):
         """Return one result row (i.e. dict)."""
