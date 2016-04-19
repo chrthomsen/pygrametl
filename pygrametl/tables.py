@@ -501,8 +501,7 @@ class CachedDimension(Dimension):
         return self.__vals2key.get(searchtuple, None)
 
     def _after_lookup(self, row, namemapping, resultkey):
-        if resultkey is not None and (self.defaultidvalue is None or
-                                      resultkey != self.defaultidvalue):
+        if resultkey is not None and resultkey != self.defaultidvalue:
             namesinrow = [(namemapping.get(a) or a) for a in self.lookupatts]
             searchtuple = tuple([row[n] for n in namesinrow])
             self.__vals2key[searchtuple] = resultkey
