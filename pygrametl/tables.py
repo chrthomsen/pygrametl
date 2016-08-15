@@ -2,7 +2,10 @@
    and updating rows in dimensions and fact tables. Rows are represented
    as dictionaries mapping between attribute names and attribute values.
 
-   Many of the class methods take an optional 'namemapping' argument which is
+   Note that named arguments should be used when instantiating classes. This
+   improves readability and guards against errors in case of future API changes.
+
+   Many of the methods take an optional 'namemapping' argument which is
    explained here, but not repeated in the documentation for the individual
    methods: Consider a method m which is given a row r and a namemapping n.
    Assume that the method m uses the attribute a in r (i.e., r[a]). If the
@@ -1746,6 +1749,8 @@ class BatchFactTable(FactTable):
             self.__batch = []
 
 
+
+
 class _BaseBulkloadable(object):
 
     """Common functionality for bulkloadable tables"""
@@ -1753,7 +1758,8 @@ class _BaseBulkloadable(object):
     def __init__(self, name, atts, bulkloader,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=500000, usefilename=False,
-                 encoding=None, dependson=()):
+                 strconverter=pygrametl.getdbfriendlystr, encoding=None, 
+                 dependson=()):
         r"""Arguments:
            - name: the name of the table in the DW
            - atts: a sequence of the bulkloadable tables' attribute names
@@ -1781,14 +1787,16 @@ class _BaseBulkloadable(object):
            - usefilename: a value deciding if the file should be passed to the
              bulkloader by its name instead of as a file-like object.
              Default: False
+           - strconverter: a method m(value, nullsubst) -> str to convert 
+             values into strings that can be written to the temporary file and 
+             eventually bulkloaded. Default: pygrametl.getdbfriendlystr
            - encoding: a string with the encoding to use. If None,
              locale.getpreferredencoding() is used. This argument is
              ignored under Python 2! Default: None
            - dependson: a sequence of other bulkloadble tables that should
              be loaded before this instance does bulkloading (e.g., if
              a fact table has foreign keys to some bulkloaded dimension
-             tables).
-             Default: ()
+             tables). Default: ()
         """
 
         self.name = name
@@ -1812,6 +1820,7 @@ class _BaseBulkloadable(object):
 
         self.bulksize = bulksize
         self.usefilename = usefilename
+        self.strconverter = strconverter
         if encoding is not None:
             self.encoding = encoding
         else:
@@ -1825,7 +1834,7 @@ class _BaseBulkloadable(object):
 
         if version_info[0] == 2:
             # Python 2: We ignore the specified encoding
-            self._tobytes = lambda data, encoding: str(data)
+            self._tobytes = lambda data, encoding: data
         else:
             # Python 3: We make _tobytes use the specified encoding:
             self._tobytes = lambda data, encoding: bytes(data, encoding)
@@ -1839,7 +1848,7 @@ class _BaseBulkloadable(object):
         self.__filename = self.__namedtempfile.name
         self.__ready = True
 
-    def _insertwithnulls(self, row, namemapping={}):
+    def insert(self, row, namemapping={}):
         """Insert (eventually) a row into the table.
 
            Arguments:
@@ -1851,32 +1860,12 @@ class _BaseBulkloadable(object):
         if not self.__ready:
             self.__preparetempfile()
         rawdata = [row[namemapping.get(att) or att] for att in self.atts]
-        data = [pygrametl.getstrornullvalue(val, self.nullsubst)
-                for val in rawdata]
+        data = [self.strconverter(val, self.nullsubst) for val in rawdata]
         self.__count += 1
         self.tempdest.write(
             self._tobytes(
                 "%s%s" % (self.fieldsep.join(data), self.rowsep),
                 self.encoding))
-        if self.__count == self.bulksize:
-            self._bulkloadnow()
-
-    def _insertwithoutnulls(self, row, namemapping={}):
-        """Insert (eventually) a row into the table.
-
-           Arguments:
-           - row: a dict at least containing values for each of the tables'
-             attributes.
-           - namemapping: an optional namemapping (see module's documentation)
-        """
-
-        if not self.__ready:
-            self.__preparetempfile()
-        data = [str(row[namemapping.get(att) or att]) for att in self.atts]
-        self.__count += 1
-        self.tempdest.write(
-            self._tobytes("%s%s" % (self.fieldsep.join(data), self.rowsep),
-                          self.encoding))
         if self.__count == self.bulksize:
             self._bulkloadnow()
 
@@ -1921,6 +1910,7 @@ class BulkFactTable(_BaseBulkloadable):
     def __init__(self, name, keyrefs, measures, bulkloader,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=500000, usefilename=False,
+                 strconverter=pygrametl.getdbfriendlystr,
                  encoding=None, dependson=()):
         r"""Arguments:
            - name: the name of the fact table in the DW
@@ -1957,6 +1947,9 @@ class BulkFactTable(_BaseBulkloadable):
              (for example, when if the BulkFactTable is wrapped by a
              DecoupledFactTable and invokes the bulkloader on a shared
              connection wrapper). Default: False
+           - strconverter: a method m(value, nullsubst) -> str to convert 
+             values into strings that can be written to the temporary file and 
+             eventually bulkloaded. Default: pygrametl.getdbfriendlystr
            - encoding: a string with the encoding to use. If None,
              locale.getpreferredencoding() is used. This argument is
              ignored under Python 2! Default: None
@@ -1965,6 +1958,8 @@ class BulkFactTable(_BaseBulkloadable):
              the fact table has foreign keys to some bulk-loaded dimension
              table). Default: ()
         """
+        # This class does not do much in itself, but looks like a FactTable with
+        # keyrefs and measures.
         _BaseBulkloadable.__init__(self,
                                    name=name,
                                    atts=[k for k in keyrefs] +
@@ -1976,24 +1971,11 @@ class BulkFactTable(_BaseBulkloadable):
                                    tempdest=tempdest,
                                    bulksize=bulksize,
                                    usefilename=usefilename,
+                                   strconverter=strconverter,
                                    encoding=encoding,
                                    dependson=dependson)
 
-        if nullsubst is None:
-            self.insert = self._insertwithoutnulls
-        else:
-            self.insert = self._insertwithnulls
-
         pygrametl._alltables.append(self)
-
-    def insert(self, row, namemapping={}):
-        """Insert a fact into the fact table.
-
-           Arguments:
-           - row: a dict at least containing values for the keys and measures.
-           - namemapping: an optional namemapping (see module's documentation)
-        """
-        pass  # Is set to _insertwithnulls or _inserwithoutnulls from __init__
 
 
 class BulkDimension(_BaseBulkloadable, CachedDimension):
@@ -2026,9 +2008,9 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
 
     def __init__(self, name, key, attributes, bulkloader, lookupatts=(),
                  idfinder=None, defaultidvalue=None, rowexpander=None,
-                 cachefullrows=False,
-                 fieldsep='\t', rowsep='\n', nullsubst=None,
-                 tempdest=None, bulksize=500000, usefilename=False,
+                 cachefullrows=False, fieldsep='\t', rowsep='\n',
+                 nullsubst=None, tempdest=None, bulksize=500000,
+                 usefilename=False, strconverter=pygrametl.getdbfriendlystr,
                  encoding=None, dependson=(), targetconnection=None):
         r"""Arguments:
            - name: the name of the dimension table in the DW
@@ -2085,13 +2067,16 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
              (instead of directly via a method on the PEP249 driver). It is
              also necessary if the bulkloader runs in another process.
              Default: False
+           - strconverter: a method m(value, nullsubst) -> str to convert 
+             values into strings that can be written to the temporary file and 
+             eventually bulkloaded. Default: pygrametl.getdbfriendlystr
+           - encoding: a string with the encoding to use. If None,
+             locale.getpreferredencoding() is used. This argument is
+             ignored under Python 2! Default: None
            - dependson: a sequence of other bulkloadble tables that should
              be loaded before this instance does bulkloading. Default: ()
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
-           - encoding: a string with the encoding to use. If None,
-             locale.getpreferredencoding() is used. This argument is
-             ignored under Python 2! Default: None
         """
         _BaseBulkloadable.__init__(self,
                                    name=name,
@@ -2103,6 +2088,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
                                    tempdest=tempdest,
                                    bulksize=bulksize,
                                    usefilename=usefilename,
+                                   strconverter=strconverter,
                                    encoding=encoding,
                                    dependson=dependson)
 
@@ -2122,11 +2108,6 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
                                  targetconnection=targetconnection)
 
         self.emptyrow = dict(zip(self.atts, len(self.atts) * (None,)))
-
-        if nullsubst is None:
-            self._insert = self._insertwithoutnulls
-        else:
-            self._insert = self._insertwithnulls
 
     def _before_getbyvals(self, values, namemapping):
         self._bulkloadnow()
@@ -2219,8 +2200,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
                  usefetchfirst=False, cachefullrows=False,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=5000, cachesize=10000,
-                 usefilename=False, encoding=None, dependson=(),
-                 targetconnection=None):
+                 usefilename=False, strconverter=pygrametl.getdbfriendlystr,
+                 encoding=None, dependson=(), targetconnection=None):
         r"""Arguments:
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
@@ -2282,13 +2263,16 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              (instead of directly via a method on the PEP249 driver). It is
              also necessary if the bulkloader runs in another process.
              Default: False
+           - strconverter: a method m(value, nullsubst) -> str to convert 
+             values into strings that can be written to the temporary file and 
+             eventually bulkloaded. Default: pygrametl.getdbfriendlystr
+           - encoding: a string with the encoding to use. If None,
+             locale.getpreferredencoding() is used. This argument is
+             ignored under Python 2! Default: None
            - dependson: a sequence of other bulkloadble tables that should
              be loaded before this instance does bulkloading. Default: ()
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
-           - encoding: a string with the encoding to use. If None,
-             locale.getpreferredencoding() is used. This argument is
-             ignored under Python 2! Default: None
         """
         _BaseBulkloadable.__init__(self,
                                    name=name,
@@ -2300,6 +2284,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
                                    tempdest=tempdest,
                                    bulksize=bulksize,
                                    usefilename=usefilename,
+                                   strconverter=strconverter,
                                    encoding=encoding,
                                    dependson=dependson)
 
@@ -2322,11 +2307,6 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
         self.__localcache = {}
         self.__localkeys = {}
-
-        if nullsubst is None:
-            self._insert = self._insertwithoutnulls
-        else:
-            self._insert = self._insertwithnulls
 
     def _before_lookup(self, row, namemapping):
         namesinrow = [(namemapping.get(a) or a) for a in self.lookupatts]
@@ -2414,6 +2394,7 @@ class SubprocessFactTable(object):
     def __init__(self, keyrefs, measures, executable,
                  initcommand=None, endcommand=None, terminateafter=-1,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
+                 strconverter=pygrametl.getdbfriendlystr,
                  buffersize=16384):
         r"""Arguments:
            - keyrefs: a sequence of attribute names that constitute the
@@ -2433,6 +2414,9 @@ class SubprocessFactTable(object):
              subprocess. Default: '\n'
            - nullsubst: an optional string used to replace None values.
              If nullsubst=None, no substitution takes place. Default: None
+           - strconverter: a method m(value, nullsubst) -> str to convert 
+             values into strings that can be written to the subprocess. 
+             Default: pygrametl.getdbfriendlystr
         """
 
         self.all = [k for k in keyrefs] + [m for m in measures]
@@ -2442,31 +2426,19 @@ class SubprocessFactTable(object):
         self.terminateafter = terminateafter
         self.fieldsep = fieldsep
         self.rowsep = rowsep
+        self.strconverter = strconverter
         self.nullsubst = nullsubst
         self.process = Popen(executable, bufsize=buffersize, shell=True,
                              stdin=PIPE)
         self.pipe = self.process.stdin
-
-        if nullsubst is None:
-            self.insert = self._insertwithoutnulls
-        else:
-            self.insert = self._insertwithnulls
 
         if initcommand is not None:
             self.pipe.write(initcommand)
 
         pygrametl._alltables.append(self)
 
-    def insert(self, row, namemapping={}):
-        """Insert a fact into the fact table.
 
-           Arguments:
-           - row: a dict at least containing values for the keys and measures.
-           - namemapping: an optional namemapping (see module's documentation)
-        """
-        pass  # Is set to _insertwithnulls or _inserwithoutnulls from __init__
-
-    def _insertwithnulls(self, row, namemapping={}):
+    def _insert(self, row, namemapping={}):
         """Insert a fact into the fact table.
 
            Arguments:
@@ -2474,19 +2446,9 @@ class SubprocessFactTable(object):
            - namemapping: an optional namemapping (see module's documentation)
         """
         rawdata = [row[namemapping.get(att) or att] for att in self.all]
-        data = [pygrametl.getstrornullvalue(val, self.nullsubst)
-                for val in rawdata]
+        data = [self.strconverter(val, self.nullsubst) for val in rawdata]
         self.pipe.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
 
-    def _insertwithoutnulls(self, row, namemapping={}):
-        """Insert a fact into the fact table.
-
-           Arguments:
-           - row: a dict at least containing values for the keys and measures.
-           - namemapping: an optional namemapping (see module's documentation)
-        """
-        data = [str(row[namemapping.get(att) or att]) for att in self.all]
-        self.pipe.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
 
     def endload(self):
         """Finalize the load."""

@@ -64,14 +64,15 @@ else:  # For Python 3
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.4.1'
+__version__ = '2.5.0'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom',
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr',
-           'getstrornullvalue', 'getbool', 'getdate', 'gettimestamp',
-           'getvalue', 'getvalueor', 'setdefaults', 'rowfactory', 'endload',
-           'today', 'now', 'ymdparser', 'ymdhmsparser', 'datereader',
-           'datetimereader', 'datespan', 'toupper', 'tolower', 'keepasis',
-           'getdefaulttargetconnection', 'ConnectionWrapper', '_stringtypes']
+           'getstrornullvalue', 'getdbfriendlystr', 'getbool', 'getdate', 
+           'gettimestamp', 'getvalue', 'getvalueor', 'setdefaults', 
+           'rowfactory', 'endload', 'today', 'now', 'ymdparser', 'ymdhmsparser',
+           'datereader', 'datetimereader', 'datespan', 'toupper', 'tolower', 
+           'keepasis', 'getdefaulttargetconnection', 'ConnectionWrapper', 
+           '_stringtypes']
 
 
 _alltables = []
@@ -200,6 +201,26 @@ def getstrippedstr(value, default=None):
         return s.strip()
     except Exception:
         return default
+
+
+def getdbfriendlystr(value, nullvalue='NULL'):
+    """Covert a value into a string that can be accepted by a DBMS.
+
+       None values are converted into the value of the argument nullvalues
+       (default: 'NULL'). Bools are converted into '1' or '0' (instead of
+       'True' or 'False' as str would do). Other values are currently just
+       converted by means of str.
+
+    """
+    if value is None:
+        return nullvalue
+    elif type(value) is bool:
+        if value:
+            return "1"
+        else:
+            return "0"
+    else:
+        return str(value)
 
 
 def getstrornullvalue(value, nullvalue='None'):

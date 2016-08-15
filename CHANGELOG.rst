@@ -8,6 +8,10 @@ Unreleased
   Added ``definequote`` function to enable quoting of SQL identifiers in all
   tables.
 
+  Added ``getdbfriendlystr`` function to enable conversion of values into
+  strings that are accepted by a DBMS. Boolean values become 0 or 1, None
+  values can be replaced by another value.
+
 **Changed**
   Generator used in ConnectionWrapper.fetchalltuples to reduce memory
   consumption. (Thanks to Alexey Kuzmenko)
@@ -16,6 +20,21 @@ Unreleased
   updates, now checked in the same way as in ``CachedDimension``
 
   rowfactory now tries to use fetchmany. (Suggested by Alexey Kuzmenko).
+
+  All Bulkloadables now accept the argument ``strconverter`` to their __init__
+  methods. This should be a function that converts values into strings that
+  are written to a temporary file and eventually bulkloaded. The default value
+  is the new ``getdbfriendlystr``.
+
+  ``_BaseBulkloadable`` now has the method ``insert`` while the methods
+  ``_insertwithnull`` and ``_insertwithoutnull`` have been removed (and
+  subclasses do thus not pick one of them at runtime). The ``insert`` method
+  will always call ``strconverter`` (see above) no matter if a ``nullsubst``
+  has been specified or not.
+
+  ``SubprocessFactTable`` has been changed similarly to ``_BaseBulkloadable``
+  and does now define ``insert`` which uses ``strconverter``. Thus
+  ``_insertwithnull`` and  ``_insertwithoutnull`` have been removed.
 
 **Fixed**
   Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
