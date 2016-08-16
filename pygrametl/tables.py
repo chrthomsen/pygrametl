@@ -2161,7 +2161,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
         else:
             keyval = row[key]
 
-        self._insert(row, namemapping)
+        _BaseBulkloadable.insert(self, row, namemapping)
 
         self._after_insert(row, namemapping, keyval)
         return keyval
@@ -2374,7 +2374,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         if searchtuple in self.__localcache:
             return self.__localcache[searchtuple]
 
-        self._insert(row, {})
+        _BaseBulkloadable.insert(self, row, {})
         self.__localcache[searchtuple] = row
         self.__localkeys[keyval] = row
         return keyval
@@ -2438,7 +2438,7 @@ class SubprocessFactTable(object):
         pygrametl._alltables.append(self)
 
 
-    def _insert(self, row, namemapping={}):
+    def insert(self, row, namemapping={}):
         """Insert a fact into the fact table.
 
            Arguments:
