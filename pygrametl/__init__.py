@@ -203,11 +203,11 @@ def getstrippedstr(value, default=None):
         return default
 
 
-def getdbfriendlystr(value, nullvalue='NULL'):
+def getdbfriendlystr(value, nullvalue='None'):
     """Covert a value into a string that can be accepted by a DBMS.
 
        None values are converted into the value of the argument nullvalues
-       (default: 'NULL'). Bools are converted into '1' or '0' (instead of
+       (default: 'None'). Bools are converted into '1' or '0' (instead of
        'True' or 'False' as str would do). Other values are currently just
        converted by means of str.
 
