@@ -9,8 +9,21 @@ Unreleased
   tables.
 
   Added ``getdbfriendlystr`` function to enable conversion of values into
-  strings that are accepted by a DBMS. Boolean values become 0 or 1, None
+  strings that are accepted by a DBMS. Boolean values become '0' or '1', None
   values can be replaced by another value.
+
+  All Bulkloadables now accept the argument ``strconverter`` to their __init__
+  methods. This should be a function that converts values into strings that
+  are written to a temporary file and eventually bulkloaded. The default value
+  is the new ``getdbfriendlystr``.
+
+  ``SlowlyChangingDimension`` can now optionally be given the argument
+  ``useorderby``  when instantiated. If True (the default), the
+  SQL used by ``lookup`` uses ORDER  BY (this is the same behaviour
+  as before). If False, ORDER BY is not used and the SQL used by ``lookup``
+  will fetch all versions of the member and then find the key value for the
+  newest version with Python code. For some systems, this can lead to
+  significant performance improvements.
 
 **Changed**
   Generator used in ConnectionWrapper.fetchalltuples to reduce memory
@@ -21,16 +34,17 @@ Unreleased
 
   rowfactory now tries to use fetchmany. (Suggested by Alexey Kuzmenko).
 
-  All Bulkloadables now accept the argument ``strconverter`` to their __init__
-  methods. This should be a function that converts values into strings that
-  are written to a temporary file and eventually bulkloaded. The default value
-  is the new ``getdbfriendlystr``.
-
   ``_BaseBulkloadable`` now has the method ``insert`` while the methods
   ``_insertwithnull`` and ``_insertwithoutnull`` have been removed (and
   subclasses do thus not pick one of them at runtime). The ``insert`` method
   will always call ``strconverter`` (see above) no matter if a ``nullsubst``
   has been specified or not.
+
+  ``_BaseBulkloadable`` will now raise a TypeError if no ``nullsubst`` is
+  specified and a None value is present. Before this change, the None value
+  would silently be converted into the string 'None'. Users must now
+  give a ``nullsubst`` argument when instantiating a subclass of
+  ``_BaseBulkloadable`` that should be able to handle None values.
 
   ``SubprocessFactTable`` has been changed similarly to ``_BaseBulkloadable``
   and does now define ``insert`` which uses ``strconverter``. Thus
