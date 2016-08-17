@@ -785,7 +785,7 @@ class SlowlyChangingDimension(Dimension):
                  toatt=None, tofinder=None, minfrom=None, maxto=None,
                  srcdateatt=None, srcdateparser=pygrametl.ymdparser,
                  type1atts=(), cachesize=10000, prefill=False, idfinder=None,
-                 usefetchfirst=False, targetconnection=None):
+                 usefetchfirst=False, useorderby=True, targetconnection=None):
         """Arguments:
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
@@ -859,6 +859,11 @@ class SlowlyChangingDimension(Dimension):
              memory. Not all DBMSs support this clause yet. Default: False
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
+           - useorderby: a flag deciding if ORDER BY is used in the SQL to
+             select the newest version. If True, the DBMS thus does the
+             sorting. If False, all versions are fetched and the highest 
+             version is found in Python. For some systems, this can lead to 
+             significant performance improvements. Default: True
         """
         # TODO: Should scdensure just override ensure instead of being a new
         #       method?
@@ -893,6 +898,7 @@ class SlowlyChangingDimension(Dimension):
         self.srcdateatt = srcdateatt
         self.srcdateparser = srcdateparser
         self.type1atts = type1atts
+        self.useorderby = useorderby
         if cachesize > 0:
             self.rowcache = FIFODict(cachesize)
             self.keycache = FIFODict(cachesize)
@@ -912,6 +918,15 @@ class SlowlyChangingDimension(Dimension):
 
         # Now extend the SQL from Dimension such that we use the versioning
         self.keylookupsql += " ORDER BY %s DESC" % (self.quote(versionatt),)
+
+        # Now create SQL for looking up the key with a local sort
+        # This gives "SELECT key, version FROM name WHERE 
+        # lookupval1 = %(lookupval1)s AND lookupval2 = %(lookupval2)s AND ..."
+        self.keyversionlookupsql = "SELECT " + self.quote(key) + ", " + \
+            self.quote(versionatt) + " FROM " + name + \
+            " WHERE " + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv)
+                                      for lv in lookupatts])
+
 
         if toatt:
             self.updatetodatesql = \
@@ -984,7 +999,42 @@ class SlowlyChangingDimension(Dimension):
         else:
             # Something is not cached so we have to use the classical lookup.
             # Note that __init__ updated self.keylookupsql to use ORDER BY ...
-            return Dimension.lookup(self, row, namemapping)
+            if self.useorderby:
+                return Dimension.lookup(self, row, namemapping)
+            else:
+                return self.__lookupnewestlocally()
+
+    def __lookupnewestlocally(self, row, namemapping):
+        """Find the key for the newest version of the row with the given values.
+
+           Arguments:
+           - row: a dict which must contain at least the lookup attributes
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+        # Based on Dimension.lookup, but uses keyversionlookupsql and 
+        # finds the newest version locally (no sorting on the DBMS)
+        key = self._before_lookup(row, namemapping)
+        if key is not None:
+            return key
+
+        self.targetconnection.execute(self.keyversionlookupsql, row, 
+                                      namemapping)
+
+        versions = [kv for kv in self.targetconnection.fetchalltuples()]
+        if not versions:
+            # There is no existing version
+            keyvalue = None
+        else:
+            # Look in all (key, version) pairs and find the key for the newest
+            # version
+            keyvalue, versionvalue = versions[-1]
+            for kv in versions:
+                if kv[1] > versionvalue:
+                    keyvalue, versionvalue = kv
+
+        self._after_lookup(row, namemapping, keyvalue)
+        return keyvalue
+
 
     def scdensure(self, row, namemapping={}):
         """Lookup or insert a version of a slowly changing dimension member.
