@@ -1861,11 +1861,16 @@ class _BaseBulkloadable(object):
             self.__preparetempfile()
         rawdata = [row[namemapping.get(att) or att] for att in self.atts]
         data = [self.strconverter(val, self.nullsubst) for val in rawdata]
+        try:
+            line = self.fieldsep.join(data)
+        except TypeError as e:
+            expl = 'Could not join values into a single string'
+            if self.nullsubst is None and None in rawdata:
+                expl += '. A nullsubst must be defined.'
+            raise TypeError(expl, e)
         self.__count += 1
         self.tempdest.write(
-            self._tobytes(
-                "%s%s" % (self.fieldsep.join(data), self.rowsep),
-                self.encoding))
+            self._tobytes("%s%s" % (line, self.rowsep), self.encoding))
         if self.__count == self.bulksize:
             self._bulkloadnow()
 
