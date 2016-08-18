@@ -1002,7 +1002,7 @@ class SlowlyChangingDimension(Dimension):
             if self.useorderby:
                 return Dimension.lookup(self, row, namemapping)
             else:
-                return self.__lookupnewestlocally()
+                return self.__lookupnewestlocally(row, namemapping)
 
     def __lookupnewestlocally(self, row, namemapping):
         """Find the key for the newest version of the row with the given values.
