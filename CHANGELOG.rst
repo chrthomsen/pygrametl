@@ -50,6 +50,11 @@ Unreleased
   and does now define ``insert`` which uses ``strconverter``. Thus
   ``_insertwithnull`` and  ``_insertwithoutnull`` have been removed.
 
+  getunderlyingmodule has been changed and now tries different possible module
+  names and looks for 'paramstyle' and 'connect'. ConnectionWrapper now uses
+  getunderlying module in __init__ when trying to determine the paramstyle to
+  use. 
+
 **Fixed**
   Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
   crash.
