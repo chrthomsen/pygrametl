@@ -624,23 +624,11 @@ class ConnectionWrapper(object):
         self.__cursor = connection.cursor()
         self.nametranslator = lambda s: s
 
+        self.__underlyingmodule = None # will be updated next
+        self.getunderlyingmodule() # updates self.__underlyingmodule
+
         if paramstyle is None:
-            try:
-                paramstyle = \
-                    modules[self.__connection.__class__.__module__].paramstyle
-            except AttributeError:
-                # Note: This is probably a better way to do this, but to avoid
-                # to break anything that worked before this fix, we only do it
-                # this way if the first approach didn't work
-                try:
-                    paramstyle = \
-                        modules[self.__connection.__class__.__module__.
-                                split('.')[0]].paramstyle
-                except AttributeError:
-                    # To support, e.g., mysql.connector connections
-                    paramstyle = \
-                        modules[self.__connection.__class__.__module__.
-                                rsplit('.', 1)[0]].paramstyle
+            paramstyle = self.__underlyingmodule.paramstyle
 
         if not paramstyle == 'pyformat':
             self.__translations = FIFODict(stmtcachesize)
@@ -841,8 +829,29 @@ class ConnectionWrapper(object):
         return self.__cursor.rowcount
 
     def getunderlyingmodule(self):
-        """Return a reference to the underlying connection's module."""
-        return modules[self.__connection.__class__.__module__]
+        """Return a reference to the underlying connection's module.
+       
+           This is done by considering the connection's __class__'s __module__
+           string from right to left (e.g., 'a.b.c', 'a.b', 'a') and looking
+           for the attributes 'paramstyle' and 'connect' in the possible modules
+        """
+        if self.__underlyingmodule is not None:
+            return self.__underlyingmodule
+        else:
+            fullmodname = self.__connection.__class__.__module__
+            for i in reversed(range(fullmodname.count('.') + 1)):
+                modname = fullmodname.rsplit('.', i)[0]
+                try:
+                    modref = modules[modname]
+                    if hasattr(modref, 'paramstyle') and \
+                            hasattr(modref, 'connect'):
+                        self.__underlyingmodule = modref
+                        return modref
+                except KeyError:
+                    pass
+
+        return None # We could not finde the module. Raise an Exception instead?
+
 
     def commit(self):
         """Commit the transaction."""
@@ -907,23 +916,11 @@ class BackgroundConnectionWrapper(object):
         self.__cursor = connection.cursor()
         self.nametranslator = lambda s: s
 
+        self.__underlyingmodule = None # will be updated next
+        self.getunderlyingmodule() # updates self.__underlyingmodule
+
         if paramstyle is None:
-            try:
-                paramstyle = \
-                    modules[self.__connection.__class__.__module__].paramstyle
-            except AttributeError:
-                # Note: This is probably a better way to do this, but to avoid
-                # to break anything that worked before this fix, we only do it
-                # this way if the first approach didn't work
-                try:
-                    paramstyle = \
-                        modules[self.__connection.__class__.__module__.
-                                split('.')[0]].paramstyle
-                except AttributeError:
-                    # To support, e.g., mysql.connector connections
-                    paramstyle = \
-                        modules[self.__connection.__class__.__module__.
-                                rsplit('.', 1)[0]].paramstyle
+            paramstyle = self.__underlyingmodule.paramstyle
 
         if not paramstyle == 'pyformat':
             self.__translations = FIFODict(stmtcachesize)
@@ -1107,8 +1104,30 @@ class BackgroundConnectionWrapper(object):
         return self.__cursor.rowcount
 
     def getunderlyingmodule(self):
+        """Return a reference to the underlying connection's module.
+       
+           This is done by considering the connection's __class__'s __module__
+           string from right to left (e.g., 'a.b.c', 'a.b', 'a') and looking
+           for the attributes 'paramstyle' and 'connect' in the possible modules
+        """
         # No need to join the queue here
-        return modules[self.__connection.__class__.__module__]
+        if self.__underlyingmodule is not None:
+            return self.__underlyingmodule
+        else:
+            fullmodname = self.__connection.__class__.__module__
+            for i in reversed(range(fullmodname.count('.') + 1)):
+                modname = fullmodname.rsplit('.', i)[0]
+                try:
+                    modref = modules[modname]
+                    if hasattr(modref, 'paramstyle') and \
+                            hasattr(modref, 'connect'):
+                        self.__underlyingmodule = modref
+                        return modref
+                except KeyError:
+                    pass
+
+        return None # We could not finde the module. Raise an Exception instead?
+
 
     def commit(self):
         endload()
