@@ -19,7 +19,7 @@
    dim.insert(row=..., namemapping={'order_date':'date'})
 """
 
-# Copyright (c) 2009-2016, Aalborg University (chr@cs.aau.dk)
+# Copyright (c) 2009-2016, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without

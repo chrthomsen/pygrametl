@@ -1,5 +1,9 @@
 Unreleased
 ----------
+n/a
+
+Version 2.5
+-----------
 **Added**
   ``TypedCSVSource`` a new class that reads a CSV file (by means of
   csv.DictReader) and performs user-specified casts (or other function calls)

@@ -2,7 +2,7 @@
    JDBC Connection. The module should only be used when running Jython.
 """
 
-# Copyright (c) 2009-2014, Aalborg University (chr@cs.aau.dk)
+# Copyright (c) 2009-2014, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without

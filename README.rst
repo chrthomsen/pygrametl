@@ -4,4 +4,4 @@ pygrametl allows developers to code the ETL process in Python code, instead of d
 
 Providing these abstractions as a framework instead of as an integrated application, allows pygrametl to seamlessly integrate with other Python code. This allows developers to quickly create ETL flows using the abstractions provided, and have direct access to a complete programming language if more complex operations are needed.
 
-**Note:** The parallel capabilities of pygrametl are currently considered experimental and subject to change, and will in many cases give better results if Jython is used instead of CPython, due to its lack of GIL.
+**Note:** The parallel capabilities of pygrametl will in many cases give much better results if Jython is used instead of CPython due to Jython not having a GIL.

@@ -11,7 +11,7 @@ setup(
     name='pygrametl',
     version=get_package_version(),
     author='Aalborg University',
-    author_email='chr@cs.aau.dk',
+    author_email='pygrametl@cs.aau.dk',
     packages=['pygrametl'],
     package_data={
         'pygrametl': [
@@ -22,13 +22,11 @@ setup(
     description='ETL programming in Python',
     long_description=open('README.rst').read(),
     classifiers=[
-                'Development Status :: 4 - Beta',
                 'Development Status :: 5 - Production/Stable',
                 'Intended Audience :: Developers',
                 'License :: OSI Approved :: BSD License',
                 'Programming Language :: Java',
                 'Programming Language :: Python',
-                'Programming Language :: Python :: 2.6',
                 'Programming Language :: Python :: 2.7',
                 'Programming Language :: Python :: 3',
                 'Topic :: Database',
