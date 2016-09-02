@@ -77,11 +77,13 @@ def _quote(x): return x
 
 
 def definequote(quotechar):
-    """Defines the global quote function, for for wrapping an identifier with
-       quotes.
-    :param quotechar: If None, do not wrap identifier. If a string, prepend and
-        append quotechar to identifier. If a tuple of two strings, prepend with
-        first element and append with last.
+    """Defines the global quote function, for wrapping identifiers with quotes.
+
+    
+       Arguments:
+       - quotechar: If None, do not wrap identifier. If a string, prepend and
+         append quotechar to identifier. If a tuple of two strings, prepend with
+         first element and append with last.
     """
     global _quote
     if quotechar is None:
@@ -2624,9 +2626,8 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
         """Arguments:
            - facttbl: the FactTable object to use in a separate process
            - returnvalues: decides if return values from method calls on
-            facttbl
-             should be kept such that they can be fetched by the caller or
-             another Decoupled instance
+             facttbl should be kept such that they can be fetched by the caller
+             or another Decoupled instance
            - consumes: a sequence of Decoupled objects from which to fetch
              returnvalues (that are used to replace FutureResults in
              arguments).
