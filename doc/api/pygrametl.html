@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pygrametl &mdash; pygrametl 2.4.1 documentation</title>
+    <title>pygrametl &mdash; pygrametl 2.5 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4.1',
+        VERSION:     '2.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
     <link rel="next" title="Datasources" href="datasources.html" />
     <link rel="prev" title="Jython" href="../examples/jython.html" />
  
@@ -55,7 +55,7 @@
         <li class="right" >
           <a href="../examples/jython.html" title="Jython"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -176,8 +176,18 @@ row[newname].</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="pygrametl.getdbfriendlystr">
+<tt class="descclassname">pygrametl.</tt><tt class="descname">getdbfriendlystr</tt><big>(</big><em>value</em>, <em>nullvalue='None'</em><big>)</big><a class="headerlink" href="#pygrametl.getdbfriendlystr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Covert a value into a string that can be accepted by a DBMS.</p>
+<p>None values are converted into the value of the argument nullvalues
+(default: &#8216;None&#8217;). Bools are converted into &#8216;1&#8217; or &#8216;0&#8217; (instead of
+&#8216;True&#8217; or &#8216;False&#8217; as str would do). Other values are currently just
+converted by means of str.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="pygrametl.getbool">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getbool</tt><big>(</big><em>value</em>, <em>default=None</em>, <em>truevalues={True</em>, <em>'True'</em>, <em>'1'</em>, <em>'t'</em>, <em>'true'}</em>, <em>falsevalues={False</em>, <em>'0'</em>, <em>'False'</em>, <em>'f'</em>, <em>'false'}</em><big>)</big><a class="headerlink" href="#pygrametl.getbool" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">pygrametl.</tt><tt class="descname">getbool</tt><big>(</big><em>value</em>, <em>default=None</em>, <em>truevalues={True</em>, <em>'1'</em>, <em>'t'</em>, <em>'true'</em>, <em>'True'}</em>, <em>falsevalues={False</em>, <em>'0'</em>, <em>'f'</em>, <em>'false'</em>, <em>'False'}</em><big>)</big><a class="headerlink" href="#pygrametl.getbool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a given value to True, False, or a default value.</p>
 <p>If the given value is in the given truevalues, True is returned.
 If the given value is in the given falsevalues, False is returned.
@@ -327,7 +337,7 @@ to a datetime.datetime</li>
 
 <dl class="function">
 <dt id="pygrametl.datespan">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">datespan</tt><big>(</big><em>fromdate</em>, <em>todate</em>, <em>fromdateincl=True</em>, <em>todateincl=True</em>, <em>key='dateid'</em>, <em>strings={'monthname': '%B'</em>, <em>'date': '%Y-%m-%d'</em>, <em>'weekday': '%A'}</em>, <em>ints={'day': '%d'</em>, <em>'year': '%Y'</em>, <em>'month': '%m'}</em>, <em>expander=None</em><big>)</big><a class="headerlink" href="#pygrametl.datespan" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">pygrametl.</tt><tt class="descname">datespan</tt><big>(</big><em>fromdate</em>, <em>todate</em>, <em>fromdateincl=True</em>, <em>todateincl=True</em>, <em>key='dateid'</em>, <em>strings={'monthname': '%B'</em>, <em>'date': '%Y-%m-%d'</em>, <em>'weekday': '%A'}</em>, <em>ints={'year': '%Y'</em>, <em>'month': '%m'</em>, <em>'day': '%d'}</em>, <em>expander=None</em><big>)</big><a class="headerlink" href="#pygrametl.datespan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator yielding dicts for all dates in an interval.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -474,6 +484,9 @@ undlying connection&#8217;s format should take place. Default: True</li>
 <dt id="pygrametl.ConnectionWrapper.getunderlyingmodule">
 <tt class="descname">getunderlyingmodule</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.getunderlyingmodule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a reference to the underlying connection&#8217;s module.</p>
+<p>This is done by considering the connection&#8217;s __class__&#8217;s __module__
+string from right to left (e.g., &#8216;a.b.c&#8217;, &#8216;a.b&#8217;, &#8216;a&#8217;) and looking
+for the attributes &#8216;paramstyle&#8217; and &#8216;connect&#8217; in the possible modules</p>
 </dd></dl>
 
 <dl class="method">
@@ -558,7 +571,7 @@ undlying connection&#8217;s format should take place. Default: True</li>
         <li class="right" >
           <a href="../examples/jython.html" title="Jython"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

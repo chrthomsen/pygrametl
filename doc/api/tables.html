@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Tables &mdash; pygrametl 2.4.1 documentation</title>
+    <title>Tables &mdash; pygrametl 2.5 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4.1',
+        VERSION:     '2.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
     <link rel="next" title="Parallel" href="parallel.html" />
     <link rel="prev" title="Datasources" href="datasources.html" />
  
@@ -55,7 +55,7 @@
         <li class="right" >
           <a href="datasources.html" title="Datasources"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -69,7 +69,9 @@
 <p>This module contains classes for looking up rows, inserting rows
 and updating rows in dimensions and fact tables. Rows are represented
 as dictionaries mapping between attribute names and attribute values.</p>
-<p>Many of the class methods take an optional &#8216;namemapping&#8217; argument which is
+<p>Note that named arguments should be used when instantiating classes. This
+improves readability and guards against errors in case of future API changes.</p>
+<p>Many of the methods take an optional &#8216;namemapping&#8217; argument which is
 explained here, but not repeated in the documentation for the individual
 methods: Consider a method m which is given a row r and a namemapping n.
 Assume that the method m uses the attribute a in r (i.e., r[a]). If the
@@ -81,6 +83,18 @@ DW tables differ. If, for example, data is inserted into an order dimension
 in the DW that has the attribute order_date, but the source data uses the
 attribte name date, we can use a name mapping from order_date to date:
 dim.insert(row=..., namemapping={&#8216;order_date&#8217;:&#8217;date&#8217;})</p>
+<dl class="function">
+<dt id="pygrametl.tables.definequote">
+<tt class="descclassname">pygrametl.tables.</tt><tt class="descname">definequote</tt><big>(</big><em>quotechar</em><big>)</big><a class="headerlink" href="#pygrametl.tables.definequote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the global quote function, for wrapping identifiers with quotes.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>quotechar: If None, do not wrap identifier. If a string, prepend and
+append quotechar to identifier. If a tuple of two strings, prepend with
+first element and append with last.</li>
+</ul>
+</dd></dl>
+
 <dl class="class">
 <dt id="pygrametl.tables.Dimension">
 <em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">Dimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension" title="Permalink to this definition">¶</a></dt>
@@ -260,7 +274,7 @@ the default target connection is used.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.BulkDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BulkDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkDimension" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BulkDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkDimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables._BaseBulkloadable</span></tt>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.CachedDimension</span></tt></a></p>
 <p>A class for accessing a dimension table. Does caching and bulk loading.</p>
 <p>Unlike CachedBulkDimension, this class always caches all dimension data.</p>
@@ -338,13 +352,16 @@ e.g., necessary when the bulk loading is invoked through SQL
 (instead of directly via a method on the PEP249 driver). It is
 also necessary if the bulkloader runs in another process.
 Default: False</li>
+<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
+values into strings that can be written to the temporary file and 
+eventually bulkloaded. Default: pygrametl.getdbfriendlystr</li>
+<li>encoding: a string with the encoding to use. If None,
+locale.getpreferredencoding() is used. This argument is
+ignored under Python 2! Default: None</li>
 <li>dependson: a sequence of other bulkloadble tables that should
 be loaded before this instance does bulkloading. Default: ()</li>
 <li>targetconnection: The ConnectionWrapper to use. If not given,
 the default target connection is used.</li>
-<li>encoding: a string with the encoding to use. If None,
-locale.getpreferredencoding() is used. This argument is
-ignored under Python 2! Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.BulkDimension.getbykey">
@@ -372,7 +389,7 @@ idfinder if missing.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.CachedBulkDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">CachedBulkDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=5000</em>, <em>cachesize=10000</em>, <em>usefilename=False</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">CachedBulkDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=5000</em>, <em>cachesize=10000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables._BaseBulkloadable</span></tt>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.CachedDimension</span></tt></a></p>
 <p>A class for accessing a dimension table. Does caching and bulk loading.</p>
 <p>Unlike BulkDimension, the cache size is configurable and lookups may
@@ -448,21 +465,24 @@ If nullsubst=None, no substitution takes place. Default: None</li>
 is used. Default: None</li>
 <li>bulksize: an int deciding the number of rows to load in one
 bulk operation. Default: 5000</li>
-<li>cachesize: the maximum number of rows to cache. If less than or equal
-to 0, unlimited caching is used. Default: 10000</li>
+<li>cachesize: the maximum number of rows to cache. If less than or
+equal to 0, unlimited caching is used. Default: 10000</li>
 <li>usefilename: a value deciding if the file should be passed to the
 bulkloader by its name instead of as a file-like object. This is,
 e.g., necessary when the bulk loading is invoked through SQL
 (instead of directly via a method on the PEP249 driver). It is
 also necessary if the bulkloader runs in another process.
 Default: False</li>
+<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
+values into strings that can be written to the temporary file and 
+eventually bulkloaded. Default: pygrametl.getdbfriendlystr</li>
+<li>encoding: a string with the encoding to use. If None,
+locale.getpreferredencoding() is used. This argument is
+ignored under Python 2! Default: None</li>
 <li>dependson: a sequence of other bulkloadble tables that should
 be loaded before this instance does bulkloading. Default: ()</li>
 <li>targetconnection: The ConnectionWrapper to use. If not given,
 the default target connection is used.</li>
-<li>encoding: a string with the encoding to use. If None,
-locale.getpreferredencoding() is used. This argument is
-ignored under Python 2! Default: None</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.CachedBulkDimension.getbykey">
@@ -559,7 +579,7 @@ to be present but will be added using idfinder if missing.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.SlowlyChangingDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">SlowlyChangingDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>versionatt</em>, <em>fromatt=None</em>, <em>fromfinder=None</em>, <em>toatt=None</em>, <em>tofinder=None</em>, <em>minfrom=None</em>, <em>maxto=None</em>, <em>srcdateatt=None</em>, <em>srcdateparser=pygrametl.ymdparser</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">SlowlyChangingDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>versionatt</em>, <em>fromatt=None</em>, <em>fromfinder=None</em>, <em>toatt=None</em>, <em>tofinder=None</em>, <em>minfrom=None</em>, <em>maxto=None</em>, <em>srcdateatt=None</em>, <em>srcdateparser=pygrametl.ymdparser</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>useorderby=True</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.Dimension</span></tt></a></p>
 <p>A class for accessing a slowly changing dimension of &#8220;type 2&#8221;.</p>
 <p>&#8220;Type 1&#8221; updates can also be applied for a subset of the attributes.</p>
@@ -609,7 +629,8 @@ described for fromfinder. If fromatt should take the value
 NULL for the 1st version, set minfrom to a tuple holding a single
 element which is None: (None,). Note that minto affects the 1st
 version, not any following versions. Note also that if the member
-to insert already contains a value for fromatt, minfrom is ignored.
+to insert already contains a value for fromatt, minfrom is
+ignored.
 Default: None.</li>
 <li>maxto: the value to use for toatt for new members. Default: None</li>
 <li>srcdateatt: the name of the attribute in the source data that
@@ -640,6 +661,11 @@ and DB driver, this can give significant savings wrt. to time and
 memory. Not all DBMSs support this clause yet. Default: False</li>
 <li>targetconnection: The ConnectionWrapper to use. If not given,
 the default target connection is used.</li>
+<li>useorderby: a flag deciding if ORDER BY is used in the SQL to
+select the newest version. If True, the DBMS thus does the
+sorting. If False, all versions are fetched and the highest 
+version is found in Python. For some systems, this can lead to 
+significant performance improvements. Default: True</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.SlowlyChangingDimension.lookup">
@@ -925,7 +951,7 @@ the default target connection is used.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.BulkFactTable">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BulkFactTable</tt><big>(</big><em>name</em>, <em>keyrefs</em>, <em>measures</em>, <em>bulkloader</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>encoding=None</em>, <em>dependson=()</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkFactTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BulkFactTable</tt><big>(</big><em>name</em>, <em>keyrefs</em>, <em>measures</em>, <em>bulkloader</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkFactTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables._BaseBulkloadable</span></tt></p>
 <p>Class for addition of facts to a fact table. Reads are not supported.</p>
 <p><strong>Arguments:</strong></p>
@@ -964,6 +990,9 @@ also necessary if the bulkloader runs in another process
 (for example, when if the BulkFactTable is wrapped by a
 DecoupledFactTable and invokes the bulkloader on a shared
 connection wrapper). Default: False</li>
+<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
+values into strings that can be written to the temporary file and 
+eventually bulkloaded. Default: pygrametl.getdbfriendlystr</li>
 <li>encoding: a string with the encoding to use. If None,
 locale.getpreferredencoding() is used. This argument is
 ignored under Python 2! Default: None</li>
@@ -972,22 +1001,11 @@ be bulkloaded before this instance does bulkloading (e.g., if
 the fact table has foreign keys to some bulk-loaded dimension
 table). Default: ()</li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.BulkFactTable.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkFactTable.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert a fact into the fact table.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: a dict at least containing values for the keys and measures.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
-</ul>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.tables.SubprocessFactTable">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">SubprocessFactTable</tt><big>(</big><em>keyrefs</em>, <em>measures</em>, <em>executable</em>, <em>initcommand=None</em>, <em>endcommand=None</em>, <em>terminateafter=-1</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>buffersize=16384</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">SubprocessFactTable</tt><big>(</big><em>keyrefs</em>, <em>measures</em>, <em>executable</em>, <em>initcommand=None</em>, <em>endcommand=None</em>, <em>terminateafter=-1</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>buffersize=16384</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Class for addition of facts to a subprocess.</p>
 <p>The subprocess can, e.g., be a logger or bulkloader. Reads are not
@@ -1013,6 +1031,9 @@ sent to the subprocess. Default: &#8216;\t</li>
 subprocess. Default: &#8216;\n&#8217;</li>
 <li>nullsubst: an optional string used to replace None values.
 If nullsubst=None, no substitution takes place. Default: None</li>
+<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
+values into strings that can be written to the subprocess. 
+Default: pygrametl.getdbfriendlystr</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.SubprocessFactTable.endload">
@@ -1047,7 +1068,8 @@ operations on a given Dimension in a separate, dedicated process
 should be kept such that they can be fetched by the caller or
 another Decoupled instance</li>
 <li>consumes: a sequence of Decoupled objects from which to fetch
-returnvalues (that are used to replace FutureResults in arguments).
+returnvalues (that are used to replace FutureResults in
+arguments).
 Default: ()</li>
 <li>attstoconsume: a sequence of the attribute names in rows that
 should have FutureResults replaced by actual return values. Does
@@ -1078,7 +1100,8 @@ return when all waiting method calls have been executed</p>
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.getbykey">
 <tt class="descname">getbykey</tt><big>(</big><em>keyvalue</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbykey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke getbykey on the decoupled Dimension in the separate process</p>
+<dd><p>Invoke getbykey on the decoupled Dimension in the separate
+process</p>
 </dd></dl>
 
 <dl class="method">
@@ -1117,11 +1140,12 @@ operations on a given FactTable in a separate, dedicated process
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>facttbl: the FactTable object to use in a separate process</li>
-<li>returnvalues: decides if return values from method calls on facttbl
-should be kept such that they can be fetched by the caller or
-another Decoupled instance</li>
+<li>returnvalues: decides if return values from method calls on
+facttbl should be kept such that they can be fetched by the caller
+or another Decoupled instance</li>
 <li>consumes: a sequence of Decoupled objects from which to fetch
-returnvalues (that are used to replace FutureResults in arguments).
+returnvalues (that are used to replace FutureResults in
+arguments).
 Default: ()</li>
 <li>attstoconsume: a sequence of the attribute names in rows that
 should have FutureResults replaced by actual return values. Does
@@ -1224,12 +1248,12 @@ means of all parts (when getbyvalsfromall = True) or only the
 first part, i.e., parts[0] (when getbybalsfromall = False).
 Default: False</li>
 <li>partitioner: None or a callable p(dict) -&gt; int where the argument
-is a dict mapping from the names of the lookupatts to the values of
-the lookupatts. The resulting int is used to determine which part
-a given row should be handled by.
+is a dict mapping from the names of the lookupatts to the values
+of the lookupatts. The resulting int is used to determine which
+part a given row should be handled by.
 When partitioner is None, a default partitioner is used. This
-partitioner computes the hash value of each value of the lookupatts
-and adds them together.</li>
+partitioner computes the hash value of each value of the
+lookupatts and adds them together.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.ensure">
@@ -1380,7 +1404,7 @@ partitioner computes the sum of all the keyrefs values.</li>
         <li class="right" >
           <a href="datasources.html" title="Datasources"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Datasources &mdash; pygrametl 2.4.1 documentation</title>
+    <title>Datasources &mdash; pygrametl 2.5 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '2.4.1',
+        VERSION:     '2.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.4.1 documentation" href="../index.html" />
+    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
     <link rel="next" title="Tables" href="tables.html" />
     <link rel="prev" title="pygrametl" href="pygrametl.html" />
  
@@ -55,7 +55,7 @@
         <li class="right" >
           <a href="pygrametl.html" title="pygrametl"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -82,7 +82,7 @@ provide dicts that map from attribute names to attribute values.</p>
 <p>A class for iterating a CSV file and type cast the values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>f: An iterable object such as as file. Passed on to 
+<li>f: An iterable object such as as file. Passed on to
 csv.DictReader</li>
 <li>casts: A dict mapping from attribute names to functions to apply
 to these names, e.g., {&#8216;id&#8217;:int, &#8216;salary&#8217;:float}</li>
@@ -107,7 +107,8 @@ to these names, e.g., {&#8216;id&#8217;:int, &#8216;salary&#8217;:float}</li>
 <p>A class for iterating the result set of a single SQL query.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>connection: the PEP 249 connection to use. NOT a ConnectionWrapper!</li>
+<li>connection: the PEP 249 connection to use. NOT a
+ConnectionWrapper!</li>
 <li>query: the query that generates the result</li>
 <li>names: names of attributes in the result. If not set,
 the names from the database are used. Default: ()</li>
@@ -253,8 +254,9 @@ returns a new source to iterate. A DynamicForEachSource instance can be
 given to several ProcessSource instances.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>seq: a sequence with the elements for each of which a unique source
-must be created. the elements are given (one by one) to callee.</li>
+<li>seq: a sequence with the elements for each of which a unique
+source must be created. the elements are given (one by one) to
+callee.</li>
 <li>callee: a function f(e) that must accept elements as those in the
 seq argument. the function should return a source which then will
 be iterated by this source. the function is called once for every
@@ -327,7 +329,7 @@ before going to the next, use UnionSource)</li>
         <li class="right" >
           <a href="pygrametl.html" title="pygrametl"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.4.1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
