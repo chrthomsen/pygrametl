@@ -2,7 +2,6 @@
 
 Data sources
 ============
-
 *pygrametl* has support for numerous data sources. Data in pygrametl is moved
 around in rows, so instead of implementing a row class, pygrametl utilizes
 Python's built in dictionaries. Each of the data sources in this class, are
@@ -20,7 +19,6 @@ As a default, pygrametl has a number of built-in data types:
 
 SQLSource
 ---------
-
 The class :class:`.SQLSource` is a data source used to iterate the results of a
 single SQL query. The data source accepts only a :PEP:`249` connection, and not
 a :class:`.ConnectionWrapper` object. For illustrative purposes, a PostgreSQL
@@ -71,7 +69,6 @@ In the previous example a new view is created, which is then used in the query.
 
 CSVSource
 ---------
-
 The class :class:`.CSVSource` is a data source returning the lines of a
 delimiter-separated file, turned into dictionaries. The class is fairly simple,
 and is implemented as a reference to `csv.DictReader
@@ -118,7 +115,6 @@ column should be cast to. A cast is not performed for the name column as
 
 MergeJoiningSource
 ------------------
-
 In addition to the aforementioned data sources, pygrametl also includes a
 number of ways to join and combine existing data sources.
 
@@ -143,7 +139,6 @@ attribute *productID*.
 
 HashJoiningSource
 -----------------
-
 The class :class:`.HashJoiningSource` functions similarly to
 :class:`.MergeJoiningSource`, but performs the join using a hash map instead.
 As such, it is not necessary for the two input data sources to be sorted.
@@ -161,7 +156,6 @@ As such, it is not necessary for the two input data sources to be sorted.
 
 UnionSource
 -----------
-
 It is also possible to union different data sources together in pygrametl. The
 class :class:`.UnionSource` creates a union of a number of supplied data
 sources. The data sources do not necessarily have to contain the same types of
@@ -183,7 +177,6 @@ first source before rows are read from the second source.
 
 RoundRobinSource
 ----------------
-
 It can also be beneficial to interleave rows, and for this purpose
 :class:`.RoundRobinSource` can be used.
 
@@ -204,7 +197,6 @@ from one source before reading from the next in a round-robin fashion.
 
 ProcessSource
 -------------
-
 The class :class:`.ProcessSource` is used for iterating a source in a separate
 process.  A worker process is spawned, which iterates the source rows in
 batches, which are added to a queue. The sizes of the batches and the queue are
@@ -224,7 +216,6 @@ For more examples of the parallel features of pygrametl, refer to
 
 FilteringSource
 ---------------
-
 The class :class:`.FilteringSource` is used to apply a filter to a source.  As
 a default, the built-in Python function `bool
 <http://docs.python.org/2/library/functions.html#bool>`_ is used, which can be
@@ -252,7 +243,6 @@ where the value of the *location* attribute is not *Aalborg*.
 
 TransformingSource
 ------------------
-
 The class :class:`.TransformingSource` can be used to apply functions to the
 rows of a source.  The class can be supplied with a number of callable
 functions of the form ``f(row)``, which will be applied to the source in the
@@ -276,7 +266,6 @@ attribute containing currency from Danish kroner (DKK) to euros
 
 CrossTabbingSource
 ------------------
-
 The class :class:`.CrossTabbingSource` can be used to compute generate a cross
 tab of a data source.  The class takes as parameters the names of the
 attributes that are to appear as rows and colums in the crosstab, as well as
@@ -306,7 +295,6 @@ from strings to integers, to allow for summation.
 
 DynamicForEachSource
 --------------------
-
 The class :class:`.DynamicForEachSource` is a source that for each provided
 source, creates a new source that will be iterated by this source.  The user
 must also provide a function that when called with a single argument, produces
