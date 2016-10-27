@@ -660,7 +660,13 @@ class ConnectionWrapper(object):
             arguments = copy(arguments, **namemapping)
         if self.__translate and translate:
             (stmt, arguments) = self.__translate(stmt, arguments)
-        self.__cursor.execute(stmt, arguments)
+
+        if arguments is None:
+            # Some drivers don't accept None for 'arguments'
+            self.__cursor.execute(stmt)
+        else:
+            self.__cursor.execute(stmt, arguments)
+
 
     def executemany(self, stmt, params, translate=True):
         """Execute a sequence of statements."""
@@ -1171,7 +1177,10 @@ class BackgroundConnectionWrapper(object):
         while True:
             (op, curs, stmt, args) = self.__queue.get()
             if op == self._SINGLE:
-                curs.execute(stmt, args)
+                if args is None:
+                    curs.execute(stmt)
+                else:
+                    curs.execute(stmt, args)
             elif op == self._MANY:
                 curs.executemany(stmt, args)
             self.__queue.task_done()
