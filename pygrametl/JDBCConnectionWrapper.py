@@ -277,6 +277,8 @@ class JDBCConnectionWrapper(object):
 
     def close(self):
         """Close the connection to the database,"""
+        if pygrametl._defaulttargetconnection is self:
+            pygrametl._defaulttargetconnection = None
         self.__jdbcconn.close()
 
     def rollback(self):
@@ -544,6 +546,8 @@ class BackgroundJDBCConnectionWrapper(object):
 
     def close(self):
         """Close the connection to the database,"""
+        if pygrametl._defaulttargetconnection is self:
+            pygrametl._defaulttargetconnection = None
         self.__queue.join()
         self.__jdbcconn.close()
 

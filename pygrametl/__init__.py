@@ -866,6 +866,9 @@ class ConnectionWrapper(object):
 
     def close(self):
         """Close the connection to the database,"""
+        global _defaulttargetconnection
+        if _defaulttargetconnection is self:
+            _defaulttargetconnection = None
         self.__connection.close()
 
     def rollback(self):
@@ -1141,6 +1144,9 @@ class BackgroundConnectionWrapper(object):
         self.__connection.commit()
 
     def close(self):
+        global _defaulttargetconnection
+        if _defaulttargetconnection is self:
+            _defaulttargetconnection = None
         self.__queue.join()
         self.__connection.close()
 
