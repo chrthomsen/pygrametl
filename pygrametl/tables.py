@@ -782,7 +782,8 @@ class SlowlyChangingDimension(Dimension):
        break this assumption.
     """
 
-    def __init__(self, name, key, attributes, lookupatts, versionatt,
+    def __init__(self, name, key, attributes, lookupatts, orderingatt, 
+                 versionatt=None,
                  fromatt=None, fromfinder=None,
                  toatt=None, tofinder=None, minfrom=None, maxto=None,
                  srcdateatt=None, srcdateparser=pygrametl.ymdparser,
@@ -798,6 +799,9 @@ class SlowlyChangingDimension(Dimension):
            - lookupatts: a sequence with a subset of the attributes that
              uniquely identify a dimension members. These attributes are thus
              used for looking up members.
+           - orderingatt: the name of the attribute used to identify the newest
+             version. The version holding the greatest value is considered to 
+             be the newest.
            - versionatt: the name of the attribute holding the version number
            - fromatt: the name of the attribute telling from when the version
              becomes valid. Not used if None. Default: None
@@ -880,9 +884,10 @@ class SlowlyChangingDimension(Dimension):
                            rowexpander=None,
                            targetconnection=targetconnection)
 
-        if not versionatt:
-            raise ValueError('A version attribute must be given')
-
+        if not orderingatt:
+            raise ValueError('An ordering attribute must be given')
+            
+        self.orderingatt = orderingatt
         self.versionatt = versionatt
         self.fromatt = fromatt
         if fromfinder is not None:
@@ -913,19 +918,19 @@ class SlowlyChangingDimension(Dimension):
 
         # Check that versionatt, fromatt and toatt are also declared as
         # attributes
-        for var in (versionatt, fromatt, toatt):
+        for var in (orderingatt, versionatt, fromatt, toatt):
             if var and var not in attributes:
                 raise ValueError("%s not present in attributes argument" %
                                  (var,))
 
         # Now extend the SQL from Dimension such that we use the versioning
-        self.keylookupsql += " ORDER BY %s DESC" % (self.quote(versionatt),)
+        self.keylookupsql += " ORDER BY %s DESC" % (self.quote(orderingatt),)
 
         # Now create SQL for looking up the key with a local sort
         # This gives "SELECT key, version FROM name WHERE 
         # lookupval1 = %(lookupval1)s AND lookupval2 = %(lookupval2)s AND ..."
         self.keyversionlookupsql = "SELECT " + self.quote(key) + ", " + \
-            self.quote(versionatt) + " FROM " + name + \
+            self.quote(orderingatt) + " FROM " + name + \
             " WHERE " + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv)
                                       for lv in lookupatts])
 
@@ -947,7 +952,7 @@ class SlowlyChangingDimension(Dimension):
             sql = 'SELECT %s FROM %s WHERE %s %s' % \
                   (', '.join(self.quotelist(self.all)), self.name,
                    self.quote(self.toatt),
-                   self.maxto is None and 'IS NULL' or '= %(maxto)s')
+                   'IS NULL' if self.maxto is None else '= %(maxto)s')
             if self.maxto is not None:
                 args = {'maxto': self.maxto}
         else:
@@ -956,12 +961,12 @@ class SlowlyChangingDimension(Dimension):
             lookupattlist = ', '.join(self.lookupatts)
             newestversions = ('SELECT %s, MAX(%s) AS %s FROM %s GROUP BY %s' %
                               (self.quote(lookupattlist),
-                               self.quotelist(self.versionatt),
-                               self.quotelist(self.versionatt), self.name,
+                               self.quotelist(self.orderingatt),
+                               self.quotelist(self.orderingatt), self.name,
                                self.quotelist(lookupattlist)))
             joincond = ' AND '.join(['A.%s = B.%s' % (self.quote(att), att)
                                      for att in [l for l in self.lookupatts] +
-                                     [self.versionatt]
+                                     [self.orderingatt]
                                      ])
             sql = 'SELECT %s FROM (%s) AS A, %s AS B WHERE %s' %\
                 (', '.join(['B.%s AS %s' % (self.quote(att), att)
@@ -1049,8 +1054,9 @@ class SlowlyChangingDimension(Dimension):
              present but will be added (if defined).
            - namemapping: an optional namemapping (see module's documentation)
         """
-        versionatt = (namemapping.get(self.versionatt) or self.versionatt)
         key = (namemapping.get(self.key) or self.key)
+        if self.versionatt:
+            versionatt = (namemapping.get(self.versionatt) or self.versionatt)
         if self.fromatt:  # this protects us against None in namemapping.
             fromatt = (namemapping.get(self.fromatt) or self.fromatt)
         else:
@@ -1068,7 +1074,9 @@ class SlowlyChangingDimension(Dimension):
         keyval = self.lookup(row, namemapping)
         if keyval is None:
             # It is a new member. We add the first version.
-            row[versionatt] = 1
+            if versionatt:
+                row[versionatt] = 1
+                   
             if fromatt and fromatt not in row:
                 if self.minfrom is not None:
                     # We need the following hack to distinguish between
@@ -1092,7 +1100,7 @@ class SlowlyChangingDimension(Dimension):
             other = self.getbykey(keyval)  # the full existing version
             for att in self.all:
                 # Special (non-)handling of versioning and key attributes:
-                if att in (self.key, self.versionatt, self.toatt):
+                if att in (self.key, self.orderingatt, self.versionatt, self.toatt):
                     # Don't compare these - we don't expect them to have
                     # meaningful values in row
                     continue
@@ -1142,7 +1150,9 @@ class SlowlyChangingDimension(Dimension):
             if addnewversion:  # type 2
                 # Make a new row version and insert it
                 row.pop(key, None)
-                row[versionatt] = other[self.versionatt] + 1
+                if versionatt:
+                    row[versionatt] = other[self.versionatt] + 1
+                       
                 if fromatt:
                     row[fromatt] = self.fromfinder(self.targetconnection,
                                                    row, namemapping)
@@ -1162,7 +1172,8 @@ class SlowlyChangingDimension(Dimension):
             else:
                 # Update the row dict by giving version and dates and the key
                 row[key] = keyval
-                row[versionatt] = other[self.versionatt]
+                if self.versionatt:
+                    row[versionatt] = other[self.versionatt]
                 if self.fromatt:
                     row[fromatt] = other[self.fromatt]
                 if self.toatt:
