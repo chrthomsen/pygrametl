@@ -782,7 +782,7 @@ class SlowlyChangingDimension(Dimension):
        break this assumption.
     """
 
-    def __init__(self, name, key, attributes, lookupatts, orderingatt, 
+    def __init__(self, name, key, attributes, lookupatts, orderingatt=None, 
                  versionatt=None,
                  fromatt=None, fromfinder=None,
                  toatt=None, tofinder=None, minfrom=None, maxto=None,
@@ -801,7 +801,10 @@ class SlowlyChangingDimension(Dimension):
              used for looking up members.
            - orderingatt: the name of the attribute used to identify the newest
              version. The version holding the greatest value is considered to 
-             be the newest.
+             be the newest. If orderingatt is None, versionatt is used. If
+             versionatt is also None, toatt is used and NULL is  considered as 
+             the greatest value. If orderingatt, versionatt,toatt are all None,
+             an error is raised.
            - versionatt: the name of the attribute holding the version number
            - fromatt: the name of the attribute telling from when the version
              becomes valid. Not used if None. Default: None
@@ -884,10 +887,17 @@ class SlowlyChangingDimension(Dimension):
                            rowexpander=None,
                            targetconnection=targetconnection)
 
-        if not orderingatt:
-            raise ValueError('An ordering attribute must be given')
+        if orderingatt is not None:
+            self.orderingatt = orderingatt
+        elif versionatt is not None:
+            self.orderingatt = versionatt
+        elif toatt is not None:
+            self.orderingatt = toatt
+        else:
+            raise ValueError(
+                "If orderingatt is None, either versionatt or toatt must not be None"
+                )
             
-        self.orderingatt = orderingatt
         self.versionatt = versionatt
         self.fromatt = fromatt
         if fromfinder is not None:
