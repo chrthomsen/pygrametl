@@ -82,6 +82,7 @@ def project(atts, row, renaming={}):
     """Create a new dictionary with a subset of the attributes.
 
        Arguments:
+           
        - atts is a sequence of attributes in row that should be copied to the
          new result row.
        - row is the original dictionary to copy data from.
@@ -105,6 +106,7 @@ def copy(row, **renaming):
     """Create a copy of a dictionary, but allow renamings.
 
        Arguments:
+           
        - row the dictionary to copy
        - **renaming allows renamings to be specified in the form
          newname=oldname meaning that in the result, oldname will be
@@ -276,6 +278,7 @@ def gettimestamp(targetconnection, ymdhmsstr, default=None):
        The returned Timestamp is in the given targetconnection's format.
 
        Arguments:
+           
        - targetconnection: a ConnectionWrapper whose underlying module's
          Timestamp format is used
        - ymdhmsstr: the string to convert
@@ -316,6 +319,7 @@ def setdefaults(row, attributes, defaults=None):
        updated.
 
        Arguments:
+           
        - row is the dictionary to set default values in
        - attributes is either
            A) a sequence of attribute names in which case defaults must
@@ -461,6 +465,7 @@ def datereader(dateattribute, parsingfunction=ymdparser):
        dictionary member from each row and converts it.
 
        Arguments:
+           
        - dateattribute: the attribute the generated function should read
        - parsingfunction: the parsing function that converts the string
          to a datetime.date
@@ -480,6 +485,7 @@ def datetimereader(datetimeattribute, parsingfunction=ymdhmsparser):
        dictionary member from each row and converts it.
 
        Arguments:
+           
        - datetimeattribute: the attribute the generated function should read
        - parsingfunction: the parsing function that converts the string
          to a datetime.datetime
@@ -499,6 +505,7 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
     """Return a generator yielding dicts for all dates in an interval.
 
        Arguments:
+           
        - fromdate: The lower bound for the date interval. Should be a
          datetime.date or a YYYY-MM-DD formatted string.
        - todate: The upper bound for the date interval. Should be a
@@ -610,6 +617,7 @@ class ConnectionWrapper(object):
            ConnectionWrapper is set as the default.
 
            Arguments:
+               
            - connection: An open PEP 249 connection to the database
            - stmtcachesize: A number deciding how many translated statements to
              cache. A statement needs to be translated when the connection
@@ -648,6 +656,7 @@ class ConnectionWrapper(object):
         """Execute a statement.
 
            Arguments:
+               
            - stmt: the statement to execute
            - arguments: a mapping with the arguments (default: None)
            - namemapping: a mapping of names such that if stmt uses %(arg)s

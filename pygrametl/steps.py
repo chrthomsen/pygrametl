@@ -53,6 +53,7 @@ class Step(object):
 
     def __init__(self, worker=None, next=None, name=None):
         """Arguments:
+            
            - worker: A function f(row) that performs the Step's operation.
              If None, self.defaultworker is used. Default: None
            - next: The default next step to use. This should be 1) an instance
@@ -140,6 +141,7 @@ class SourceStep(Step):
 
     def __init__(self, source, next=None, name=None):
         """Arguments:
+            
            - source: The data source. Must be iterable.
            - next: The default next step to use. This should be 1) an instance
              of a Step, 2) the name of a Step, or 3) None.
@@ -166,6 +168,7 @@ class MappingStep(Step):
 
     def __init__(self, targets, requiretargets=True, next=None, name=None):
         """Arguments:
+            
            - targets: A sequence of (name, function) pairs. For each element,
              row[name] is set to function(row[name]) for each row given to the
              step.
@@ -202,6 +205,7 @@ class ValueMappingStep(Step):
     def __init__(self, outputatt, inputatt, mapping, requireinput=True,
                  defaultvalue=None, next=None, name=None):
         """Arguments:
+            
            - outputatt: The attribute to write the mapped value to in each row.
            - inputatt: The attribute to map.
            - mapping: A dict with the mapping itself.
@@ -244,6 +248,7 @@ class PrintStep(Step):
 
     def __init__(self, next=None, name=None):
         """Arguments:
+            
            - next: The default next step to use. This should be 1) an instance
              of a Step, 2) the name of a Step, or 3) None.
              If if is a name, the next step will be looked up dynamically
@@ -266,6 +271,7 @@ class DimensionStep(Step):
 
     def __init__(self, dimension, keyfield=None, next=None, name=None):
         """Arguments:
+            
            - dimension: the Dimension object to call ensure on.
            - keyfield: the name of the attribute that in each row is set to
              hold the key value for the dimension member
@@ -295,6 +301,7 @@ class SCDimensionStep(Step):
 
     def __init__(self, dimension, next=None, name=None):
         """Arguments:
+            
            - dimension: the Dimension object to call ensure on.
            - keyfield: the name of the attribute that in each row is set to
              hold the key value for the dimension member
@@ -321,6 +328,7 @@ class RenamingFromToStep(Step):
 
     def __init__(self, renaming, next=None, name=None):
         """Arguments:
+            
            - name: A name for the Step instance. This is used when another
              Step (implicitly or explicitly) passes on rows. If two instanes
              have the same name, the name is mapped to the instance that was
@@ -358,6 +366,7 @@ class GarbageStep(Step):
 
     def __init__(self, name=None):
         """Arguments:
+            
            - name: A name for the Step instance. This is used when another
              Step (implicitly or explicitly) passes on rows. If two instanes
              have the same name, the name is mapped to the instance that was
@@ -375,6 +384,7 @@ class ConditionalStep(Step):
 
     def __init__(self, condition, whentrue, whenfalse=None, name=None):
         """Arguments:
+            
            - condition: A function f(row) that is evaluated for each row.
            - whentrue: The next step to use if the condition evaluates to a
              true value. This argument  should be 1) an instance of a Step,
@@ -410,6 +420,7 @@ class CopyStep(Step):
 
     def __init__(self, originaldest, copydest, deepcopy=False, name=None):
         """Arguments:
+            
            - originaldest: The Step each given row is passed on to.
              This argument  should be 1) an instance of a Step,
              2) the name of a Step, or 3) None.

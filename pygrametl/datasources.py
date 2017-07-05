@@ -67,6 +67,7 @@ class TypedCSVSource(DictReader):
     def __init__(self, csvfile, casts, fieldnames=None, restkey=None,
                  restval=None, dialect='excel', *args, **kwds):
         """Arguments:
+            
            - f: An iterable object such as as file. Passed on to
              csv.DictReader
            - casts: A dict mapping from attribute names to functions to apply
@@ -109,6 +110,7 @@ class SQLSource(object):
     def __init__(self, connection, query, names=(), initsql=None,
                  cursorarg=None, parameters=None):
         """Arguments:
+            
            - connection: the PEP 249 connection to use. NOT a
              ConnectionWrapper!
            - query: the query that generates the result
@@ -173,6 +175,7 @@ class ProcessSource(object):
 
     def __init__(self, source, batchsize=500, queuesize=20):
         """Arguments:
+            
            - source: the source to iterate
            - batchsize: the number of rows passed from the worker process each
              time it passes on a batch of rows. Must be positive. Default: 500
@@ -232,6 +235,7 @@ class HashJoiningSource(object):
 
     def __init__(self, src1, key1, src2, key2):
         """Arguments:
+            
            - src1: the first source. This source is iterated row by row.
            - key1: the attribute of the first source to use in the join
            - src2: the second source. The rows of this source are all loaded
@@ -271,6 +275,7 @@ class MergeJoiningSource(object):
 
     def __init__(self, src1, key1, src2, key2):
         """Arguments:
+            
         - src1: a data source
         - key1: the attribute to use from src1
         - src2: a data source
@@ -337,6 +342,7 @@ class TransformingSource(object):
 
     def __init__(self, source, *transformations):
         """Arguments:
+            
         - source: a data source
         - *transformations: the transformations to apply. Must be callables
           of the form func(row) where row is a dict. Will be applied in the
@@ -359,6 +365,7 @@ class CrossTabbingSource(object):
     def __init__(self, source, rowvaluesatt, colvaluesatt, values,
                  aggregator=None, nonevalue=0, sortrows=False):
         """Arguments:
+            
         - source: the data source to pull data from
         - rowvaluesatt: the name of the attribute that holds the values that
           appear as rows in the result
@@ -410,6 +417,7 @@ class FilteringSource(object):
 
     def __init__(self, source, filter=bool):
         """Arguments:
+            
            - source: the source to filter
            - filter: a callable f(row). If the result is a True value,
              the row is passed on. If not, the row is discarded.
@@ -434,6 +442,7 @@ class UnionSource(object):
 
     def __init__(self, *sources):
         """Arguments:
+            
            - *sources: The sources to union in the order they should be used.
         """
         self.__sources = sources
@@ -450,6 +459,7 @@ class RoundRobinSource(object):
 
     def __init__(self, sources, batchsize=500):
         """Arguments:
+            
            - sources: a sequence of data sources
            - batchsize: the amount of rows to read from a data source before
              going to the next data source. Must be positive (to empty a source
@@ -492,6 +502,7 @@ class DynamicForEachSource(object):
 
     def __init__(self, seq, callee):
         """Arguments:
+            
            - seq: a sequence with the elements for each of which a unique
              source must be created. the elements are given (one by one) to
              callee.
