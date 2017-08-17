@@ -2,8 +2,11 @@ Unreleased
 ----------
 **Added**
 **Changed**
+  ``SlowlyChangingDimension`` improved to make ``versionatt`` optional. 
+  (GitHub issue #12. Thanks to HereticSK) 
+
 **Fixed**
-  ConnectionWrapper.execute does not pass the argument ``arguments`` to
+  ``ConnectionWrapper.execute`` does not pass the argument ``arguments`` to
   the underlying cursor's execute method if ``arguments`` is None. Some drivers
   raise an Error if None is passed, some don't.
 
