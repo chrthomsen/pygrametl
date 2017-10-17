@@ -241,6 +241,25 @@ row should be passed on.
 In the above example, a very simple filter is used, which filters out rows
 where the value of the *location* attribute is not *Aalborg*.
 
+MappingSource
+------------------
+The class :class:`.MapppingSource` can be used to apply functions to the
+columns of a source. The class can be supplied with a dictionary mapping columns
+to callable functions of the form ``f(val)``, which will be applied to columns
+in an undefined order.
+
+.. code-block:: python
+
+    import pygrametl
+    from pygrametl.datasources import CSVSource, MappingSource
+
+    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter=',')
+
+    sales_transformed = MapppingSource(source=sales, {'price':int})
+
+In the above example, a function is used to cast all values of the column price
+to integer while rows are read from a .csv.
+
 TransformingSource
 ------------------
 The class :class:`.TransformingSource` can be used to apply functions to the

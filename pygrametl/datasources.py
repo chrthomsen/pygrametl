@@ -50,12 +50,12 @@ except NameError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.5.0'
+__version__ = '2.5.1'
 __all__ = ['CSVSource', 'TypedCSVSource', 'SQLSource', 'JoiningSource',
            'HashJoiningSource', 'MergeJoiningSource', 'BackgroundSource',
-           'ProcessSource', 'TransformingSource', 'UnionSource',
-           'CrossTabbingSource', 'FilteringSource', 'DynamicForEachSource',
-           'RoundRobinSource']
+           'ProcessSource', 'MappingSource', 'TransformingSource',
+           'UnionSource', 'CrossTabbingSource', 'FilteringSource',
+           'DynamicForEachSource', 'RoundRobinSource']
 
 
 CSVSource = DictReader
@@ -334,6 +334,32 @@ class MergeJoiningSource(object):
             else:
                 self.__next = row
                 return res
+
+
+class MappingSource(object):
+    """A class for iterating a source and applying a function to each column."""
+
+    def __init__(self, source, callables):
+        """Arguments:
+
+           - source: A data source
+           - callables: A dict mapping from attribute names to functions to
+             apply to these names, e.g. type casting {'id':int, 'salary':float}
+        """
+        if not type(callables) == dict:
+            raise TypeError("The callables argument must be a dict")
+        for v in callables.values():
+            if not callable(v):
+                raise TypeError("The values in callables must be callable")
+
+        self._source = source
+        self._callables = callables
+
+    def __iter__(self):
+        for row in self._source:
+            for (att, func) in self._callables.items():
+                row[att] = func(row[att])
+                yield row
 
 
 class TransformingSource(object):
