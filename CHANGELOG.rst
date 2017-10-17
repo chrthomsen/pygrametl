@@ -1,6 +1,10 @@
 Unreleased
 ----------
 **Added**
+  ``MappingSource`` a new class, that given a data source and a dictionary of
+  columns to callables, maps the callables over each element of the specified
+  column before returning the row.
+
 **Changed**
   ``SlowlyChangingDimension`` improved to make ``versionatt`` optional. 
   (GitHub issue #12. Thanks to HereticSK) 
