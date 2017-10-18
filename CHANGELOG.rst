@@ -1,6 +1,10 @@
 Unreleased
 ----------
 **Added**
+  ``PandasSource`` a new class, that given a Pandas DataFrame function as a
+  data source. Each row of the DataFrame is returned as a dict that can be
+  loaded into a data warehouse using pygrametl.tables.
+
   ``MappingSource`` a new class, that given a data source and a dictionary of
   columns to callables, maps the callables over each element of the specified
   column before returning the row.

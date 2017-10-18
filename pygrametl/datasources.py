@@ -50,12 +50,12 @@ except NameError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.5.1'
-__all__ = ['CSVSource', 'TypedCSVSource', 'SQLSource', 'JoiningSource',
-           'HashJoiningSource', 'MergeJoiningSource', 'BackgroundSource',
-           'ProcessSource', 'MappingSource', 'TransformingSource',
-           'UnionSource', 'CrossTabbingSource', 'FilteringSource',
-           'DynamicForEachSource', 'RoundRobinSource']
+__version__ = '2.5.2'
+__all__ = ['CSVSource', 'TypedCSVSource', 'SQLSource', 'PandasSource',
+           'JoiningSource', 'HashJoiningSource', 'MergeJoiningSource',
+           'BackgroundSource', 'ProcessSource', 'MappingSource',
+           'TransformingSource', 'UnionSource', 'CrossTabbingSource',
+           'FilteringSource', 'DynamicForEachSource', 'RoundRobinSource']
 
 
 CSVSource = DictReader
@@ -167,6 +167,22 @@ class SQLSource(object):
                 self.cursor.close()
             except Exception:
                 pass
+
+class PandasSource(object):
+
+    """A source for iterating a Pandas DataFrame and cast each row to a dict."""
+
+    def __init__(self, dataFrame):
+        """Arguments:
+
+           - dataFrame: A Pandas DataFrame
+        """
+        self._dataFrame = dataFrame
+
+    def __iter__(self):
+        for (_, series) in self._dataFrame.iterrows():
+            row = series.to_dict()
+            yield row
 
 
 class ProcessSource(object):

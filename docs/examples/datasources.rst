@@ -113,6 +113,43 @@ dictionary is passed as the second providing information about what type each
 column should be cast to. A cast is not performed for the name column as
 :class:`.TypedCSVSource` uses strings as the default.
 
+PandasSource
+-------------
+The class :class:`.PandasSource` is a data source that return each row of a
+Pandas DataFrame as a dictionary. The class is fairly simple, and is implemented
+as a wrapper around existing functionality provided by `DataFrames
+<https://pandas.pydata.org/pandas-docs/stable/api.html#dataframe>`_. An example
+of the how to use this class can be seen below. In this example some data is
+loaded from a spreadsheet, then transformed using a Pandas DataFrame, and last
+converted to an iterator of dictionaries for use with pygrametl:
+
+.. code-block:: python
+
+    import pandas
+    from pygrametl.datasources import PandasSource
+
+    # For this example the revenue of a store is kept in a spreadsheet, so
+    # we use Pandas to load the data into a DataFrame so we can manipulate it.
+    df = pandas.read_excel('revenue.xls')
+
+    # After constructing the DataFrame, the data can be easily transformed using
+    # the transformation and higher-order functions implemented as part of the
+    # DataFrame. In this example the price of each book is converted from Danish
+    # kroner (DKK) to euros.
+    df['price'] = df['price'].apply(lambda p : float(p) / 7.46)
+
+    # Afterwards, to load the DataFrame into the data warehouse, a
+    # PandasSource is constructed which returns each row from the DataFrame as a
+    # dictionary suitable for pygrametl to load.
+    ps = PandasSource(df)
+
+In the above example, a Pandas DataFrame is created from a spreadsheet
+containing revenue from some form of sales. Afterwards, the data of one column
+is transformed using one of the higher-order functions build into the Pandas
+library. Last, so the data can be loaded into a data warehouse using pygrametl,
+a :class:`.PandasSource` is created with the DataFrame as argument, making the
+rows of the DataFrame accessible as an iterator of dict.
+
 MergeJoiningSource
 ------------------
 In addition to the aforementioned data sources, pygrametl also includes a
