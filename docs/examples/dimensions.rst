@@ -535,14 +535,22 @@ dimension. This feature should however be considered experimental.
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
-        {'name' : 'Calvin and Hobbes 1', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 2', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 3', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Cake and Me', 'category' : 'Cookbook', 'price' : '15'},
-        {'name' : 'French Cooking', 'category' : 'Cookbook', 'price' : '50'},
-        {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30'},
-        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60'}
+        {'name' : 'Calvin and Hobbes 1', 'category' : 'Comic',
+         'type' : 'Fiction', 'price' : '10'},
+        {'name' : 'Calvin and Hobbes 2', 'category' : 'Comic',
+         'type' : 'Fiction', 'price' : '10'},
+        {'name' : 'Calvin and Hobbes 3', 'category' : 'Comic',
+         'type' : 'Fiction', 'price' : '10'},
+        {'name' : 'Cake and Me', 'category' : 'Cookbook',
+         'type' : 'Non-Fiction', 'price' : '15'},
+        {'name' : 'French Cooking', 'category' : 'Cookbook',
+         'type' : 'Non-Fiction', 'price' : '50'},
+        {'name' : 'Sushi', 'category' : 'Cookbook',
+         'type' : 'Non-Fiction', 'price' : '30'},
+        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel',
+         'type' : 'Fiction', 'price' : '15'},
+        {'name' : 'The Lord of the Rings', 'category' : 'Novel',
+         'type' : 'Fiction', 'price' : '60'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
@@ -558,33 +566,33 @@ dimension. This feature should however be considered experimental.
     productTable = Dimension(
         name='product',
         key='productid',
-        attributes=['name', 'categoryid'],
+        attributes=['name', 'categoryid', 'price'],
         lookupatts=['name'])
 
     categoryTable = Dimension(
         name='category',
         key='categoryid',
-        attributes=['category', 'priceid'],
+        attributes=['category', 'typeid'],
         lookupatts=['category'])
 
-    priceTable = Dimension(
-        name='price',
-        key='priceid',
-        attributes=['price'])
+    typeTable = Dimension(
+        name='type',
+        key='typeid',
+        attributes=['type'])
 
-    # A instance of SnowflakedDimension is initialised with the
-    # created dimensions as input, creating a simple interface matching a
-    # single dimension, allowing a Snowflaked dimension to be used in the same
-    # manner as a dimension represented in the database by a Star schema. The
-    # dimensions representing tables are passed in pairs based on their foreign
-    # key relations. Meaning the arguments indicate that the productTable has
-    # a foreign key relation with the categoryTable, and the categoryTable has
-    # a foreign key relation with the priceTable. If a table has multiple
-    # foreign key relations to tables in the Snowflaked dimension, a list must
-    # be passed as the second part of the tuple with a Dimension object for
-    # each table the first argument references through its foreign keys.
+    # A instance of SnowflakedDimension is initialised with the created dimensions
+    # as input, creating a simple interface matching a single dimension, allowing a
+    # Snowflaked dimension to be used in the same manner as a dimension represented
+    # in the database by a Star schema. The dimensions representing tables are
+    # passed in pairs based on their foreign key relations. Meaning the arguments
+    # indicate that the productTable has a foreign key relation with the
+    # categoryTable, and the categoryTable has a foreign key relation with the
+    # typeTable. If a table has multiple foreign key relations to tables in the
+    # Snowflaked dimension, a list must be passed as the second part of the tuple
+    # with a Dimension object for each table the first argument references through
+    # its foreign keys.
     productDimension = SnowflakedDimension(references=[(productTable, categoryTable),
-                                            (categoryTable, priceTable)])
+                                            (categoryTable, typeTable)])
 
     # Using a SnowflakedDimension is done through the same interface as the
     # Dimension class. Some methods of the SnowflakedDimension have
