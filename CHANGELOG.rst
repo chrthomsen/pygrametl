@@ -1,7 +1,7 @@
 Unreleased
 ----------
 **Added**
-  ``PandasSource`` a new class, that given a Pandas DataFrame function as a
+  ``PandasSource`` a new class, that given a Pandas DataFrame acts as a
   data source. Each row of the DataFrame is returned as a dict that can be
   loaded into a data warehouse using pygrametl.tables.
 
