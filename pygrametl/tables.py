@@ -64,7 +64,7 @@ except ImportError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.5.0'
+__version__ = '2.6'
 __all__ = ['definequote', 'Dimension', 'CachedDimension', 'BulkDimension',
            'CachedBulkDimension', 'TypeOneSlowlyChangingDimension',
            'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable',
@@ -945,13 +945,14 @@ class SlowlyChangingDimension(Dimension):
                                  (var,))
 
         # Now extend the SQL from Dimension such that we use the versioning
-        self.keylookupsql += " ORDER BY %s DESC" % (self.quote(orderingatt),)
+        self.keylookupsql += " ORDER BY %s DESC" % \
+                             (self.quote(self.orderingatt),)
 
         # Now create SQL for looking up the key with a local sort
         # This gives "SELECT key, version FROM name WHERE 
         # lookupval1 = %(lookupval1)s AND lookupval2 = %(lookupval2)s AND ..."
         self.keyversionlookupsql = "SELECT " + self.quote(key) + ", " + \
-            self.quote(orderingatt) + " FROM " + name + \
+            self.quote(self.orderingatt) + " FROM " + name + \
             " WHERE " + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv)
                                       for lv in lookupatts])
 
