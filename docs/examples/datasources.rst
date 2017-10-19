@@ -115,7 +115,7 @@ column should be cast to. A cast is not performed for the name column as
 
 PandasSource
 -------------
-The class :class:`.PandasSource` is a data source that return each row of a
+The class :class:`.PandasSource` is a data source that returns each row of a
 Pandas DataFrame as a dictionary. The class is fairly simple, and is implemented
 as a wrapper around existing functionality provided by `DataFrames
 <https://pandas.pydata.org/pandas-docs/stable/api.html#dataframe>`_. An example
