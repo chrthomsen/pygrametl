@@ -26,7 +26,7 @@
         <section class="page-header">
             <h1 class="project-name">pygrametl</h1>
             <h2 class="project-tagline">ETL programming in Python</h2>
-            <a href="doc/index.html" class="btn">Documentation</a>
+            <a href="#documentation" class="btn">Documentation</a>
             <a href="https://github.com/chrthomsen/pygrametl" class="btn" target="_top">View on GitHub</a>
             <a href="https://pypi.python.org/pypi/pygrametl" class="btn" target="_top">View on Pypi</a>
             <a href="#community" class="btn">Community</a>
@@ -81,7 +81,7 @@
 
 
 <span class="pl-c">#</span>
-<span class="pl-c">#  Copyright (c) 2009, 2010 Christian Thomsen ( chr @ cs . aau . dk )</span>
+<span class="pl-c">#  Copyright (c) 2009, 2010 Aalborg University (pygrametl@cs.aau.dk)</span>
 <span class="pl-c">#</span>
 <span class="pl-c">#  This file is free software: you may copy, redistribute and/or modify it</span>
 <span class="pl-c">#  under the terms of the GNU General Public License version 2</span>
@@ -270,37 +270,51 @@ inputdata <span class="pl-k">=</span> MergeJoiningSource(downloadlog, <span clas
                 <p>In addition to the documentation multiple papers have been published on pygrametl. The papers provide a more detailed description of the foundational ideas behind pygrametl, but is obviously not keep up to date with changes and improvements implemented in the framework, for such see the documentation.</p>
                 <ul>
                     <li><b>pygrametl: A Powerful Programming Framework for Extract-Transform-Load Programmers - DOLAP'09</b><br>
-                           by Christian, Thomsen and Torben Bach Pedersen<br>
+                           by Christian Thomsen and Torben Bach Pedersen<br>
                            in <i>Proceedings of the ACM 12th international workshop on Data warehousing and OLAP</i><br>
                            Download: <a href="http://dl.acm.org/citation.cfm?id=1651301" target="_top">Publication</a>, <a href="assets/pygrametlexa.zip">Examples and Data Generator</a></li>
                     <br>
                     <li><b>pygrametl: A Powerful Programming Framework for Extract–Transform–Load Programmers - Technical Report</b><br>
-                           by Christian, Thomsen and Torben Bach Pedersen<br>
+                           by Christian Thomsen and Torben Bach Pedersen<br>
                            Download: <a href="http://dbtr.cs.aau.dk/DBPublications/DBTR-25.pdf" target="_top">Publication</a></li>
                     <br>
                     <li><b>Easy and Effective Parallel Programmable ETL - DOLAP'11</b><br>
-                        by Christian, Thomsen and Torben Bach Pedersen<br>
-                        in <i>Proceedings of the ACM 14th international workshop on Data Warehousing and OLAP</i><br>
-                        Download: <a href="http://dl.acm.org/citation.cfm?id=2064684" target="_top">Publication</a>, <a href="assets/exaprogs.zip">Examples and Data Generator</a></li>
+                           by Christian Thomsen and Torben Bach Pedersen<br>
+                           in <i>Proceedings of the ACM 14th international workshop on Data Warehousing and OLAP</i><br>
+                           Download: <a href="http://dl.acm.org/citation.cfm?id=2064684" target="_top">Publication</a>, <a href="assets/exaprogs.zip">Examples and Data Generator</a></li>
+                    <br>
+                    <li><b>Programmatic ETL - eBISS'17</b><br>
+                           by Christian Thomsen, Ove Andersen, S&oslash;ren Kejser Jensen and Torben Bach Pedersen<br>
+                           in <i>Tutorial Lectures of the 7th European Business Intelligence and Big Data Summer School</i><br>
+                           Download: <a href="https://link.springer.com/chapter/10.1007/978-3-319-96655-7_2" target="_top">Publication</a>
                 </ul>
                 <p>If you use pygrametl in academia, please cite the relevant paper(s) above.</p>
 
 
                 <!-- Community -->
                 <h2><a id="community" class="anchor" href="#community" aria-hidden="true"><span class="octicon octicon-link"></span></a>Community</h2>
-                <p>To keep the development of pygrametl open for external participation, we endeavour to keep all communication public through mailing lists and use of Github. Feel free to ask questions and provide all kinds of feedback, especially if you choose not to use pygrametl.
+                <p>To keep the development of pygrametl open for external participation, we endeavor to keep all communication public through mailing lists and use of Github. Feel free to ask questions and provide all kinds of feedback, especially if you choose not to use pygrametl.
 
                 <ul>
-                    <li><a href="https://groups.google.com/forum/#!forum/pygrametl-user" target="_top">pygrametl-user</a> - For any questions about how to deploy and utilise pygrametl for ETL.</li>
+                    <li><a href="https://groups.google.com/forum/#!forum/pygrametl-user" target="_top">pygrametl-user</a> - For any questions about how to deploy and utilize pygrametl for ETL.</li>
                     <li><a href="https://groups.google.com/forum/#!forum/pygrametl-dev" target="_top">pygrametl-dev</a> - For questions and discussion about the development of pygrametl.</li>
                     <li><a href="https://github.com/chrthomsen/pygrametl" target="_top">Github</a> - Bugs and patches should be submitted to Github as issues and pull requests.</li>
                 </ul></p>
 
+                <p>When asking a question or reporting a possible bug in pygrametl, please first verify that the problem still occurs with the latest version of pygrametl. If the problem persists after updating please include the following information, preferably with detailed version information, when reporting the problem:</p>
+                <ul>
+                  <li>Operating System.</li>
+                  <li>Python Implementation.</li>
+                  <li>Relational Database Management System.</li>
+                  <li>Python Database Connector.</li>
+                  <li>A short description of the problem with a minimal code example that reproduces the problem.</li>
+                </ul>
+
                 <p>We encourage use of Github and the mailing lists. For discussions not suitable for a public mailing list, you can, however, send us a private <a href="mailto:pygrametl@cs.aau.dk" target="_top">email</a>.</p>
 
                 <footer class="site-footer">
-                    <span class="site-footer-owner"><a href="https://github.com/chrthomsen/pygrametl" target="_top">pygrametl</a> is maintained at <a href="http://www.cs.aau.dk" target="_top">Aalborg University</a> by:<br/>
-                        <a href="https://github.com/chrthomsen" target="_top">Christian Thomsen</a>, <a href="https://github.com/Tellus" target="_top">Johannes Lindhart Borresen</a>, <a href="https://github.com/OveAnd" target="_top">Ove Andersen</a>, and <a href="https://github.com/skejserjensen" target="_top">S&oslashren Kejser Jensen</a></span>
+                    <span class="site-footer-owner"><a href="https://github.com/chrthomsen/pygrametl" target="_top">pygrametl</a> is maintained at <a href="http://www.cs.aau.dk" target="_top">Aalborg University</a> by
+                        <a href="https://github.com/chrthomsen" target="_top">Christian Thomsen</a> and <a href="https://github.com/skejserjensen" target="_top">S&oslash;ren Kejser Jensen</a></span>
                     <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com" target="_top">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme" target="_top">Cayman theme</a> by <a href="https://twitter.com/jasonlong" target="_top">Jason Long</a>.</span>
                 </footer>
         </section>
