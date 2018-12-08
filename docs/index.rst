@@ -24,11 +24,11 @@ Pygrametl is currently maintained at Aalborg University in Denmark by the follow
 
 **Maintainers**
     - Christian Thomsen <chr@cs.aau.dk>
-    - Ove Andersen <ove.andersen.oa@gmail.com>
     - Søren Kejser Jensen <devel@kejserjensen.dk>
 
 **Former Maintainers**
     - Christoffer Moesgaard <cmoesgaard@gmail.com>
+    - Ove Andersen <ove.andersen.oa@gmail.com>
 
 Getting started
 ===============
