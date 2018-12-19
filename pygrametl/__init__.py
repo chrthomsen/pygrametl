@@ -18,7 +18,7 @@
      removed in first-in first-out order
 """
 
-# Copyright (c) 2009-2016, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2018, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@ else:  # For Python 3
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.5.0'
+__version__ = '2.6.0'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom',
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr',
            'getstrornullvalue', 'getdbfriendlystr', 'getbool', 'getdate', 
@@ -610,7 +610,8 @@ class ConnectionWrapper(object):
        statements can be executed anyway.
     """
 
-    def __init__(self, connection, stmtcachesize=1000, paramstyle=None):
+    def __init__(self, connection, stmtcachesize=1000, paramstyle=None, \
+                 copyintonew=False):
         """Create a ConnectionWrapper around the given PEP 249 connection
 
            If no default ConnectionWrapper already exists, the new
@@ -622,11 +623,14 @@ class ConnectionWrapper(object):
            - stmtcachesize: A number deciding how many translated statements to
              cache. A statement needs to be translated when the connection
              does not use 'pyformat' to specify parameters. When 'pyformat' is
-             used, stmtcachesize is ignored as no statements need to be
-             translated.
+             used and copyintonew == False, stmtcachesize is ignored as no 
+             statements need to be translated.
            - paramstyle: A string holding the name of the PEP 249 connection's
              paramstyle. If None, pygrametl will try to find the paramstyle
              automatically (an AttributeError can be raised if that fails).
+           - copyintonew: A boolean deciding if a new mapping only holding the
+             needed arguments should be created when a statement is executed.
+             Some drivers require this.
         """
         self.__connection = connection
         self.__cursor = connection.cursor()
@@ -638,7 +642,7 @@ class ConnectionWrapper(object):
         if paramstyle is None:
             paramstyle = self.__underlyingmodule.paramstyle
 
-        if not paramstyle == 'pyformat':
+        if copyintonew or not paramstyle == 'pyformat':
             self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, '_translate2' + paramstyle)
@@ -646,7 +650,12 @@ class ConnectionWrapper(object):
                 raise InterfaceError("The paramstyle '%s' is not supported" %
                                      paramstyle)
         else:
+            # Since paramstyle == 'pyformat' and copyintonew == False,
+            # no translations are needed
             self.__translate = None
+
+        self.__paramstyle = paramstyle
+        self.__copyintonew = copyintonew
 
         global _defaulttargetconnection
         if _defaulttargetconnection is None:
@@ -682,28 +691,61 @@ class ConnectionWrapper(object):
         if self.__translate and translate:
             # Idea: Translate the statement for the first parameter set. Then
             # reuse the statement (but create new attribute sequences if
-            # needed) for the remaining paramter sets
-            newstmt = self.__translate(stmt, params[0])[0]
-            if isinstance(self.__translations[stmt], str):
-                # The paramstyle is 'named' in this case and we don't have to
-                # put parameters into sequences
-                self.__cursor.executemany(newstmt, params)
+            # needed) for the remaining parameter sets
+            (newstmt, _) = self.__translate(stmt, params[0])
+            names = self.__translations[stmt][1]
+
+            if self.paramstyle == 'pyformat' or self.__paramstyle == 'named':
+                if self.__copyintonew:
+                    # we need to copy attributes from params into new dicts
+                    newparams = [{n:p[n] for n in names} for p in params]
+                else:
+                    newparams = params
             else:
                 # We need to extract attributes and put them into sequences
-                # The attributes to extract
-                names = self.__translations[stmt][1]
                 newparams = [[p[n] for n in names] for p in params]
-                self.__cursor.executemany(newstmt, newparams)
         else:
-            # for pyformat when no translation is necessary
-            self.__cursor.executemany(stmt, params)
+            # nothing to do for pyformat when no translation is necessary
+            newstmt = stmt
+            newparams = params
+
+        self.__cursor.executemany(newstmt, newparams)
+
+    def _translate2pyformat(self, stmt, row=None):
+        # No translation of stmt needed. This method is only used if a new
+        # row only containing the required attributes must be made.
+        (_, names) = self.__translations.get(stmt, (None, None))
+        if names:
+            return (stmt, {n:row[n] for n in names})
+        elif names == []:
+            # there are no arguments to copy
+            return (stmt, None)
+        names = []
+        end = 0
+        while True:
+            start = stmt.find('%(', end)
+            if start == -1:
+                break
+            end = stmt.find(')s', start)
+            if end == -1:
+                break
+            names.append(stmt[start + 2 : end])
+        self.__translations[stmt] = (stmt, names)
+        return self._translate2pyformat(stmt, row)
+
 
     def _translate2named(self, stmt, row=None):
-        # Translate %(name)s to :name. No need to change row.
-        # Cache only the translated SQL.
-        res = self.__translations.get(stmt, None)
+        # Translate %(name)s to :name. Make new row if self.__copyintonew.
+        # Cache the translated SQL and a list of attributes to extract.
+        (res, names) = self.__translations.get(stmt, (None, None))
         if res:
-            return (res, row)
+            if not self.__copyintonew:
+                return (res, row)
+            elif names:
+                return (res, {n:row[n] for n in names})
+            else:
+                return (res, None)
+        names = []
         res = stmt
         while True:
             start = res.find('%(')
@@ -714,8 +756,9 @@ class ConnectionWrapper(object):
                 break
             name = res[start + 2: end]
             res = res.replace(res[start:end + 2], ':' + name)
-        self.__translations[stmt] = res
-        return (res, row)
+            names.append(name)
+        self.__translations[stmt] = (res, names)
+        return self._translate2named(stmt, row)
 
     def _translate2qmark(self, stmt, row=None):
         # Translate %(name)s to ? and build a list of attributes to extract
@@ -780,11 +823,7 @@ class ConnectionWrapper(object):
             name = newstmt[start + 2: end]
             names.append(name)
             newstmt = newstmt.replace(
-                newstmt[
-                    start:end +
-                    2],
-                '%s',
-                1)  # Replace once!
+                newstmt[start:end + 2], '%s', 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -913,11 +952,14 @@ class ConnectionWrapper(object):
 
 class BackgroundConnectionWrapper(object):
 
-    """An alternative implementation of the ConnectionWrapper for experiments.
+    """Deprecated: This class is not maintained anymore! Use ConnectionWrapper
+       instead.
+
+       An alternative implementation of the ConnectionWrapper for experiments.
        This implementation communicates with the database by using a
        separate thread.
 
-       It is likely better to use ConnectionWrapper og a shared
+       It is likely better to use ConnectionWrapper or a shared
        ConnectionWrapper (see pygrametl.parallel).
 
        This class offers the same methods as ConnectionWrapper. The

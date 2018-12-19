@@ -1,4 +1,4 @@
-Unreleased
+Unreleased (to be 2.6.0)
 ----------
 **Added**
   ``PandasSource`` a new class, that given a Pandas DataFrame acts as a
@@ -11,7 +11,14 @@ Unreleased
 
 **Changed**
   ``SlowlyChangingDimension`` improved to make ``versionatt`` optional. 
-  (GitHub issue #12. Thanks to HereticSK) 
+  (GitHub issue #12. Thanks to HereticSK)
+
+  ``ConnectionWrapper.__init__`` now optionally takes the argument
+  ``copyintonew``. When this argument is True (the default is False), a new
+  dict with parameters is created when a statement is executed. The new dict
+  only holds the k/v pairs needed by the statement. This is to avoid
+  "DatabaseError: ORA-01036: illegal variable name/number" with cx_Oracle.
+  (GitHub issue #9).
 
 **Fixed**
   ``ConnectionWrapper.execute`` does not pass the argument ``arguments`` to
