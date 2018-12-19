@@ -64,7 +64,7 @@ CSVSource = DictReader
 class TypedCSVSource(DictReader):
     """A class for iterating a CSV file and type cast the values."""
 
-    def __init__(self, csvfile, casts, fieldnames=None, restkey=None,
+    def __init__(self, f, casts, fieldnames=None, restkey=None,
                  restval=None, dialect='excel', *args, **kwds):
         """Arguments:
             
@@ -79,7 +79,7 @@ class TypedCSVSource(DictReader):
            - *args: Passed on to csv.DictReader
            - **kwds: Passed on to csv.DictReader
         """
-        DictReader.__init__(self, csvfile, fieldnames=fieldnames,
+        DictReader.__init__(self, f, fieldnames=fieldnames,
                             restkey=restkey, restval=restval, dialect=dialect,
                             *args, **kwds)
 

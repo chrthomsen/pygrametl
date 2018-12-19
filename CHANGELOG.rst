@@ -20,6 +20,9 @@ Unreleased (to be 2.6.0)
   "DatabaseError: ORA-01036: illegal variable name/number" with cx_Oracle.
   (GitHub issue #9).
 
+  First argument to ``TypedCSVSource.__init__`` renamed from ``csvfile`` to
+  ``f`` to be consistent with documentation and ``CSVSource``
+  
 **Fixed**
   ``ConnectionWrapper.execute`` does not pass the argument ``arguments`` to
   the underlying cursor's execute method if ``arguments`` is None. Some drivers
