@@ -19,7 +19,7 @@ Dimension
 ---------
 :class:`.Dimension` is the simplest abstraction pygrametl provides for
 interaction with dimensions in a data warehouse. For each of the dimensions in
-a data warehouse a instance of :class:`.Dimension` is created, which provides
+a data warehouse an instance of :class:`.Dimension` is created, which provides
 an interface for performing operations on the table, such as insertions or
 looking up keys, while abstracting away the database connection and queries.
 Using :class:`.Dimension` is a two-step process. First, an instance of
@@ -531,18 +531,26 @@ dimension. This feature should however be considered experimental.
 
     import psycopg2
     import pygrametl
-    from pygrametl.tables import Dimension, SnowflakedDimension
+    from pygrametl.tables import CachedDimension, SnowflakedDimension
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
-        {'name' : 'Calvin and Hobbes 1', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 2', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 3', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Cake and Me', 'category' : 'Cookbook', 'price' : '15'},
-        {'name' : 'French Cooking', 'category' : 'Cookbook', 'price' : '50'},
-        {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30'},
-        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60'}
+        {'name' : 'Calvin and Hobbes 1', 'category' : 'Comic',
+         'type' : 'Fiction', 'price' : '10'},
+        {'name' : 'Calvin and Hobbes 2', 'category' : 'Comic',
+         'type' : 'Fiction', 'price' : '10'},
+        {'name' : 'Calvin and Hobbes 3', 'category' : 'Comic',
+         'type' : 'Fiction', 'price' : '10'},
+        {'name' : 'Cake and Me', 'category' : 'Cookbook',
+         'type' : 'Non-Fiction', 'price' : '15'},
+        {'name' : 'French Cooking', 'category' : 'Cookbook',
+         'type' : 'Non-Fiction', 'price' : '50'},
+        {'name' : 'Sushi', 'category' : 'Cookbook',
+         'type' : 'Non-Fiction', 'price' : '30'},
+        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel',
+         'type' : 'Fiction', 'price' : '15'},
+        {'name' : 'The Lord of the Rings', 'category' : 'Novel',
+         'type' : 'Fiction', 'price' : '60'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
@@ -554,37 +562,37 @@ dimension. This feature should however be considered experimental.
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # The product dimension is in the database represented as a Snowflaked
-    # dimension, so a dimension object is created for each table
-    productTable = Dimension(
+    # dimension, so a CachedDimension object is created for each table
+    productTable = CachedDimension(
         name='product',
         key='productid',
-        attributes=['name', 'categoryid'],
+        attributes=['name', 'categoryid', 'price'],
         lookupatts=['name'])
 
-    categoryTable = Dimension(
+    categoryTable = CachedDimension(
         name='category',
         key='categoryid',
-        attributes=['category', 'priceid'],
+        attributes=['category', 'typeid'],
         lookupatts=['category'])
 
-    priceTable = Dimension(
-        name='price',
-        key='priceid',
-        attributes=['price'])
+    typeTable = CachedDimension(
+        name='type',
+        key='typeid',
+        attributes=['type'])
 
-    # A instance of SnowflakedDimension is initialised with the
-    # created dimensions as input, creating a simple interface matching a
-    # single dimension, allowing a Snowflaked dimension to be used in the same
-    # manner as a dimension represented in the database by a Star schema. The
-    # dimensions representing tables are passed in pairs based on their foreign
-    # key relations. Meaning the arguments indicate that the productTable has
-    # a foreign key relation with the categoryTable, and the categoryTable has
-    # a foreign key relation with the priceTable. If a table has multiple
-    # foreign key relations to tables in the Snowflaked dimension, a list must
-    # be passed as the second part of the tuple with a Dimension object for
-    # each table the first argument references through its foreign keys.
+    # An instance of SnowflakedDimension is initialised with the created dimensions
+    # as input, creating a simple interface matching a single dimension, allowing a
+    # Snowflaked dimension to be used in the same manner as a dimension represented
+    # in the database by a Star schema. The dimensions representing tables are
+    # passed in pairs based on their foreign key relations. Meaning the arguments
+    # indicate that the productTable has a foreign key relation with the
+    # categoryTable, and the categoryTable has a foreign key relation with the
+    # typeTable. If a table has multiple foreign key relations to tables in the
+    # Snowflaked dimension, a list must be passed as the second part of the tuple
+    # with a Dimension object for each table the first argument references through
+    # its foreign keys.
     productDimension = SnowflakedDimension(references=[(productTable, categoryTable),
-                                            (categoryTable, priceTable)])
+                                            (categoryTable, typeTable)])
 
     # Using a SnowflakedDimension is done through the same interface as the
     # Dimension class. Some methods of the SnowflakedDimension have
@@ -604,22 +612,22 @@ like in the examples shown for the other type of dimensions provided by
 pygrametl. It is instead represented as a snowflake schema where the dimension
 is split into multiple tables to achieve more normalisation and reduce
 redundancy in the dimension. To support this, a combination of
-:class:`.SnowflakedDimension` and :class:`.Dimension` is used. As multiple
-tables need to be represented, an instance of :class:`.Dimension` is created
-for each. An instance of :class:`.SnowflakedDimension` is then created to
-aggregate the created instances of :class:`.Dimension` and represent the
-Snowflaked dimension through one interface instead of manually interacting with
-each table on its own. Interacting with a Snowflaked dimension is then done
+:class:`.SnowflakedDimension` and :class:`.CachedDimension` is used. As multiple
+tables need to be represented, an instance of :class:`.CachedDimension` is
+created for each. An instance of :class:`.SnowflakedDimension` is then created
+to aggregate the created instances of :class:`.CachedDimension` and represent
+the Snowflaked dimension through one interface instead of manually interacting
+with each table on its own. Interacting with a Snowflaked dimension is then done
 through the same interface as presented by the other dimensions provided by
 pygrametl, with the caveat that some methods have side effects on the rows
-provided to :class:`.SnowflakedDimension` object, as foreign key relations
-needs to be computed based on the contents of the rows the object operates on.
+provided to :class:`.SnowflakedDimension` object, as foreign key relations needs
+to be computed based on the contents of the rows the object operates on.
 
 .. code-block:: python
 
     import psycopg2
     import pygrametl
-    from pygrametl.tables import Dimension, SnowflakedDimension, \
+    from pygrametl.tables import CachedDimension, SnowflakedDimension, \
         SlowlyChangingDimension
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
@@ -665,7 +673,7 @@ needs to be computed based on the contents of the rows the object operates on.
         toatt='validto',
         versionatt='version')
 
-    categoryTable = Dimension(
+    categoryTable = CachedDimension(
         name='category',
         key='categoryid',
         attributes=['category'])
@@ -684,9 +692,9 @@ needs to be computed based on the contents of the rows the object operates on.
 
 A :class:`.SlowlyChangingDimension` and a :class:`.SnowflakedDimension` can be
 combined if necessary, with the restriction that all slowly changing attributes
-must be placed in the root table. To do this, the :class:`.Dimension` instance
-connecting to the root table has to be changed to an instance of
+must be placed in the root table. To do this, the :class:`.CachedDimension`
+instance connecting to the root table has to be changed to an instance of
 :class:`.SlowlyChangingDimension` and the necessary attributes added to the
-database table. Afterwards :meth:`.SnowflakedDimension.scdensure` can be used
-to insert and lookup rows while ensuring that the slowly changing attributes
-are updated correctly.
+database table. Afterwards :meth:`.SnowflakedDimension.scdensure` can be used to
+insert and lookup rows while ensuring that the slowly changing attributes are
+updated correctly.

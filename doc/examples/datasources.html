@@ -1,46 +1,38 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Data sources &mdash; pygrametl 2.5 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <title>Data sources &#8212; pygrametl 2.6 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Dimensions" href="dimensions.html" />
     <link rel="prev" title="Database" href="database.html" />
  
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-30772056-2', 'auto');
+    ga('send', 'pageview');
   
-</script>
+  </script>
 
-  </head>
-  <body>
-    <div class="related">
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -55,42 +47,42 @@
         <li class="right" >
           <a href="database.html" title="Database"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="data-sources">
 <span id="datasources"></span><h1>Data sources<a class="headerlink" href="#data-sources" title="Permalink to this headline">¶</a></h1>
 <p><em>pygrametl</em> has support for numerous data sources. Data in pygrametl is moved
 around in rows, so instead of implementing a row class, pygrametl utilizes
-Python&#8217;s built in dictionaries. Each of the data sources in this class, are
+Python’s built in dictionaries. Each of the data sources in this class, are
 iterable and provide <em>dicts</em> with data values. Implementing your own data
 sources in pygrametl is easy, as the only requirement is that the data source
-is iterable, i.e. defining the <tt class="xref py py-meth docutils literal"><span class="pre">__iter__()</span></tt> method. As such, it should be
+is iterable, i.e. defining the <code class="xref py py-meth docutils literal notranslate"><span class="pre">__iter__()</span></code> method. As such, it should be
 possible to do the following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">datasource</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">datasource</span><span class="p">:</span>
     <span class="o">...</span>
 </pre></div>
 </div>
 <p>As a default, pygrametl has a number of built-in data types:</p>
 <div class="section" id="sqlsource">
 <h2>SQLSource<a class="headerlink" href="#sqlsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.SQLSource" title="pygrametl.datasources.SQLSource"><tt class="xref py py-class docutils literal"><span class="pre">SQLSource</span></tt></a> is a data source used to iterate the results of a
-single SQL query. The data source accepts only a <span class="target" id="index-0"></span><a class="pep reference external" href="http://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connection, and not
-a <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a> object. For illustrative purposes, a PostgreSQL
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.SQLSource" title="pygrametl.datasources.SQLSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLSource</span></code></a> is a data source used to iterate the results of a
+single SQL query. The data source accepts only a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connection, and not
+a <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> object. For illustrative purposes, a PostgreSQL
 connection is used here, using the Psycopg package.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">SQLSource</span>
 
-<span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s">&quot;db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s">&quot;dbuser&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&quot;dbpass&quot;</span><span class="p">)</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s2">&quot;db&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dbuser&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;dbpass&quot;</span><span class="p">)</span>
 
-<span class="n">sql</span> <span class="o">=</span> <span class="s">&quot;SELECT * FROM table;&quot;</span>
+<span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM table;&quot;</span>
 <span class="n">resultsSource</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">sql</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">resultsSource</span><span class="p">:</span>
@@ -103,36 +95,36 @@ a table.</p>
 which will be used instead of the attribute names from the table. Naturally,
 the number of supplied names must match the number of names in the query result
 from the database:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="n">newnames</span> <span class="o">=</span> <span class="s">&#39;ID&#39;</span><span class="p">,</span> <span class="s">&#39;Name&#39;</span><span class="p">,</span> <span class="s">&#39;Price&#39;</span>
+<span class="n">newnames</span> <span class="o">=</span> <span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Price&#39;</span>
 <span class="n">resultsSource</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">newnames</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The class also makes it possible to supply an SQL expression that will be
 executed before the query, through the initsql parameter. The result of the
 expression will not be returned.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
-<span class="n">sql</span> <span class="o">=</span> <span class="s">&quot;SELECT * FROM newview;&quot;</span>
+<span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM newview;&quot;</span>
 <span class="n">resultsSource</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">sql</span><span class="p">,</span> \
-    <span class="n">initsql</span><span class="o">=</span><span class="s">&quot;CREATE VIEW newview AS SELECT ID, Name FROM table WHERE Price &gt; 10;&quot;</span><span class="p">)</span>
+    <span class="n">initsql</span><span class="o">=</span><span class="s2">&quot;CREATE VIEW newview AS SELECT ID, Name FROM table WHERE Price &gt; 10;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In the previous example a new view is created, which is then used in the query.</p>
 </div>
 <div class="section" id="csvsource">
 <h2>CSVSource<a class="headerlink" href="#csvsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <tt class="xref py py-class docutils literal"><span class="pre">CSVSource</span></tt> is a data source returning the lines of a
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">CSVSource</span></code> is a data source returning the lines of a
 delimiter-separated file, turned into dictionaries. The class is fairly simple,
 and is implemented as a reference to <a class="reference external" href="http://docs.python.org/2/library/csv.html#csv.DictReader">csv.DictReader</a> in the Python
 Standard Library. An example of the usage of this class can be seen below, in
 which a file containing comma-separated values is loaded:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
 
-<span class="n">resultsSource</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;ResultsFile.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> \
-                            <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">resultsSource</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;ResultsFile.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> \
+                            <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In the above example, a CSVSource is created from a file delimited by commas,
@@ -141,42 +133,76 @@ performed better than the alternatives we evaluated it against.</p>
 </div>
 <div class="section" id="typedcsvsource">
 <h2>TypedCSVSource<a class="headerlink" href="#typedcsvsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TypedCSVSource" title="pygrametl.datasources.TypedCSVSource"><tt class="xref py py-class docutils literal"><span class="pre">TypedCSVSource</span></tt></a> extends <tt class="xref py py-class docutils literal"><span class="pre">CSVSource</span></tt> with automatic
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TypedCSVSource" title="pygrametl.datasources.TypedCSVSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypedCSVSource</span></code></a> extends <code class="xref py py-class docutils literal notranslate"><span class="pre">CSVSource</span></code> with automatic
 type casts by wrapping <a class="reference external" href="http://docs.python.org/2/library/csv.html#csv.DictReader">csv.DictReader</a>  instead of simply
 being an alias for it.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">TypedCSVSource</span>
 
-<span class="c"># ResultsFile.csv contain name, age, score</span>
+<span class="c1"># ResultsFile.csv contain name, age, score</span>
 <span class="n">resultsSource</span> <span class="o">=</span> <span class="n">TypedCSVSource</span><span class="p">(</span>
-                            <span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;ResultsFile.txt&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> \
-                            <span class="n">casts</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;age&#39;</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s">&#39;score&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">},</span> \
-                            <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+                            <span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;ResultsFile.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> \
+                            <span class="n">casts</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;age&#39;</span> <span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;score&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">},</span> \
+                            <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In the above example, a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TypedCSVSource" title="pygrametl.datasources.TypedCSVSource"><tt class="xref py py-class docutils literal"><span class="pre">TypedCSVSource</span></tt></a> is created from a file
+<p>In the above example, a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TypedCSVSource" title="pygrametl.datasources.TypedCSVSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypedCSVSource</span></code></a> is created from a file
 delimited by commas, using a buffer size of 16384. This particular buffer size
 is used as it performed better than the alternatives we evaluated it against. A
 dictionary is passed as the second providing information about what type each
 column should be cast to. A cast is not performed for the name column as
-<a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TypedCSVSource" title="pygrametl.datasources.TypedCSVSource"><tt class="xref py py-class docutils literal"><span class="pre">TypedCSVSource</span></tt></a> uses strings as the default.</p>
+<a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TypedCSVSource" title="pygrametl.datasources.TypedCSVSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypedCSVSource</span></code></a> uses strings as the default.</p>
+</div>
+<div class="section" id="pandassource">
+<h2>PandasSource<a class="headerlink" href="#pandassource" title="Permalink to this headline">¶</a></h2>
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.PandasSource" title="pygrametl.datasources.PandasSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">PandasSource</span></code></a> is a data source that returns each row of a
+Pandas DataFrame as a dictionary. The class is fairly simple, and is implemented
+as a wrapper around existing functionality provided by <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/api.html#dataframe">DataFrames</a>. An example
+of the how to use this class can be seen below. In this example some data is
+loaded from a spreadsheet, then transformed using a Pandas DataFrame, and last
+converted to an iterator of dictionaries for use with pygrametl:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">PandasSource</span>
+
+<span class="c1"># For this example the revenue of a store is kept in a spreadsheet, so</span>
+<span class="c1"># we use Pandas to load the data into a DataFrame so we can manipulate it.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;revenue.xls&#39;</span><span class="p">)</span>
+
+<span class="c1"># After constructing the DataFrame, the data can be easily transformed using</span>
+<span class="c1"># the transformation and higher-order functions implemented as part of the</span>
+<span class="c1"># DataFrame. In this example the price of each book is converted from Danish</span>
+<span class="c1"># kroner (DKK) to euros.</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="mf">7.46</span><span class="p">)</span>
+
+<span class="c1"># Afterwards, to load the DataFrame into the data warehouse, a</span>
+<span class="c1"># PandasSource is constructed which returns each row from the DataFrame as a</span>
+<span class="c1"># dictionary suitable for pygrametl to load.</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="n">PandasSource</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above example, a Pandas DataFrame is created from a spreadsheet
+containing revenue from some form of sales. Afterwards, the data of one column
+is transformed using one of the higher-order functions build into the Pandas
+library. Last, so the data can be loaded into a data warehouse using pygrametl,
+a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.PandasSource" title="pygrametl.datasources.PandasSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">PandasSource</span></code></a> is created with the DataFrame as argument, making the
+rows of the DataFrame accessible as an iterator of dict.</p>
 </div>
 <div class="section" id="mergejoiningsource">
 <h2>MergeJoiningSource<a class="headerlink" href="#mergejoiningsource" title="Permalink to this headline">¶</a></h2>
 <p>In addition to the aforementioned data sources, pygrametl also includes a
 number of ways to join and combine existing data sources.</p>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.MergeJoiningSource" title="pygrametl.datasources.MergeJoiningSource"><tt class="xref py py-class docutils literal"><span class="pre">MergeJoiningSource</span></tt></a> can be used to equijoin rows from two
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.MergeJoiningSource" title="pygrametl.datasources.MergeJoiningSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">MergeJoiningSource</span></code></a> can be used to equijoin rows from two
 data sources. The rows of the two data sources which are to be merged, must
 deliver their rows in sorted order. It is also necessary to supply the common
 attributes on which the join must be performed.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">MergeJoiningSource</span>
 
-<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;products.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.txt&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;products.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 
-<span class="n">data</span> <span class="o">=</span> <span class="n">MergeJoiningSource</span><span class="p">(</span><span class="n">src1</span><span class="o">=</span><span class="n">products</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="s">&#39;productID&#39;</span><span class="p">,</span>
-                          <span class="n">src2</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="s">&#39;productID&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">MergeJoiningSource</span><span class="p">(</span><span class="n">src1</span><span class="o">=</span><span class="n">products</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="s1">&#39;productID&#39;</span><span class="p">,</span>
+                          <span class="n">src2</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="s1">&#39;productID&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In the above example, the class is used to join two sources on a common
@@ -184,32 +210,32 @@ attribute <em>productID</em>.</p>
 </div>
 <div class="section" id="hashjoiningsource">
 <h2>HashJoiningSource<a class="headerlink" href="#hashjoiningsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.HashJoiningSource" title="pygrametl.datasources.HashJoiningSource"><tt class="xref py py-class docutils literal"><span class="pre">HashJoiningSource</span></tt></a> functions similarly to
-<a class="reference internal" href="../api/datasources.html#pygrametl.datasources.MergeJoiningSource" title="pygrametl.datasources.MergeJoiningSource"><tt class="xref py py-class docutils literal"><span class="pre">MergeJoiningSource</span></tt></a>, but performs the join using a hash map instead.
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.HashJoiningSource" title="pygrametl.datasources.HashJoiningSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashJoiningSource</span></code></a> functions similarly to
+<a class="reference internal" href="../api/datasources.html#pygrametl.datasources.MergeJoiningSource" title="pygrametl.datasources.MergeJoiningSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">MergeJoiningSource</span></code></a>, but performs the join using a hash map instead.
 As such, it is not necessary for the two input data sources to be sorted.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">HashJoiningSource</span>
 
-<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;products.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.txt&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;products.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 
-<span class="n">data</span> <span class="o">=</span> <span class="n">HashJoiningSource</span><span class="p">(</span><span class="n">src1</span><span class="o">=</span><span class="n">products</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="s">&#39;productID&#39;</span><span class="p">,</span>
-                          <span class="n">src2</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="s">&#39;productID&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">HashJoiningSource</span><span class="p">(</span><span class="n">src1</span><span class="o">=</span><span class="n">products</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="s1">&#39;productID&#39;</span><span class="p">,</span>
+                          <span class="n">src2</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="s1">&#39;productID&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="unionsource">
 <h2>UnionSource<a class="headerlink" href="#unionsource" title="Permalink to this headline">¶</a></h2>
 <p>It is also possible to union different data sources together in pygrametl. The
-class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.UnionSource" title="pygrametl.datasources.UnionSource"><tt class="xref py py-class docutils literal"><span class="pre">UnionSource</span></tt></a> creates a union of a number of supplied data
+class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.UnionSource" title="pygrametl.datasources.UnionSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnionSource</span></code></a> creates a union of a number of supplied data
 sources. The data sources do not necessarily have to contain the same types of
 rows.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">UnionSource</span>
 
-<span class="n">salesOne</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales1.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
-<span class="n">salesTwo</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales2.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
-<span class="n">salesThree</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales3.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">salesOne</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales1.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">salesTwo</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales2.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">salesThree</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales3.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
 <span class="n">combinedSales</span> <span class="o">=</span> <span class="n">UnionSource</span><span class="p">(</span><span class="n">salesOne</span><span class="p">,</span> <span class="n">salesTwo</span><span class="p">,</span> <span class="n">salesThree</span><span class="p">)</span>
 </pre></div>
@@ -220,13 +246,13 @@ first source before rows are read from the second source.</p>
 <div class="section" id="roundrobinsource">
 <h2>RoundRobinSource<a class="headerlink" href="#roundrobinsource" title="Permalink to this headline">¶</a></h2>
 <p>It can also be beneficial to interleave rows, and for this purpose
-<a class="reference internal" href="../api/datasources.html#pygrametl.datasources.RoundRobinSource" title="pygrametl.datasources.RoundRobinSource"><tt class="xref py py-class docutils literal"><span class="pre">RoundRobinSource</span></tt></a> can be used.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<a class="reference internal" href="../api/datasources.html#pygrametl.datasources.RoundRobinSource" title="pygrametl.datasources.RoundRobinSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoundRobinSource</span></code></a> can be used.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">RoundRobinSource</span>
 
-<span class="n">salesOne</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales1.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
-<span class="n">salesTwo</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales2.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
-<span class="n">salesThree</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales3.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">salesOne</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales1.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">salesTwo</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales2.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">salesThree</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales3.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
 <span class="n">combinedSales</span> <span class="o">=</span> <span class="n">RoundRobinSource</span><span class="p">((</span><span class="n">salesOne</span><span class="p">,</span> <span class="n">salesTwo</span><span class="p">,</span> <span class="n">salesThree</span><span class="p">),</span> <span class="n">batchsize</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </pre></div>
@@ -237,38 +263,38 @@ from one source before reading from the next in a round-robin fashion.</p>
 </div>
 <div class="section" id="processsource">
 <h2>ProcessSource<a class="headerlink" href="#processsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a> is used for iterating a source in a separate
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessSource</span></code></a> is used for iterating a source in a separate
 process.  A worker process is spawned, which iterates the source rows in
 batches, which are added to a queue. The sizes of the batches and the queue are
 optional parameters to the class.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">ProcessSource</span>
 
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">sales_process</span> <span class="o">=</span> <span class="n">ProcessSource</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">batchsize</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">queuesize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For more examples of the parallel features of pygrametl, refer to
-<a class="reference internal" href="parallel.html"><em>Parallel</em></a>.</p>
+<a class="reference internal" href="parallel.html"><span class="doc">Parallel</span></a>.</p>
 </div>
 <div class="section" id="filteringsource">
 <h2>FilteringSource<a class="headerlink" href="#filteringsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.FilteringSource" title="pygrametl.datasources.FilteringSource"><tt class="xref py py-class docutils literal"><span class="pre">FilteringSource</span></tt></a> is used to apply a filter to a source.  As
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.FilteringSource" title="pygrametl.datasources.FilteringSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">FilteringSource</span></code></a> is used to apply a filter to a source.  As
 a default, the built-in Python function <a class="reference external" href="http://docs.python.org/2/library/functions.html#bool">bool</a> is used, which can be
 used to remove empty rows. Alternatively, the user can supply a custom filter,
-which should be a callable function <tt class="docutils literal"><span class="pre">f(row)</span></tt>, which returns <tt class="docutils literal"><span class="pre">True</span></tt> when a
+which should be a callable function <code class="docutils literal notranslate"><span class="pre">f(row)</span></code>, which returns <code class="docutils literal notranslate"><span class="pre">True</span></code> when a
 row should be passed on.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">FilteringSource</span>
 
 <span class="k">def</span> <span class="nf">locationfilter</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;location&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;Aalborg&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Aalborg&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>
 
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">sales_filtered</span> <span class="o">=</span> <span class="n">FilteringSource</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">locationfilter</span><span class="p">)</span>
 </pre></div>
@@ -276,20 +302,37 @@ row should be passed on.</p>
 <p>In the above example, a very simple filter is used, which filters out rows
 where the value of the <em>location</em> attribute is not <em>Aalborg</em>.</p>
 </div>
+<div class="section" id="mappingsource">
+<h2>MappingSource<a class="headerlink" href="#mappingsource" title="Permalink to this headline">¶</a></h2>
+<p>The class <code class="xref py py-class docutils literal notranslate"><span class="pre">MapppingSource</span></code> can be used to apply functions to the
+columns of a source. The class can be supplied with a dictionary mapping columns
+to callable functions of the form <code class="docutils literal notranslate"><span class="pre">f(val)</span></code>, which will be applied to columns
+in an undefined order.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
+<span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">MappingSource</span>
+
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="n">sales_transformed</span> <span class="o">=</span> <span class="n">MapppingSource</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;price&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>In the above example, a function is used to cast all values of the column price
+to integer while rows are read from a .csv.</p>
+</div>
 <div class="section" id="transformingsource">
 <h2>TransformingSource<a class="headerlink" href="#transformingsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TransformingSource" title="pygrametl.datasources.TransformingSource"><tt class="xref py py-class docutils literal"><span class="pre">TransformingSource</span></tt></a> can be used to apply functions to the
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TransformingSource" title="pygrametl.datasources.TransformingSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformingSource</span></code></a> can be used to apply functions to the
 rows of a source.  The class can be supplied with a number of callable
-functions of the form <tt class="docutils literal"><span class="pre">f(row)</span></tt>, which will be applied to the source in the
+functions of the form <code class="docutils literal notranslate"><span class="pre">f(row)</span></code>, which will be applied to the source in the
 given order.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">TransformingSource</span>
 
 <span class="k">def</span> <span class="nf">dkk_to_eur</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="n">oldprice</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">])</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oldprice</span> <span class="o">/</span> <span class="mf">7.46</span>
+    <span class="n">oldprice</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">])</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">oldprice</span> <span class="o">/</span> <span class="mf">7.46</span>
 
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
 <span class="n">sales_transformed</span> <span class="o">=</span> <span class="n">TransformingSource</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">dkk_to_eur</span><span class="p">)</span>
 </pre></div>
@@ -299,24 +342,24 @@ attribute containing currency from Danish kroner (DKK) to euros</p>
 </div>
 <div class="section" id="crosstabbingsource">
 <h2>CrossTabbingSource<a class="headerlink" href="#crosstabbingsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.CrossTabbingSource" title="pygrametl.datasources.CrossTabbingSource"><tt class="xref py py-class docutils literal"><span class="pre">CrossTabbingSource</span></tt></a> can be used to compute generate a cross
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.CrossTabbingSource" title="pygrametl.datasources.CrossTabbingSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossTabbingSource</span></code></a> can be used to compute generate a cross
 tab of a data source.  The class takes as parameters the names of the
 attributes that are to appear as rows and colums in the crosstab, as well as
 the name of the attribute to aggregate.  As a default, the values are
 aggregated using <em>Sum</em>, but the class also accepts an alternate aggregator,
-which can be found in the module <a class="reference internal" href="../api/aggregators.html#module-pygrametl.aggregators" title="pygrametl.aggregators"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.aggregators</span></tt></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+which can be found in the module <a class="reference internal" href="../api/aggregators.html#module-pygrametl.aggregators" title="pygrametl.aggregators"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.aggregators</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">CrossTabbingSource</span><span class="p">,</span> <span class="n">TransformingSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.aggregators</span> <span class="kn">import</span> <span class="n">Sum</span>
 
 <span class="k">def</span> <span class="nf">price_to_integer</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">])</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">])</span>
 
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 <span class="n">sales_transformed</span> <span class="o">=</span> <span class="n">TransformingSource</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">price_to_integer</span><span class="p">)</span>
 
-<span class="n">crossTab</span> <span class="o">=</span> <span class="n">CrossTabbingSource</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">sales_transformed</span><span class="p">,</span> <span class="n">rowvaluesatt</span><span class="o">=</span><span class="s">&#39;product&#39;</span><span class="p">,</span>\
-             <span class="n">colvaluesatt</span><span class="o">=</span><span class="s">&#39;location&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s">&#39;price&#39;</span><span class="p">,</span> <span class="n">aggregator</span><span class="o">=</span><span class="n">Sum</span><span class="p">())</span>
+<span class="n">crossTab</span> <span class="o">=</span> <span class="n">CrossTabbingSource</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">sales_transformed</span><span class="p">,</span> <span class="n">rowvaluesatt</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>\
+             <span class="n">colvaluesatt</span><span class="o">=</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="n">aggregator</span><span class="o">=</span><span class="n">Sum</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>In the above example, a crosstab is made from a table containing sales data, in
@@ -326,20 +369,20 @@ from strings to integers, to allow for summation.</p>
 </div>
 <div class="section" id="dynamicforeachsource">
 <h2>DynamicForEachSource<a class="headerlink" href="#dynamicforeachsource" title="Permalink to this headline">¶</a></h2>
-<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.DynamicForEachSource" title="pygrametl.datasources.DynamicForEachSource"><tt class="xref py py-class docutils literal"><span class="pre">DynamicForEachSource</span></tt></a> is a source that for each provided
+<p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.DynamicForEachSource" title="pygrametl.datasources.DynamicForEachSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicForEachSource</span></code></a> is a source that for each provided
 source, creates a new source that will be iterated by this source.  The user
 must also provide a function that when called with a single argument, produces
 a new iterable source.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">DynamicForEachSource</span>
 
-<span class="c"># Opens a file and creates a CSVSource</span>
+<span class="c1"># Opens a file and creates a CSVSource</span>
 <span class="k">def</span> <span class="nf">createCSVSource</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
-<span class="c"># Extract all .csv file names from the folder &#39;files&#39;</span>
-<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s">&#39;files/*.csv&#39;</span><span class="p">)</span>
+<span class="c1"># Extract all .csv file names from the folder &#39;files&#39;</span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;files/*.csv&#39;</span><span class="p">)</span>
 
 <span class="n">sources</span> <span class="o">=</span> <span class="n">DynamicForEachSource</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">callee</span><span class="o">=</span><span class="n">createCSVSource</span><span class="p">)</span>
 </pre></div>
@@ -347,10 +390,10 @@ a new iterable source.</p>
 <p>In the above example, the class is used to create a number of <em>CSVSources</em> for
 each of a number of .csv files in a directory. <cite>DynamicForEachSource</cite> stores
 the input list in a safe multiprocessing queue, and as such the
-<cite>DynamicForEachSource</cite> instance can be given to several <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a>
+<cite>DynamicForEachSource</cite> instance can be given to several <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessSource</span></code></a>
 instances.</p>
 <p>For more examples of the parallel features of pygrametl, refer to
-<a class="reference internal" href="parallel.html"><em>Parallel</em></a>.</p>
+<a class="reference internal" href="parallel.html"><span class="doc">Parallel</span></a>.</p>
 </div>
 </div>
 
@@ -358,20 +401,22 @@ instances.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Data sources</a><ul>
 <li><a class="reference internal" href="#sqlsource">SQLSource</a></li>
 <li><a class="reference internal" href="#csvsource">CSVSource</a></li>
 <li><a class="reference internal" href="#typedcsvsource">TypedCSVSource</a></li>
+<li><a class="reference internal" href="#pandassource">PandasSource</a></li>
 <li><a class="reference internal" href="#mergejoiningsource">MergeJoiningSource</a></li>
 <li><a class="reference internal" href="#hashjoiningsource">HashJoiningSource</a></li>
 <li><a class="reference internal" href="#unionsource">UnionSource</a></li>
 <li><a class="reference internal" href="#roundrobinsource">RoundRobinSource</a></li>
 <li><a class="reference internal" href="#processsource">ProcessSource</a></li>
 <li><a class="reference internal" href="#filteringsource">FilteringSource</a></li>
+<li><a class="reference internal" href="#mappingsource">MappingSource</a></li>
 <li><a class="reference internal" href="#transformingsource">TransformingSource</a></li>
 <li><a class="reference internal" href="#crosstabbingsource">CrossTabbingSource</a></li>
 <li><a class="reference internal" href="#dynamicforeachsource">DynamicForEachSource</a></li>
@@ -385,29 +430,30 @@ instances.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="dimensions.html"
                         title="next chapter">Dimensions</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/datasources.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/datasources.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -422,12 +468,12 @@ instances.</p>
         <li class="right" >
           <a href="database.html" title="Database"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2016, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>

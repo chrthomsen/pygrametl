@@ -1,46 +1,38 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Bulk Loading &mdash; pygrametl 2.5 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <title>Bulk Loading &#8212; pygrametl 2.6 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Parallel" href="parallel.html" />
     <link rel="prev" title="Fact Tables" href="facttable.html" />
  
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-30772056-2', 'auto');
+    ga('send', 'pageview');
   
-</script>
+  </script>
 
-  </head>
-  <body>
-    <div class="related">
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -55,14 +47,14 @@
         <li class="right" >
           <a href="facttable.html" title="Fact Tables"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="bulk-loading">
 <span id="bulkloading"></span><h1>Bulk Loading<a class="headerlink" href="#bulk-loading" title="Permalink to this headline">¶</a></h1>
@@ -74,28 +66,28 @@ function must be created defining how to perform the bulk loading on the
 particular database. The following is a short list of example functions showing
 how simple bulk loading can be performed with some of the more widely used
 databases.</p>
-<p>Currently three classes in pygrametl use bulk loading, <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">BulkDimension</span></tt></a>,
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt></a>, and <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><tt class="xref py py-class docutils literal"><span class="pre">CachedBulkDimension</span></tt></a>, meaning that they
+<p>Currently three classes in pygrametl use bulk loading, <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a>,
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkFactTable</span></code></a>, and <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a>, meaning that they
 require the specification of a loader function. All three classes accept a
 function with the following signature to be passed as a parameter to their
 constructors.</p>
 <dl class="function">
 <dt>
-<tt class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</tt></dt>
+<code class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</code></dt>
 <dd><p>Expected signature of a bulk loader function by either classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> &#8211; The name of the table in the data warehouse.</li>
-<li><strong>attributes</strong> &#8211; A list containing the sequence of attributes in the table.</li>
-<li><strong>fieldsep</strong> &#8211; The string used to separate fields in the temporary file.</li>
-<li><strong>rowsep</strong> &#8211; The string used to separate rows in the temporary file.</li>
-<li><strong>nullval</strong> &#8211; If the class was passed a string to substitute None values with,
+<li><strong>name</strong> – The name of the table in the data warehouse.</li>
+<li><strong>attributes</strong> – A list containing the sequence of attributes in the table.</li>
+<li><strong>fieldsep</strong> – The string used to separate fields in the temporary file.</li>
+<li><strong>rowsep</strong> – The string used to separate rows in the temporary file.</li>
+<li><strong>nullval</strong> – If the class was passed a string to substitute None values with,
 then it will be passed, if not then None is passed.</li>
-<li><strong>filehandle</strong> &#8211; Either the name of the file or the file object itself,
-depending upon on the value of member <tt class="xref py py-attr docutils literal"><span class="pre">usefilename</span></tt> on the class.</li>
+<li><strong>filehandle</strong> – Either the name of the file or the file object itself,
+depending upon on the value of member <code class="xref py py-attr docutils literal notranslate"><span class="pre">usefilename</span></code> on the class.</li>
 </ul>
 </td>
 </tr>
@@ -107,7 +99,7 @@ depending upon on the value of member <tt class="xref py py-attr docutils litera
 <h2>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
 <p>For PostgreSQL we can use the <a class="reference external" href="http://initd.org/psycopg/docs/cursor.html#cursor.copy_from">copy_from</a> function from
 Psycopg</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#Psycopg</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Psycopg</span>
 <span class="k">def</span> <span class="nf">pgbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">connection</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -117,12 +109,12 @@ Psycopg</p>
 </div>
 <p>For PostgreSQL using Jython, we can use the <a class="reference external" href="https://jdbc.postgresql.org/documentation/publicapi/org/postgresql/copy/CopyManager.html">copyIn</a>
 function from the JDBC CopyManager</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#JDBC</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#JDBC</span>
 <span class="k">def</span> <span class="nf">pgcopybulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">pgconnection</span>
     <span class="n">copymgr</span> <span class="o">=</span> <span class="n">pgconnection</span><span class="o">.</span><span class="n">getCopyAPI</span><span class="p">()</span>
-    <span class="n">sql</span> <span class="o">=</span> <span class="s">&quot;COPY </span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">) FROM STDIN WITH DELIMITER &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> \
-          <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span> <span class="n">fieldsep</span><span class="p">)</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;COPY </span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">) FROM STDIN WITH DELIMITER &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> \
+          <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span> <span class="n">fieldsep</span><span class="p">)</span>
     <span class="n">copymgr</span><span class="o">.</span><span class="n">copyIn</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -131,12 +123,12 @@ function from the JDBC CopyManager</p>
 <h2>MySQL<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h2>
 <p>For MySQL we can use the <a class="reference external" href="http://dev.mysql.com/doc/refman/5.7/en/load-data.html">LOAD DATA INFILE</a> functionality
 included in the language supported by MySQL.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#MySQLdb</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#MySQLdb</span>
 <span class="k">def</span> <span class="nf">mysqlbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">connection</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="n">sql</span> <span class="o">=</span> <span class="s">&quot;LOAD DATA LOCAL INFILE &#39;</span><span class="si">%s</span><span class="s">&#39; INTO TABLE </span><span class="si">%s</span><span class="s"> FIELDS TERMINATED BY &#39;</span><span class="si">%s</span><span class="s">&#39; LINES TERMINATED BY &#39;</span><span class="si">%s</span><span class="s">&#39; (</span><span class="si">%s</span><span class="s">);&quot;</span> <span class="o">%</span> \
-            <span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attributes</span><span class="p">))</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;LOAD DATA LOCAL INFILE &#39;</span><span class="si">%s</span><span class="s2">&#39; INTO TABLE </span><span class="si">%s</span><span class="s2"> FIELDS TERMINATED BY &#39;</span><span class="si">%s</span><span class="s2">&#39; LINES TERMINATED BY &#39;</span><span class="si">%s</span><span class="s2">&#39; (</span><span class="si">%s</span><span class="s2">);&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attributes</span><span class="p">))</span>
     <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -147,11 +139,11 @@ included in the language supported by MySQL.</p>
 External Tables. The following example uses SQL Loader as it does not require
 the creation of an additional table, which becomes problematic to do in a
 program due to the need for specifying data types.</p>
-<p>SQL Loader is part of Oracle&#8217;s client package which must be installed, also
+<p>SQL Loader is part of Oracle’s client package which must be installed, also
 SQL Loader requires all configuration and data files to have specific suffixes,
 so a file must be created with the suffix .dat and passed to any bulkloading
-table as <tt class="xref py py-attr docutils literal"><span class="pre">tempdest</span></tt>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s">&quot;.dat&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dat_handle</span><span class="p">:</span>
+table as <code class="xref py py-attr docutils literal notranslate"><span class="pre">tempdest</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.dat&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dat_handle</span><span class="p">:</span>
     <span class="n">BulkDimension</span><span class="p">(</span>
         <span class="o">...</span>
         <span class="n">tempdest</span><span class="o">=</span><span class="n">dat_handle</span><span class="p">)</span>
@@ -160,30 +152,30 @@ table as <tt class="xref py py-attr docutils literal"><span class="pre">tempdest
 <p>The example below shows the bulkloading function, where the .ctl file is
 constructed based on the arguments given, and SQL Loader is executed using the
 generated .ctl file.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#cx_Oracle or JDBC</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#cx_Oracle or JDBC</span>
 <span class="k">def</span> <span class="nf">oraclebulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
 
-    <span class="c"># The configuration file used by SQL Loader must have the suffix .ctf</span>
-    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s">&quot;.ctl&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ctl_handle</span><span class="p">:</span>
+    <span class="c1"># The configuration file used by SQL Loader must have the suffix .ctf</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ctl&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ctl_handle</span><span class="p">:</span>
 
-        <span class="c"># The attributes to be loaded must be qouted using double quotes</span>
-        <span class="n">unqouted_atts</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">attributes</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">ctl_contents</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">            LOAD DATA INFILE &#39;</span><span class="si">%s</span><span class="s">&#39; &quot;str </span><span class="si">%r</span><span class="s">&quot;</span>
-<span class="s">            APPEND INTO TABLE </span><span class="si">%s</span><span class="s"></span>
-<span class="s">            FIELDS TERMINATED BY </span><span class="si">%r</span><span class="s"></span>
-<span class="s">            </span><span class="si">%s</span><span class="s"></span>
-<span class="s">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filehandle</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">unqouted_atts</span><span class="p">)</span>
+        <span class="c1"># The attributes to be loaded must be qouted using double quotes</span>
+        <span class="n">unqouted_atts</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">attributes</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">ctl_contents</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            LOAD DATA INFILE &#39;</span><span class="si">%s</span><span class="s2">&#39; &quot;str </span><span class="si">%r</span><span class="s2">&quot;</span>
+<span class="s2">            APPEND INTO TABLE </span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">            FIELDS TERMINATED BY </span><span class="si">%r</span><span class="s2"></span>
+<span class="s2">            </span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filehandle</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">unqouted_atts</span><span class="p">)</span>
 
-        <span class="c"># Strips the multi line string of unnecessary indention, and ensures</span>
-        <span class="c"># the contents are written to the file by flushing it</span>
+        <span class="c1"># Strips the multi line string of unnecessary indention, and ensures</span>
+        <span class="c1"># the contents are written to the file by flushing it</span>
         <span class="n">ctl_contents</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">ctl_handle</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
         <span class="n">ctl_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ctl_contents</span><span class="p">)</span>
         <span class="n">ctl_handle</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-        <span class="c"># Bulk loads the data using Oracle DB&#39;s SQL Loader. As a new</span>
-        <span class="c"># connection is created, the same username, passowrd etc. must be given</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;sqlldr username/password@ip:port/sid control=&quot;</span> <span class="o">+</span>
+        <span class="c1"># Bulk loads the data using Oracle DB&#39;s SQL Loader. As a new</span>
+        <span class="c1"># connection is created, the same username, passowrd etc. must be given</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;sqlldr username/password@ip:port/sid control=&quot;</span> <span class="o">+</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">ctl_handle</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -203,30 +195,30 @@ by adding a <a class="reference external" href="https://msdn.microsoft.com/en-us
 create a <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms191479.aspx">non-XML format file</a>.</p>
 <p>A simple example of bulk loading in SQL Server along with the creation of a
 format file, is seen below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sqlserverbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sqlserverbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">msconn</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">msconn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 
-    <span class="c"># Copy the tempdest</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="s">r&#39;d:\dw\tmpfilecopy&#39;</span><span class="p">)</span>
+    <span class="c1"># Copy the tempdest</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;d:\dw\tmpfilecopy&#39;</span><span class="p">)</span>
 
-    <span class="c"># Create format file</span>
-    <span class="n">fmt</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">r&#39;d:\dw\format.fmt&#39;</span><span class="p">,</span> <span class="s">&#39;w+&#39;</span><span class="p">)</span>
-    <span class="c"># 12.0 corresponds to the version of the bcp utility being used by SQL Server.</span>
-    <span class="c"># For more information, see the above link on non-XML format files.</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;12.0</span><span class="se">\r\n</span><span class="si">%d</span><span class="se">\r\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">attributes</span><span class="p">))</span>
+    <span class="c1"># Create format file</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;d:\dw\format.fmt&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
+    <span class="c1"># 12.0 corresponds to the version of the bcp utility being used by SQL Server.</span>
+    <span class="c1"># For more information, see the above link on non-XML format files.</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;12.0</span><span class="se">\r\n</span><span class="si">%d</span><span class="se">\r\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">attributes</span><span class="p">))</span>
     <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">t&quot;</span>
+    <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">t&quot;</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
         <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">attributes</span><span class="p">):</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s">n&quot;</span>
-        <span class="c"># For information regarding the format values,</span>
-        <span class="c"># see the above link on non-XML format files.</span>
-        <span class="n">fmt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s"> SQLCHAR 0 8000 &quot;</span><span class="si">%s</span><span class="s">&quot; </span><span class="si">%d</span><span class="s"> </span><span class="si">%s</span><span class="s"> &quot;Latin1_General_100_CI_AS_SC&quot;</span><span class="se">\r\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">attributes</span><span class="p">):</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span>
+        <span class="c1"># For information regarding the format values,</span>
+        <span class="c1"># see the above link on non-XML format files.</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1"> SQLCHAR 0 8000 &quot;</span><span class="si">%s</span><span class="s1">&quot; </span><span class="si">%d</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> &quot;Latin1_General_100_CI_AS_SC&quot;</span><span class="se">\r\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span>
     <span class="n">fmt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">sql</span> <span class="o">=</span> <span class="s">&quot;BULK INSERT </span><span class="si">%s</span><span class="s"> FROM &#39;</span><span class="si">%s</span><span class="s">&#39; WITH (FORMATFILE = &#39;</span><span class="si">%s</span><span class="s">&#39;, FIELDTERMINATOR = &#39;</span><span class="si">%s</span><span class="s">&#39;, ROWTERMINATOR = &#39;</span><span class="si">%s</span><span class="s">&#39;)&quot;</span> <span class="o">%</span> \
-            <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">r&#39;d:\dw\tmpfilecopy&#39;</span><span class="p">,</span> <span class="s">r&#39;d:\dw\format.fmt&#39;</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,)</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;BULK INSERT </span><span class="si">%s</span><span class="s2"> FROM &#39;</span><span class="si">%s</span><span class="s2">&#39; WITH (FORMATFILE = &#39;</span><span class="si">%s</span><span class="s2">&#39;, FIELDTERMINATOR = &#39;</span><span class="si">%s</span><span class="s2">&#39;, ROWTERMINATOR = &#39;</span><span class="si">%s</span><span class="s2">&#39;)&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;d:\dw\tmpfilecopy&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;d:\dw\format.fmt&#39;</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,)</span>
     <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -237,9 +229,9 @@ format file, is seen below:</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Bulk Loading</a><ul>
 <li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
@@ -256,29 +248,30 @@ format file, is seen below:</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="parallel.html"
                         title="next chapter">Parallel</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/bulkloading.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/bulkloading.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -293,12 +286,12 @@ format file, is seen below:</p>
         <li class="right" >
           <a href="facttable.html" title="Fact Tables"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2016, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>

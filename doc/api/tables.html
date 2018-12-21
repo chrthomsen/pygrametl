@@ -1,46 +1,38 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Tables &mdash; pygrametl 2.5 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <title>Tables &#8212; pygrametl 2.6 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Parallel" href="parallel.html" />
     <link rel="prev" title="Datasources" href="datasources.html" />
  
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-30772056-2', 'auto');
+    ga('send', 'pageview');
   
-</script>
+  </script>
 
-  </head>
-  <body>
-    <div class="related">
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -55,14 +47,14 @@
         <li class="right" >
           <a href="datasources.html" title="Datasources"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-pygrametl.tables">
 <span id="tables"></span><h1>Tables<a class="headerlink" href="#module-pygrametl.tables" title="Permalink to this headline">¶</a></h1>
@@ -71,7 +63,7 @@ and updating rows in dimensions and fact tables. Rows are represented
 as dictionaries mapping between attribute names and attribute values.</p>
 <p>Note that named arguments should be used when instantiating classes. This
 improves readability and guards against errors in case of future API changes.</p>
-<p>Many of the methods take an optional &#8216;namemapping&#8217; argument which is
+<p>Many of the methods take an optional ‘namemapping’ argument which is
 explained here, but not repeated in the documentation for the individual
 methods: Consider a method m which is given a row r and a namemapping n.
 Assume that the method m uses the attribute a in r (i.e., r[a]). If the
@@ -82,10 +74,10 @@ r[n[a]].  This is practical if attribute names in the considered rows and
 DW tables differ. If, for example, data is inserted into an order dimension
 in the DW that has the attribute order_date, but the source data uses the
 attribte name date, we can use a name mapping from order_date to date:
-dim.insert(row=..., namemapping={&#8216;order_date&#8217;:&#8217;date&#8217;})</p>
+dim.insert(row=…, namemapping={‘order_date’:’date’})</p>
 <dl class="function">
 <dt id="pygrametl.tables.definequote">
-<tt class="descclassname">pygrametl.tables.</tt><tt class="descname">definequote</tt><big>(</big><em>quotechar</em><big>)</big><a class="headerlink" href="#pygrametl.tables.definequote" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.tables.</code><code class="descname">definequote</code><span class="sig-paren">(</span><em>quotechar</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.definequote" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the global quote function, for wrapping identifiers with quotes.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -97,8 +89,8 @@ first element and append with last.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.Dimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">Dimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">Dimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class for accessing a dimension. Does no caching.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -117,7 +109,7 @@ row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
 maximum plus one.</li>
 <li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded &#8220;Unknown&#8221; member.</li>
+This should thus be the ID for a preloaded “Unknown” member.</li>
 <li>rowexpander: A function(row, namemapping) -&gt; row. This function
 is called by ensure before insertion if a lookup of the row fails.
 This is practical if expensive calculations only have to be done
@@ -132,13 +124,13 @@ the default target connection is used.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.Dimension.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.Dimension.ensure">
-<tt class="descname">ensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension.ensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup the given row. If that fails, insert it. Return the key value.</p>
 <p>If the lookup fails and a rowexpander was set when creating the
 instance, this rowexpander is called before the insert takes place.</p>
@@ -147,13 +139,13 @@ instance, this rowexpander is called before the insert takes place.</p>
 <li>row: the row to lookup or insert. Must contain the lookup
 attributes. Key is not required to be present but will be added
 using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.Dimension.getbykey">
-<tt class="descname">getbykey</tt><big>(</big><em>keyvalue</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup and return the row with the given key value.</p>
 <p>If no row is found in the dimension table, the function returns
 a row where all values (including the key) are None.</p>
@@ -161,20 +153,20 @@ a row where all values (including the key) are None.</p>
 
 <dl class="method">
 <dt id="pygrametl.tables.Dimension.getbyvals">
-<tt class="descname">getbyvals</tt><big>(</big><em>values</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension.getbyvals" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>values</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.getbyvals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all rows with values identical to the given.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>values: a dict which must hold a subset of the tables attributes.
 All rows that have identical values for all attributes in this
 dict are returned.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.Dimension.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the given row. Return the new key value.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -182,24 +174,24 @@ dict are returned.</li>
 all attributes, and is allowed to contain more attributes than
 that. Key is not required to be present but will be added using
 idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.Dimension.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the key for the row with the given values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>row: a dict which must contain at least the lookup attributes</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.Dimension.update">
-<tt class="descname">update</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.Dimension.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update a single row in the dimension table.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -207,7 +199,7 @@ idfinder if missing.</li>
 The row with this key value is updated such that it takes
 the value of row[att] for each attribute att which is also in
 row.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
@@ -215,10 +207,10 @@ row.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.CachedDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">CachedDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>size=10000</em>, <em>prefill=False</em>, <em>cachefullrows=False</em>, <em>cacheoninsert=True</em>, <em>usefetchfirst=False</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.Dimension</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">CachedDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>size=10000</em>, <em>prefill=False</em>, <em>cachefullrows=False</em>, <em>cacheoninsert=True</em>, <em>usefetchfirst=False</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.Dimension</span></code></a></p>
 <p>A class for accessing a dimension. Does caching.</p>
-<p>We assume that the DB doesn&#8217;t change or add any attribute
+<p>We assume that the DB doesn’t change or add any attribute
 values that are cached.
 For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
@@ -239,7 +231,7 @@ row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
 maximum plus one.</li>
 <li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded &#8220;Unknown&#8221; member.</li>
+This should thus be the ID for a preloaded “Unknown” member.</li>
 <li>rowexpander: A function(row, namemapping) -&gt; row. This function
 is called by ensure before insertion if a lookup of the row fails.
 This is practical if expensive calculations only have to be done
@@ -267,15 +259,21 @@ the default target connection is used.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.CachedDimension.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedDimension.lookup" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the key for the row with the given values.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>row: a dict which must contain at least the lookup attributes</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
+</ul>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.tables.BulkDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BulkDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables._BaseBulkloadable</span></tt>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.CachedDimension</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BulkDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables._BaseBulkloadable</span></code>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.CachedDimension</span></code></a></p>
 <p>A class for accessing a dimension table. Does caching and bulk loading.</p>
 <p>Unlike CachedBulkDimension, this class always caches all dimension data.</p>
 <p>The class caches all dimension members in memory. Newly inserted
@@ -283,16 +281,16 @@ dimension members are also put into the cache. The class does not
 INSERT new dimension members into the underlying database table
 immediately when insert or ensure is invoked. Instead, the class does
 bulk loading of new members. When a certain amount of new dimension
-members have been inserted (configurable through __init__&#8217;s bulksize
+members have been inserted (configurable through __init__’s bulksize
 argument), a user-provided bulkloader method is called.</p>
 <p>Calls of lookup and ensure will only use the cache and does not invoke
 any database operations. It is also possible to use the update and
 getbyvals methods, but calls of these will invoke the bulkloader first
-(and performance can degrade). If the dimension table&#8217;s full rows
-are cached (by setting __init__&#8217;s cachefullrow argument to True), a
+(and performance can degrade). If the dimension table’s full rows
+are cached (by setting __init__’s cachefullrow argument to True), a
 call of getbykey will only use the cache, but if cachefullrows==False
 (which is the default), the bulkloader is again invoked first.</p>
-<p>We assume that the DB doesn&#8217;t change or add any attribute
+<p>We assume that the DB doesn’t change or add any attribute
 values that are cached.
 For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
@@ -306,11 +304,11 @@ given in the key argument.</li>
 <li>bulkloader: A method
 m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
 is called to load data from a temporary file into the DW. The
-argument &#8220;attributes&#8221; is a list of the names of the columns to
+argument “attributes” is a list of the names of the columns to
 insert values into and show the order in which the attribute
 values appear in the temporary file.  The rest of the arguments
 are similar to those arguments with identical names that are
-described below. The argument &#8220;tempdest&#8221; can, however, be
+described below. The argument “tempdest” can, however, be
 1) a string with a filename or 2) a file object. This is
 determined by the usefilename argument (see below).</li>
 <li>lookupatts: A subset of the attributes that uniquely identify
@@ -323,7 +321,7 @@ row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
 maximum plus one.</li>
 <li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded &#8220;Unknown&#8221; member.</li>
+This should thus be the ID for a preloaded “Unknown” member.</li>
 <li>rowexpander: A function(row, namemapping) -&gt; row. This function
 is called by ensure before insertion if a lookup of the row fails.
 This is practical if expensive calculations only have to be done
@@ -337,9 +335,9 @@ done.</li>
 cached. If not, the cache only holds a mapping from
 lookupattributes to key values. Default: False.</li>
 <li>fieldsep: a string used to separate fields in the temporary
-file. Default: &#8216;\t&#8217;</li>
+file. Default: ‘\t’</li>
 <li>rowsep: a string used to separate rows in the temporary file.
-Default: &#8216;\n&#8217;</li>
+Default: ‘\n’</li>
 <li>nullsubst: an optional string used to replace None values.
 If nullsubst=None, no substitution takes place. Default: None</li>
 <li>tempdest: a file object or None. If None a named temporary file
@@ -365,7 +363,7 @@ the default target connection is used.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.BulkDimension.getbykey">
-<tt class="descname">getbykey</tt><big>(</big><em>keyvalue</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup and return the row with the given key value.</p>
 <p>If no row is found in the dimension table, the function returns
 a row where all values (including the key) are None.</p>
@@ -373,7 +371,7 @@ a row where all values (including the key) are None.</p>
 
 <dl class="method">
 <dt id="pygrametl.tables.BulkDimension.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkDimension.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the given row. Return the new key value.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -381,7 +379,7 @@ a row where all values (including the key) are None.</p>
 all attributes, and is allowed to contain more attributes than
 that. Key is not required to be present but will be added using
 idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
@@ -389,8 +387,8 @@ idfinder if missing.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.CachedBulkDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">CachedBulkDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=5000</em>, <em>cachesize=10000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables._BaseBulkloadable</span></tt>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.CachedDimension</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">CachedBulkDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=5000</em>, <em>cachesize=10000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables._BaseBulkloadable</span></code>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.CachedDimension</span></code></a></p>
 <p>A class for accessing a dimension table. Does caching and bulk loading.</p>
 <p>Unlike BulkDimension, the cache size is configurable and lookups may
 thus lead to database operations.</p>
@@ -399,15 +397,15 @@ dimension members are also put into the cache. The class does not
 INSERT new dimension members into the underlying database table
 immediately when insert or ensure is invoked. Instead, the class does
 bulk loading of new members. When a certain amount of new dimension
-members have been inserted (configurable through __init__&#8217;s bulksize
+members have been inserted (configurable through __init__’s bulksize
 argument), a user-provided bulkloader method is called.</p>
 <p>It is also possible to use the update and getbyvals methods, but calls
 of these will invoke the bulkloader first (and performance can
-degrade). If the dimension table&#8217;s full rows are cached (by setting
-__init__&#8217;s cachefullrow argument to True), a call of getbykey will only
+degrade). If the dimension table’s full rows are cached (by setting
+__init__’s cachefullrow argument to True), a call of getbykey will only
 use the cache, but if cachefullrows==False (which is the default), the
 bulkloader is again invoked first.</p>
-<p>We assume that the DB doesn&#8217;t change or add any attribute
+<p>We assume that the DB doesn’t change or add any attribute
 values that are cached.
 For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
@@ -421,11 +419,11 @@ given in the key argument.</li>
 <li>bulkloader: A method
 m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
 is called to load data from a temporary file into the DW. The
-argument &#8220;attributes&#8221; is a list of the names of the columns to
+argument “attributes” is a list of the names of the columns to
 insert values into and show the order in which the attribute
 values appear in the temporary file.  The rest of the arguments
 are similar to those arguments with identical names that are
-described below. The argument &#8220;tempdest&#8221; can, however, be
+described below. The argument “tempdest” can, however, be
 1) a string with a filename or 2) a file object. This is
 determined by the usefilename argument (see below).</li>
 <li>lookupatts: A subset of the attributes that uniquely identify
@@ -438,7 +436,7 @@ row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
 maximum plus one.</li>
 <li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded &#8220;Unknown&#8221; member.</li>
+This should thus be the ID for a preloaded “Unknown” member.</li>
 <li>rowexpander: A function(row, namemapping) -&gt; row. This function
 is called by ensure before insertion if a lookup of the row fails.
 This is practical if expensive calculations only have to be done
@@ -456,9 +454,9 @@ memory. Not all DBMSs support this clause yet. Default: False</li>
 cached. If not, the cache only holds a mapping from
 lookupattributes to key values. Default: False.</li>
 <li>fieldsep: a string used to separate fields in the temporary
-file. Default: &#8216;\t&#8217;</li>
+file. Default: ‘\t’</li>
 <li>rowsep: a string used to separate rows in the temporary file.
-Default: &#8216;\n&#8217;</li>
+Default: ‘\n’</li>
 <li>nullsubst: an optional string used to replace None values.
 If nullsubst=None, no substitution takes place. Default: None</li>
 <li>tempdest: a file object or None. If None a named temporary file
@@ -486,7 +484,7 @@ the default target connection is used.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.CachedBulkDimension.getbykey">
-<tt class="descname">getbykey</tt><big>(</big><em>keyvalue</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup and return the row with the given key value.</p>
 <p>If no row is found in the dimension table, the function returns
 a row where all values (including the key) are None.</p>
@@ -494,7 +492,7 @@ a row where all values (including the key) are None.</p>
 
 <dl class="method">
 <dt id="pygrametl.tables.CachedBulkDimension.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the given row. Return the new key value.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -502,23 +500,29 @@ a row where all values (including the key) are None.</p>
 all attributes, and is allowed to contain more attributes than
 that. Key is not required to be present but will be added using
 idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.CachedBulkDimension.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.lookup" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the key for the row with the given values.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li>row: a dict which must contain at least the lookup attributes</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
+</ul>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.tables.TypeOneSlowlyChangingDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">TypeOneSlowlyChangingDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.CachedDimension</span></tt></a></p>
-<p>A class for accessing a slowly changing dimension of &#8220;type 1&#8221;.</p>
-<p>Caching is used. We assume that the DB doesn&#8217;t change or add any
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">TypeOneSlowlyChangingDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.CachedDimension</span></code></a></p>
+<p>A class for accessing a slowly changing dimension of “type 1”.</p>
+<p>Caching is used. We assume that the DB doesn’t change or add any
 attribute values that are cached.
 For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
@@ -557,7 +561,7 @@ default target connection is used.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure">
-<tt class="descname">scdensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup or insert a version of a slowly changing dimension member.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -571,7 +575,7 @@ inserted, updates of existing rows need only contain lookupatts
 and a subset of type1atts as a missing type1atts is ignored and
 the existing value left as is in the database. Key is not required
 to be present but will be added using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
@@ -579,11 +583,11 @@ to be present but will be added using idfinder if missing.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.SlowlyChangingDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">SlowlyChangingDimension</tt><big>(</big><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>versionatt</em>, <em>fromatt=None</em>, <em>fromfinder=None</em>, <em>toatt=None</em>, <em>tofinder=None</em>, <em>minfrom=None</em>, <em>maxto=None</em>, <em>srcdateatt=None</em>, <em>srcdateparser=pygrametl.ymdparser</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>useorderby=True</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.Dimension</span></tt></a></p>
-<p>A class for accessing a slowly changing dimension of &#8220;type 2&#8221;.</p>
-<p>&#8220;Type 1&#8221; updates can also be applied for a subset of the attributes.</p>
-<p>Caching is used. We assume that the DB doesn&#8217;t change or add any
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">SlowlyChangingDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>orderingatt=None</em>, <em>versionatt=None</em>, <em>fromatt=None</em>, <em>fromfinder=None</em>, <em>toatt=None</em>, <em>tofinder=None</em>, <em>minfrom=None</em>, <em>maxto=None</em>, <em>srcdateatt=None</em>, <em>srcdateparser=pygrametl.ymdparser</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>useorderby=True</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.Dimension</span></code></a></p>
+<p>A class for accessing a slowly changing dimension of “type 2”.</p>
+<p>“Type 1” updates can also be applied for a subset of the attributes.</p>
+<p>Caching is used. We assume that the DB doesn’t change or add any
 attribute values that are cached.
 For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
@@ -598,6 +602,12 @@ fromatt, and toatt.</li>
 <li>lookupatts: a sequence with a subset of the attributes that
 uniquely identify a dimension members. These attributes are thus
 used for looking up members.</li>
+<li>orderingatt: the name of the attribute used to identify the newest
+version. The version holding the greatest value is considered to 
+be the newest. If orderingatt is None, versionatt is used. If
+versionatt is also None, toatt is used and NULL is  considered as 
+the greatest value. If orderingatt, versionatt,toatt are all None,
+an error is raised.</li>
 <li>versionatt: the name of the attribute holding the version number</li>
 <li>fromatt: the name of the attribute telling from when the version
 becomes valid. Not used if None. Default: None</li>
@@ -612,7 +622,7 @@ pygrametl.datereader(srcdateatt, srcdateparser) is used.
 In other words, if no date attribute and no special
 date function are given, new versions get the date of the current
 day. If a date attribute is given (but no date function), the
-date attribute&#8217;s value is converted (by means of srcdateparser)
+date attribute’s value is converted (by means of srcdateparser)
 and a new version gets the result of this as the date it is valid
 from. Default: None</li>
 <li>toatt: the name of the attribute telling until when the version
@@ -620,7 +630,7 @@ is valid. Not used if None. Default: None</li>
 <li>tofinder: a function(targetconnection, row, namemapping)
 returning a value for the toatt. If not set, fromfinder is used
 (note that if fromfinder is None, it is set to a default
-function &#8211; see the comments about fromfinder. The possibly
+function – see the comments about fromfinder. The possibly
 modified value is used here.) Default: None</li>
 <li>minfrom: the value to use for fromatt for the 1st version of a
 member if fromatt is not already set. If None, the value is
@@ -643,7 +653,7 @@ If None, the date fields are not compared. Default: None</li>
 format scrdateatt has) and returns a datetime.datetime.
 If srcdateatt is None, srcdateparser is not used.
 Default: pygrametl.ymdparser (i.e., the default value is a
-function that parses a string of the form &#8216;yyyy-MM-dd&#8217;)</li>
+function that parses a string of the form ‘yyyy-MM-dd’)</li>
 <li>type1atts: a sequence of attributes that should have type1 updates
 applied. Default: ()</li>
 <li>cachesize: the maximum size of the cache. 0 disables caching
@@ -669,18 +679,18 @@ significant performance improvements. Default: True</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.SlowlyChangingDimension.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the key for the newest version with the given values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>row: a dict which must contain at least the lookup attributes</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.SlowlyChangingDimension.scdensure">
-<tt class="descname">scdensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup or insert a version of a slowly changing dimension member.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -691,7 +701,7 @@ significant performance improvements. Default: True</li>
 <li>row: a dict containing the attributes for the member.
 key, versionatt, fromatt, and toatt are not required to be
 present but will be added (if defined).</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
@@ -699,8 +709,8 @@ present but will be added (if defined).</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.SnowflakedDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">SnowflakedDimension</tt><big>(</big><em>references</em>, <em>expectboguskeyvalues=False</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">SnowflakedDimension</code><span class="sig-paren">(</span><em>references</em>, <em>expectboguskeyvalues=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class for accessing a snowflaked dimension spanning several tables
 in the underlying database. Lookups and inserts are then automatically
 spread out over the relevant tables while the programmer only needs
@@ -708,9 +718,9 @@ to interact with a single SnowflakedDimension instance.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first">references: a sequence of pairs of Dimension objects
-[(a1,a2), (b1,b2), ...] meaning that a1 has a foreign key to a2
+[(a1,a2), (b1,b2), …] meaning that a1 has a foreign key to a2
 etc. a2 may itself be a sequence of Dimensions:
-[(a1, [a21, a22, ...]), (b1, [b21, b22, ...]), ...].</p>
+[(a1, [a21, a22, …]), (b1, [b21, b22, …]), …].</p>
 <p>The first element of the first pair (a1 in the example above) must
 be the dimension table representing the lowest level in the
 hierarchy (i.e., the dimension table the closest to the fact
@@ -731,13 +741,13 @@ move directly on to do an insert. Default: False</p>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.ensure">
-<tt class="descname">ensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.ensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup the given member. If that fails, insert it. Return key value.</p>
 <p>If the member must be inserted, data is automatically inserted in
 all participating tables where (part of) the member is not
@@ -750,13 +760,13 @@ afterwards.</p>
 <li>row: the row to lookup or insert. Must contain the lookup
 attributes. Key is not required to be present but will be added
 using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.getbykey">
-<tt class="descname">getbykey</tt><big>(</big><em>keyvalue</em>, <em>fullrow=False</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em>, <em>fullrow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup and return the row with the given key value.</p>
 <p>If no row is found in the dimension table, the function returns
 a row where all values (including the key) are None.</p>
@@ -772,14 +782,14 @@ the closest to the fact table) is returned. Default: False</li>
 
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.getbyvals">
-<tt class="descname">getbyvals</tt><big>(</big><em>values</em>, <em>namemapping={}</em>, <em>fullrow=False</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>values</em>, <em>namemapping={}</em>, <em>fullrow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all rows with values identical to the given.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>values: a dict which must hold a subset of the tables attributes.
 All rows that have identical values for all attributes in this
 dict are returned.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 <li>fullrow: a flag deciding if the full row (with data from
 all tables in the snowflake) should be returned. If False,
 only data from the lowest level in the hierarchy (i.e., the table
@@ -789,7 +799,7 @@ the closest to the fact table) is returned. Default: False</li>
 
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the given member. If that fails, insert it. Return key value.</p>
 <p>Data is automatically inserted in all participating tables where
 (part of) the member is not already represented. If nothing is
@@ -802,26 +812,26 @@ afterwards.</p>
 <li>row: the row to lookup or insert. Must contain the lookup
 attributes. Key is not required to be present but will be added
 using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the key for the row with the given values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>row: a dict which must contain at least the lookup attributes
 which all must come from the root (the table closest to the
 fact table).</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.scdensure">
-<tt class="descname">scdensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.scdensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup or insert a version of a slowly changing dimension member.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
@@ -837,16 +847,16 @@ root is a SlowlyChangingDimension.</p>
 <li>row: a dict containing the attributes for the member. Key is not
 required to be present but will be added using idfinder if
 missing.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.SnowflakedDimension.update">
-<tt class="descname">update</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update rows in the participating dimension tables.</p>
 <p>If the key of a participating dimension D is in the given row,
-D.update(...) is invoked.</p>
+D.update(…) is invoked.</p>
 <p>Note that this function is not good to use for updating a foreign
 key which here has the same name as the referenced primary key: The
 referenced table could then also get updated unless it is ensured
@@ -856,8 +866,8 @@ directly on the Dimensions that should be updated.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>row: a dict. If the key of a participating dimension D is in the
-dict, D.update(...) is invoked.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+dict, D.update(…) is invoked.</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
@@ -865,8 +875,8 @@ dict, D.update(...) is invoked.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.FactTable">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">FactTable</tt><big>(</big><em>name</em>, <em>keyrefs</em>, <em>measures=()</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">FactTable</code><span class="sig-paren">(</span><em>name</em>, <em>keyrefs</em>, <em>measures=()</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class for accessing a fact table in the DW.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -879,13 +889,13 @@ the default target connection is used.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.FactTable.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTable.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.FactTable.ensure">
-<tt class="descname">ensure</tt><big>(</big><em>row</em>, <em>compare=False</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTable.ensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>compare=False</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensure that a fact is present (insert it if it is not already there).</p>
 <p>Return True if a fact with identical values for keyrefs attributes
 was already present in the fact table; False if not.</p>
@@ -895,30 +905,30 @@ was already present in the fact table; False if not.</p>
 <li>compare: a flag deciding if measure vales from a fact that was
 looked up are compared to those in the given row. If True and
 differences are found, a ValueError is raised. Default: False</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.FactTable.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTable.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a fact into the fact table.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>row: a dict at least containing values for the keys and measures.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.FactTable.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>keyvalues</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTable.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>keyvalues</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup a fact from the given key values. Return key and measure vals.</p>
 <p>Return None if no fact is found.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>keyvalues: a dict at least containing values for all keys</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
@@ -926,8 +936,8 @@ differences are found, a ValueError is raised. Default: False</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.BatchFactTable">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BatchFactTable</tt><big>(</big><em>name</em>, <em>keyrefs</em>, <em>measures=()</em>, <em>batchsize=10000</em>, <em>targetconnection=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BatchFactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.FactTable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BatchFactTable</code><span class="sig-paren">(</span><em>name</em>, <em>keyrefs</em>, <em>measures=()</em>, <em>batchsize=10000</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BatchFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.FactTable</span></code></a></p>
 <p>A class for accessing a fact table in the DW. This class performs
 performs insertions in batches.</p>
 <p><strong>Arguments:</strong></p>
@@ -943,7 +953,7 @@ the default target connection is used.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.BatchFactTable.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.BatchFactTable.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BatchFactTable.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
@@ -951,8 +961,8 @@ the default target connection is used.</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.BulkFactTable">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BulkFactTable</tt><big>(</big><em>name</em>, <em>keyrefs</em>, <em>measures</em>, <em>bulkloader</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BulkFactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables._BaseBulkloadable</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BulkFactTable</code><span class="sig-paren">(</span><em>name</em>, <em>keyrefs</em>, <em>measures</em>, <em>bulkloader</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables._BaseBulkloadable</span></code></p>
 <p>Class for addition of facts to a fact table. Reads are not supported.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -963,19 +973,19 @@ primary key of the fact tables (i.e., the dimension references)</li>
 <li>bulkloader: A method
 m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
 is called to load data from a temporary file into the DW. The
-argument &#8220;attributes&#8221; is the combination of keyrefs and measures
+argument “attributes” is the combination of keyrefs and measures
 (i.e., a list of the names of the columns to insert values into)
 and show the order in which the attribute values appear in the
 temporary file.  The rest of the arguments are similar to those
 arguments with identical names that are given to
-BulkFactTable.__init__ as described here. The argument &#8220;tempdest&#8221;
+BulkFactTable.__init__ as described here. The argument “tempdest”
 can, however, be 1) a string with a filename or 2) a file
 object. This is determined by the usefilename argument to
 BulkFactTable.__init__ (see below).</li>
 <li>fieldsep: a string used to separate fields in the temporary
-file. Default: &#8216;\t&#8217;</li>
+file. Default: ‘\t’</li>
 <li>rowsep: a string used to separate rows in the temporary file.
-Default: &#8216;\n&#8217;</li>
+Default: ‘\n’</li>
 <li>nullsubst: an optional string used to replace None values.
 If nullsubst=None, no substitution takes place. Default: None</li>
 <li>tempdest: a file object or None. If None a named temporary file
@@ -1005,8 +1015,8 @@ table). Default: ()</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.SubprocessFactTable">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">SubprocessFactTable</tt><big>(</big><em>keyrefs</em>, <em>measures</em>, <em>executable</em>, <em>initcommand=None</em>, <em>endcommand=None</em>, <em>terminateafter=-1</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>buffersize=16384</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">SubprocessFactTable</code><span class="sig-paren">(</span><em>keyrefs</em>, <em>measures</em>, <em>executable</em>, <em>initcommand=None</em>, <em>endcommand=None</em>, <em>terminateafter=-1</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>buffersize=16384</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for addition of facts to a subprocess.</p>
 <p>The subprocess can, e.g., be a logger or bulkloader. Reads are not
 supported.</p>
@@ -1026,9 +1036,9 @@ after all data has been written.</li>
 is terminated after this amount of seconds after the pipe to
 the subprocess is closed.</li>
 <li>fieldsep: a string used to separate fields in the output
-sent to the subprocess. Default: &#8216;\t</li>
+sent to the subprocess. Default: ‘\t</li>
 <li>rowsep: a string used to separate rows in the output sent to the
-subprocess. Default: &#8216;\n&#8217;</li>
+subprocess. Default: ‘\n’</li>
 <li>nullsubst: an optional string used to replace None values.
 If nullsubst=None, no substitution takes place. Default: None</li>
 <li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
@@ -1037,18 +1047,18 @@ Default: pygrametl.getdbfriendlystr</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.SubprocessFactTable.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.SubprocessFactTable.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a fact into the fact table.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>row: a dict at least containing values for the keys and measures.</li>
-<li>namemapping: an optional namemapping (see module&#8217;s documentation)</li>
+<li>namemapping: an optional namemapping (see module’s documentation)</li>
 </ul>
 </dd></dl>
 
@@ -1056,11 +1066,11 @@ Default: pygrametl.getdbfriendlystr</li>
 
 <dl class="class">
 <dt id="pygrametl.tables.DecoupledDimension">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">DecoupledDimension</tt><big>(</big><em>dim</em>, <em>returnvalues=True</em>, <em>consumes=()</em>, <em>attstoconsume=()</em>, <em>batchsize=500</em>, <em>queuesize=200</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.parallel.Decoupled</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">DecoupledDimension</code><span class="sig-paren">(</span><em>dim</em>, <em>returnvalues=True</em>, <em>consumes=()</em>, <em>attstoconsume=()</em>, <em>batchsize=500</em>, <em>queuesize=200</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.parallel.Decoupled</span></code></a></p>
 <p>A Dimension-like class that enables parallelism by executing all
 operations on a given Dimension in a separate, dedicated process
-(that Dimension is said to be &#8220;decoupled&#8221;).</p>
+(that Dimension is said to be “decoupled”).</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>dim: the Dimension object to use in a separate process</li>
@@ -1086,45 +1096,45 @@ Default: 200</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke endload on the decoupled Dimension in the separate process and
 return when all waiting method calls have been executed</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.ensure">
-<tt class="descname">ensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.ensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke ensure on the decoupled Dimension in the separate process</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.getbykey">
-<tt class="descname">getbykey</tt><big>(</big><em>keyvalue</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke getbykey on the decoupled Dimension in the separate
 process</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.getbyvals">
-<tt class="descname">getbyvals</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke betbycals on the decoupled Dimension in the separate process</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke insert on the decoupled Dimension in the separate process</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke lookup on the decoupled Dimension in the separate process</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledDimension.scdensure">
-<tt class="descname">scdensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.scdensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke scdensure on the decoupled Dimension in the separate process</p>
 </dd></dl>
 
@@ -1132,11 +1142,11 @@ process</p>
 
 <dl class="class">
 <dt id="pygrametl.tables.DecoupledFactTable">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">DecoupledFactTable</tt><big>(</big><em>facttbl</em>, <em>returnvalues=True</em>, <em>consumes=()</em>, <em>attstoconsume=()</em>, <em>batchsize=500</em>, <em>queuesize=200</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.parallel.Decoupled</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">DecoupledFactTable</code><span class="sig-paren">(</span><em>facttbl</em>, <em>returnvalues=True</em>, <em>consumes=()</em>, <em>attstoconsume=()</em>, <em>batchsize=500</em>, <em>queuesize=200</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.parallel.Decoupled</span></code></a></p>
 <p>A FactTable-like class that enables parallelism by executing all
 operations on a given FactTable in a separate, dedicated process
-(that FactTable is said to be &#8220;decoupled&#8221;).</p>
+(that FactTable is said to be “decoupled”).</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li>facttbl: the FactTable object to use in a separate process</li>
@@ -1162,26 +1172,26 @@ Default: 200</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledFactTable.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke endload on the decoupled FactTable in the separate process and
 return when all waiting method calls have been executed</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledFactTable.ensure">
-<tt class="descname">ensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.ensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke ensure on the decoupled FactTable in the separate process</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledFactTable.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke insert on the decoupled FactTable in the separate process</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DecoupledFactTable.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke lookup on the decoupled FactTable in the separate process</p>
 </dd></dl>
 
@@ -1189,19 +1199,19 @@ return when all waiting method calls have been executed</p>
 
 <dl class="class">
 <dt id="pygrametl.tables.BasePartitioner">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">BasePartitioner</tt><big>(</big><em>parts</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BasePartitioner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BasePartitioner</code><span class="sig-paren">(</span><em>parts</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A base class for partitioning between several parts.</p>
 <p>See also DimensionPartitioner and FactTablePartitioner.</p>
 <dl class="method">
 <dt id="pygrametl.tables.BasePartitioner.addpart">
-<tt class="descname">addpart</tt><big>(</big><em>part</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BasePartitioner.addpart" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addpart</code><span class="sig-paren">(</span><em>part</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.addpart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.BasePartitioner.droppart">
-<tt class="descname">droppart</tt><big>(</big><em>part=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BasePartitioner.droppart" title="Permalink to this definition">¶</a></dt>
+<code class="descname">droppart</code><span class="sig-paren">(</span><em>part=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.droppart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop a part. If an argument is given, it must be a part of the
 patitioner and it will then be removed. If no argument is given,
 the first part is removed.</p>
@@ -1209,13 +1219,13 @@ the first part is removed.</p>
 
 <dl class="method">
 <dt id="pygrametl.tables.BasePartitioner.endload">
-<tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.BasePartitioner.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call endload on all parts</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.BasePartitioner.getpart">
-<tt class="descname">getpart</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.BasePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getpart</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find  the part that should handle the given row. The provided
 implementation in BasePartitioner does only use round robin
 partitioning, but subclasses apply other methods</p>
@@ -1223,7 +1233,7 @@ partitioning, but subclasses apply other methods</p>
 
 <dl class="method">
 <dt id="pygrametl.tables.BasePartitioner.parts">
-<tt class="descname">parts</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.tables.BasePartitioner.parts" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.parts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the parts the partitioner works on</p>
 </dd></dl>
 
@@ -1231,8 +1241,8 @@ partitioning, but subclasses apply other methods</p>
 
 <dl class="class">
 <dt id="pygrametl.tables.DimensionPartitioner">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">DimensionPartitioner</tt><big>(</big><em>parts</em>, <em>getbyvalsfromall=False</em>, <em>partitioner=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.BasePartitioner</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">DimensionPartitioner</code><span class="sig-paren">(</span><em>parts</em>, <em>getbyvalsfromall=False</em>, <em>partitioner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.BasePartitioner</span></code></a></p>
 <p>A Dimension-like class that handles partitioning.</p>
 <p>Partitioning is done between a number of Dimension objects called the
 parts. The class offers the interface of Dimensions (incl. scdensure
@@ -1257,50 +1267,50 @@ lookupatts and adds them together.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.ensure">
-<tt class="descname">ensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.ensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke ensure on the relevant Dimension part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.getbykey">
-<tt class="descname">getbykey</tt><big>(</big><em>keyvalue</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbykey" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke getbykey on the relevant Dimension part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.getbyvals">
-<tt class="descname">getbyvals</tt><big>(</big><em>values</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbyvals" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>values</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbyvals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke getbyvals on the first part or all parts (depending on the
-value of the instance&#8217;s getbyvalsfromall)</p>
+value of the instance’s getbyvalsfromall)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.getpart">
-<tt class="descname">getpart</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getpart" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getpart</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getpart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the part that should handle the given row</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke insert on the relevant Dimension part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke lookup on the relevant Dimension part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.scdensure">
-<tt class="descname">scdensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.scdensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.scdensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke scdensure on the relevant Dimension part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.DimensionPartitioner.update">
-<tt class="descname">update</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke update on the relevant Dimension part</p>
 </dd></dl>
 
@@ -1308,8 +1318,8 @@ value of the instance&#8217;s getbyvalsfromall)</p>
 
 <dl class="class">
 <dt id="pygrametl.tables.FactTablePartitioner">
-<em class="property">class </em><tt class="descclassname">pygrametl.tables.</tt><tt class="descname">FactTablePartitioner</tt><big>(</big><em>parts</em>, <em>partitioner=None</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><tt class="xref py py-class docutils literal"><span class="pre">pygrametl.tables.BasePartitioner</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">FactTablePartitioner</code><span class="sig-paren">(</span><em>parts</em>, <em>partitioner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.BasePartitioner</span></code></a></p>
 <p>A FactTable-like class that handles partitioning.</p>
 <p>Partitioning is done between a number of FactTable objects called the
 parts. The class offers the interface of FactTable. When a method is
@@ -1329,25 +1339,25 @@ partitioner computes the sum of all the keyrefs values.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.tables.FactTablePartitioner.ensure">
-<tt class="descname">ensure</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.ensure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke ensure on the relevant part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.FactTablePartitioner.getpart">
-<tt class="descname">getpart</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getpart</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the relevant part for the given row</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.FactTablePartitioner.insert">
-<tt class="descname">insert</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke insert on the relevant part</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.tables.FactTablePartitioner.lookup">
-<tt class="descname">lookup</tt><big>(</big><em>row</em>, <em>namemapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke lookup on the relevant part</p>
 </dd></dl>
 
@@ -1359,7 +1369,7 @@ partitioner computes the sum of all the keyrefs values.</li>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="datasources.html"
@@ -1367,29 +1377,30 @@ partitioner computes the sum of all the keyrefs values.</li>
   <h4>Next topic</h4>
   <p class="topless"><a href="parallel.html"
                         title="next chapter">Parallel</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/tables.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/tables.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1404,12 +1415,12 @@ partitioner computes the sum of all the keyrefs values.</li>
         <li class="right" >
           <a href="datasources.html" title="Datasources"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2016, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>

@@ -1,46 +1,38 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>JDBCConnectionWrapper &mdash; pygrametl 2.5 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <title>JDBCConnectionWrapper &#8212; pygrametl 2.6 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Jythonmultiprocessing" href="jythonmultiprocessing.html" />
     <link rel="prev" title="Parallel" href="parallel.html" />
  
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-30772056-2', 'auto');
+    ga('send', 'pageview');
   
-</script>
+  </script>
 
-  </head>
-  <body>
-    <div class="related">
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -55,14 +47,14 @@
         <li class="right" >
           <a href="parallel.html" title="Parallel"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-pygrametl.JDBCConnectionWrapper">
 <span id="jdbcconnectionwrapper"></span><h1>JDBCConnectionWrapper<a class="headerlink" href="#module-pygrametl.JDBCConnectionWrapper" title="Permalink to this headline">¶</a></h1>
@@ -70,8 +62,8 @@
 JDBC Connection. The module should only be used when running Jython.</p>
 <dl class="class">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper">
-<em class="property">class </em><tt class="descclassname">pygrametl.JDBCConnectionWrapper.</tt><tt class="descname">JDBCConnectionWrapper</tt><big>(</big><em>jdbcconn</em>, <em>stmtcachesize=20</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.JDBCConnectionWrapper.</code><code class="descname">JDBCConnectionWrapper</code><span class="sig-paren">(</span><em>jdbcconn</em>, <em>stmtcachesize=20</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Wrap a JDBC Connection.</p>
 <p>All Dimension and FactTable communicate with the data warehouse using
 a ConnectionWrapper. In this way, the code for loading the DW does not
@@ -88,25 +80,25 @@ open. Default: 20.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.close">
-<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.close" title="Permalink to this definition">¶</a></dt>
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the connection to the database,</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.commit">
-<tt class="descname">commit</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.commit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.commit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commit the transaction.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.cursor">
-<tt class="descname">cursor</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.cursor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cursor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.cursor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Not implemented for this JDBC connection wrapper!</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.execute">
-<tt class="descname">execute</tt><big>(</big><em>stmt</em>, <em>arguments=None</em>, <em>namemapping=None</em>, <em>ignored=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.execute" title="Permalink to this definition">¶</a></dt>
+<code class="descname">execute</code><span class="sig-paren">(</span><em>stmt</em>, <em>arguments=None</em>, <em>namemapping=None</em>, <em>ignored=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a statement.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -122,7 +114,7 @@ number of arguments as ConnectionWrapper.execute</li>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.executemany">
-<tt class="descname">executemany</tt><big>(</big><em>stmt</em>, <em>params</em>, <em>ignored=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.executemany" title="Permalink to this definition">¶</a></dt>
+<code class="descname">executemany</code><span class="sig-paren">(</span><em>stmt</em>, <em>params</em>, <em>ignored=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.executemany" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a sequence of statements.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -135,60 +127,60 @@ number of arguments as ConnectionWrapper.executemany</li>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchalltuples">
-<tt class="descname">fetchalltuples</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchalltuples" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchalltuples</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchalltuples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all result tuples</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchmanytuples">
-<tt class="descname">fetchmanytuples</tt><big>(</big><em>cnt</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchmanytuples" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchmanytuples</code><span class="sig-paren">(</span><em>cnt</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchmanytuples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return cnt result tuples.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchone">
-<tt class="descname">fetchone</tt><big>(</big><em>names=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchone</code><span class="sig-paren">(</span><em>names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one result row (i.e. dict).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchonetuple">
-<tt class="descname">fetchonetuple</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchonetuple" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchonetuple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.fetchonetuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one result tuple.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.getunderlyingmodule">
-<tt class="descname">getunderlyingmodule</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.getunderlyingmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a reference to the underlying connection&#8217;s module.</p>
+<code class="descname">getunderlyingmodule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.getunderlyingmodule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a reference to the underlying connection’s module.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.resultnames">
-<tt class="descname">resultnames</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.resultnames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resultnames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.resultnames" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rollback">
-<tt class="descname">rollback</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rollback" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rollback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rollback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rollback the transaction.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rowcount">
-<tt class="descname">rowcount</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rowcount" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rowcount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rowcount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Not implemented. Return 0. Should return the size of the result.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rowfactory">
-<tt class="descname">rowfactory</tt><big>(</big><em>names=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rowfactory" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rowfactory</code><span class="sig-paren">(</span><em>names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.rowfactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator object returning result rows (i.e. dicts).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.setasdefault">
-<tt class="descname">setasdefault</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.setasdefault" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setasdefault</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper.setasdefault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set this ConnectionWrapper as the default connection.</p>
 </dd></dl>
 
@@ -196,8 +188,8 @@ number of arguments as ConnectionWrapper.executemany</li>
 
 <dl class="class">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper">
-<em class="property">class </em><tt class="descclassname">pygrametl.JDBCConnectionWrapper.</tt><tt class="descname">BackgroundJDBCConnectionWrapper</tt><big>(</big><em>jdbcconn</em>, <em>stmtcachesize=20</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.JDBCConnectionWrapper.</code><code class="descname">BackgroundJDBCConnectionWrapper</code><span class="sig-paren">(</span><em>jdbcconn</em>, <em>stmtcachesize=20</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Wrap a JDBC Connection and do all DB communication in the background.</p>
 <p>All Dimension and FactTable communicate with the data warehouse using
 a ConnectionWrapper. In this way, the code for loading the DW does not
@@ -219,25 +211,25 @@ open. Default: 20.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.close">
-<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.close" title="Permalink to this definition">¶</a></dt>
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the connection to the database,</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.commit">
-<tt class="descname">commit</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.commit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.commit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commit the transaction.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.cursor">
-<tt class="descname">cursor</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.cursor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cursor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.cursor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Not implemented for this JDBC connection wrapper!</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.execute">
-<tt class="descname">execute</tt><big>(</big><em>stmt</em>, <em>arguments=None</em>, <em>namemapping=None</em>, <em>ignored=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.execute" title="Permalink to this definition">¶</a></dt>
+<code class="descname">execute</code><span class="sig-paren">(</span><em>stmt</em>, <em>arguments=None</em>, <em>namemapping=None</em>, <em>ignored=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a statement.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -253,7 +245,7 @@ number of arguments as ConnectionWrapper.execute</li>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.executemany">
-<tt class="descname">executemany</tt><big>(</big><em>stmt</em>, <em>params</em>, <em>ignored=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.executemany" title="Permalink to this definition">¶</a></dt>
+<code class="descname">executemany</code><span class="sig-paren">(</span><em>stmt</em>, <em>params</em>, <em>ignored=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.executemany" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a sequence of statements.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -266,60 +258,60 @@ number of arguments as ConnectionWrapper.executemany</li>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchalltuples">
-<tt class="descname">fetchalltuples</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchalltuples" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchalltuples</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchalltuples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all result tuples</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchmanytuples">
-<tt class="descname">fetchmanytuples</tt><big>(</big><em>cnt</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchmanytuples" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchmanytuples</code><span class="sig-paren">(</span><em>cnt</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchmanytuples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return cnt result tuples.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchone">
-<tt class="descname">fetchone</tt><big>(</big><em>names=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchone</code><span class="sig-paren">(</span><em>names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one result row (i.e. dict).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchonetuple">
-<tt class="descname">fetchonetuple</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchonetuple" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchonetuple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.fetchonetuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one result tuple.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.getunderlyingmodule">
-<tt class="descname">getunderlyingmodule</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.getunderlyingmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a reference to the underlying connection&#8217;s module.</p>
+<code class="descname">getunderlyingmodule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.getunderlyingmodule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a reference to the underlying connection’s module.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.resultnames">
-<tt class="descname">resultnames</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.resultnames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resultnames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.resultnames" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rollback">
-<tt class="descname">rollback</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rollback" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rollback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rollback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rollback the transaction.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rowcount">
-<tt class="descname">rowcount</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rowcount" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rowcount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rowcount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Not implemented. Return 0. Should return the size of the result.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rowfactory">
-<tt class="descname">rowfactory</tt><big>(</big><em>names=None</em><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rowfactory" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rowfactory</code><span class="sig-paren">(</span><em>names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.rowfactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator object returning result rows (i.e. dicts).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.setasdefault">
-<tt class="descname">setasdefault</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.setasdefault" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setasdefault</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper.setasdefault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set this ConnectionWrapper as the default connection.</p>
 </dd></dl>
 
@@ -331,7 +323,7 @@ number of arguments as ConnectionWrapper.executemany</li>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="parallel.html"
@@ -339,29 +331,30 @@ number of arguments as ConnectionWrapper.executemany</li>
   <h4>Next topic</h4>
   <p class="topless"><a href="jythonmultiprocessing.html"
                         title="next chapter">Jythonmultiprocessing</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/jdbcconnectionwrapper.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/jdbcconnectionwrapper.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -376,12 +369,12 @@ number of arguments as ConnectionWrapper.executemany</li>
         <li class="right" >
           <a href="parallel.html" title="Parallel"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2016, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>

@@ -2,7 +2,6 @@
 
 Data sources
 ============
-
 *pygrametl* has support for numerous data sources. Data in pygrametl is moved
 around in rows, so instead of implementing a row class, pygrametl utilizes
 Python's built in dictionaries. Each of the data sources in this class, are
@@ -20,7 +19,6 @@ As a default, pygrametl has a number of built-in data types:
 
 SQLSource
 ---------
-
 The class :class:`.SQLSource` is a data source used to iterate the results of a
 single SQL query. The data source accepts only a :PEP:`249` connection, and not
 a :class:`.ConnectionWrapper` object. For illustrative purposes, a PostgreSQL
@@ -71,7 +69,6 @@ In the previous example a new view is created, which is then used in the query.
 
 CSVSource
 ---------
-
 The class :class:`.CSVSource` is a data source returning the lines of a
 delimiter-separated file, turned into dictionaries. The class is fairly simple,
 and is implemented as a reference to `csv.DictReader
@@ -116,9 +113,45 @@ dictionary is passed as the second providing information about what type each
 column should be cast to. A cast is not performed for the name column as
 :class:`.TypedCSVSource` uses strings as the default.
 
+PandasSource
+-------------
+The class :class:`.PandasSource` is a data source that returns each row of a
+Pandas DataFrame as a dictionary. The class is fairly simple, and is implemented
+as a wrapper around existing functionality provided by `DataFrames
+<https://pandas.pydata.org/pandas-docs/stable/api.html#dataframe>`_. An example
+of the how to use this class can be seen below. In this example some data is
+loaded from a spreadsheet, then transformed using a Pandas DataFrame, and last
+converted to an iterator of dictionaries for use with pygrametl:
+
+.. code-block:: python
+
+    import pandas
+    from pygrametl.datasources import PandasSource
+
+    # For this example the revenue of a store is kept in a spreadsheet, so
+    # we use Pandas to load the data into a DataFrame so we can manipulate it.
+    df = pandas.read_excel('revenue.xls')
+
+    # After constructing the DataFrame, the data can be easily transformed using
+    # the transformation and higher-order functions implemented as part of the
+    # DataFrame. In this example the price of each book is converted from Danish
+    # kroner (DKK) to euros.
+    df['price'] = df['price'].apply(lambda p : float(p) / 7.46)
+
+    # Afterwards, to load the DataFrame into the data warehouse, a
+    # PandasSource is constructed which returns each row from the DataFrame as a
+    # dictionary suitable for pygrametl to load.
+    ps = PandasSource(df)
+
+In the above example, a Pandas DataFrame is created from a spreadsheet
+containing revenue from some form of sales. Afterwards, the data of one column
+is transformed using one of the higher-order functions build into the Pandas
+library. Last, so the data can be loaded into a data warehouse using pygrametl,
+a :class:`.PandasSource` is created with the DataFrame as argument, making the
+rows of the DataFrame accessible as an iterator of dict.
+
 MergeJoiningSource
 ------------------
-
 In addition to the aforementioned data sources, pygrametl also includes a
 number of ways to join and combine existing data sources.
 
@@ -143,7 +176,6 @@ attribute *productID*.
 
 HashJoiningSource
 -----------------
-
 The class :class:`.HashJoiningSource` functions similarly to
 :class:`.MergeJoiningSource`, but performs the join using a hash map instead.
 As such, it is not necessary for the two input data sources to be sorted.
@@ -161,7 +193,6 @@ As such, it is not necessary for the two input data sources to be sorted.
 
 UnionSource
 -----------
-
 It is also possible to union different data sources together in pygrametl. The
 class :class:`.UnionSource` creates a union of a number of supplied data
 sources. The data sources do not necessarily have to contain the same types of
@@ -183,7 +214,6 @@ first source before rows are read from the second source.
 
 RoundRobinSource
 ----------------
-
 It can also be beneficial to interleave rows, and for this purpose
 :class:`.RoundRobinSource` can be used.
 
@@ -204,7 +234,6 @@ from one source before reading from the next in a round-robin fashion.
 
 ProcessSource
 -------------
-
 The class :class:`.ProcessSource` is used for iterating a source in a separate
 process.  A worker process is spawned, which iterates the source rows in
 batches, which are added to a queue. The sizes of the batches and the queue are
@@ -224,7 +253,6 @@ For more examples of the parallel features of pygrametl, refer to
 
 FilteringSource
 ---------------
-
 The class :class:`.FilteringSource` is used to apply a filter to a source.  As
 a default, the built-in Python function `bool
 <http://docs.python.org/2/library/functions.html#bool>`_ is used, which can be
@@ -250,9 +278,27 @@ row should be passed on.
 In the above example, a very simple filter is used, which filters out rows
 where the value of the *location* attribute is not *Aalborg*.
 
+MappingSource
+------------------
+The class :class:`.MapppingSource` can be used to apply functions to the
+columns of a source. The class can be supplied with a dictionary mapping columns
+to callable functions of the form ``f(val)``, which will be applied to columns
+in an undefined order.
+
+.. code-block:: python
+
+    import pygrametl
+    from pygrametl.datasources import CSVSource, MappingSource
+
+    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter=',')
+
+    sales_transformed = MapppingSource(source=sales, {'price':int})
+
+In the above example, a function is used to cast all values of the column price
+to integer while rows are read from a .csv.
+
 TransformingSource
 ------------------
-
 The class :class:`.TransformingSource` can be used to apply functions to the
 rows of a source.  The class can be supplied with a number of callable
 functions of the form ``f(row)``, which will be applied to the source in the
@@ -276,7 +322,6 @@ attribute containing currency from Danish kroner (DKK) to euros
 
 CrossTabbingSource
 ------------------
-
 The class :class:`.CrossTabbingSource` can be used to compute generate a cross
 tab of a data source.  The class takes as parameters the names of the
 attributes that are to appear as rows and colums in the crosstab, as well as
@@ -306,7 +351,6 @@ from strings to integers, to allow for summation.
 
 DynamicForEachSource
 --------------------
-
 The class :class:`.DynamicForEachSource` is a source that for each provided
 source, creates a new source that will be iterated by this source.  The user
 must also provide a function that when called with a single argument, produces

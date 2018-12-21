@@ -1,46 +1,38 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>pygrametl &mdash; pygrametl 2.5 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <title>pygrametl &#8212; pygrametl 2.6 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Datasources" href="datasources.html" />
     <link rel="prev" title="Jython" href="../examples/jython.html" />
  
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-30772056-2', 'auto');
+    ga('send', 'pageview');
   
-</script>
+  </script>
 
-  </head>
-  <body>
-    <div class="related">
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -55,14 +47,14 @@
         <li class="right" >
           <a href="../examples/jython.html" title="Jython"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-pygrametl">
 <span id="pygrametl"></span><h1>pygrametl<a class="headerlink" href="#module-pygrametl" title="Permalink to this headline">¶</a></h1>
@@ -70,9 +62,9 @@
 <p>The package contains a number of classes for filling fact tables
 and dimensions (including snowflaked and slowly changing dimensions),
 classes for extracting data from different sources, classes for defining
-&#8216;steps&#8217; in an ETL flow, and convenient functions for often-needed ETL
+‘steps’ in an ETL flow, and convenient functions for often-needed ETL
 functionality.</p>
-<p>The package&#8217;s modules are:</p>
+<p>The package’s modules are:</p>
 <ul class="simple">
 <li>datasources for access to different data sources</li>
 <li>tables for giving easy and abstracted access to dimension and fact tables</li>
@@ -85,7 +77,7 @@ removed in first-in first-out order</li>
 </ul>
 <dl class="function">
 <dt id="pygrametl.project">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">project</tt><big>(</big><em>atts</em>, <em>row</em>, <em>renaming={}</em><big>)</big><a class="headerlink" href="#pygrametl.project" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">project</code><span class="sig-paren">(</span><em>atts</em>, <em>row</em>, <em>renaming={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new dictionary with a subset of the attributes.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -104,7 +96,7 @@ the following holds:<ul>
 
 <dl class="function">
 <dt id="pygrametl.copy">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">copy</tt><big>(</big><em>row</em>, <em>**renaming</em><big>)</big><a class="headerlink" href="#pygrametl.copy" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">copy</code><span class="sig-paren">(</span><em>row</em>, <em>**renaming</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a copy of a dictionary, but allow renamings.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -113,13 +105,13 @@ the following holds:<ul>
 newname=oldname meaning that in the result, oldname will be
 renamed to newname. The key oldname must exist in the row argument,
 but it can be assigned to several newnames in the result as in
-x=&#8217;repeated&#8217;, y=&#8217;repeated&#8217;.</li>
+x=’repeated’, y=’repeated’.</li>
 </ul>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.renamefromto">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">renamefromto</tt><big>(</big><em>row</em>, <em>renaming</em><big>)</big><a class="headerlink" href="#pygrametl.renamefromto" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">renamefromto</code><span class="sig-paren">(</span><em>row</em>, <em>renaming</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.renamefromto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rename keys in a dictionary.</p>
 <p>For each (oldname, newname) in renaming.items(): rename row[oldname] to
 row[newname].</p>
@@ -127,7 +119,7 @@ row[newname].</p>
 
 <dl class="function">
 <dt id="pygrametl.rename">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">rename</tt><big>(</big><em>row</em>, <em>renaming</em><big>)</big><a class="headerlink" href="#pygrametl.rename" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">rename</code><span class="sig-paren">(</span><em>row</em>, <em>renaming</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.rename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rename keys in a dictionary.</p>
 <p>For each (oldname, newname) in renaming.items(): rename row[oldname] to
 row[newname].</p>
@@ -135,7 +127,7 @@ row[newname].</p>
 
 <dl class="function">
 <dt id="pygrametl.renametofrom">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">renametofrom</tt><big>(</big><em>row</em>, <em>renaming</em><big>)</big><a class="headerlink" href="#pygrametl.renametofrom" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">renametofrom</code><span class="sig-paren">(</span><em>row</em>, <em>renaming</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.renametofrom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rename keys in a dictionary.</p>
 <p>For each (newname, oldname) in renaming.items(): rename row[oldname] to
 row[newname].</p>
@@ -143,51 +135,51 @@ row[newname].</p>
 
 <dl class="function">
 <dt id="pygrametl.getint">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getint</tt><big>(</big><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><big>)</big> &rarr; int(value) if possible, else default.<a class="headerlink" href="#pygrametl.getint" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getint</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; int(value) if possible, else default.<a class="headerlink" href="#pygrametl.getint" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getlong">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getlong</tt><big>(</big><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><big>)</big> &rarr; long(value) if possible, else default.<a class="headerlink" href="#pygrametl.getlong" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getlong</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; long(value) if possible, else default.<a class="headerlink" href="#pygrametl.getlong" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getfloat">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getfloat</tt><big>(</big><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><big>)</big> &rarr; float(value) if possible, else default.<a class="headerlink" href="#pygrametl.getfloat" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getfloat</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; float(value) if possible, else default.<a class="headerlink" href="#pygrametl.getfloat" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getstr">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getstr</tt><big>(</big><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><big>)</big> &rarr; str(value) if possible, else default.<a class="headerlink" href="#pygrametl.getstr" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getstr</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; str(value) if possible, else default.<a class="headerlink" href="#pygrametl.getstr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getstrippedstr">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getstrippedstr</tt><big>(</big><em>value</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#pygrametl.getstrippedstr" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getstrippedstr</code><span class="sig-paren">(</span><em>value</em>, <em>default=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getstrippedstr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert given value to a string and use .strip() on the result.</p>
 <p>If the conversion fails, the given default value is returned.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getstrornullvalue">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getstrornullvalue</tt><big>(</big><em>value</em>, <em>nullvalue='None'</em><big>)</big><a class="headerlink" href="#pygrametl.getstrornullvalue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getstrornullvalue</code><span class="sig-paren">(</span><em>value</em>, <em>nullvalue='None'</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getstrornullvalue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a given value different from None to a string.</p>
-<p>If the given value is None, nullvalue (default: &#8216;None&#8217;) is returned.</p>
+<p>If the given value is None, nullvalue (default: ‘None’) is returned.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getdbfriendlystr">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getdbfriendlystr</tt><big>(</big><em>value</em>, <em>nullvalue='None'</em><big>)</big><a class="headerlink" href="#pygrametl.getdbfriendlystr" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getdbfriendlystr</code><span class="sig-paren">(</span><em>value</em>, <em>nullvalue='None'</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getdbfriendlystr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Covert a value into a string that can be accepted by a DBMS.</p>
 <p>None values are converted into the value of the argument nullvalues
-(default: &#8216;None&#8217;). Bools are converted into &#8216;1&#8217; or &#8216;0&#8217; (instead of
-&#8216;True&#8217; or &#8216;False&#8217; as str would do). Other values are currently just
+(default: ‘None’). Bools are converted into ‘1’ or ‘0’ (instead of
+‘True’ or ‘False’ as str would do). Other values are currently just
 converted by means of str.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getbool">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getbool</tt><big>(</big><em>value</em>, <em>default=None</em>, <em>truevalues={True</em>, <em>'1'</em>, <em>'t'</em>, <em>'true'</em>, <em>'True'}</em>, <em>falsevalues={False</em>, <em>'0'</em>, <em>'f'</em>, <em>'false'</em>, <em>'False'}</em><big>)</big><a class="headerlink" href="#pygrametl.getbool" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getbool</code><span class="sig-paren">(</span><em>value</em>, <em>default=None</em>, <em>truevalues={True</em>, <em>'1'</em>, <em>'True'</em>, <em>'true'</em>, <em>'t'}</em>, <em>falsevalues={False</em>, <em>'0'</em>, <em>'False'</em>, <em>'false'</em>, <em>'f'}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getbool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a given value to True, False, or a default value.</p>
 <p>If the given value is in the given truevalues, True is returned.
 If the given value is in the given falsevalues, False is returned.
@@ -196,12 +188,12 @@ Otherwise, the default value is returned.</p>
 
 <dl class="function">
 <dt id="pygrametl.getdate">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getdate</tt><big>(</big><em>targetconnection</em>, <em>ymdstr</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#pygrametl.getdate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a string of the form &#8216;yyyy-MM-dd&#8217; to a Date object.</p>
-<p>The returned Date is in the given targetconnection&#8217;s format.</p>
+<code class="descclassname">pygrametl.</code><code class="descname">getdate</code><span class="sig-paren">(</span><em>targetconnection</em>, <em>ymdstr</em>, <em>default=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string of the form ‘yyyy-MM-dd’ to a Date object.</p>
+<p>The returned Date is in the given targetconnection’s format.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>targetconnection: a ConnectionWrapper whose underlying module&#8217;s
+<li>targetconnection: a ConnectionWrapper whose underlying module’s
 Date format is used</li>
 <li>ymdstr: the string to convert</li>
 <li>default: The value to return if the conversion fails</li>
@@ -210,12 +202,12 @@ Date format is used</li>
 
 <dl class="function">
 <dt id="pygrametl.gettimestamp">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">gettimestamp</tt><big>(</big><em>targetconnection</em>, <em>ymdhmsstr</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#pygrametl.gettimestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a string of the form &#8216;yyyy-MM-dd HH:mm:ss&#8217; to a Timestamp.</p>
-<p>The returned Timestamp is in the given targetconnection&#8217;s format.</p>
+<code class="descclassname">pygrametl.</code><code class="descname">gettimestamp</code><span class="sig-paren">(</span><em>targetconnection</em>, <em>ymdhmsstr</em>, <em>default=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.gettimestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a string of the form ‘yyyy-MM-dd HH:mm:ss’ to a Timestamp.</p>
+<p>The returned Timestamp is in the given targetconnection’s format.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>targetconnection: a ConnectionWrapper whose underlying module&#8217;s
+<li>targetconnection: a ConnectionWrapper whose underlying module’s
 Timestamp format is used</li>
 <li>ymdhmsstr: the string to convert</li>
 <li>default: The value to return if the conversion fails</li>
@@ -224,29 +216,28 @@ Timestamp format is used</li>
 
 <dl class="function">
 <dt id="pygrametl.getvalue">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getvalue</tt><big>(</big><em>row</em>, <em>name</em>, <em>mapping={}</em><big>)</big><a class="headerlink" href="#pygrametl.getvalue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getvalue</code><span class="sig-paren">(</span><em>row</em>, <em>name</em>, <em>mapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getvalue" title="Permalink to this definition">¶</a></dt>
 <dd><p>If name in mapping, return row[mapping[name]], else return row[name].</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getvalueor">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getvalueor</tt><big>(</big><em>row</em>, <em>name</em>, <em>mapping={}</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#pygrametl.getvalueor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getvalueor</code><span class="sig-paren">(</span><em>row</em>, <em>name</em>, <em>mapping={}</em>, <em>default=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getvalueor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the value of name from row using a mapping and a default value.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.setdefaults">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">setdefaults</tt><big>(</big><em>row</em>, <em>attributes</em>, <em>defaults=None</em><big>)</big><a class="headerlink" href="#pygrametl.setdefaults" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">setdefaults</code><span class="sig-paren">(</span><em>row</em>, <em>attributes</em>, <em>defaults=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.setdefaults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set default values for attributes not present in a dictionary.</p>
-<p>Default values are set for &#8220;missing&#8221; values, existing values are not
+<p>Default values are set for “missing” values, existing values are not
 updated.</p>
 <p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first">row is the dictionary to set default values in</p>
-</li>
+<ul class="simple">
+<li>row is the dictionary to set default values in</li>
 <li><dl class="first docutils">
 <dt>attributes is either</dt>
-<dd><ol class="first last upperalpha simple">
+<dd><ol class="first last upperalpha">
 <li>a sequence of attribute names in which case defaults must
 be an equally long sequence of these attributes default values or</li>
 <li>a sequence of pairs of the form (attribute, defaultvalue) in
@@ -255,19 +246,18 @@ which case the defaults argument should be None</li>
 </dd>
 </dl>
 </li>
-<li><p class="first">defaults is a sequence of default values (see above)</p>
-</li>
+<li>defaults is a sequence of default values (see above)</li>
 </ul>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.rowfactory">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">rowfactory</tt><big>(</big><em>source</em>, <em>names</em>, <em>close=True</em><big>)</big><a class="headerlink" href="#pygrametl.rowfactory" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">rowfactory</code><span class="sig-paren">(</span><em>source</em>, <em>names</em>, <em>close=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.rowfactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate dicts with key values from names and data values from source.</p>
 <p>The given source should provide A) fetchmany returning the next set of
 rows, B) next() or fetchone() returning a tuple, or C) fetchall()
 returning a sequence of tuples. For each tuple, a dict is constructed
-such that the i&#8217;th element in names maps to the i&#8217;th value in the
+such that the i’th element in names maps to the i’th value in the
 tuple.</p>
 <p>If close=True (the default), close will be called on source after
 fetching all tuples.</p>
@@ -275,39 +265,39 @@ fetching all tuples.</p>
 
 <dl class="function">
 <dt id="pygrametl.endload">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">endload</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.endload" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Signal to all Dimension and FactTable objects that all data is loaded.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.today">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">today</tt><big>(</big><em>ignoredtargetconn=None</em>, <em>ignoredrow=None</em>, <em>ignorednamemapping=None</em><big>)</big><a class="headerlink" href="#pygrametl.today" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">today</code><span class="sig-paren">(</span><em>ignoredtargetconn=None</em>, <em>ignoredrow=None</em>, <em>ignorednamemapping=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.today" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the date of the first call this method as a datetime.date object.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.now">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">now</tt><big>(</big><em>ignoredtargetconn=None</em>, <em>ignoredrow=None</em>, <em>ignorednamemapping=None</em><big>)</big><a class="headerlink" href="#pygrametl.now" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">now</code><span class="sig-paren">(</span><em>ignoredtargetconn=None</em>, <em>ignoredrow=None</em>, <em>ignorednamemapping=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.now" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the time of the first call this method as a datetime.datetime.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.ymdparser">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">ymdparser</tt><big>(</big><em>ymdstr</em><big>)</big><a class="headerlink" href="#pygrametl.ymdparser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a string of the form &#8216;yyyy-MM-dd&#8217; to a datetime.date.</p>
+<code class="descclassname">pygrametl.</code><code class="descname">ymdparser</code><span class="sig-paren">(</span><em>ymdstr</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ymdparser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string of the form ‘yyyy-MM-dd’ to a datetime.date.</p>
 <p>If the input is None, the return value is also None.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.ymdhmsparser">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">ymdhmsparser</tt><big>(</big><em>ymdhmsstr</em><big>)</big><a class="headerlink" href="#pygrametl.ymdhmsparser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a string &#8216;yyyy-MM-dd HH:mm:ss&#8217; to a datetime.datetime.</p>
+<code class="descclassname">pygrametl.</code><code class="descname">ymdhmsparser</code><span class="sig-paren">(</span><em>ymdhmsstr</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ymdhmsparser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string ‘yyyy-MM-dd HH:mm:ss’ to a datetime.datetime.</p>
 <p>If the input is None, the return value is also None.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.datereader">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">datereader</tt><big>(</big><em>dateattribute</em>, <em>parsingfunction=ymdparser</em><big>)</big><a class="headerlink" href="#pygrametl.datereader" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">datereader</code><span class="sig-paren">(</span><em>dateattribute</em>, <em>parsingfunction=ymdparser</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datereader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a function that converts a certain dict member to a datetime.date</p>
 <p>When setting, fromfinder for a tables.SlowlyChangingDimension, this
 method can be used for generating a function that picks the relevant
@@ -322,7 +312,7 @@ to a datetime.date</li>
 
 <dl class="function">
 <dt id="pygrametl.datetimereader">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">datetimereader</tt><big>(</big><em>datetimeattribute</em>, <em>parsingfunction=ymdhmsparser</em><big>)</big><a class="headerlink" href="#pygrametl.datetimereader" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">datetimereader</code><span class="sig-paren">(</span><em>datetimeattribute</em>, <em>parsingfunction=ymdhmsparser</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datetimereader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a function that converts a certain dict member to a datetime</p>
 <p>When setting, fromfinder for a tables.SlowlyChangingDimension, this
 method can be used for generating a function that picks the relevant
@@ -337,7 +327,7 @@ to a datetime.datetime</li>
 
 <dl class="function">
 <dt id="pygrametl.datespan">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">datespan</tt><big>(</big><em>fromdate</em>, <em>todate</em>, <em>fromdateincl=True</em>, <em>todateincl=True</em>, <em>key='dateid'</em>, <em>strings={'monthname': '%B'</em>, <em>'date': '%Y-%m-%d'</em>, <em>'weekday': '%A'}</em>, <em>ints={'year': '%Y'</em>, <em>'month': '%m'</em>, <em>'day': '%d'}</em>, <em>expander=None</em><big>)</big><a class="headerlink" href="#pygrametl.datespan" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">datespan</code><span class="sig-paren">(</span><em>fromdate</em>, <em>todate</em>, <em>fromdateincl=True</em>, <em>todateincl=True</em>, <em>key='dateid'</em>, <em>strings={'date': '%Y-%m-%d'</em>, <em>'monthname': '%B'</em>, <em>'weekday': '%A'}</em>, <em>ints={'day': '%d'</em>, <em>'month': '%m'</em>, <em>'year': '%Y'}</em>, <em>expander=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.datespan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator yielding dicts for all dates in an interval.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -348,15 +338,15 @@ datetime.date or a YYYY-MM-DD formatted string.</li>
 <li>fromdateincl: Decides if fromdate is included. Default: True</li>
 <li>todateincl: Decides if todate is included. Default: True</li>
 <li>key: The name of the attribute where an int (YYYYMMDD) that uniquely
-identifies the date is stored. Default: &#8216;dateid&#8217;.</li>
+identifies the date is stored. Default: ‘dateid’.</li>
 <li>strings: A dict mapping attribute names to formatting directives (as
 those used by strftime). The returned dicts will have the specified
 attributes as strings.
-Default: {&#8216;date&#8217;:&#8217;%Y-%m-%d&#8217;, &#8216;monthname&#8217;:&#8217;%B&#8217;, &#8216;weekday&#8217;:&#8217;%A&#8217;}</li>
+Default: {‘date’:’%Y-%m-%d’, ‘monthname’:’%B’, ‘weekday’:’%A’}</li>
 <li>ints: A dict mapping attribute names to formatting directives (as
 those used by strftime). The returned dicts will have the specified
 attributes as ints.
-Default: {&#8216;year&#8217;:&#8217;%Y&#8217;, &#8216;month&#8217;:&#8217;%m&#8217;, &#8216;day&#8217;:&#8217;%d&#8217;}</li>
+Default: {‘year’:’%Y’, ‘month’:’%m’, ‘day’:’%d’}</li>
 <li>expander: A callable f(date, dict) that is invoked on each created
 dict. Not invoked if None. Default: None</li>
 </ul>
@@ -364,42 +354,42 @@ dict. Not invoked if None. Default: None</li>
 
 <dl class="function">
 <dt id="pygrametl.toupper">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">toupper</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#pygrametl.toupper" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">toupper</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.toupper" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.tolower">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">tolower</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#pygrametl.tolower" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">tolower</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tolower" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.keepasis">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">keepasis</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#pygrametl.keepasis" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">keepasis</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.keepasis" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="pygrametl.getdefaulttargetconnection">
-<tt class="descclassname">pygrametl.</tt><tt class="descname">getdefaulttargetconnection</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.getdefaulttargetconnection" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pygrametl.</code><code class="descname">getdefaulttargetconnection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getdefaulttargetconnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the default target connection</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="pygrametl.ConnectionWrapper">
-<em class="property">class </em><tt class="descclassname">pygrametl.</tt><tt class="descname">ConnectionWrapper</tt><big>(</big><em>connection</em>, <em>stmtcachesize=1000</em>, <em>paramstyle=None</em><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<em class="property">class </em><code class="descclassname">pygrametl.</code><code class="descname">ConnectionWrapper</code><span class="sig-paren">(</span><em>connection</em>, <em>stmtcachesize=1000</em>, <em>paramstyle=None</em>, <em>copyintonew=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Provide a uniform representation of different database connection types.</p>
 <p>All Dimensions and FactTables communicate with the data warehouse using
 a ConnectionWrapper. In this way, the code for loading the DW does not
 have to care about which parameter format is used.</p>
-<p>pygrametl&#8217;s code uses the &#8216;pyformat&#8217; but the ConnectionWrapper performs
-translations of the SQL to use &#8216;named&#8217;, &#8216;qmark&#8217;, &#8216;format&#8217;, or &#8216;numeric&#8217;
-if the user&#8217;s database connection needs this. Note that the
+<p>pygrametl’s code uses the ‘pyformat’ but the ConnectionWrapper performs
+translations of the SQL to use ‘named’, ‘qmark’, ‘format’, or ‘numeric’
+if the user’s database connection needs this. Note that the
 translations are simple and naive. Escaping as in %%(name)s is not
 taken into consideration. These simple translations are enough for
-pygrametl&#8217;s code which is the important thing here; we&#8217;re not trying to
+pygrametl’s code which is the important thing here; we’re not trying to
 make a generic, all-purpose tool to get rid of the problems with
 different parameter formats. It is, however, possible to disable the
-translation of a statement to execute such that &#8216;problematic&#8217;
+translation of a statement to execute such that ‘problematic’
 statements can be executed anyway.</p>
 <p>Create a ConnectionWrapper around the given PEP 249 connection</p>
 <p>If no default ConnectionWrapper already exists, the new
@@ -409,34 +399,37 @@ ConnectionWrapper is set as the default.</p>
 <li>connection: An open PEP 249 connection to the database</li>
 <li>stmtcachesize: A number deciding how many translated statements to
 cache. A statement needs to be translated when the connection
-does not use &#8216;pyformat&#8217; to specify parameters. When &#8216;pyformat&#8217; is
-used, stmtcachesize is ignored as no statements need to be
-translated.</li>
-<li>paramstyle: A string holding the name of the PEP 249 connection&#8217;s
+does not use ‘pyformat’ to specify parameters. When ‘pyformat’ is
+used and copyintonew == False, stmtcachesize is ignored as no 
+statements need to be translated.</li>
+<li>paramstyle: A string holding the name of the PEP 249 connection’s
 paramstyle. If None, pygrametl will try to find the paramstyle
 automatically (an AttributeError can be raised if that fails).</li>
+<li>copyintonew: A boolean deciding if a new mapping only holding the
+needed arguments should be created when a statement is executed.
+Some drivers require this.</li>
 </ul>
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.close">
-<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.close" title="Permalink to this definition">¶</a></dt>
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the connection to the database,</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.commit">
-<tt class="descname">commit</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.commit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.commit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commit the transaction.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.cursor">
-<tt class="descname">cursor</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.cursor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cursor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.cursor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a cursor object. Optional method.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.execute">
-<tt class="descname">execute</tt><big>(</big><em>stmt</em>, <em>arguments=None</em>, <em>namemapping=None</em>, <em>translate=True</em><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.execute" title="Permalink to this definition">¶</a></dt>
+<code class="descname">execute</code><span class="sig-paren">(</span><em>stmt</em>, <em>arguments=None</em>, <em>namemapping=None</em>, <em>translate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a statement.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -445,76 +438,76 @@ automatically (an AttributeError can be raised if that fails).</li>
 <li>namemapping: a mapping of names such that if stmt uses %(arg)s
 and namemapping[arg]=arg2, the value arguments[arg2] is used
 instead of arguments[arg]</li>
-<li>translate: decides if translation from &#8216;pyformat&#8217; to the
-undlying connection&#8217;s format should take place. Default: True</li>
+<li>translate: decides if translation from ‘pyformat’ to the
+undlying connection’s format should take place. Default: True</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.executemany">
-<tt class="descname">executemany</tt><big>(</big><em>stmt</em>, <em>params</em>, <em>translate=True</em><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.executemany" title="Permalink to this definition">¶</a></dt>
+<code class="descname">executemany</code><span class="sig-paren">(</span><em>stmt</em>, <em>params</em>, <em>translate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.executemany" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a sequence of statements.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.fetchalltuples">
-<tt class="descname">fetchalltuples</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchalltuples" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchalltuples</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchalltuples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all result tuples</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.fetchmanytuples">
-<tt class="descname">fetchmanytuples</tt><big>(</big><em>cnt</em><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchmanytuples" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchmanytuples</code><span class="sig-paren">(</span><em>cnt</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchmanytuples" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return cnt result tuples.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.fetchone">
-<tt class="descname">fetchone</tt><big>(</big><em>names=None</em><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchone</code><span class="sig-paren">(</span><em>names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one result row (i.e. dict).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.fetchonetuple">
-<tt class="descname">fetchonetuple</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchonetuple" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fetchonetuple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.fetchonetuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return one result tuple.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.getunderlyingmodule">
-<tt class="descname">getunderlyingmodule</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.getunderlyingmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a reference to the underlying connection&#8217;s module.</p>
-<p>This is done by considering the connection&#8217;s __class__&#8217;s __module__
-string from right to left (e.g., &#8216;a.b.c&#8217;, &#8216;a.b&#8217;, &#8216;a&#8217;) and looking
-for the attributes &#8216;paramstyle&#8217; and &#8216;connect&#8217; in the possible modules</p>
+<code class="descname">getunderlyingmodule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.getunderlyingmodule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a reference to the underlying connection’s module.</p>
+<p>This is done by considering the connection’s __class__’s __module__
+string from right to left (e.g., ‘a.b.c’, ‘a.b’, ‘a’) and looking
+for the attributes ‘paramstyle’ and ‘connect’ in the possible modules</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.resultnames">
-<tt class="descname">resultnames</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.resultnames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">resultnames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.resultnames" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.rollback">
-<tt class="descname">rollback</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.rollback" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rollback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.rollback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rollback the transaction.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.rowcount">
-<tt class="descname">rowcount</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.rowcount" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rowcount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.rowcount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the size of the result.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.rowfactory">
-<tt class="descname">rowfactory</tt><big>(</big><em>names=None</em><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.rowfactory" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rowfactory</code><span class="sig-paren">(</span><em>names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.rowfactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator object returning result rows (i.e. dicts).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pygrametl.ConnectionWrapper.setasdefault">
-<tt class="descname">setasdefault</tt><big>(</big><big>)</big><a class="headerlink" href="#pygrametl.ConnectionWrapper.setasdefault" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setasdefault</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ConnectionWrapper.setasdefault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set this ConnectionWrapper as the default connection.</p>
 </dd></dl>
 
@@ -526,7 +519,7 @@ for the attributes &#8216;paramstyle&#8217; and &#8216;connect&#8217; in the pos
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="../examples/jython.html"
@@ -534,29 +527,30 @@ for the attributes &#8216;paramstyle&#8217; and &#8216;connect&#8217; in the pos
   <h4>Next topic</h4>
   <p class="topless"><a href="datasources.html"
                         title="next chapter">Datasources</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/pygrametl.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/pygrametl.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -571,12 +565,12 @@ for the attributes &#8216;paramstyle&#8217; and &#8216;connect&#8217; in the pos
         <li class="right" >
           <a href="../examples/jython.html" title="Jython"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2016, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>

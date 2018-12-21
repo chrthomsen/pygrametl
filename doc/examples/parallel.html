@@ -1,46 +1,38 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Parallel &mdash; pygrametl 2.5 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <title>Parallel &#8212; pygrametl 2.6 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Jython" href="jython.html" />
     <link rel="prev" title="Bulk Loading" href="bulkloading.html" />
  
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-30772056-2', 'auto');
+    ga('send', 'pageview');
   
-</script>
+  </script>
 
-  </head>
-  <body>
-    <div class="related">
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -55,115 +47,115 @@
         <li class="right" >
           <a href="bulkloading.html" title="Bulk Loading"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="parallel">
 <span id="id1"></span><h1>Parallel<a class="headerlink" href="#parallel" title="Permalink to this headline">¶</a></h1>
 <p><em>pygrametl</em> contains multiple abstractions to simplify the creation of parallel
 ETL flow, in order to take advantage of modern multi-core and multi-processor
-systems. Firstly, any <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><tt class="xref py py-mod docutils literal"><span class="pre">datasources</span></tt></a> can be read in a separate process
-using <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a>. Further parallelism can be archived by
+systems. Firstly, any <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><code class="xref py py-mod docutils literal notranslate"><span class="pre">datasources</span></code></a> can be read in a separate process
+using <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessSource</span></code></a>. Further parallelism can be archived by
 decoupling tables from the main process of execution, and allowing these
 decoupled tables to communicate with each other without interrupting the main
 process. Tables can also be partitioned so operations on large tables can be
 performed by multiple processes. Both decoupled tables and partitioning tables
-can be found in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">tables</span></tt></a> module. To support database connections from
-multiple decoupled tables the <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a>, or
-<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">JDBCConnectionWrapper</span></tt></a> must be used, wrapped by the function
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><tt class="xref py py-func docutils literal"><span class="pre">shareconnectionwrapper()</span></tt></a> to prevent inconsistencies when used by
+can be found in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tables</span></code></a> module. To support database connections from
+multiple decoupled tables the <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a>, or
+<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper</span></code></a> must be used, wrapped by the function
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">shareconnectionwrapper()</span></code></a> to prevent inconsistencies when used by
 multiple decoupled tables.</p>
 <p>pygrametl also provides abstractions for running functions in parallel.  The
-decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><tt class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></tt></a> can be used to annotate functions which should
+decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">splitpoint()</span></code></a> can be used to annotate functions which should
 run in a separate process. This supplements the decoupled tables, as many
 transformation are done in a set of functions before they are inserted into a
 database table. Splitpoints can be synchronised using the function
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><tt class="xref py py-func docutils literal"><span class="pre">endsplits()</span></tt></a>. The function <tt class="xref py py-func docutils literal"><span class="pre">createflow()</span></tt> can be used to create a
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><code class="xref py py-func docutils literal notranslate"><span class="pre">endsplits()</span></code></a>. The function <code class="xref py py-func docutils literal notranslate"><span class="pre">createflow()</span></code> can be used to create a
 sequence of functions that run in a separate process. In a flow a row is given
 to first function, then the second, and so forth. This also means changes to
 the passed row is done using side effects while the return values are ignored.</p>
-<p>Due to CPython&#8217;s <a class="reference external" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL</a>,
+<p>Due to CPython’s <a class="reference external" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL</a>,
 Jython should be used rather than CPython, as it allows threads to be used
 instead of processes for performing operations in parallel. The term process is
 used to denote both a process and a thread, depending on the Python
 implementation in question. For more information on using pygrametl on
-Jython, see <a class="reference internal" href="jython.html#jython"><em>Jython</em></a>.</p>
+Jython, see <a class="reference internal" href="jython.html#jython"><span class="std std-ref">Jython</span></a>.</p>
 <div class="section" id="processsource">
 <h2>ProcessSource<a class="headerlink" href="#processsource" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a> is a special data source allowing other data sources to
+<p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessSource</span></code></a> is a special data source allowing other data sources to
 be iterated through in a separate process. A data source in pygrametl is a
 set of abstraction allowing access to multiple types of data through a normal
 Python iterator, for more information about data sources in general see
-<a class="reference internal" href="datasources.html#datasources"><em>Data sources</em></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<a class="reference internal" href="datasources.html#datasources"><span class="std std-ref">Data sources</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span><span class="p">,</span> <span class="n">CachedDimension</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">ProcessSource</span><span class="p">,</span> \
         <span class="n">TransformingSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 
-<span class="c"># JDBC and Jython is used as threads can allow for better performance</span>
+<span class="c1"># JDBC and Jython is used as threads can allow for better performance</span>
 <span class="kn">import</span> <span class="nn">java.sql.DriverManager</span>
 <span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span> \
-    <span class="p">(</span><span class="s">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">JDBCConnectionWrapper</span><span class="p">(</span><span class="n">jdbcconn</span><span class="o">=</span><span class="n">jconn</span><span class="p">)</span>
 
 <span class="n">factTable</span> <span class="o">=</span> <span class="n">FactTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;facttable&#39;</span><span class="p">,</span>
-    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sales&#39;</span><span class="p">],</span>
-    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">,</span> <span class="s">&#39;productid&#39;</span><span class="p">,</span> <span class="s">&#39;dateid&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;facttable&#39;</span><span class="p">,</span>
+    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sales&#39;</span><span class="p">],</span>
+    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">,</span> <span class="s1">&#39;productid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateid&#39;</span><span class="p">])</span>
 
 <span class="n">productTable</span> <span class="o">=</span> <span class="n">CachedDimension</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s">&#39;product&#39;</span><span class="p">,</span>
-        <span class="n">key</span><span class="o">=</span><span class="s">&#39;productid&#39;</span><span class="p">,</span>
-        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">,</span> <span class="s">&#39;price&#39;</span><span class="p">],</span>
-        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">])</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
+        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">])</span>
 
-<span class="c"># A set of &quot;computational expensive&quot; functions are needed to</span>
-<span class="c"># transform the facts before they can be inserted into the fact table.</span>
-<span class="c"># Each function must be defined as func(row) for them to be bundled as a</span>
-<span class="c"># TransformationSource and performed in a separate process through the</span>
-<span class="c"># data source ProcessSource</span>
+<span class="c1"># A set of &quot;computational expensive&quot; functions are needed to</span>
+<span class="c1"># transform the facts before they can be inserted into the fact table.</span>
+<span class="c1"># Each function must be defined as func(row) for them to be bundled as a</span>
+<span class="c1"># TransformationSource and performed in a separate process through the</span>
+<span class="c1"># data source ProcessSource</span>
 <span class="k">def</span> <span class="nf">convertReals</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="c"># Converting a string encoding of a float to a integer must be done in</span>
-    <span class="c"># two steps, first it must be converted to a float and then to a integer</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;sales&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;sales&#39;</span><span class="p">]))</span>
+    <span class="c1"># Converting a string encoding of a float to a integer must be done in</span>
+    <span class="c1"># two steps, first it must be converted to a float and then to a integer</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;sales&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;sales&#39;</span><span class="p">]))</span>
 
 <span class="k">def</span> <span class="nf">trimProductname</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-<span class="c"># In the transformation we use three data sources to retrieve rows from</span>
-<span class="c"># sales.csv, first CSVSource to read the csv file, then</span>
-<span class="c"># TransformationSource to transform the rows, and lastly ProcessSource to</span>
-<span class="c"># do both the reading and transformation in a separate threads</span>
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="c1"># In the transformation we use three data sources to retrieve rows from</span>
+<span class="c1"># sales.csv, first CSVSource to read the csv file, then</span>
+<span class="c1"># TransformationSource to transform the rows, and lastly ProcessSource to</span>
+<span class="c1"># do both the reading and transformation in a separate threads</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 <span class="n">transSales</span> <span class="o">=</span> <span class="n">TransformingSource</span><span class="p">(</span><span class="n">sales</span><span class="p">,</span> <span class="n">convertReals</span><span class="p">,</span> <span class="n">trimProductname</span><span class="p">)</span>
 <span class="n">salesProcess</span> <span class="o">=</span> <span class="n">ProcessSource</span><span class="p">(</span><span class="n">transSales</span><span class="p">)</span>
 
-<span class="c"># While the list of sales are being read and transformed by the spawned</span>
-<span class="c"># process, the main process is occupied with pre loading the products</span>
-<span class="c"># dimension with data from the products csv file</span>
-<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;product.csv&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="c1"># While the list of sales are being read and transformed by the spawned</span>
+<span class="c1"># process, the main process is occupied with pre loading the products</span>
+<span class="c1"># dimension with data from the products csv file</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;product.csv&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
     <span class="n">productTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c"># After the ProcessSource have read rows from the data source provided can</span>
-<span class="c"># they be accessed through a iterator as any other data source</span>
+<span class="c1"># After the ProcessSource have read rows from the data source provided can</span>
+<span class="c1"># they be accessed through a iterator as any other data source</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">salesProcess</span><span class="p">:</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productTable</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productTable</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
     <span class="n">factTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Here we use a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a> to transform a set of rows from the
+<p>Here we use a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessSource</span></code></a> to transform a set of rows from the
 <em>sales</em> csv file while we fill the <em>products</em> dimension with data. As the use
-of a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><tt class="xref py py-class docutils literal"><span class="pre">ProcessSource</span></tt></a> adds additional overhead to the iterator, seeing
+of a <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessSource</span></code></a> adds additional overhead to the iterator, seeing
 as rows must be transferred in batches from another process, other computations
 should be performed in between the creation and use of the source to allow for
 data to be read, transformed and transferred.</p>
@@ -171,90 +163,90 @@ data to be read, transformed and transferred.</p>
 <div class="section" id="decoupled-tables">
 <h2>Decoupled Tables<a class="headerlink" href="#decoupled-tables" title="Permalink to this headline">¶</a></h2>
 <p>A decoupled table in pygrametl is a proxy for an instance of another table
-class defined in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">tables</span></tt></a> module. Currently two different classes
-exist for decoupled tables, <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledDimension</span></tt></a> and
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledFactTable</span></tt></a>. The two classes behave nearly identically with
+class defined in the <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tables</span></code></a> module. Currently two different classes
+exist for decoupled tables, <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecoupledDimension</span></code></a> and
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecoupledFactTable</span></code></a>. The two classes behave nearly identically with
 one implementing the interface of a dimension and the other the interface of a
 fact table. When a method is called on one of the two classes, a message is
 sent to the actual table object, and if the method has a return value an
-instance of the class <tt class="xref py py-class docutils literal"><span class="pre">FutureResult</span></tt> is returned. This instance is a
+instance of the class <code class="xref py py-class docutils literal notranslate"><span class="pre">FutureResult</span></code> is returned. This instance is a
 handle to the actual result when it becomes available. In order to get the
 actual result, the instance can be given directly to a method accepting a row
 which would force the method to block until a value is ready or, alternatively,
 the entire decoupled can be consumed by another decoupled table. When a
 decoupled table is consumed by another decoupled table, the values are
-extracted from an instance of <tt class="xref py py-class docutils literal"><span class="pre">FutureResult</span></tt> by the table that needs it
+extracted from an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">FutureResult</span></code> by the table that needs it
 without blocking the caller of methods on that table. It should however be
-noted that any rows passed to an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledFactTable</span></tt></a> or
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><tt class="xref py py-class docutils literal"><span class="pre">DecoupledDimension</span></tt></a> should only contain the attributes directly needed
-by the table, as having additional key/value pairs in the <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt> can
+noted that any rows passed to an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledFactTable" title="pygrametl.tables.DecoupledFactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecoupledFactTable</span></code></a> or
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.DecoupledDimension" title="pygrametl.tables.DecoupledDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecoupledDimension</span></code></a> should only contain the attributes directly needed
+by the table, as having additional key/value pairs in the <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> can
 make pygrametl insert the row before the actual values are ready, leading to
-instances of the class <tt class="xref py py-class docutils literal"><span class="pre">FutureResult</span></tt> being passed to the database instead,
+instances of the class <code class="xref py py-class docutils literal notranslate"><span class="pre">FutureResult</span></code> being passed to the database instead,
 which in nearly every case is undesirable.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span><span class="p">,</span> <span class="n">CachedDimension</span><span class="p">,</span>\
      <span class="n">DecoupledDimension</span><span class="p">,</span> <span class="n">DecoupledFactTable</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 <span class="kn">from</span> <span class="nn">pygrametl.parallel</span> <span class="kn">import</span> <span class="n">shareconnectionwrapper</span>
 
-<span class="c"># The data is read from a csv file</span>
-<span class="n">inputdata</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="c1"># The data is read from a csv file</span>
+<span class="n">inputdata</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
-<span class="c"># JDBC and Jython is used as threads allows for better performance</span>
+<span class="c1"># JDBC and Jython is used as threads allows for better performance</span>
 <span class="kn">import</span> <span class="nn">java.sql.DriverManager</span>
 <span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span> \
-    <span class="p">(</span><span class="s">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
 
-<span class="c"># The connection wrapper is itself wrapped in a SharedConnectionClient,</span>
-<span class="c"># allowing for it to be used by multiple decoupled tables safely</span>
+<span class="c1"># The connection wrapper is itself wrapped in a SharedConnectionClient,</span>
+<span class="c1"># allowing for it to be used by multiple decoupled tables safely</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">JDBCConnectionWrapper</span><span class="p">(</span><span class="n">jdbcconn</span><span class="o">=</span><span class="n">jconn</span><span class="p">)</span>
 <span class="n">shrdconn</span> <span class="o">=</span> <span class="n">shareconnectionwrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
 
-<span class="c"># The product dimension is decoupled and runs in a separate process</span>
-<span class="c"># (CPython) or thread (Jython), allowing it to be accessed by other</span>
-<span class="c"># decoupled tables without any use of the main process</span>
+<span class="c1"># The product dimension is decoupled and runs in a separate process</span>
+<span class="c1"># (CPython) or thread (Jython), allowing it to be accessed by other</span>
+<span class="c1"># decoupled tables without any use of the main process</span>
 <span class="n">productDimension</span> <span class="o">=</span> <span class="n">DecoupledDimension</span><span class="p">(</span>
     <span class="n">CachedDimension</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s">&#39;product&#39;</span><span class="p">,</span>
-        <span class="n">key</span><span class="o">=</span><span class="s">&#39;productid&#39;</span><span class="p">,</span>
-        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">,</span> <span class="s">&#39;price&#39;</span><span class="p">],</span>
-        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">],</span>
-        <span class="c"># The SharedConnectionWrapperClient must be copied for each</span>
-        <span class="c"># decoupled table that use it correct interaction with the database</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
+        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">],</span>
+        <span class="c1"># The SharedConnectionWrapperClient must be copied for each</span>
+        <span class="c1"># decoupled table that use it correct interaction with the database</span>
         <span class="n">targetconnection</span><span class="o">=</span><span class="n">shrdconn</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="n">prefill</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="p">)</span>
 
-<span class="c"># The fact table is also decoupled in order to consume the values returned</span>
-<span class="c"># from the methods called on the product dimension without blocking the main</span>
-<span class="c"># process while waiting for the database, allowing the main  process to</span>
-<span class="c"># perform other operations needed before a full fact is ready</span>
+<span class="c1"># The fact table is also decoupled in order to consume the values returned</span>
+<span class="c1"># from the methods called on the product dimension without blocking the main</span>
+<span class="c1"># process while waiting for the database, allowing the main  process to</span>
+<span class="c1"># perform other operations needed before a full fact is ready</span>
 <span class="n">factTable</span> <span class="o">=</span> <span class="n">DecoupledFactTable</span><span class="p">(</span>
     <span class="n">FactTable</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s">&#39;fact&#39;</span><span class="p">,</span>
-        <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">],</span>
-        <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">,</span> <span class="s">&#39;productid&#39;</span><span class="p">,</span> <span class="s">&#39;dateid&#39;</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fact&#39;</span><span class="p">,</span>
+        <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">],</span>
+        <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">,</span> <span class="s1">&#39;productid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateid&#39;</span><span class="p">],</span>
         <span class="n">targetconnection</span><span class="o">=</span><span class="n">shrdconn</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span>
     <span class="n">returnvalues</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
     <span class="n">consumes</span><span class="o">=</span><span class="p">[</span><span class="n">productDimension</span><span class="p">]</span>
     <span class="p">)</span>
 
-<span class="c"># Inserting facts into the database can be done in the same manner as in a</span>
-<span class="c"># sequential ETL flow, extraction of data from the product dimension is</span>
-<span class="c"># done automatically by pygrametl.</span>
+<span class="c1"># Inserting facts into the database can be done in the same manner as in a</span>
+<span class="c1"># sequential ETL flow, extraction of data from the product dimension is</span>
+<span class="c1"># done automatically by pygrametl.</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">inputdata</span><span class="p">:</span>
-    <span class="c"># A new &#39;row&#39; is created for each fact, as having values not present in a</span>
-    <span class="c"># decoupled table that consumes another dimension, can make pygrametl</span>
-    <span class="c"># miscalculate when actuals results are ready, making the framework</span>
-    <span class="c"># pass a FutureResult object to the database driver instead of the actual</span>
-    <span class="c"># values, leading to exceptions</span>
+    <span class="c1"># A new &#39;row&#39; is created for each fact, as having values not present in a</span>
+    <span class="c1"># decoupled table that consumes another dimension, can make pygrametl</span>
+    <span class="c1"># miscalculate when actuals results are ready, making the framework</span>
+    <span class="c1"># pass a FutureResult object to the database driver instead of the actual</span>
+    <span class="c1"># values, leading to exceptions</span>
     <span class="n">fact</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">]</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productDimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;dateid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;dateid&#39;</span><span class="p">]</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">]</span>
-    <span class="c"># Other CPU intensive transformations should be performed to take</span>
-    <span class="c"># advantage of the decoupled dimensions automatically exchanging data</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">]</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productDimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;dateid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;dateid&#39;</span><span class="p">]</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">]</span>
+    <span class="c1"># Other CPU intensive transformations should be performed to take</span>
+    <span class="c1"># advantage of the decoupled dimensions automatically exchanging data</span>
     <span class="n">factTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
 <span class="n">shrdconn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">shrdconn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -264,35 +256,35 @@ which in nearly every case is undesirable.</p>
 for real world application, tuning of queues and buffers should be done to
 match the underlying hardware in order to maximize the performance of the
 parallel ETL flow.  Although the example uses an instance of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><tt class="xref py py-class docutils literal"><span class="pre">Dimension</span></tt></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><tt class="xref py py-class docutils literal"><span class="pre">FactTable</span></tt></a> for simplicity, it is supported for
-all types of dimensions and fact tables, except <a class="reference internal" href="../api/tables.html#pygrametl.tables.SubprocessFactTable" title="pygrametl.tables.SubprocessFactTable"><tt class="xref py py-class docutils literal"><span class="pre">SubprocessFactTable</span></tt></a>
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FactTable</span></code></a> for simplicity, it is supported for
+all types of dimensions and fact tables, except <a class="reference internal" href="../api/tables.html#pygrametl.tables.SubprocessFactTable" title="pygrametl.tables.SubprocessFactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubprocessFactTable</span></code></a>
 on CPython as it already runs in its own process. Decoupling of tables
 requiring large amount of processing when their methods are called, like a
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a>, can help increase performance due to not
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a>, can help increase performance due to not
 blocking the main process while waiting on the database performing the joins.</p>
 <p>If any user-defined functions needs to access the database and be synchronised
 with the decoupled tables, it must be passed to
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><tt class="xref py py-func docutils literal"><span class="pre">shareconnectionwrapper()</span></tt></a>.  An example of such a function is the bulk
-loader used for pygrametl&#8217;s <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><tt class="xref py py-class docutils literal"><span class="pre">BulkFactTable</span></tt></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">shareconnectionwrapper()</span></code></a>.  An example of such a function is the bulk
+loader used for pygrametl’s <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkFactTable</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 <span class="kn">from</span> <span class="nn">pygrametl.parallel</span> <span class="kn">import</span> <span class="n">shareconnectionwrapper</span>
 
-<span class="c"># JDBC and Jython is used as threads allows for better performance</span>
+<span class="c1"># JDBC and Jython is used as threads allows for better performance</span>
 <span class="kn">import</span> <span class="nn">java.sql.DriverManager</span>
 <span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span> \
-    <span class="p">(</span><span class="s">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
 
-<span class="c"># A user defined function that specifies how to perform bulk loading for a</span>
-<span class="c"># specific database management system such as Postgresql or Oracle</span>
+<span class="c1"># A user defined function that specifies how to perform bulk loading for a</span>
+<span class="c1"># specific database management system such as Postgresql or Oracle</span>
 <span class="k">def</span> <span class="nf">bulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
-    <span class="c">#DBMS specific bulk loading code here...</span>
+    <span class="c1">#DBMS specific bulk loading code here...</span>
 
-<span class="c"># The connection wrapper is itself wrapped in a SharedConnectionClient,</span>
-<span class="c"># allowing for it to be used by multiple decoupled tables safely. The</span>
-<span class="c">#function &quot;bulkloader&quot; is given to &quot;shareconnectionwrapper&quot; allowing the</span>
-<span class="c"># shared connection wrapper to ensure that the bulk loading functions is</span>
-<span class="c"># synchronised with the decoupled tables using the shared connection wrapper</span>
+<span class="c1"># The connection wrapper is itself wrapped in a SharedConnectionClient,</span>
+<span class="c1"># allowing for it to be used by multiple decoupled tables safely. The</span>
+<span class="c1">#function &quot;bulkloader&quot; is given to &quot;shareconnectionwrapper&quot; allowing the</span>
+<span class="c1"># shared connection wrapper to ensure that the bulk loading functions is</span>
+<span class="c1"># synchronised with the decoupled tables using the shared connection wrapper</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">JDBCConnectionWrapper</span><span class="p">(</span><span class="n">jdbcconn</span><span class="o">=</span><span class="n">jconn</span><span class="p">)</span>
 <span class="n">scw</span> <span class="o">=</span> <span class="n">shareconnectionwrapper</span><span class="p">(</span><span class="n">targetconnection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">userfuncs</span><span class="o">=</span><span class="p">[</span><span class="n">bulkloader</span><span class="p">])</span>
 </pre></div>
@@ -305,16 +297,16 @@ other tables, it can be beneficial to partition it into multiple parts,
 allowing operations to be conducted on one table in parallel reducing the time
 needed to process that particular table. pygrametl supports partitioning of
 tables through multiple features. First, the classes
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.DimensionPartitioner" title="pygrametl.tables.DimensionPartitioner"><tt class="xref py py-class docutils literal"><span class="pre">DimensionPartitioner</span></tt></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTablePartitioner" title="pygrametl.tables.FactTablePartitioner"><tt class="xref py py-class docutils literal"><span class="pre">FactTablePartitioner</span></tt></a> automates the
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.DimensionPartitioner" title="pygrametl.tables.DimensionPartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">DimensionPartitioner</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTablePartitioner" title="pygrametl.tables.FactTablePartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">FactTablePartitioner</span></code></a> automates the
 partitioning of rows into multiple decoupled dimensions or fact tables. How to
 do the partitioning is determined by a partitioning function with the signature
 <cite>func(dict)</cite>. If no function is passed, then a default partitioning function is
 used as documented in the API. Second, to ensure that unique surrogate keys are
 assigned to all rows in a partitioned table, a shared sequence factory can be
-created through the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.getsharedsequencefactory" title="pygrametl.parallel.getsharedsequencefactory"><tt class="xref py py-func docutils literal"><span class="pre">getsharedsequencefactory()</span></tt></a>. Each parallel process is
+created through the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.getsharedsequencefactory" title="pygrametl.parallel.getsharedsequencefactory"><code class="xref py py-func docutils literal notranslate"><span class="pre">getsharedsequencefactory()</span></code></a>. Each parallel process is
 then given a sequence of unique numbers to use as surrogate keys, ensuring that
 all surrogate keys are unique despite being assigned by separate processes.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">ProcessSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span><span class="p">,</span> <span class="n">CachedDimension</span><span class="p">,</span> \
     <span class="n">DecoupledDimension</span><span class="p">,</span> <span class="n">DecoupledFactTable</span><span class="p">,</span> <span class="n">DimensionPartitioner</span>
@@ -322,33 +314,33 @@ all surrogate keys are unique despite being assigned by separate processes.</p>
     <span class="n">getsharedsequencefactory</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
-<span class="c"># JDBC and Jython is used as threads allows for better performance</span>
+<span class="c1"># JDBC and Jython is used as threads allows for better performance</span>
 <span class="kn">import</span> <span class="nn">java.sql.DriverManager</span>
 <span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span> \
-    <span class="p">(</span><span class="s">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
 
-<span class="c"># The connection wrapper is itself wrapped in a SharedConnectionClient,</span>
-<span class="c"># allowing for it to be used by multiple decoupled tables safely</span>
+<span class="c1"># The connection wrapper is itself wrapped in a SharedConnectionClient,</span>
+<span class="c1"># allowing for it to be used by multiple decoupled tables safely</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">JDBCConnectionWrapper</span><span class="p">(</span><span class="n">jdbcconn</span><span class="o">=</span><span class="n">jconn</span><span class="p">)</span>
 <span class="n">shrdconn</span> <span class="o">=</span> <span class="n">shareconnectionwrapper</span><span class="p">(</span><span class="n">targetconnection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
 
-<span class="c"># A sharedsequencefactory is created which creates values starting a zero,</span>
-<span class="c"># each table is given a sequence of number to use, the size of the</span>
-<span class="c"># sequence can increased trough a second argument if the</span>
-<span class="c"># sharedsequencefactory becomes a bottleneck in the ETL flow</span>
+<span class="c1"># A sharedsequencefactory is created which creates values starting a zero,</span>
+<span class="c1"># each table is given a sequence of number to use, the size of the</span>
+<span class="c1"># sequence can increased trough a second argument if the</span>
+<span class="c1"># sharedsequencefactory becomes a bottleneck in the ETL flow</span>
 <span class="n">idfactory</span> <span class="o">=</span> <span class="n">getsharedsequencefactory</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="c"># The product dimension must use the sharedsequencefactory to ensure that</span>
-<span class="c"># the two processes do not assign overlapping surrogate key, if the creation</span>
-<span class="c"># of a surrogate key for the dimension is needed</span>
+<span class="c1"># The product dimension must use the sharedsequencefactory to ensure that</span>
+<span class="c1"># the two processes do not assign overlapping surrogate key, if the creation</span>
+<span class="c1"># of a surrogate key for the dimension is needed</span>
 <span class="n">productDimensionOne</span> <span class="o">=</span> <span class="n">DecoupledDimension</span><span class="p">(</span>
     <span class="n">CachedDimension</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s">&#39;product&#39;</span><span class="p">,</span>
-        <span class="n">key</span><span class="o">=</span><span class="s">&#39;productid&#39;</span><span class="p">,</span>
-        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">,</span> <span class="s">&#39;price&#39;</span><span class="p">],</span>
-        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
+        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">],</span>
         <span class="n">idfinder</span><span class="o">=</span><span class="n">idfactory</span><span class="p">(),</span>
         <span class="n">targetconnection</span><span class="o">=</span><span class="n">shrdconn</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="n">prefill</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -356,52 +348,52 @@ all surrogate keys are unique despite being assigned by separate processes.</p>
 
 <span class="n">productDimensionTwo</span> <span class="o">=</span> <span class="n">DecoupledDimension</span><span class="p">(</span>
     <span class="n">CachedDimension</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s">&#39;product&#39;</span><span class="p">,</span>
-        <span class="n">key</span><span class="o">=</span><span class="s">&#39;productid&#39;</span><span class="p">,</span>
-        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;produtname&#39;</span><span class="p">,</span> <span class="s">&#39;price&#39;</span><span class="p">],</span>
-        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;produtname&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
+        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">],</span>
         <span class="n">idfinder</span><span class="o">=</span><span class="n">idfactory</span><span class="p">(),</span>
         <span class="n">targetconnection</span><span class="o">=</span><span class="n">shrdconn</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="n">prefill</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="p">)</span>
 
-<span class="c"># The partitioning of data is automated by the DimensionPartitioner, using</span>
-<span class="c"># a hash on the name of product. A corresponding class for partitioning a</span>
-<span class="c"># fact table into multiple tables is also a available</span>
+<span class="c1"># The partitioning of data is automated by the DimensionPartitioner, using</span>
+<span class="c1"># a hash on the name of product. A corresponding class for partitioning a</span>
+<span class="c1"># fact table into multiple tables is also a available</span>
 <span class="n">productDimension</span> <span class="o">=</span> <span class="n">DimensionPartitioner</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">productDimensionOne</span><span class="p">,</span>
-    <span class="n">productDimensionTwo</span><span class="p">],</span> <span class="n">partitioner</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">]))</span>
+    <span class="n">productDimensionTwo</span><span class="p">],</span> <span class="n">partitioner</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">]))</span>
 
-<span class="c"># Only partitioned tables needs to use the sharedsequencefactory, normal</span>
-<span class="c"># tables can without any problems use the default incrementing surrogate key</span>
+<span class="c1"># Only partitioned tables needs to use the sharedsequencefactory, normal</span>
+<span class="c1"># tables can without any problems use the default incrementing surrogate key</span>
 <span class="n">factTable</span> <span class="o">=</span> <span class="n">DecoupledFactTable</span><span class="p">(</span>
         <span class="n">FactTable</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s">&#39;fact&#39;</span><span class="p">,</span>
-            <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">],</span>
-            <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">,</span> <span class="s">&#39;productid&#39;</span><span class="p">,</span> <span class="s">&#39;dateid&#39;</span><span class="p">],</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fact&#39;</span><span class="p">,</span>
+            <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">],</span>
+            <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">,</span> <span class="s1">&#39;productid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateid&#39;</span><span class="p">],</span>
             <span class="n">targetconnection</span><span class="o">=</span><span class="n">shrdconn</span><span class="o">.</span><span class="n">copy</span><span class="p">()),</span>
         <span class="n">returnvalues</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-        <span class="c"># When consuming a partitioned dimension should each part be</span>
-        <span class="c"># consumed separately, a simple way to do so is using the parts</span>
-        <span class="c"># method which returns all parts handled by the partitioned</span>
-        <span class="c"># dimension or fact table</span>
+        <span class="c1"># When consuming a partitioned dimension should each part be</span>
+        <span class="c1"># consumed separately, a simple way to do so is using the parts</span>
+        <span class="c1"># method which returns all parts handled by the partitioned</span>
+        <span class="c1"># dimension or fact table</span>
         <span class="n">consumes</span><span class="o">=</span><span class="n">productDimension</span><span class="o">.</span><span class="n">parts</span>
         <span class="p">)</span>
 
-<span class="c"># Using a partitioned table is done in the same way as any other pygrametl</span>
-<span class="c"># table, as the frameworks takes care of the partitioning behind the scenes</span>
+<span class="c1"># Using a partitioned table is done in the same way as any other pygrametl</span>
+<span class="c1"># table, as the frameworks takes care of the partitioning behind the scenes</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sales</span><span class="p">:</span>
-    <span class="c"># A new &#39;row&#39; is created for each fact, as having values not present in a</span>
-    <span class="c"># decoupled table that consumes another dimension, can make pygrametl</span>
-    <span class="c"># miscalculate when actuals results are ready, making the framework</span>
-    <span class="c"># pass a FutureResult object to the database driver instead of the actual</span>
-    <span class="c"># values, leading to exceptions</span>
+    <span class="c1"># A new &#39;row&#39; is created for each fact, as having values not present in a</span>
+    <span class="c1"># decoupled table that consumes another dimension, can make pygrametl</span>
+    <span class="c1"># miscalculate when actuals results are ready, making the framework</span>
+    <span class="c1"># pass a FutureResult object to the database driver instead of the actual</span>
+    <span class="c1"># values, leading to exceptions</span>
     <span class="n">fact</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">]</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;dateid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;dateid&#39;</span><span class="p">]</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productDimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-    <span class="n">fact</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">]</span>
-    <span class="c"># Other CPU intensive transformations should be performed to take</span>
-    <span class="c"># advantage of the decoupled dimensions automatically exchanging data</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">]</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;dateid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;dateid&#39;</span><span class="p">]</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productDimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">fact</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">]</span>
+    <span class="c1"># Other CPU intensive transformations should be performed to take</span>
+    <span class="c1"># advantage of the decoupled dimensions automatically exchanging data</span>
     <span class="n">factTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
 <span class="n">shrdconn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">shrdconn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -419,69 +411,69 @@ fact table in the database, so a simple auto incrementing integer is fine.</p>
 <div class="section" id="splitpoints">
 <h2>Splitpoints<a class="headerlink" href="#splitpoints" title="Permalink to this headline">¶</a></h2>
 <p>As CPU-intensive operations are often performed in user defined functions, the
-decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><tt class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></tt></a> is provided. This decorator functions in much the
+decorator <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">splitpoint()</span></code></a> is provided. This decorator functions in much the
 same way as decoupled classes does for tables, as a number of processes are
 spawned to run the function. The first time a functions with a decorator is
 called, a process is created to handle the call. This is done until the number
 of created process match the argument given to the decorator. If no process is
-available, the call and its arguments are added to a <tt class="xref py py-class docutils literal"><span class="pre">queue</span></tt> and sent
+available, the call and its arguments are added to a <code class="xref py py-class docutils literal notranslate"><span class="pre">queue</span></code> and sent
 to a process when one is idle. The number of processes to spawn can be passed
 to the decorator, allowing more processes to be created for functions with a
 longer running time. If a split function calls another function that requires
 synchronisation it can be annotated with a new split point with <em>one</em> as
 argument, specifying that only one process is allowed to call this function at
 a time. To ensure all annotated functions are finished, the function
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><tt class="xref py py-func docutils literal"><span class="pre">endsplits()</span></tt></a> must be called, which joins all processes created by split
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><code class="xref py py-func docutils literal notranslate"><span class="pre">endsplits()</span></code></a> must be called, which joins all processes created by split
 points up to that point.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.parallel</span> <span class="kn">import</span> <span class="n">splitpoint</span><span class="p">,</span> <span class="n">endsplits</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">file</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">file</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
-<span class="c"># JDBC and Jython is used as threads allows for better performance</span>
+<span class="c1"># JDBC and Jython is used as threads allows for better performance</span>
 <span class="kn">import</span> <span class="nn">java.sql.DriverManager</span>
 <span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span> \
-    <span class="p">(</span><span class="s">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
 
 <span class="n">conn</span> <span class="o">=</span> <span class="n">JDBCConnectionWrapper</span><span class="p">(</span><span class="n">jdbcconn</span><span class="o">=</span><span class="n">jconn</span><span class="p">)</span>
 
 <span class="n">factTable</span> <span class="o">=</span> <span class="n">FactTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;fact&#39;</span><span class="p">,</span>
-    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">],</span>
-    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;storeid&#39;</span><span class="p">,</span> <span class="s">&#39;productid&#39;</span><span class="p">,</span> <span class="s">&#39;dateid&#39;</span><span class="p">]</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fact&#39;</span><span class="p">,</span>
+    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">],</span>
+    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">,</span> <span class="s1">&#39;productid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateid&#39;</span><span class="p">]</span>
     <span class="p">)</span>
 
-<span class="c"># Five processes are created to run this function, so five rows can be</span>
-<span class="c"># transformed at the same time, if not threads are available is the row</span>
-<span class="c"># added to a queue ensuring it will transformed when a process is available</span>
+<span class="c1"># Five processes are created to run this function, so five rows can be</span>
+<span class="c1"># transformed at the same time, if not threads are available is the row</span>
+<span class="c1"># added to a queue ensuring it will transformed when a process is available</span>
 <span class="nd">@splitpoint</span><span class="p">(</span><span class="n">instances</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">performExpensiveTransformations</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="c"># Do some (expensive) transformations...</span>
+    <span class="c1"># Do some (expensive) transformations...</span>
 
-    <span class="c"># As multiple processes performs the operation inside this function must</span>
-    <span class="c"># a second function be created for the insertion into the database to</span>
-    <span class="c"># reduce the number of parallel processes accessing the database at the</span>
-    <span class="c"># same time</span>
+    <span class="c1"># As multiple processes performs the operation inside this function must</span>
+    <span class="c1"># a second function be created for the insertion into the database to</span>
+    <span class="c1"># reduce the number of parallel processes accessing the database at the</span>
+    <span class="c1"># same time</span>
     <span class="n">insertRowIntoData</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c"># The function is annotated with a argument free split point, no argument is</span>
-<span class="c"># passed as the default is one, thereby specifying that only one process are</span>
-<span class="c"># allowed to call this function at the same time</span>
+<span class="c1"># The function is annotated with a argument free split point, no argument is</span>
+<span class="c1"># passed as the default is one, thereby specifying that only one process are</span>
+<span class="c1"># allowed to call this function at the same time</span>
 <span class="nd">@splitpoint</span>
 <span class="k">def</span> <span class="nf">insertRowIntoData</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
     <span class="n">factTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c"># The CSV file is read by the main process, while each row is transformed by</span>
-<span class="c"># one of five process before being inserted to the database by sixth process</span>
+<span class="c1"># The CSV file is read by the main process, while each row is transformed by</span>
+<span class="c1"># one of five process before being inserted to the database by sixth process</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sales</span><span class="p">:</span>
     <span class="n">performExpensiveTransformations</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c"># To ensure that a all split point annotated function are finished before</span>
-<span class="c"># the ETL program terminated, must the function endsplits be called as it</span>
-<span class="c"># joins all the process created by split points up to this point</span>
+<span class="c1"># To ensure that a all split point annotated function are finished before</span>
+<span class="c1"># the ETL program terminated, must the function endsplits be called as it</span>
+<span class="c1"># joins all the process created by split points up to this point</span>
 <span class="n">endsplits</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -492,59 +484,59 @@ expensive function is annotated with a splitpoint given the argument 5,
 allowing five processes to run the function at the same time. The second
 splitpoint without argument ensures that only one process is allowed to execute
 that function at the same time, so even though it is called from
-<tt class="xref py py-func docutils literal"><span class="pre">performExpensiveTransformation()</span></tt> only one process can insert rows into
+<code class="xref py py-func docutils literal notranslate"><span class="pre">performExpensiveTransformation()</span></code> only one process can insert rows into
 the fact table at the same time. Should the table operations become a
 bottleneck it could be partitioned over multiple table classes. To ensure that
-all split points have finished execution, the function <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><tt class="xref py py-func docutils literal"><span class="pre">endsplits()</span></tt></a> is
+all split points have finished execution, the function <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.endsplits" title="pygrametl.parallel.endsplits"><code class="xref py py-func docutils literal notranslate"><span class="pre">endsplits()</span></code></a> is
 executed, which joins all split points, before the database transaction is
 committed.</p>
 <p>As splitpoint annotated functions run in a separate processes, returned values
 are not available to the calling process. To work around this restriction a
 queue can be passed to the function which is then used as storage for returned
 values automatically by pygrametl.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.parallel</span> <span class="kn">import</span> <span class="n">splitpoint</span><span class="p">,</span> <span class="n">endsplits</span>
 <span class="kn">from</span> <span class="nn">pygrametl.jythonmultiprocessing</span> <span class="kn">import</span> <span class="n">Queue</span>
 
 <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
-<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">file</span><span class="p">(</span><span class="s">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">file</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
-<span class="c"># A queue is passed to the split point, which uses it to store return values</span>
+<span class="c1"># A queue is passed to the split point, which uses it to store return values</span>
 <span class="nd">@splitpoint</span><span class="p">(</span><span class="n">instances</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">expensiveReturningOperation</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
 
-    <span class="c"># Some special value, in this case None, is used to indicate that no</span>
-    <span class="c"># more data will be given to the queue and that processing can continue</span>
+    <span class="c1"># Some special value, in this case None, is used to indicate that no</span>
+    <span class="c1"># more data will be given to the queue and that processing can continue</span>
     <span class="k">if</span> <span class="n">row</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">None</span>
 
-    <span class="c"># Returned values are automatically added to the queue for other to use</span>
+    <span class="c1"># Returned values are automatically added to the queue for other to use</span>
     <span class="k">return</span> <span class="n">row</span>
 
-<span class="c"># Each row in the sales csv file is extracted and passed to the function</span>
+<span class="c1"># Each row in the sales csv file is extracted and passed to the function</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sales</span><span class="p">:</span>
     <span class="n">expensiveReturningOperation</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c"># A simple sentinel value can be used to indicate that all rows have been</span>
-<span class="c"># processed and that the loop using the results below can break</span>
+<span class="c1"># A simple sentinel value can be used to indicate that all rows have been</span>
+<span class="c1"># processed and that the loop using the results below can break</span>
 <span class="n">expensiveReturningOperation</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
 
-<span class="c"># A infinite loop is used to process the returned values as the number of</span>
-<span class="c"># returned rows are unknown, so a sentinel value and a break is used instead</span>
+<span class="c1"># A infinite loop is used to process the returned values as the number of</span>
+<span class="c1"># returned rows are unknown, so a sentinel value and a break is used instead</span>
 <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-    <span class="c"># Extracts the processed row returned by the annotated function, a</span>
-    <span class="c"># simple sentinel value is used to indicate when the processing is done</span>
+    <span class="c1"># Extracts the processed row returned by the annotated function, a</span>
+    <span class="c1"># simple sentinel value is used to indicate when the processing is done</span>
     <span class="n">elem</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">elem</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">break</span>
 
-    <span class="c"># Use the returned elements after the sentinel check to prevent errors</span>
-    <span class="c"># ......</span>
+    <span class="c1"># Use the returned elements after the sentinel check to prevent errors</span>
+    <span class="c1"># ......</span>
 
-<span class="c"># To ensure that a all split point annotated function are finished before</span>
-<span class="c"># the ETL program terminated, must the function endsplits be called as it</span>
-<span class="c"># joins all the process created by split points up to this point</span>
+<span class="c1"># To ensure that a all split point annotated function are finished before</span>
+<span class="c1"># the ETL program terminated, must the function endsplits be called as it</span>
+<span class="c1"># joins all the process created by split points up to this point</span>
 <span class="n">endsplits</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -556,68 +548,68 @@ pygrametl consists of multiple functions that can be called with the same
 interface, which is grouped together with each function running in its own
 separate process, and with each function called in sequence. A flow can be
 created from multiple different functions that, however, must be callable
-through the same interface, using the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.createflow" title="pygrametl.parallel.createflow"><tt class="xref py py-func docutils literal"><span class="pre">createflow()</span></tt></a> function. After a
+through the same interface, using the <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.createflow" title="pygrametl.parallel.createflow"><code class="xref py py-func docutils literal notranslate"><span class="pre">createflow()</span></code></a> function. After a
 flow is created it can be called just like any other function. Internally, the
 arguments are passed from the first function to the last. As the arguments are
 passed from one function to another, the side effects on each row are available
 to the next function, white returned values on the other hand are ignored.
-Unlike <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><tt class="xref py py-func docutils literal"><span class="pre">splitpoint()</span></tt></a>, the arguments are passed in batches instead of
+Unlike <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.splitpoint" title="pygrametl.parallel.splitpoint"><code class="xref py py-func docutils literal notranslate"><span class="pre">splitpoint()</span></code></a>, the arguments are passed in batches instead of
 single values leading to less locking and synchronisation between the
 processes.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pygrametl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">Dimension</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.parallel</span> <span class="kn">import</span> <span class="n">splitpoint</span><span class="p">,</span> <span class="n">endsplits</span><span class="p">,</span> <span class="n">createflow</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 
-<span class="c"># JDBC and Jython is used as threads allows for better performance</span>
+<span class="c1"># JDBC and Jython is used as threads allows for better performance</span>
 <span class="kn">import</span> <span class="nn">java.sql.DriverManager</span>
 <span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span> \
-    <span class="p">(</span><span class="s">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
 
 <span class="n">conn</span> <span class="o">=</span> <span class="n">JDBCConnectionWrapper</span><span class="p">(</span><span class="n">jdbcconn</span><span class="o">=</span><span class="n">jconn</span><span class="p">)</span>
 
-<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">file</span><span class="p">(</span><span class="s">&#39;product.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="nb">file</span><span class="p">(</span><span class="s1">&#39;product.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
 <span class="n">productDimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="s">&#39;product&#39;</span><span class="p">,</span>
-        <span class="n">key</span><span class="o">=</span><span class="s">&#39;productid&#39;</span><span class="p">,</span>
-        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">,</span> <span class="s">&#39;price&#39;</span><span class="p">],</span>
-        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">])</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
+        <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">])</span>
 
-<span class="c"># A couple of functions is defined to extract and transform the information</span>
-<span class="c"># in the csv file each taking a row which is changed before being passed on</span>
+<span class="c1"># A couple of functions is defined to extract and transform the information</span>
+<span class="c1"># in the csv file each taking a row which is changed before being passed on</span>
 <span class="k">def</span> <span class="nf">normaliseProductNames</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="c"># Expensive operations should be performed in a flow, this example is</span>
-    <span class="c"># simple, so the performance gain is negated by overhead</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;productname&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="c1"># Expensive operations should be performed in a flow, this example is</span>
+    <span class="c1"># simple, so the performance gain is negated by overhead</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;productname&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">convertPriceToThousands</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-    <span class="c"># Expensive operations should be performed in a flow, this example is</span>
-    <span class="c"># simple, so the performance gain is negated by overhead</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">1000</span>
+    <span class="c1"># Expensive operations should be performed in a flow, this example is</span>
+    <span class="c1"># simple, so the performance gain is negated by overhead</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">1000</span>
 
-<span class="c"># A flow is created from the functions defined above, this flow can then be</span>
-<span class="c"># called just like any other function, while two processes run the functions</span>
-<span class="c"># underneath and take care of passing the arguments in batch between them</span>
+<span class="c1"># A flow is created from the functions defined above, this flow can then be</span>
+<span class="c1"># called just like any other function, while two processes run the functions</span>
+<span class="c1"># underneath and take care of passing the arguments in batch between them</span>
 <span class="n">flow</span> <span class="o">=</span> <span class="n">createflow</span><span class="p">(</span><span class="n">normaliseProductNames</span><span class="p">,</span> <span class="n">convertPriceToThousands</span><span class="p">)</span>
 
-<span class="c"># The data is read form the csv file in a split point so that the main</span>
-<span class="c"># process does not have to both read the input data and insert it in the DB</span>
+<span class="c1"># The data is read form the csv file in a split point so that the main</span>
+<span class="c1"># process does not have to both read the input data and insert it in the DB</span>
 <span class="nd">@splitpoint</span>
 <span class="k">def</span> <span class="nf">producer</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
         <span class="n">flow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-    <span class="c"># The flow should be closed when there is no more data available,</span>
-    <span class="c"># this means no more data is accepted but the computations will finish</span>
+    <span class="c1"># The flow should be closed when there is no more data available,</span>
+    <span class="c1"># this means no more data is accepted but the computations will finish</span>
     <span class="n">flow</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="c"># The producer is called and the separate process starts to read the input</span>
+<span class="c1"># The producer is called and the separate process starts to read the input</span>
 <span class="n">producer</span><span class="p">()</span>
 
-<span class="c"># The simplest way to extract rows from a flow is just to iterate over it,</span>
-<span class="c"># however additional functions to extract the results as a list is available</span>
+<span class="c1"># The simplest way to extract rows from a flow is just to iterate over it,</span>
+<span class="c1"># however additional functions to extract the results as a list is available</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">flow</span><span class="p">:</span>
     <span class="n">productDimension</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 <span class="n">endsplits</span><span class="p">()</span>
@@ -629,7 +621,7 @@ contributing to the transformation on rows from the input csv file. Combining
 the functions into a flow, creates a new process for each function in order to
 increase throughput, while bundling data transfers to decrease the number of
 times data needs to be moved from one process to the next. Calling the flow is
-done in the function <tt class="xref py py-func docutils literal"><span class="pre">producer()</span></tt>, which runs in a separate process using a
+done in the function <code class="xref py py-func docutils literal notranslate"><span class="pre">producer()</span></code>, which runs in a separate process using a
 splitpoint so the main process can insert rows into the database. It is done
 just like a normal function call with the row as argument, as both functions in
 the flow has an interface accepting one argument, the row.</p>
@@ -640,9 +632,9 @@ the flow has an interface accepting one argument, the row.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Parallel</a><ul>
 <li><a class="reference internal" href="#processsource">ProcessSource</a></li>
@@ -660,29 +652,30 @@ the flow has an interface accepting one argument, the row.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="jython.html"
                         title="next chapter">Jython</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/parallel.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/parallel.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -697,12 +690,12 @@ the flow has an interface accepting one argument, the row.</p>
         <li class="right" >
           <a href="bulkloading.html" title="Bulk Loading"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2016, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>

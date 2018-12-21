@@ -1,46 +1,38 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Beginner Guide &mdash; pygrametl 2.5 documentation</title>
-    
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <title>Beginner Guide &#8212; pygrametl 2.6 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '2.5',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pygrametl 2.5 documentation" href="../index.html" />
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Database" href="../examples/database.html" />
     <link rel="prev" title="Install Guide" href="install.html" />
  
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
+    ga('create', 'UA-30772056-2', 'auto');
+    ga('send', 'pageview');
   
-</script>
+  </script>
 
-  </head>
-  <body>
-    <div class="related">
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -55,49 +47,49 @@
         <li class="right" >
           <a href="install.html" title="Install Guide"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="beginner-guide">
 <span id="beginner"></span><h1>Beginner Guide<a class="headerlink" href="#beginner-guide" title="Permalink to this headline">¶</a></h1>
 <p>The following is a small getting started guide, showcasing the various
 constructs in <em>pygrametl</em> and how to utilise them in order to create a simple
-ETL flow for a made-up example. The example used is shown in <a class="reference internal" href="#dwexample"><em>Data Warehouse example</em></a>,
+ETL flow for a made-up example. The example used is shown in <a class="reference internal" href="#dwexample"><span class="std std-ref">Data Warehouse example</span></a>,
 and is a small data warehouse represented as a star schema with three
 dimensions. Firstly, a book dimension for storing the name and genre of a book
 sold, then a location dimension with the city and state of the store, and lastly,
 the time dimension with day, month and year of a sale. To keep the example
 simple, none of dimension are snowflaked, nor do they contain any slowly changing
 attributes. Both of these are however supported by pygrametl through
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><tt class="xref py py-class docutils literal"><span class="pre">SnowflakedDimension</span></tt></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><tt class="xref py py-class docutils literal"><span class="pre">SlowlyChangingDimension</span></tt></a>. In
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a>. In
 addition, pygrametl also contains support for creating high level
 multiprocess or multithreaded ETL flow, depending on the implementation of Python used.
 For more information about support for parallel ETL flows can be found
-here: <a class="reference internal" href="../examples/parallel.html#parallel"><em>Parallel</em></a>.</p>
+here: <a class="reference internal" href="../examples/parallel.html#parallel"><span class="std std-ref">Parallel</span></a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">When using pygrametl, we strongly encourage you to use named parameters
 when instantiating classes, in order to improve readability, and to prevent
 future errors in the event of changes to the API</p>
 </div>
-<div class="figure align-center" id="dwexample">
-<img alt="bookstore data warehouse example" src="../_images/example.svg" /><p class="caption">Data Warehouse example</p>
+<div class="figure align-center" id="id1">
+<span id="dwexample"></span><img alt="bookstore data warehouse example" src="../_images/example.svg" /><p class="caption"><span class="caption-text">Data Warehouse example</span></p>
 </div>
 <div class="section" id="input-data">
 <h2>Input Data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h2>
 <p>Most pygrametl abstractions either produce, consume or operate on data in
-<cite>rows</cite>, where a row is a Python <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt> with the keys as &#8220;columns&#8221; and
+<cite>rows</cite>, where a row is a Python <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> with the keys as “columns” and
 the values being the data the row contains. For more information about each
-available data source, refer to <a class="reference internal" href="../examples/datasources.html#datasources"><em>Data sources</em></a>.</p>
+available data source, refer to <a class="reference internal" href="../examples/datasources.html#datasources"><span class="std std-ref">Data sources</span></a>.</p>
 <p>We use data from a database relation containing sales records, in order to load
 the data warehouse. The relation contains data as shown below.</p>
-<div class="highlight-none"><div class="highlight"><pre>book,                   genre,      store,      timestamp,  sale
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>book,                   genre,      store,      timestamp,  sale
 ----------------------------------------------------------------
 Nineteen Eighty-Four,   Novel,      Aalborg,    2005/08/05  50
 Calvin and Hobbes One,  Comic,      Aalborg,    2005/08/05  25
@@ -110,7 +102,7 @@ The Silver Spoon,       Cookbook,   Odense,     2005/09/01  7
 is limited, the Location dimension is pre-filled by data from a file. The file
 contains data as shown below with an extra tab added between each column for
 readability.</p>
-<div class="highlight-none"><div class="highlight"><pre>city,       region
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>city,       region
 Aalborg,    North Denmark Region
 Odense,     Region of Southern Denmark
 ....
@@ -122,26 +114,26 @@ Odense,     Region of Southern Denmark
 <p>The ETL flow is designed to run on CPython and use Postgresql as database
 management system, but can easily be run on other implementations such as
 Jython, by changing a few CPython specific components, such as the database
-driver and <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.SQLSource" title="pygrametl.datasources.SQLSource"><tt class="xref py py-class docutils literal"><span class="pre">SQLSource</span></tt></a>, as the C-based database drivers used by CPython
+driver and <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.SQLSource" title="pygrametl.datasources.SQLSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLSource</span></code></a>, as the C-based database drivers used by CPython
 are incompatible with most other implementations. For more information about
-running pygrametl on Jython see <a class="reference internal" href="../examples/jython.html#jython"><em>Jython</em></a>.</p>
+running pygrametl on Jython see <a class="reference internal" href="../examples/jython.html#jython"><span class="std std-ref">Jython</span></a>.</p>
 <p>We start by importing the various functions and classes needed for the simple
 ETL flow. Two parts of pygrametl need to be imported. The means to read
 data from the sales database as well as from the CSV file is imported from the
-module <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><tt class="xref py py-mod docutils literal"><span class="pre">datasources</span></tt></a>. Classes for interacting with the fact
-table and the various dimensions are imported from <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><tt class="xref py py-mod docutils literal"><span class="pre">tables</span></tt></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># psycopg2 is a database driver allowing CPython to access Postgresql</span>
+module <a class="reference internal" href="../api/datasources.html#module-pygrametl.datasources" title="pygrametl.datasources"><code class="xref py py-mod docutils literal notranslate"><span class="pre">datasources</span></code></a>. Classes for interacting with the fact
+table and the various dimensions are imported from <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tables</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># psycopg2 is a database driver allowing CPython to access Postgresql</span>
 <span class="kn">import</span> <span class="nn">psycopg2</span>
 
-<span class="c"># Pygrametl&#39;s __init__ file provides a set of helper functions and more</span>
-<span class="c"># importantly the class ConnectionWrapper for wrapping PEP 249 connections</span>
+<span class="c1"># Pygrametl&#39;s __init__ file provides a set of helper functions and more</span>
+<span class="c1"># importantly the class ConnectionWrapper for wrapping PEP 249 connections</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 
-<span class="c"># Pygrametl provides simple reading of data through datasources.</span>
+<span class="c1"># Pygrametl provides simple reading of data through datasources.</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">SQLSource</span><span class="p">,</span> <span class="n">CSVSource</span>
 
-<span class="c"># Interacting with the dimensions and the fact table is done through a set</span>
-<span class="c"># of classes. A suitable object must be created for each.</span>
+<span class="c1"># Interacting with the dimensions and the fact table is done through a set</span>
+<span class="c1"># of classes. A suitable object must be created for each.</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">Dimension</span><span class="p">,</span> <span class="n">FactTable</span>
 </pre></div>
 </div>
@@ -149,87 +141,87 @@ table and the various dimensions are imported from <a class="reference internal"
 data, as well as a connection to actual data warehouses is needed. As we use
 CPython, we use a PEP 249 connection for this. As the data warehouse connection
 must be shared by multiple different pygrametl abstractions in the ETL flow, we
-create an instance of <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionWrapper</span></tt></a>, as the first instance of
-this class is set as the default connection for pygrametl&#8217;s abstractions,
+create an instance of <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a>, as the first instance of
+this class is set as the default connection for pygrametl’s abstractions,
 allowing it to be used without having to pass it directly to each abstraction
 that needs it. This is not needed for the connection to the sales database as
 it is only needed by one abstraction, so in that case we just use the PEP 249
 connection directly. For more information about database connections in
-pygrametl see <a class="reference internal" href="../examples/database.html#database"><em>Database</em></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># Creation of a database connection to the sales database with a simple</span>
-<span class="c"># connection string, specifying the necessary host, username and passowrd</span>
-<span class="n">sales_string</span> <span class="o">=</span> <span class="s">&quot;host=&#39;10.0.0.12&#39; dbname=&#39;sale&#39; user=&#39;user&#39; password=&#39;pass&#39;&quot;</span>
+pygrametl see <a class="reference internal" href="../examples/database.html#database"><span class="std std-ref">Database</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creation of a database connection to the sales database with a simple</span>
+<span class="c1"># connection string, specifying the necessary host, username and passowrd</span>
+<span class="n">sales_string</span> <span class="o">=</span> <span class="s2">&quot;host=&#39;10.0.0.12&#39; dbname=&#39;sale&#39; user=&#39;user&#39; password=&#39;pass&#39;&quot;</span>
 <span class="n">sales_pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">sales_string</span><span class="p">)</span>
 
-<span class="c"># A connection is also created for the data warehouse. The connection is</span>
-<span class="c"># then given to a ConnectionWrapper for it to implicitly shared between</span>
-<span class="c"># all the pygrametl abstractions that needs it with being passed around</span>
-<span class="n">dw_string</span> <span class="o">=</span> <span class="s">&quot;host=&#39;10.0.0.13&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39; password=&#39;dwpass&#39;&quot;</span>
+<span class="c1"># A connection is also created for the data warehouse. The connection is</span>
+<span class="c1"># then given to a ConnectionWrapper for it to implicitly shared between</span>
+<span class="c1"># all the pygrametl abstractions that needs it with being passed around</span>
+<span class="n">dw_string</span> <span class="o">=</span> <span class="s2">&quot;host=&#39;10.0.0.13&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39; password=&#39;dwpass&#39;&quot;</span>
 <span class="n">dw_pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dw_string</span><span class="p">)</span>
 
-<span class="c"># Although the ConnectionWrapper is shared automatically between pygrametl</span>
-<span class="c"># abstractions, we still save in in a variable to allow for it to be closed</span>
+<span class="c1"># Although the ConnectionWrapper is shared automatically between pygrametl</span>
+<span class="c1"># abstractions, we still save in in a variable to allow for it to be closed</span>
 <span class="n">dw_conn_wrapper</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">dw_pgconn</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To get data into the ETL flow, two data sources are created. One for the
 database containing the sales data, and one for the CSV file containing the
 region information. For more information about the various data sources see
-<a class="reference internal" href="../examples/datasources.html#datasources"><em>Data sources</em></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># As the location dimension stores the name of a location in the attribute</span>
-<span class="c"># &quot;city&quot; instead of in the attribute &quot;store&quot; as in the input data from the</span>
-<span class="c"># sales relation, a sequence of names matching the number of attributes in</span>
-<span class="c"># the relation is created, allowing the SQLSource to do the mapping for us</span>
-<span class="n">name_mapping</span><span class="o">=</span> <span class="s">&#39;book&#39;</span><span class="p">,</span> <span class="s">&#39;genre&#39;</span><span class="p">,</span> <span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s">&#39;sale&#39;</span>
+<a class="reference internal" href="../examples/datasources.html#datasources"><span class="std std-ref">Data sources</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># As the location dimension stores the name of a location in the attribute</span>
+<span class="c1"># &quot;city&quot; instead of in the attribute &quot;store&quot; as in the input data from the</span>
+<span class="c1"># sales relation, a sequence of names matching the number of attributes in</span>
+<span class="c1"># the relation is created, allowing the SQLSource to do the mapping for us</span>
+<span class="n">name_mapping</span><span class="o">=</span> <span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="s1">&#39;genre&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;sale&#39;</span>
 
-<span class="c"># Extraction of rows from a database using a PEP 249 connection and SQL</span>
+<span class="c1"># Extraction of rows from a database using a PEP 249 connection and SQL</span>
 <span class="n">sales_source</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">sales_pgconn</span><span class="p">,</span> \
-                         <span class="n">query</span><span class="o">=</span><span class="s">&quot;SELECT * FROM sales&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">name_mapping</span><span class="p">)</span>
+                         <span class="n">query</span><span class="o">=</span><span class="s2">&quot;SELECT * FROM sales&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">name_mapping</span><span class="p">)</span>
 
-<span class="c"># Extraction of rows from a CSV file does not require SQL, just an open file</span>
-<span class="c"># handle to the file, as pygrametl uses Pythons DictReader for CSV files,</span>
-<span class="c"># and the header of the CSV file contains information about each column.</span>
-<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">)</span>
-<span class="n">region_source</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="n">region_file_handle</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+<span class="c1"># Extraction of rows from a CSV file does not require SQL, just an open file</span>
+<span class="c1"># handle to the file, as pygrametl uses Pythons DictReader for CSV files,</span>
+<span class="c1"># and the header of the CSV file contains information about each column.</span>
+<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">)</span>
+<span class="n">region_source</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="n">region_file_handle</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>An object must then be created for each dimension in the data warehouse, as
 well as an object for the fact table. Pygrametl contains multiple different
 types of dimension and fact table object abstractions. In this example we use
 the simplest ones. For more information about the more advanced dimension and
-fact table objects, see <a class="reference internal" href="../examples/dimensions.html#dimensions"><em>Dimensions</em></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><em>Fact Tables</em></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># An instance of Dimension is created for each dimension in the data</span>
-<span class="c"># warehouse. For each table, the name of the table, the primary key of</span>
-<span class="c"># the table, and a list of non key attributes in the table, are added.</span>
-<span class="c"># In addition, for the location dimension we specify which attributes</span>
-<span class="c"># should be used for a lookup of the primary key, as only the city is</span>
-<span class="c"># present in the sales database and is enough to perform a lookup of</span>
-<span class="c"># a unique primary key. As mentioned in the beginning of the guide, using</span>
-<span class="c"># named parameters is strongly encouraged.</span>
+fact table objects, see <a class="reference internal" href="../examples/dimensions.html#dimensions"><span class="std std-ref">Dimensions</span></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><span class="std std-ref">Fact Tables</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># An instance of Dimension is created for each dimension in the data</span>
+<span class="c1"># warehouse. For each table, the name of the table, the primary key of</span>
+<span class="c1"># the table, and a list of non key attributes in the table, are added.</span>
+<span class="c1"># In addition, for the location dimension we specify which attributes</span>
+<span class="c1"># should be used for a lookup of the primary key, as only the city is</span>
+<span class="c1"># present in the sales database and is enough to perform a lookup of</span>
+<span class="c1"># a unique primary key. As mentioned in the beginning of the guide, using</span>
+<span class="c1"># named parameters is strongly encouraged.</span>
 
 <span class="n">book_dimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;book&#39;</span><span class="p">,</span>
-    <span class="n">key</span><span class="o">=</span><span class="s">&#39;bookid&#39;</span><span class="p">,</span>
-    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;book&#39;</span><span class="p">,</span> <span class="s">&#39;genre&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;book&#39;</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="s1">&#39;bookid&#39;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="s1">&#39;genre&#39;</span><span class="p">])</span>
 
 <span class="n">time_dimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;time&#39;</span><span class="p">,</span>
-    <span class="n">key</span><span class="o">=</span><span class="s">&#39;timeid&#39;</span><span class="p">,</span>
-    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;day&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">,</span> <span class="s">&#39;year&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="s1">&#39;timeid&#39;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])</span>
 
 <span class="n">location_dimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;location&#39;</span><span class="p">,</span>
-    <span class="n">key</span><span class="o">=</span><span class="s">&#39;locationid&#39;</span><span class="p">,</span>
-    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;region&#39;</span><span class="p">],</span>
-    <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;city&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;location&#39;</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="s1">&#39;locationid&#39;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">],</span>
+    <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">])</span>
 
-<span class="c"># A single instance of FactTable is created for the data warehouse&#39;s</span>
-<span class="c"># fact table, with the name of the table, a list of attributes constituting</span>
-<span class="c"># the primary key of the fact table, and lastly, the list of measures.</span>
+<span class="c1"># A single instance of FactTable is created for the data warehouse&#39;s</span>
+<span class="c1"># fact table, with the name of the table, a list of attributes constituting</span>
+<span class="c1"># the primary key of the fact table, and lastly, the list of measures.</span>
 <span class="n">fact_table</span> <span class="o">=</span> <span class="n">FactTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;facttable&#39;</span><span class="p">,</span>
-    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;bookid&#39;</span><span class="p">,</span> <span class="s">&#39;locationid&#39;</span><span class="p">,</span> <span class="s">&#39;timeid&#39;</span><span class="p">],</span>
-    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;facttable&#39;</span><span class="p">,</span>
+    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bookid&#39;</span><span class="p">,</span> <span class="s1">&#39;locationid&#39;</span><span class="p">,</span> <span class="s1">&#39;timeid&#39;</span><span class="p">],</span>
+    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>As the input timestamp is a string, and the time dimension consists of multiple
@@ -237,21 +229,21 @@ levels, day, month, and year, the string must be split into its separate
 values. For this, we simply create a normal Python function and pass it each of
 the rows. As pygrametl is a Python library, the manipulation of data be written
 in standard Python without any syntactic additions or restrictions.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># A normal Python function is used to split the timestamp into its parts</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># A normal Python function is used to split the timestamp into its parts</span>
 <span class="k">def</span> <span class="nf">split_timestamp</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Splits a timestamp containing a date into its three parts&quot;&quot;&quot;</span>
 
-    <span class="c"># First the timestamp is extracted from the row dictionary</span>
-    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;timestamp&#39;</span><span class="p">]</span>
+    <span class="c1"># First the timestamp is extracted from the row dictionary</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
 
-    <span class="c"># Then the string is split on the / in the time stamp</span>
-    <span class="n">timestamp_split</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+    <span class="c1"># Then the string is split on the / in the time stamp</span>
+    <span class="n">timestamp_split</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
 
-    <span class="c"># Finally each part is reassigned to the row dictionary. It can then be</span>
-    <span class="c"># accessed by the caller as the row is a reference to the dict object</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># Finally each part is reassigned to the row dictionary. It can then be</span>
+    <span class="c1"># accessed by the caller as the row is a reference to the dict object</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Finally, the data can be inserted into the data warehouse. All rows from the
@@ -260,67 +252,67 @@ data needed, and the data needs to exist in the dimension in order for a
 foreign key to be computed for the fact table. The other two dimensions are
 built during the insertion of facts, as the needed data is included in the
 sales data from the database. To ensure that the data is committed to the
-database, the method <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><tt class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.commit()</span></tt></a> is called, before
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.close" title="pygrametl.ConnectionWrapper.close"><tt class="xref py py-meth docutils literal"><span class="pre">ConnectionWrapper.close()</span></tt></a> which closes the connection to the database.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># The Location dimension is filled with data from the CSV file, as the file</span>
-<span class="c"># contains information for both columns in the table. If the dimension was</span>
-<span class="c"># filled using the sales database, it would be necessary to update the</span>
-<span class="c"># region attribute with data from the CSV file later irregardless.</span>
-<span class="c"># To perform the insertion, the method Dimension.insert() is used which</span>
-<span class="c"># inserts a row into the table, and the connection wrapper is asked to</span>
-<span class="c"># commit to ensure that the data is present in the database to allow for</span>
-<span class="c"># lookups of keys for the fact table</span>
+database, the method <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionWrapper.commit()</span></code></a> is called, before
+<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.close" title="pygrametl.ConnectionWrapper.close"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionWrapper.close()</span></code></a> which closes the connection to the database.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The Location dimension is filled with data from the CSV file, as the file</span>
+<span class="c1"># contains information for both columns in the table. If the dimension was</span>
+<span class="c1"># filled using the sales database, it would be necessary to update the</span>
+<span class="c1"># region attribute with data from the CSV file later irregardless.</span>
+<span class="c1"># To perform the insertion, the method Dimension.insert() is used which</span>
+<span class="c1"># inserts a row into the table, and the connection wrapper is asked to</span>
+<span class="c1"># commit to ensure that the data is present in the database to allow for</span>
+<span class="c1"># lookups of keys for the fact table</span>
 <span class="p">[</span><span class="n">location_dimension</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">region_source</span><span class="p">]</span>
 
-<span class="c"># The file handle for the CSV file can then be closed</span>
+<span class="c1"># The file handle for the CSV file can then be closed</span>
 <span class="n">region_file_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="c"># As all the information needed for the other dimensions are stored in the</span>
-<span class="c"># sales database, we can loop through all the rows in it, split the timestamp</span>
-<span class="c"># into its three parts, and lookup the three dimension keys needed for</span>
-<span class="c"># the fact table while letting pygrametl update each dimension with the</span>
-<span class="c"># necessary data using Dimension.ensure(). Using this method instead of</span>
-<span class="c"># insert combines a lookup with a insertion so a new row only is inserted</span>
-<span class="c"># into the dimension or fact table, if it does not yet exist.</span>
+<span class="c1"># As all the information needed for the other dimensions are stored in the</span>
+<span class="c1"># sales database, we can loop through all the rows in it, split the timestamp</span>
+<span class="c1"># into its three parts, and lookup the three dimension keys needed for</span>
+<span class="c1"># the fact table while letting pygrametl update each dimension with the</span>
+<span class="c1"># necessary data using Dimension.ensure(). Using this method instead of</span>
+<span class="c1"># insert combines a lookup with a insertion so a new row only is inserted</span>
+<span class="c1"># into the dimension or fact table, if it does not yet exist.</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sales_source</span><span class="p">:</span>
 
-    <span class="c"># The timestamp is split into its three parts</span>
+    <span class="c1"># The timestamp is split into its three parts</span>
     <span class="n">split_timestamp</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-    <span class="c"># We update the row with the primary keys of each dimension while at</span>
-    <span class="c"># the same time inserting new data into each dimension</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;bookid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">book_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;timeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="c1"># We update the row with the primary keys of each dimension while at</span>
+    <span class="c1"># the same time inserting new data into each dimension</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;bookid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">book_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;timeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-    <span class="c"># We do not use ensure() for the location dimension, as city</span>
-    <span class="c"># and region information of all stores has already been loaded into</span>
-    <span class="c"># the table, and having a sale from a store we do not know about is</span>
-    <span class="c"># probably either an error in the sales or region data. We use lookup</span>
-    <span class="c"># instead which does not insert data and returns None, if no row with</span>
-    <span class="c"># the requested data is available, allowing for simple implementation</span>
-    <span class="c"># of error handling in ETL flow, which is shown here as an exception</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;locationid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_dimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="c1"># We do not use ensure() for the location dimension, as city</span>
+    <span class="c1"># and region information of all stores has already been loaded into</span>
+    <span class="c1"># the table, and having a sale from a store we do not know about is</span>
+    <span class="c1"># probably either an error in the sales or region data. We use lookup</span>
+    <span class="c1"># instead which does not insert data and returns None, if no row with</span>
+    <span class="c1"># the requested data is available, allowing for simple implementation</span>
+    <span class="c1"># of error handling in ETL flow, which is shown here as an exception</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;locationid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_dimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-    <span class="c"># A simple example of how to check if a lookup was successful, so</span>
-    <span class="c"># errors can be handled in some way. Here we just give up, and throw</span>
-    <span class="c"># an error.</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;locationid&#39;</span><span class="p">]:</span>
-       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;City was not present in the location dimension&quot;</span><span class="p">)</span>
+    <span class="c1"># A simple example of how to check if a lookup was successful, so</span>
+    <span class="c1"># errors can be handled in some way. Here we just give up, and throw</span>
+    <span class="c1"># an error.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;locationid&#39;</span><span class="p">]:</span>
+       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;City was not present in the location dimension&quot;</span><span class="p">)</span>
 
-    <span class="c"># As the number of sales was already conveniently aggregated in the</span>
-    <span class="c"># sales table, the row can now be inserted into the data warehouse as</span>
-    <span class="c"># we have all the IDs we need. If aggregations, or other more advanced</span>
-    <span class="c"># manipulation is required, the full power Python is available as shown</span>
-    <span class="c"># with the call to the split_timestamp(row) function.</span>
+    <span class="c1"># As the number of sales was already conveniently aggregated in the</span>
+    <span class="c1"># sales table, the row can now be inserted into the data warehouse as</span>
+    <span class="c1"># we have all the IDs we need. If aggregations, or other more advanced</span>
+    <span class="c1"># manipulation is required, the full power Python is available as shown</span>
+    <span class="c1"># with the call to the split_timestamp(row) function.</span>
     <span class="n">fact_table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c"># After all the data is inserted, we close the connection in order to</span>
-<span class="c"># ensure that all data is committed to the database and that the</span>
-<span class="c"># connection is correctly released</span>
+<span class="c1"># After all the data is inserted, we close the connection in order to</span>
+<span class="c1"># ensure that all data is committed to the database and that the</span>
+<span class="c1"># connection is correctly released</span>
 <span class="n">dw_conn_wrapper</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">dw_conn_wrapper</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="c"># Finally, the connection to the sales database is closed</span>
+<span class="c1"># Finally, the connection to the sales database is closed</span>
 <span class="n">sales_pgconn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -329,99 +321,99 @@ pygrametl. A combined, less commented version, can be seen below, but as this
 is only a very small example, the caching or bulk loading built into some of
 the more advanced dimension and fact table classes has not been used. In
 anything but very small ETL flows, these should however be used. See
-<a class="reference internal" href="../examples/dimensions.html#dimensions"><em>Dimensions</em></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><em>Fact Tables</em></a> for more information. Pygrametl also
+<a class="reference internal" href="../examples/dimensions.html#dimensions"><span class="std std-ref">Dimensions</span></a> and <a class="reference internal" href="../examples/facttable.html#facttables"><span class="std std-ref">Fact Tables</span></a> for more information. Pygrametl also
 provides a set of simple abstractions for performing operations in parallel on
 multi-core systems, in order to increase the throughput of a ETL program. For
-more information about parallelism, see <a class="reference internal" href="../examples/parallel.html#parallel"><em>Parallel</em></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">psycopg2</span>
+more information about parallelism, see <a class="reference internal" href="../examples/parallel.html#parallel"><span class="std std-ref">Parallel</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">SQLSource</span><span class="p">,</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">Dimension</span><span class="p">,</span> <span class="n">FactTable</span>
 
-<span class="c"># Opening of connections and creation of a ConnectionWrapper</span>
-<span class="n">sales_string</span> <span class="o">=</span> <span class="s">&quot;host=&#39;10.0.0.12&#39; dbname=&#39;sale&#39; user=&#39;user&#39; password=&#39;pass&#39;&quot;</span>
+<span class="c1"># Opening of connections and creation of a ConnectionWrapper</span>
+<span class="n">sales_string</span> <span class="o">=</span> <span class="s2">&quot;host=&#39;10.0.0.12&#39; dbname=&#39;sale&#39; user=&#39;user&#39; password=&#39;pass&#39;&quot;</span>
 <span class="n">sales_pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">sales_string</span><span class="p">)</span>
 
-<span class="n">dw_string</span> <span class="o">=</span> <span class="s">&quot;host=&#39;10.0.0.13&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39; password=&#39;dwpass&#39;&quot;</span>
+<span class="n">dw_string</span> <span class="o">=</span> <span class="s2">&quot;host=&#39;10.0.0.13&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39; password=&#39;dwpass&#39;&quot;</span>
 <span class="n">dw_pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dw_string</span><span class="p">)</span>
 <span class="n">dw_conn_wrapper</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">dw_pgconn</span><span class="p">)</span>
 
-<span class="c"># Creation of data sources for the sales database and the CSV file,</span>
-<span class="c"># containing extra information about cities and regions in Denmark.</span>
-<span class="n">name_mapping</span><span class="o">=</span> <span class="s">&#39;book&#39;</span><span class="p">,</span> <span class="s">&#39;genre&#39;</span><span class="p">,</span> <span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s">&#39;sale&#39;</span>
+<span class="c1"># Creation of data sources for the sales database and the CSV file,</span>
+<span class="c1"># containing extra information about cities and regions in Denmark.</span>
+<span class="n">name_mapping</span><span class="o">=</span> <span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="s1">&#39;genre&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;sale&#39;</span>
 <span class="n">sales_source</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">sales_pgconn</span><span class="p">,</span> \
-                         <span class="n">query</span><span class="o">=</span><span class="s">&quot;SELECT * FROM sales&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">name_mapping</span><span class="p">)</span>
+                         <span class="n">query</span><span class="o">=</span><span class="s2">&quot;SELECT * FROM sales&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">name_mapping</span><span class="p">)</span>
 
-<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">)</span>
-<span class="n">region_source</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="n">region_file_handle</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
-<span class="c"># Creation of dimension and fact table abstractions for use in the ETL flow</span>
+<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">)</span>
+<span class="n">region_source</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">csvfile</span><span class="o">=</span><span class="n">region_file_handle</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="c1"># Creation of dimension and fact table abstractions for use in the ETL flow</span>
 <span class="n">book_dimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;book&#39;</span><span class="p">,</span>
-    <span class="n">key</span><span class="o">=</span><span class="s">&#39;bookid&#39;</span><span class="p">,</span>
-    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;book&#39;</span><span class="p">,</span> <span class="s">&#39;genre&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;book&#39;</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="s1">&#39;bookid&#39;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="s1">&#39;genre&#39;</span><span class="p">])</span>
 
 <span class="n">time_dimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;time&#39;</span><span class="p">,</span>
-    <span class="n">key</span><span class="o">=</span><span class="s">&#39;timeid&#39;</span><span class="p">,</span>
-    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;day&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">,</span> <span class="s">&#39;year&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="s1">&#39;timeid&#39;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])</span>
 
 <span class="n">location_dimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;location&#39;</span><span class="p">,</span>
-    <span class="n">key</span><span class="o">=</span><span class="s">&#39;locationid&#39;</span><span class="p">,</span>
-    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;city&#39;</span><span class="p">,</span> <span class="s">&#39;region&#39;</span><span class="p">],</span>
-    <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;city&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;location&#39;</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="s1">&#39;locationid&#39;</span><span class="p">,</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">],</span>
+    <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">])</span>
 
 <span class="n">fact_table</span> <span class="o">=</span> <span class="n">FactTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s">&#39;facttable&#39;</span><span class="p">,</span>
-    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;bookid&#39;</span><span class="p">,</span> <span class="s">&#39;locationid&#39;</span><span class="p">,</span> <span class="s">&#39;timeid&#39;</span><span class="p">],</span>
-    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;sale&#39;</span><span class="p">])</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;facttable&#39;</span><span class="p">,</span>
+    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bookid&#39;</span><span class="p">,</span> <span class="s1">&#39;locationid&#39;</span><span class="p">,</span> <span class="s1">&#39;timeid&#39;</span><span class="p">],</span>
+    <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sale&#39;</span><span class="p">])</span>
 
-<span class="c"># Python function needed to split the timestamp into its three parts</span>
+<span class="c1"># Python function needed to split the timestamp into its three parts</span>
 <span class="k">def</span> <span class="nf">split_timestamp</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Splits a timestamp containing a date into its three parts&quot;&quot;&quot;</span>
 
-    <span class="c"># Splitting of the timestamp into parts</span>
-    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;timestamp&#39;</span><span class="p">]</span>
-    <span class="n">timestamp_split</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+    <span class="c1"># Splitting of the timestamp into parts</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+    <span class="n">timestamp_split</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
 
-    <span class="c"># Assignment of each part to the dictionary</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># Assignment of each part to the dictionary</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp_split</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
-<span class="c"># The location dimension is loaded from the CSV file, and in order for</span>
-<span class="c"># the data to be present in the database, the shared connection is asked</span>
-<span class="c"># to commit</span>
+<span class="c1"># The location dimension is loaded from the CSV file, and in order for</span>
+<span class="c1"># the data to be present in the database, the shared connection is asked</span>
+<span class="c1"># to commit</span>
 <span class="p">[</span><span class="n">location_dimension</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">region_source</span><span class="p">]</span>
 
-<span class="c"># The file handle for the CSV file can then be closed</span>
+<span class="c1"># The file handle for the CSV file can then be closed</span>
 <span class="n">region_file_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="c"># Each row in the sales database is iterated through and inserted</span>
+<span class="c1"># Each row in the sales database is iterated through and inserted</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sales_source</span><span class="p">:</span>
 
-    <span class="c"># Each row is passed to the timestamp split function for splitting</span>
+    <span class="c1"># Each row is passed to the timestamp split function for splitting</span>
     <span class="n">split_timestamp</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-    <span class="c"># Lookups are performed to find the key in each dimension for the fact</span>
-    <span class="c"># and if the data is not there, it is inserted from the sales row</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;bookid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">book_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;timeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="c1"># Lookups are performed to find the key in each dimension for the fact</span>
+    <span class="c1"># and if the data is not there, it is inserted from the sales row</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;bookid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">book_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;timeid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_dimension</span><span class="o">.</span><span class="n">ensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-    <span class="c"># For the location dimension, all the data is already present, so a</span>
-    <span class="c"># missing row must be an error</span>
-    <span class="n">row</span><span class="p">[</span><span class="s">&#39;locationid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_dimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;locationid&#39;</span><span class="p">]:</span>
-       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;city was not present in the location dimension&quot;</span><span class="p">)</span>
+    <span class="c1"># For the location dimension, all the data is already present, so a</span>
+    <span class="c1"># missing row must be an error</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;locationid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_dimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;locationid&#39;</span><span class="p">]:</span>
+       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;city was not present in the location dimension&quot;</span><span class="p">)</span>
 
-    <span class="c"># The row can then be inserted into the fact table</span>
+    <span class="c1"># The row can then be inserted into the fact table</span>
     <span class="n">fact_table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c"># The data warehouse connection is then ordered to commit and close</span>
+<span class="c1"># The data warehouse connection is then ordered to commit and close</span>
 <span class="n">dw_conn_wrapper</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">dw_conn_wrapper</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="c"># Finally the connection to the sales database is closed</span>
+<span class="c1"># Finally the connection to the sales database is closed</span>
 <span class="n">sales_pgconn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -432,9 +424,9 @@ more information about parallelism, see <a class="reference internal" href="../e
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Beginner Guide</a><ul>
 <li><a class="reference internal" href="#input-data">Input Data</a></li>
@@ -449,29 +441,30 @@ more information about parallelism, see <a class="reference internal" href="../e
   <h4>Next topic</h4>
   <p class="topless"><a href="../examples/database.html"
                         title="next chapter">Database</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/quickstart/beginner.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/quickstart/beginner.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -486,12 +479,12 @@ more information about parallelism, see <a class="reference internal" href="../e
         <li class="right" >
           <a href="install.html" title="Install Guide"
              >previous</a> |</li>
-        <li><a href="../index.html">pygrametl 2.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2009 - 2015, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2009 - 2016, Aalborg University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>
