@@ -1,4 +1,4 @@
-Unreleased (to be 2.6.0)
+Version 2.6
 ----------
 **Added**
   ``PandasSource`` a new class, that given a Pandas DataFrame acts as a
@@ -27,7 +27,6 @@ Unreleased (to be 2.6.0)
   ``ConnectionWrapper.execute`` does not pass the argument ``arguments`` to
   the underlying cursor's execute method if ``arguments`` is None. Some drivers
   raise an Error if None is passed, some don't.
-
 
 Version 2.5
 -----------
