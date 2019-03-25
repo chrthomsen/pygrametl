@@ -64,13 +64,13 @@ except ImportError:
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.6'
+__version__ = '2.7'
 __all__ = ['definequote', 'Dimension', 'CachedDimension', 'BulkDimension',
            'CachedBulkDimension', 'TypeOneSlowlyChangingDimension',
            'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable',
-           'BatchFactTable', 'BulkFactTable', 'SubprocessFactTable',
-           'DecoupledDimension', 'DecoupledFactTable', 'BasePartitioner',
-           'DimensionPartitioner', 'FactTablePartitioner']
+           'BatchFactTable', 'BulkFactTable', 'AccumulatingSnapshotFactTable',
+           'SubprocessFactTable', 'DecoupledDimension', 'DecoupledFactTable',
+           'BasePartitioner', 'DimensionPartitioner', 'FactTablePartitioner']
 
 
 def _quote(x): return x
@@ -1720,7 +1720,8 @@ class FactTable(object):
 
            Arguments:
                
-           - row: a dict at least containing values for the keys and measures.
+           - row: a dict at least containing values for all the fact table's 
+             attributes (both keys/references and measures).
            - namemapping: an optional namemapping (see module's documentation)
         """
         tmp = self._before_insert(row, namemapping)
@@ -1851,6 +1852,122 @@ class BatchFactTable(FactTable):
             self.__batch = []
 
 
+class AccumulatingSnapshotFactTable(FactTable):
+
+    """A class for accessing and updating an accumulating fact table in the DW.
+       Facts in an accumulating fact table can be updated. The class does
+       no caching and all lookups and updates are sent to the DBMS (and an
+       index on the keyrefs should thus be considered).
+    """
+
+    def __init__(self, name, keyrefs, otherrefs, measures=(),
+                 ignorenonerefs=True, ignorenonemeasures=True,
+                 factexpander=None, targetconnection=None):
+        """Arguments:
+            
+           - name: the name of the fact table in the DW
+           - keyrefs: a sequence of attribute names that constitute the
+             primary key of the fact tables. This is a subset of the dimension 
+             references and these references are not allowed to be updated.
+           - otherrefs: a sequence of dimension references that can be updated.
+           - measures: a possibly empty sequence of measure names. Default: ()
+           - ignorenonerefs: A flag deciding if None values for attributes in
+             otherrefs are ignored when doing an update. If True (default), the
+             existing value in the database will not be overwritten by a None.
+           - ignorenonemeasures: A flag deciding if None values for attributes 
+             in measures are ignored when doing an update. If True (default), 
+             the existing value in the database will not be overwritten by a 
+             None.
+           - factexpander: A function(row, namemapping, set of names of updated 
+             attributes). This function is called by the ensure method before 
+             it calls the update method if a row has been changed. This is, 
+             e.g., practical if lag measures should be computed before the row 
+             in the fact table is updated. The function should make its 
+             changes directly on the passed row.
+           - targetconnection: The ConnectionWrapper to use. If not given,
+             the default target connection is used.
+        """
+
+        FactTable.__init__(self,
+                           name=name,
+                           keyrefs=keyrefs,
+                           measures=otherrefs + measures,
+                           targetconnection=targetconnection)
+
+        self.measures = measures#FactTable.__init__ set it to otherrefs+measures
+        self.otherrefs = otherrefs
+        self.ignorenonerefs = ignorenonerefs
+        self.ignorenonemeasures = ignorenonemeasures
+        self.factexpander = factexpander
+        
+    # insert and lookup are inherited from FactTable
+    
+    def ensure(self, row, namemapping={}):
+        """Lookup the given row. If that fails, insert it. If found, see
+           if values for attributes in otherrefs or measures have changed and
+           update the found row if necessary (note that values for attributes
+           in keyrefs are not allowed to change). If an update is necessary
+           and a factexpander is defined, the factexpander will be run on the
+           row first. Return nothing. 
+
+           Arguments:
+               
+           - row: the row to insert or update if needed. Must contain the 
+             keyrefs attributes. For missing attributes from otherrefs and
+             measures, the value is set to None if the row has to be
+             inserted.
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+        oldrow = self.lookup(row, namemapping)
+        if not oldrow:
+            if (self.otherrefs + self.measures) - row.keys():
+                # some keys are missing in row; fix it in a copy and use that
+                row = pygrametl.copy(row, **namemapping)
+                namemapping = {}
+                for att in (self.otherrefs + self.measures):
+                    if att not in row:
+                        row[att] = None
+            self.insert(row, namemapping)
+            return
+        else:
+            updated = self.__differences(oldrow, row, namemapping)
+            if updated:
+                if self.factexpander:
+                    self.factexpander(row, namemapping, updated)
+                    updated = self.__differences(oldrow, row, namemapping)
+                self.__doupdates(row, namemapping, updated)
+                
+    def __differences(self, oldrow, newrow, namemapping):
+        # finds differences between oldrow and newrow wrt. otherrefs and 
+        # measures (namemapping is used for newrow only) 
+        differences = set()
+        self.__diffhelper(oldrow, newrow, namemapping, self.otherrefs, \
+                           self.ignorenonerefs, differences)
+        self.__diffhelper(oldrow, newrow, namemapping, self.measures, \
+                          self.ignorenonemeasures, differences)
+        return differences
+        
+    def __diffhelper(self, oldrow, newrow, namemapping, atts, ignorenone, res):
+        for a in atts:
+            newa = namemapping.get(a) or a
+            if newrow.get(newa) != oldrow.get(a):
+                if newrow.get(newa) is not None or not ignorenone:
+                    res.add(a)
+
+    def update(self, row, namemapping={}):
+        oldrow = self.lookup(row, namemapping)
+        updated = self.__differences(oldrow, row, namemapping)
+        if updated:
+            self.__doupdates(row, namemapping, updated)
+
+    def __doupdates(self, newrow, namemapping, updated):
+        updatesql = "UPDATE " + self.name + " SET " + \
+                    ",".join(["%s = %%(%s)s" %
+                              (self.quote(a), a) for a in updated]) + \
+                    " WHERE " + " AND ".join(["%s = %%(%s)s" %
+                                              (self.quote(k), k) \
+                                              for k in self.keyrefs])
+        self.targetconnection.execute(updatesql, newrow, namemapping)
 
 
 class _BaseBulkloadable(object):

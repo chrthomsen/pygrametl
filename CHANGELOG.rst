@@ -1,3 +1,9 @@
+Version 2.7 (unreleased)
+------------------------
+**Added**
+  ``AccumulatingSnapshotFactTable`` a new class supporting accumulating
+  snapshot fact tables where facts can be updated as a process progresses.
+ 
 Version 2.6
 ----------
 **Added**

@@ -201,3 +201,104 @@ driver used.
         factTable.insert(row)
     conn.commit()
     conn.close()
+
+AccumulatingSnapshotFactTable
+-----------------------------
+The class :class:`.AccumulatingSnapshotFactTable` supports accumulating
+snapshot fact tables. Fact rows in accumulating fact tables are updated as a
+process evolves. Typically different date references (OrderData, PaymentDate,
+ShipDate, DeliveryDate, etc.) are set when they become known. Measures (e.g.,
+measuring the lag between the different dates) are also often set as they
+become available.
+
+Like for :class:`.FactTable`, the class :class:`.AccumulatingSnapshotFactTable`
+performs an insert in the database whenever the :meth:`.FactTable.insert`
+method is called.
+
+The following illustrates how to create use the class.
+
+.. code-block:: python
+
+    import psycopg2
+    import pygrametl
+    from pygrametl.tables import AccumulatingSnapshotFactTable
+
+    # The actual database connection is handled using a PEP 249 connection
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+                              password='dwpass'""")
+
+    # This ConnectionWrapper will be set as default and is then implicitly used,
+    # a reference to the wrapper is saved to allow for easy access of it later
+    conn = pygrametl.ConnectionWrapper(connection=pgconn)
+
+    def computelag(row, namemapping, updated):
+	# Here we can modify row and compute lag measures.
+	# NB: For brevity and simplicity, we ignore namemapping in this example.
+	# We shouldn't ignore that in production code.
+	if 'shipmentdateid' in updated:
+           row['shipmentlag'] = row['shipmentdateid'] - row['paymentdateid']
+	if 'deliverydateid' in updated:
+           row['deliverylag'] = row['deliverydate'] - row['shipmentdateid']
+    
+    # The instance of AccumulatingSnapshotFactTable connects to the table
+    # "orderprocessing" in the database using the default connection wrapper
+    # we created above
+    asft = AccumulatingSnapshotFactTable(
+        name='orderprocessing',
+	keyrefs = ['orderid', 'customerid', 'productid'],
+	otherrefs = ['paymentdateid', 'shipmentdateid', 'deliverydateid']
+	measures = ['price', 'shipmentlag', 'deliverylag'],
+	factexpander = computelag
+	)
+
+First a :PEP:`249` connection is created to perform the actual database
+operations, then an instance of the :class:`.ConnectionWrapper` is created as
+a uniform wrapper around the PEP connection which is set as the default
+database connection for pygrametl.  Then a user-defined function to compute lag
+measures is defined. Lastly an :class:`.AccumulatingSnapshotFactTable` is
+created.
+
+:meth:`.AccumulatingSnapshotFactTable.insert` inserts new facts directly into
+the fact table when they are passed to the method. :meth:`.FactTable.lookup`
+checks if the database contains a fact with the given combination of keys
+referencing the dimensions.  These methods behave in the same way as in
+:class:`.FactTable`. The method :meth:`.AccumulatingSnapshotFactTable.update`
+will based on the keyrefs find the fact and detect any differences in
+otherrefs and measures and then do any necessary updates to the row in the
+database. The method :meth:`.AccumulatingSnapshotFactTable.ensure` will see if
+the row it is given, already exists in the database table. If it does not
+exist there, it is immediately inserted. If it exsits, the method will see if
+some of the values for otherrefs or measures have been updated in the passed
+row. If so, it will update the row in the database. Before that it will,
+however, run the factexpander if such one was given to
+:meth:`.AccumulatingSnapshotFactTable.__init__` when the object was created.
+Note that the generated SQL for lookups and updates will use the keyrefs
+in the WHERE condition and an index on them should be considered.
+
+An example of how to use the class can be seen below.
+
+.. code-block:: python
+
+    # A list of facts are ready to inserted into the fact table
+    facts = [ {'orderid' : 1, 'customerid' : 1, 'productid' : 1, 'price': 10},
+              {'orderid' : 2, 'customerid' : 2, 'productid' : 2, 'price': 20},
+	      {'orderid' : 3, 'customerid' : 3, 'productid' : 3, 'price': 30} ]
+
+    # The facts can be inserted using the ensure method. (If we had used the
+    # insert method instead, we should have made sure the the facts above
+    # had a value for each attribute in the fact table. When using ensure,
+    # "missing" attributes will be set to None before an insertion.)
+    for row in facts:
+        asft.ensure(row)
+
+    # Now assume that the the orders get paid and shipped 
+    facts[0]['paymentdateid'] = 12
+    facts[0]['shipmentdateid'] = 14
+    facts[2]['paymentdateid'] = 11
+
+    # Update the accumulating fact table in the DW
+    for row in facts: 
+        asft.ensure(row) # will call computelag and do the needed updates
+
+    conn.commit()
+    conn.close()
