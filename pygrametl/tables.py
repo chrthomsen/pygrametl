@@ -19,7 +19,7 @@
    dim.insert(row=..., namemapping={'order_date':'date'})
 """
 
-# Copyright (c) 2009-2016, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2019, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -1127,11 +1127,16 @@ class SlowlyChangingDimension(Dimension):
             other = self.getbykey(keyval)  # the full existing version
             for att in self.all:
                 # Special (non-)handling of versioning and key attributes:
-                if att in (self.key, self.orderingatt, self.versionatt, self.toatt):
+                if att in (self.key, self.orderingatt, self.versionatt):
                     # Don't compare these - we don't expect them to have
                     # meaningful values in row
                     continue
-                # We may have to compare the "from dates"
+                # We may have to compare the "from" and "to" dates
+                elif att == self.toatt:
+                    if other[self.toatt] != self.maxto:
+                        # That version was closed manually or by closecurrent
+                        # and we now have to add a new version
+                        addnewversion = True
                 elif att == self.fromatt:
                     if self.srcdateatt is None:  # We don't compare dates then
                         continue
@@ -1186,8 +1191,9 @@ class SlowlyChangingDimension(Dimension):
                 if toatt:
                     row[toatt] = self.maxto
                 row[key] = self.insert(row, namemapping)
-                # Update the todate attribute in the old row version in the DB.
-                if toatt:
+                # Update the todate attribute in the old row version in the DB
+                # if it has not been set manually or by closecurrent
+                if toatt and other[self.toatt] == self.maxto:
                     toattval = self.tofinder(self.targetconnection, row,
                                              namemapping)
                     self.targetconnection.execute(
@@ -1289,6 +1295,31 @@ class SlowlyChangingDimension(Dimension):
         for key in updatekeys:
             if key in self.rowcache:
                 del self.rowcache[key]
+
+    def closecurrent(self, row, namemapping={}, end=pygrametl.today()):
+        """Close the current version by setting its toatt if it is maxto.
+
+           The newest version will have its toatt set to the given end 
+           argument (default pygrametl.today(), i.e., the current date) only
+           if, the value for the newest row's toatt currently is maxto. 
+           Otherwise no update will be done.
+           If toatt is not defined an exception is raised. 
+
+           Arguments:
+               
+           - row: a dict which must contain at least the lookup attributes
+           - namemapping: an optional namemapping (see module's documentation)
+           - end: the value to set for the newest version. Default: The current
+             date as given by pygrametl.today()
+        """
+        if self.toatt is None:
+            raise RuntimeError("A toatt must be defined")
+        keyval = self.lookup(row, namemapping)
+        if keyval is None:
+            raise RuntimeError("Member does not exist and cannot be closed")
+        existing = self.getbykey(keyval)
+        if existing[self.toatt] == self.maxto:
+            self.update({self.key: keyval, self.toatt: end})
 
 
 SCDimension = SlowlyChangingDimension

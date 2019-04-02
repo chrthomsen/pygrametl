@@ -3,6 +3,17 @@ Version 2.7 (unreleased)
 **Added**
   ``AccumulatingSnapshotFactTable`` a new class supporting accumulating
   snapshot fact tables where facts can be updated as a process progresses.
+
+  ``closecurrent`` method to ``SlowlyChangingDimension`` to make it possible
+  to set and end date for the most current version without adding a new
+  version.
+
+**Changed**
+  ``SlowlyChangingDimension.scdensure`` now checks if the newest version
+  has its toatt set to a value different from maxto (if toatt is
+  defined). This can happen from a call to ``closecurrent`` or a manual
+  update. If it is the case, a new version will be added when ``scdensure`` is
+  called even if no other differences are present.
  
 Version 2.6
 ----------
