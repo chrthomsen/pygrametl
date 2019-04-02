@@ -5,7 +5,7 @@ Version 2.7 (unreleased)
   snapshot fact tables where facts can be updated as a process progresses.
 
   ``closecurrent`` method to ``SlowlyChangingDimension`` to make it possible
-  to set and end date for the most current version without adding a new
+  to set an end date for the most current version without adding a new
   version.
 
 **Changed**
