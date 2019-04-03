@@ -1938,8 +1938,9 @@ class AccumulatingSnapshotFactTable(FactTable):
            if values for attributes in otherrefs or measures have changed and
            update the found row if necessary (note that values for attributes
            in keyrefs are not allowed to change). If an update is necessary
-           and a factexpander is defined, the factexpander will be run on the
-           row first. Return nothing. 
+           and a factexpander is defined, the row will first be updated with
+           any missing otherrefs/measures and the factexpander will be run on
+           it. Return nothing. 
 
            Arguments:
                
@@ -1964,6 +1965,7 @@ class AccumulatingSnapshotFactTable(FactTable):
             updated = self.__differences(oldrow, row, namemapping)
             if updated:
                 if self.factexpander:
+                    self.__addmissingkeys(row, namemapping, oldrow)
                     self.factexpander(row, namemapping, updated)
                     updated = self.__differences(oldrow, row, namemapping)
                 self.__doupdates(row, namemapping, updated)
@@ -1984,6 +1986,12 @@ class AccumulatingSnapshotFactTable(FactTable):
             if newrow.get(newa) != oldrow.get(a):
                 if newrow.get(newa) is not None or not ignorenone:
                     res.add(a)
+
+    def __addmissingkeys(self, row, namemappingfornew, oldrow):
+        for key in self.all:
+            mappedkey = namemappingfornew.get(key) or key
+            if mappedkey not in row:
+                row[mappedkey] = oldrow[key]
 
     def update(self, row, namemapping={}):
         oldrow = self.lookup(row, namemapping)
