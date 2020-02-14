@@ -695,7 +695,7 @@ class ConnectionWrapper(object):
             (newstmt, _) = self.__translate(stmt, params[0])
             names = self.__translations[stmt][1]
 
-            if self.paramstyle == 'pyformat' or self.__paramstyle == 'named':
+            if self.__paramstyle == 'pyformat' or self.__paramstyle == 'named':
                 if self.__copyintonew:
                     # we need to copy attributes from params into new dicts
                     newparams = [{n:p[n] for n in names} for p in params]
