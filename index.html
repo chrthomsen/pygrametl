@@ -81,7 +81,7 @@
 
 
 <span class="pl-c">#</span>
-<span class="pl-c">#  Copyright (c) 2009, 2010 Aalborg University (pygrametl@cs.aau.dk)</span>
+<span class="pl-c">#  Copyright (c) 2009-2020 Aalborg University (pygrametl@cs.aau.dk)</span>
 <span class="pl-c">#</span>
 <span class="pl-c">#  This file is free software: you may copy, redistribute and/or modify it</span>
 <span class="pl-c">#  under the terms of the GNU General Public License version 2</span>
@@ -238,10 +238,10 @@ facttbl <span class="pl-k">=</span> BulkFactTable(
 
 <span class="pl-c"># Data sources - change the path if you have your files somewhere else</span>
 <span class="pl-c"># The buffer size is set to 16384 B, as it performed better than any alternatives we tested</span>
-downloadlog <span class="pl-k">=</span> CSVSource(<span class="pl-c1">file</span>(<span class="pl-s"><span class="pl-pds">'</span>./DownloadLog.csv<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>r<span class="pl-pds">'</span></span>, <span class="pl-c1">16384</span>),
+downloadlog <span class="pl-k">=</span> CSVSource(<span class="pl-c1">open</span>(<span class="pl-s"><span class="pl-pds">'</span>./DownloadLog.csv<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>r<span class="pl-pds">'</span></span>, <span class="pl-c1">16384</span>),
                         <span class="pl-smi">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\t</span><span class="pl-pds">'</span></span>)
 
-testresults <span class="pl-k">=</span> CSVSource(<span class="pl-c1">file</span>(<span class="pl-s"><span class="pl-pds">'</span>./TestResults.csv<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>r<span class="pl-pds">'</span></span>, <span class="pl-c1">16384</span>),
+testresults <span class="pl-k">=</span> CSVSource(<span class="pl-c1">open</span>(<span class="pl-s"><span class="pl-pds">'</span>./TestResults.csv<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>r<span class="pl-pds">'</span></span>, <span class="pl-c1">16384</span>),
                         <span class="pl-smi">delimiter</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\t</span><span class="pl-pds">'</span></span>)
 
 inputdata <span class="pl-k">=</span> MergeJoiningSource(downloadlog, <span class="pl-s"><span class="pl-pds">'</span>localfile<span class="pl-pds">'</span></span>,
