@@ -307,21 +307,24 @@ class MergeJoiningSource(object):
         rows2 = self.__getnextrows(iter2)
         keyval2 = rows2[0][self.__key2]
 
-        while True:  # At one point there will be a StopIteration
-            if keyval1 == keyval2:
-                # Output rows
-                for part in rows2:
-                    resrow = row1.copy()
-                    resrow.update(part)
-                    yield resrow
-                row1 = next(iter1)
-                keyval1 = row1[self.__key1]
-            elif keyval1 < keyval2:
-                row1 = next(iter1)
-                keyval1 = row1[self.__key1]
-            else:  # k1 > k2
-                rows2 = self.__getnextrows(iter2)
-                keyval2 = rows2[0][self.__key2]
+        try:
+            while True:  # At one point there will be a StopIteration
+                if keyval1 == keyval2:
+                    # Output rows
+                    for part in rows2:
+                        resrow = row1.copy()
+                        resrow.update(part)
+                        yield resrow
+                    row1 = next(iter1)
+                    keyval1 = row1[self.__key1]
+                elif keyval1 < keyval2:
+                    row1 = next(iter1)
+                    keyval1 = row1[self.__key1]
+                else:  # k1 > k2
+                    rows2 = self.__getnextrows(iter2)
+                    keyval2 = rows2[0][self.__key2]
+        except StopIteration:
+            return # Needed in Python 3.7+ due to PEP 479
 
     def __getnextrows(self, iterval):
         res = []
@@ -521,7 +524,7 @@ class RoundRobinSource(object):
                     # we're done with this source and can delete it since
                     # we iterate the list as we do
                     del self.__sources[i]
-        raise StopIteration()
+        return
 
 
 class DynamicForEachSource(object):
@@ -565,4 +568,4 @@ class DynamicForEachSource(object):
                 for row in src:
                     yield row
             except Empty:
-                raise StopIteration()
+                return
