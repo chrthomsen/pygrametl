@@ -51,13 +51,6 @@ else:
     # Use (C)Python's std. lib.
     import multiprocessing
 
-# Jython 2.5.X specific code
-try:
-    next
-except NameError:
-    from pygrametl import next
-
-
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
 __version__ = '2.3'

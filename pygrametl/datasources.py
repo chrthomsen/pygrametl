@@ -42,11 +42,6 @@ try:
 except ImportError:
     from queue import Empty  # Python 3
 
-# Jython 2.5.X specific code
-try:
-    next
-except NameError:
-    from pygrametl import next
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"

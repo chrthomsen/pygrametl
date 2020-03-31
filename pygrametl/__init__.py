@@ -569,18 +569,6 @@ def tolower(s): return s.lower()
 def keepasis(s): return s
 
 
-def next(iterator, default=None):
-    """A version of the built-in next function, for use with
-       implementations of Python older then version 2.6.
-    """
-    try:
-        return iterator.next()
-    except StopIteration:
-        if default:
-            return default
-        else:
-            raise StopIteration
-
 _defaulttargetconnection = None
 
 
