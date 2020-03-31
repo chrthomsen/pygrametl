@@ -14,6 +14,9 @@ Version 2.7 (unreleased)
   defined). This can happen from a call to ``closecurrent`` or a manual
   update. If it is the case, a new version will be added when ``scdensure`` is
   called even if no other differences are present.
+
+  Generators in datasources don't raise StopIteration anymore as required by
+  PEP479.
  
 Version 2.6
 ----------
