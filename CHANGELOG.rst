@@ -4,6 +4,11 @@ Version 2.7 (unreleased)
   ``AccumulatingSnapshotFactTable`` a new class supporting accumulating
   snapshot fact tables where facts can be updated as a process progresses.
 
+  ``BatchFactTable.__init__`` now optionally takes the argument ``usevalues``.
+  When this argument is ``True`` (the default is ``False``), batches are loaded
+  using an ``INSERT INTO name VALUES`` statement instead of ``executemany()``.
+  (GitHub issue #19).
+
   ``closecurrent`` method to ``SlowlyChangingDimension`` to make it possible
   to set an end date for the most current version without adding a new
   version.

@@ -19,7 +19,7 @@
    dim.insert(row=..., namemapping={'order_date':'date'})
 """
 
-# Copyright (c) 2009-2019, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -1843,7 +1843,7 @@ class BatchFactTable(FactTable):
     """
 
     def __init__(self, name, keyrefs, measures=(), batchsize=10000,
-                 targetconnection=None):
+                 usevalues=False, targetconnection=None):
         """Arguments:
             
            - name: the name of the fact table in the DW
@@ -1852,8 +1852,11 @@ class BatchFactTable(FactTable):
            - measures: a possibly empty sequence of measure names. Default: ()
            - batchsize: an int deciding many insert operations should be done
              in one batch. Default: 10000
+           - usevalues: load batches using an INSERT INTO name VALUES statement
+             instead of executemany(). WARNING: no sanitization is performed.
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
+
         """
         FactTable.__init__(self,
                            name=name,
@@ -1863,6 +1866,14 @@ class BatchFactTable(FactTable):
 
         self.__batchsize = batchsize
         self.__batch = []
+        if usevalues:
+            self.__insertnow = self.__insertvalues
+            self.__basesql = self.insertsql[:self.insertsql.find(' (') + 1]
+            self.__rowtovalue = lambda row: '(' + \
+                ','.join(map(lambda c: "'" + row[c] + "'" if type(row[c])
+                             is str else str(row[c]), self.all)) + ')'
+        else:
+            self.__insertnow = self.__insertexecutemany
 
     def _before_insert(self, row, namemapping):
         self.__batch.append(pygrametl.project(self.all, row, namemapping))
@@ -1877,7 +1888,14 @@ class BatchFactTable(FactTable):
         """Finalize the load."""
         self.__insertnow()
 
-    def __insertnow(self):
+    def __insertvalues(self):
+        if self.__batch:
+            values = map(self.__rowtovalue, self.__batch)
+            insertsql = self.__basesql + ','.join(values)
+            self.targetconnection.execute(insertsql)
+            self.__batch = []
+
+    def __insertexecutemany(self):
         if self.__batch:
             self.targetconnection.executemany(self.insertsql, self.__batch)
             self.__batch = []
