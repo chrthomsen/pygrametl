@@ -1843,7 +1843,7 @@ class BatchFactTable(FactTable):
     """
 
     def __init__(self, name, keyrefs, measures=(), batchsize=10000,
-                 usevalues=False, targetconnection=None):
+                 usemultirow=False, targetconnection=None):
         """Arguments:
             
            - name: the name of the fact table in the DW
@@ -1852,8 +1852,9 @@ class BatchFactTable(FactTable):
            - measures: a possibly empty sequence of measure names. Default: ()
            - batchsize: an int deciding many insert operations should be done
              in one batch. Default: 10000
-           - usevalues: load batches using an INSERT INTO name VALUES statement
-             instead of executemany(). WARNING: no sanitization is performed.
+           - usemultirow: load batches with an INSERT INTO name VALUES statement
+             instead of executemany(). WARNING: single quotes are automatically
+             escaped. Other forms of sanitization must be manually performed.
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
 
@@ -1866,12 +1867,12 @@ class BatchFactTable(FactTable):
 
         self.__batchsize = batchsize
         self.__batch = []
-        if usevalues:
-            self.__insertnow = self.__insertvalues
+        if usemultirow:
+            self.__insertnow = self.__insertmultirow
             self.__basesql = self.insertsql[:self.insertsql.find(' (') + 1]
-            self.__rowtovalue = lambda row: '(' + \
-                ','.join(map(lambda c: "'" + row[c] + "'" if type(row[c])
-                             is str else str(row[c]), self.all)) + ')'
+            self.__rowtovalue = lambda row: '(' + ','.join(map(
+                lambda c: "'" + row[c].replace("'", "''") + "'"
+                if type(row[c]) is str else str(row[c]), self.all)) + ')'
         else:
             self.__insertnow = self.__insertexecutemany
 
@@ -1888,7 +1889,7 @@ class BatchFactTable(FactTable):
         """Finalize the load."""
         self.__insertnow()
 
-    def __insertvalues(self):
+    def __insertmultirow(self):
         if self.__batch:
             values = map(self.__rowtovalue, self.__batch)
             insertsql = self.__basesql + ','.join(values)
