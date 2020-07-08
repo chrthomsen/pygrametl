@@ -79,21 +79,21 @@ flags, see `Jython CLI <http://jython.org/docs/using/cmdline.html>`_.
     import pygrametl
     from pygrametl.tables import FactTable
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
-    
+
     # Java classes used must be imported into the program
     import java.sql.DriverManager
-    
+
     # The actual database connection is handled using a JDBC connection
     jconn = java.sql.DriverManager.getConnection \
         ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
-    
-    # As PEP 249 and JDBC connections are different must JDBCConnectionWrapper 
-    # instead of ConnectionWrapper. The class has the same interface and a 
+
+    # As PEP 249 and JDBC connections are different must JDBCConnectionWrapper
+    # instead of ConnectionWrapper. The class has the same interface and a
     # reference to the wrapper is also saved to allow for easy access of it
     conn = JDBCConnectionWrapper(jdbcconn=jconn)
-    
-    # The instance of FactTable connects to the table "facttable" in the 
-    # database using the default connection wrapper we just created 
+
+    # The instance of FactTable connects to the table "facttable" in the
+    # database using the default connection wrapper we just created
     factTable = FactTable(
         name='testresults',
         measures=['errors'],
@@ -109,4 +109,4 @@ connection wrappers abstract away the differences between JDBC and :pep:`249`.
 The other Jython module, :mod:`.jythonmultiprocessing`, is even simpler to use
 as pygrametl's parallel module :mod:`.parallel` imports either it, or CPythons
 built-in :mod:`.multiprocessing` module depending on whether Jython or CPython
-is used. 
+is used.

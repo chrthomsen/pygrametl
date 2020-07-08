@@ -21,7 +21,7 @@ decorator :func:`.splitpoint` can be used to annotate functions which should
 run in a separate process. This supplements the decoupled tables, as many
 transformation are done in a set of functions before they are inserted into a
 database table. Splitpoints can be synchronised using the function
-:func:`.endsplits()`. The function :func:`createflow` can be used to create a
+:func:`.endsplits()`. The function :func:`.createflow` can be used to create a
 sequence of functions that run in a separate process. In a flow a row is given
 to first function, then the second, and so forth. This also means changes to
 the passed row is done using side effects while the return values are ignored.
@@ -145,18 +145,18 @@ which in nearly every case is undesirable.
     # The data is read from a csv file
     inputdata = CSVSource(csvfile=open('sales.csv', 'r'), delimiter=',')
 
-    # JDBC and Jython is used as threads allows for better performance 
+    # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection \
         ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
-         
+
     # The connection wrapper is itself wrapped in a SharedConnectionClient,
     # allowing for it to be used by multiple decoupled tables safely
     conn = JDBCConnectionWrapper(jdbcconn=jconn)
     shrdconn = shareconnectionwrapper(connection=conn)
 
-    # The product dimension is decoupled and runs in a separate process 
-    # (CPython) or thread (Jython), allowing it to be accessed by other 
+    # The product dimension is decoupled and runs in a separate process
+    # (CPython) or thread (Jython), allowing it to be accessed by other
     # decoupled tables without any use of the main process
     productDimension = DecoupledDimension(
         CachedDimension(
@@ -164,15 +164,15 @@ which in nearly every case is undesirable.
             key='productid',
             attributes=['productname', 'price'],
             lookupatts=['productname'],
-            # The SharedConnectionWrapperClient must be copied for each 
-            # decoupled table that use it correct interaction with the database 
+            # The SharedConnectionWrapperClient must be copied for each
+            # decoupled table that use it correct interaction with the database
             targetconnection=shrdconn.copy(),
             prefill=True)
         )
 
     # The fact table is also decoupled in order to consume the values returned
     # from the methods called on the product dimension without blocking the main
-    # process while waiting for the database, allowing the main  process to 
+    # process while waiting for the database, allowing the main  process to
     # perform other operations needed before a full fact is ready
     factTable = DecoupledFactTable(
         FactTable(
@@ -185,12 +185,12 @@ which in nearly every case is undesirable.
         )
 
     # Inserting facts into the database can be done in the same manner as in a
-    # sequential ETL flow, extraction of data from the product dimension is 
+    # sequential ETL flow, extraction of data from the product dimension is
     # done automatically by pygrametl.
     for row in inputdata:
         # A new 'row' is created for each fact, as having values not present in a
-        # decoupled table that consumes another dimension, can make pygrametl 
-        # miscalculate when actuals results are ready, making the framework 
+        # decoupled table that consumes another dimension, can make pygrametl
+        # miscalculate when actuals results are ready, making the framework
         # pass a FutureResult object to the database driver instead of the actual
         # values, leading to exceptions
         fact = {}
@@ -226,7 +226,7 @@ loader used for pygrametl's :class:`.BulkFactTable`.
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
     from pygrametl.parallel import shareconnectionwrapper
 
-    # JDBC and Jython is used as threads allows for better performance 
+    # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection \
         ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -235,11 +235,11 @@ loader used for pygrametl's :class:`.BulkFactTable`.
     # specific database management system such as Postgresql or Oracle
     def bulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
         #DBMS specific bulk loading code here...
-         
+
     # The connection wrapper is itself wrapped in a SharedConnectionClient,
     # allowing for it to be used by multiple decoupled tables safely. The
     #function "bulkloader" is given to "shareconnectionwrapper" allowing the
-    # shared connection wrapper to ensure that the bulk loading functions is 
+    # shared connection wrapper to ensure that the bulk loading functions is
     # synchronised with the decoupled tables using the shared connection wrapper
     conn = JDBCConnectionWrapper(jdbcconn=jconn)
     scw = shareconnectionwrapper(targetconnection=conn, userfuncs=[bulkloader])
@@ -269,11 +269,11 @@ all surrogate keys are unique despite being assigned by separate processes.
         DecoupledDimension, DecoupledFactTable, DimensionPartitioner
     from pygrametl.parallel import shareconnectionwrapper, \
         getsharedsequencefactory
-    from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper 
+    from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
 
     sales = CSVSource(csvfile=open('sales.csv', 'r'), delimiter=',')
-        
-    # JDBC and Jython is used as threads allows for better performance 
+
+    # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection \
         ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -285,7 +285,7 @@ all surrogate keys are unique despite being assigned by separate processes.
 
     # A sharedsequencefactory is created which creates values starting a zero,
     # each table is given a sequence of number to use, the size of the
-    # sequence can increased trough a second argument if the 
+    # sequence can increased trough a second argument if the
     # sharedsequencefactory becomes a bottleneck in the ETL flow
     idfactory = getsharedsequencefactory(0)
 
@@ -317,7 +317,7 @@ all surrogate keys are unique despite being assigned by separate processes.
     # The partitioning of data is automated by the DimensionPartitioner, using
     # a hash on the name of product. A corresponding class for partitioning a
     # fact table into multiple tables is also a available
-    productDimension = DimensionPartitioner(parts=[productDimensionOne, 
+    productDimension = DimensionPartitioner(parts=[productDimensionOne,
         productDimensionTwo], partitioner = lambda row: hash(row['productname']))
 
     # Only partitioned tables needs to use the sharedsequencefactory, normal
@@ -329,9 +329,9 @@ all surrogate keys are unique despite being assigned by separate processes.
                 keyrefs=['storeid', 'productid', 'dateid'],
                 targetconnection=shrdconn.copy()),
             returnvalues=False,
-            # When consuming a partitioned dimension should each part be 
-            # consumed separately, a simple way to do so is using the parts 
-            # method which returns all parts handled by the partitioned 
+            # When consuming a partitioned dimension should each part be
+            # consumed separately, a simple way to do so is using the parts
+            # method which returns all parts handled by the partitioned
             # dimension or fact table
             consumes=productDimension.parts
             )
@@ -340,8 +340,8 @@ all surrogate keys are unique despite being assigned by separate processes.
     # table, as the frameworks takes care of the partitioning behind the scenes
     for row in sales:
         # A new 'row' is created for each fact, as having values not present in a
-        # decoupled table that consumes another dimension, can make pygrametl 
-        # miscalculate when actuals results are ready, making the framework 
+        # decoupled table that consumes another dimension, can make pygrametl
+        # miscalculate when actuals results are ready, making the framework
         # pass a FutureResult object to the database driver instead of the actual
         # values, leading to exceptions
         fact = {}
@@ -364,7 +364,7 @@ self-incrementing integer would assign the same value to multiple rows. This is
 not needed for the fact table as only one table handles all operations on the
 fact table in the database, so a simple auto incrementing integer is fine.
 
-Splitpoints 
+Splitpoints
 -----------
 As CPU-intensive operations are often performed in user defined functions, the
 decorator :func:`.splitpoint` is provided. This decorator functions in much the
@@ -388,11 +388,11 @@ points up to that point.
     from pygrametl.tables import FactTable
     from pygrametl.datasources import CSVSource
     from pygrametl.parallel import splitpoint, endsplits
-    from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper 
-        
+    from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
+
     sales = CSVSource(csvfile=file('sales.csv', 'r'), delimiter=',')
 
-    # JDBC and Jython is used as threads allows for better performance 
+    # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection \
         ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -405,8 +405,8 @@ points up to that point.
         keyrefs=['storeid', 'productid', 'dateid']
         )
 
-    # Five processes are created to run this function, so five rows can be 
-    # transformed at the same time, if not threads are available is the row 
+    # Five processes are created to run this function, so five rows can be
+    # transformed at the same time, if not threads are available is the row
     # added to a queue ensuring it will transformed when a process is available
     @splitpoint(instances=5)
     def performExpensiveTransformations(row):
@@ -427,7 +427,7 @@ points up to that point.
 
     # The CSV file is read by the main process, while each row is transformed by
     # one of five process before being inserted to the database by sixth process
-    for row in sales: 
+    for row in sales:
         performExpensiveTransformations(row)
 
     # To ensure that a all split point annotated function are finished before
@@ -480,7 +480,7 @@ values automatically by pygrametl.
     for row in sales:
         expensiveReturningOperation(row)
 
-    # A simple sentinel value can be used to indicate that all rows have been 
+    # A simple sentinel value can be used to indicate that all rows have been
     # processed and that the loop using the results below can break
     expensiveReturningOperation(None)
 
@@ -500,7 +500,7 @@ values automatically by pygrametl.
     # the ETL program terminated, must the function endsplits be called as it
     # joins all the process created by split points up to this point
     endsplits()
- 
+
 
 Flows
 -----
@@ -521,12 +521,12 @@ processes.
 .. code-block:: python
 
     import pygrametl
-    from pygrametl.tables import Dimension 
-    from pygrametl.datasources import CSVSource 
+    from pygrametl.tables import Dimension
+    from pygrametl.datasources import CSVSource
     from pygrametl.parallel import splitpoint, endsplits, createflow
-    from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper 
-        
-    # JDBC and Jython is used as threads allows for better performance 
+    from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
+
+    # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection \
         ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -544,12 +544,12 @@ processes.
     # A couple of functions is defined to extract and transform the information
     # in the csv file each taking a row which is changed before being passed on
     def normaliseProductNames(row):
-        # Expensive operations should be performed in a flow, this example is 
+        # Expensive operations should be performed in a flow, this example is
         # simple, so the performance gain is negated by overhead
         row['productname'].lower()
 
     def convertPriceToThousands(row):
-        # Expensive operations should be performed in a flow, this example is 
+        # Expensive operations should be performed in a flow, this example is
         # simple, so the performance gain is negated by overhead
         row['price'] = int(row['price']) / 1000
 
@@ -565,15 +565,15 @@ processes.
         for row in products:
             flow(row)
 
-        # The flow should be closed when there is no more data available, 
+        # The flow should be closed when there is no more data available,
         # this means no more data is accepted but the computations will finish
         flow.close()
 
-    # The producer is called and the separate process starts to read the input 
+    # The producer is called and the separate process starts to read the input
     producer()
 
     # The simplest way to extract rows from a flow is just to iterate over it,
-    # however additional functions to extract the results as a list is available 
+    # however additional functions to extract the results as a list is available
     for row in flow:
         productDimension.insert(row)
     endsplits()

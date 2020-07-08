@@ -292,12 +292,12 @@ the cache. The method :meth:`getbykey` also no longer needs to force loading of
 the data in the file if :attr:`.cachefullrows` is not enabled. This is due to
 :class:`.CachedBulkDimension` using a local cache for the rows currently in the
 file. All rows in the file are cached as there is no guarantee that the cache
-on :class:`CachedDimension` would not overwrite the cached version of the rows
+on :class:`.CachedDimension` would not overwrite the cached version of the rows
 in the file due to it's cache being full, forcing the need of an additional
 cache to ensure :meth:`lookup` and :meth:`getbykey` can locate rows before they
 are loaded into the database. The method :meth:`insert` first caches rows in
 the local cache, and only when the rows in the file are loaded into the
-database are the data moved to the cache on :class:`CachedBulkDimension`, in
+database are the data moved to the cache on :class:`.CachedBulkDimension`, in
 which :meth:`lookup` also stores rows if the method had to query the database
 for them.
 

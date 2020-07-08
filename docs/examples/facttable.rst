@@ -7,18 +7,18 @@ to support both serial and parallel loading of facts into the table. For more
 information about the parallel capabilities of pygrametl see :ref:`parallel`.
 In the following examples we use PostgreSQL and psycopg2 as the database driver.
 
-All of these classes are currently implemented in the  
+All of these classes are currently implemented in the
 :mod:`.pygrametl.tables` module.
 
 FactTable
 ---------
 The most basic class for performing operations on the fact table is the class
-:class:`.FactTable`. However, this class perform an insert in the database 
-whenever the :meth:`.FactTable.insert` method is called, which can very quickly 
-become a bottleneck. Using the :class:`.FactTable` class is very simple and 
-only requires that an appropriate table has been created in the database 
-beforehand, and that a connection to the database has been created using an 
-instance of the class :class:`.ConnectionWrapper`. 
+:class:`.FactTable`. However, this class perform an insert in the database
+whenever the :meth:`.FactTable.insert` method is called, which can very quickly
+become a bottleneck. Using the :class:`.FactTable` class is very simple and
+only requires that an appropriate table has been created in the database
+beforehand, and that a connection to the database has been created using an
+instance of the class :class:`.ConnectionWrapper`.
 
 For more information about database connections see :ref:`database`
 
@@ -29,15 +29,15 @@ For more information about database connections see :ref:`database`
     from pygrametl.tables import FactTable
 
     # The actual database connection is handled using a PEP 249 connection
-    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
     # This ConnectionWrapper will be set as default and is then implicitly used,
     # a reference to the wrapper is saved to allow for easy access of it later
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
-    # The instance of FactTable connects to the table "facttable" in the 
-    # database using the default connection wrapper we just created 
+    # The instance of FactTable connects to the table "facttable" in the
+    # database using the default connection wrapper we just created
     factTable = FactTable(
         name='facttable',
         measures=['price'],
@@ -73,7 +73,7 @@ example is reused.
               {'storeid' : 1, 'productid' :  7, 'dateid' : 4, 'price': 50},
               {'storeid' : 3, 'productid' :  9, 'dateid' : 4, 'price': 25} ]
 
-    # The facts can be inserted using the insert method, before committing to DB 
+    # The facts can be inserted using the insert method, before committing to DB
     for row in facts:
         factTable.insert(row)
     conn.commit()
@@ -89,10 +89,10 @@ example is reused.
                  {'storeid' : 1, 'itemid' :  2, 'dateid' : 7, 'price': 150},
                  {'storeid' : 3, 'itemid' :  3, 'dateid' : 6, 'price': 100} ]
 
-    for row in newFacts: 
+    for row in newFacts:
         # The second argument forces FactTable.ensure to not only match the keys
         # for facts to be considered equal, but also checks if the measures are
-        # the same for facts with the same key, and if not raises a ValueError 
+        # the same for facts with the same key, and if not raises a ValueError
         factTable.ensure(row, True, {'productid' : 'itemid'})
     conn.commit()
     conn.close()
@@ -107,11 +107,11 @@ batch inserted into the database is determined by an additional argument to the
 class initialiser method. The :meth:`.ConnectionWrapper.commit` must be called
 after all facts have been inserted into the fact table to both ensure that the
 last batch is loaded into the database from memory, and that the transaction is
-committed. 
+committed.
 
-.. note:: To keep :meth:`.BatchFactTable.lookup` and 
-        :meth:`.BatchFactTable.ensure` consistent with all facts inserted into 
-        the fact table, both methods force an insertion of facts. Use of 
+.. note:: To keep :meth:`.BatchFactTable.lookup` and
+        :meth:`.BatchFactTable.ensure` consistent with all facts inserted into
+        the fact table, both methods force an insertion of facts. Use of
         these method can therefore reduce the benefit of batching insertions.
 
 BulkFactTable
@@ -120,8 +120,8 @@ BulkFactTable
 a temporary file instead of keeping them in memory, allowing for batched
 insertions to be limited by disk space instead of memory. This however prevents
 database lookups to be performed consistently without reading the temporary
-file store on disk as well, so the methods :meth:`BulkFactTable.lookup` and
-:meth:`BulkFactTable.ensure` are not available. Like the other table classes,
+file store on disk as well, so the methods :meth:`.BulkFactTable.lookup` and
+:meth:`.BulkFactTable.ensure` are not available. Like the other table classes,
 the method :meth:`.ConnectionWrapper.commit` must be called to ensure that the
 remaining set of facts are inserted into the fact table, and that the
 transaction is committed. Multiple additional parameters are added to the class
@@ -130,7 +130,7 @@ facts, such as specific delimiters and the number of facts to be bulk loaded. Al
 of these parameters provide a default value except for :attr:`.bulkloader`.
 This parameter must be passed a function to be called for each batch of facts
 to be loaded, this is necessary as the exact way to perform bulk loading
-differs from DBMS to DBMS. 
+differs from DBMS to DBMS.
 
 .. py:function:: func(name, attributes, fieldsep, rowsep, nullval, filehandle):
 
@@ -156,11 +156,11 @@ differs from DBMS to DBMS.
       necessary if the bulkloader runs in another process.
 
 
-In the following example we use a :class:`BulkFactTable` to load facts into a
+In the following example we use a :class:`.BulkFactTable` to load facts into a
 data warehouse, with the bulk loading itself done by our own bulk loading
 function. For information about how to perform bulk loading using other DBMS
 than PostresSQL see the documentation for that particular DBMS and the database
-driver used. 
+driver used.
 
 .. code-block:: python
 
@@ -168,7 +168,7 @@ driver used.
     import pygrametl
     from pygrametl.tables import BulkFactTable
 
-    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser' 
+    pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
@@ -178,13 +178,13 @@ driver used.
               {'storeid' : 1, 'productid' :  7, 'dateid' : 4, 'price': 50},
               {'storeid' : 3, 'productid' :  9, 'dateid' : 4, 'price': 25} ]
 
-    # How to perform the bulk loading using psycopg2 is defined as this function 
+    # How to perform the bulk loading using psycopg2 is defined as this function
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
         cursor = conn.cursor()
         # psycopg2 does not accept the default value used for null substitutes
-        # bv BulkFactTable, which is None, so we just ignore it as we have no 
+        # bv BulkFactTable, which is None, so we just ignore it as we have no
         # null values that we wish to substitute for a more descriptive value
-        cursor.copy_from(file=filehandle, table=name, sep=fieldsep, 
+        cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
                          columns=attributes)
 
     # The bulk loading function must be passed to the BulkFactTable on creation
@@ -194,8 +194,8 @@ driver used.
         keyrefs=['storeid', 'productid', 'dateid'],
         bulkloader=pgbulkloader)
 
-    # After all the facts are inserted must commit() be called to ensure that 
-    # the temporary file is empty and all facts inserted into the database and 
+    # After all the facts are inserted must commit() be called to ensure that
+    # the temporary file is empty and all facts inserted into the database and
     # the last transaction is committed
     for row in facts:
         factTable.insert(row)
@@ -239,7 +239,7 @@ The following illustrates how to create use the class.
            row['shipmentlag'] = row['shipmentdateid'] - row['paymentdateid']
 	if 'deliverydateid' in updated:
            row['deliverylag'] = row['deliverydate'] - row['shipmentdateid']
-    
+
     # The instance of AccumulatingSnapshotFactTable connects to the table
     # "orderprocessing" in the database using the default connection wrapper
     # we created above
@@ -291,13 +291,13 @@ An example of how to use the class can be seen below.
     for row in facts:
         asft.ensure(row)
 
-    # Now assume that the the orders get paid and shipped 
+    # Now assume that the the orders get paid and shipped
     facts[0]['paymentdateid'] = 12
     facts[0]['shipmentdateid'] = 14
     facts[2]['paymentdateid'] = 11
 
     # Update the accumulating fact table in the DW
-    for row in facts: 
+    for row in facts:
         asft.ensure(row) # will call computelag and do the needed updates
 
     conn.commit()
