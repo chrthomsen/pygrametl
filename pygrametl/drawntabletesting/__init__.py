@@ -38,7 +38,11 @@ __all__ = ['connectionwrapper', 'Table']
 
 
 def connectionwrapper(connection=None):
-    """Create a new database connection for use with unit tests """
+    """Create a new database connection for use with unit tests 
+
+       - connection: A PEP249 connection to use. If None (the default),
+         a connection to a temporary SQLite in-memory database is created.
+    """
     if not connection:
         connection = sqlite3.connect(":memory:")
         connection.execute("PRAGMA foreign_keys = ON;")
