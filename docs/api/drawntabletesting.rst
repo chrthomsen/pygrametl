@@ -1,5 +1,5 @@
-Drawn Table Testing
-===================
+DrawnTableTesting
+=================
 
 .. automodule:: pygrametl.drawntabletesting
    :show-inheritance:
