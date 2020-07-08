@@ -1,6 +1,11 @@
 Version 2.7 (unreleased)
 ------------------------
 **Added**
+  ``drawntabletesting`` a new module for testing ETL flows. The module makes it
+  easy to define the preconditions and postconditions for the database as part
+  of each test. This is done simply by “drawing” the tables and their contents
+  using strings.
+
   ``AccumulatingSnapshotFactTable`` a new class supporting accumulating
   snapshot fact tables where facts can be updated as a process progresses.
 
@@ -39,7 +44,7 @@ Version 2.6
   column before returning the row.
 
 **Changed**
-  ``SlowlyChangingDimension`` improved to make ``versionatt`` optional. 
+  ``SlowlyChangingDimension`` improved to make ``versionatt`` optional.
   (GitHub issue #12. Thanks to HereticSK)
 
   ``ConnectionWrapper.__init__`` now optionally takes the argument
@@ -51,7 +56,7 @@ Version 2.6
 
   First argument to ``TypedCSVSource.__init__`` renamed from ``csvfile`` to
   ``f`` to be consistent with documentation and ``CSVSource``
-  
+
 **Fixed**
   ``ConnectionWrapper.execute`` does not pass the argument ``arguments`` to
   the underlying cursor's execute method if ``arguments`` is None. Some drivers
@@ -112,7 +117,7 @@ Version 2.5
   getunderlyingmodule has been changed and now tries different possible module
   names and looks for 'paramstyle' and 'connect'. ConnectionWrapper now uses
   getunderlying module in __init__ when trying to determine the paramstyle to
-  use. 
+  use.
 
 **Fixed**
   Using ``cachesize=0`` with ``SlowlyChangingDimension`` no longer causes
@@ -121,7 +126,7 @@ Version 2.5
   Problem with double use of namemappings in _before_update in CachedDimension
   and SlowlyChangingDimension fixed. (Thanks to Alexey Kuzmenko).
 
-  Problem with rowfactory only returning one row fixed. 
+  Problem with rowfactory only returning one row fixed.
   (Thanks to Alexey Kuzmenko).
 
   Problem with JDBCConnectionWrapper.rowfactory returning dicts with incorrect
@@ -207,9 +212,9 @@ Version 2.3
 
   pygrametl now officially supports Python 2.6.X, Python 2.7.X, Python 3,
   Jython 2.5.X and Jython 2.7.X.
-  
+
   ``BulkDimension`` a new class that supports bulk loading of dimension tables.
-  
+
   ``_BaseBulkloadable`` with common functionality for ``BulkFactTable`` and
   ``BulkDimension``.
 
