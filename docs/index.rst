@@ -53,7 +53,7 @@ Code Examples
    examples/bulkloading
    examples/parallel
    examples/jython
-   examples/testing
+   Testing <examples/testing>
 
 API
 ===

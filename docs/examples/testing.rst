@@ -1,24 +1,19 @@
 .. _testing:
 
-Testing
-========
-*pygrametl* contains multiple abstractions to simplify testing.
-
-
 Drawn Table Testing
+===================
+*pygrametl* provides the Drawn Table abstraction to simplify testing.
+It is implemented as part of the Drawn Table Testing (DTT) framework is
+implemented in Python, but this *does not* imply that the user necessarily must
+implement the ETL flow itself with pygrametl or in Python – the ETL flow can be
+implemented using any programming language or program, including GUI-based ETL
+tools. In this section, we describe how DTT can be used as a library, i.e.,
+together with user-written Python code such as unit tests. Later, we show how
+DTT can be used as a stand-alone tool that provides the same functionality
+without requiring the users to implement their tests using Python code.
+
+The ``Table`` Class
 -------------------
-The DTT framework is implemented in Python, but this *does not* imply that the
-user necessarily must implement the ETL flow itself with pygrametl or in
-Python – the ETL flow can be implemented using any programming language or
-program, including GUI-based ETL tools. In this section, we describe how DTT
-can be used as a library, i.e., together with user-written Python code such as
-unit tests. Later, we show how DTT can be used as a stand-alone tool that
-provides the same functionality without requiring the users to implement their
-tests using Python code.
-
-
-Drawn Tables with the ``Table`` Class
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The Drawn Table functionality is implemented by the ``Table`` class.
 When an instance is created, a name for the table must be given as well
 as a string with the Drawn Table. Further, a string value representing
@@ -142,7 +137,7 @@ This is done using assertions (Line 6) which we will now describe.
 
 
 Assertions
-~~~~~~~~~~
+----------
 DTT offers multiple assertions to check the state of a database table.
 At the moment, the methods ``assertEqual(verbose=True)``,
 ``assertDisjoint(verbose= True)``, and ``assertSubset(verbose=True)``
@@ -216,10 +211,8 @@ columns for which the user does not know the state or which do not
 matter in the test, like an automatically generated primary key or audit
 information such as a timestamp.
 
-
-
 Variables
-~~~~~~~~~
+---------
 Cases can also occur where it is important that specific cells are equal
 across different database tables, but the exact values are unknown or do
 not matter. A prominent example is when foreign keys are used. In DTT
@@ -302,10 +295,8 @@ is specified. The reason is of course that DTT does not know which
 concrete values to insert into the database for variables if they are
 used in preconditions.
 
-
-
 Tooling Support
-~~~~~~~~~~~~~~~
+---------------
 A key benefit of DTT is the ability for users to effectively understand
 the preconditions and postconditions of a test due to the visual
 representation provided by . However, to gain the full benefit of ,
@@ -328,7 +319,7 @@ can be seen below.
 It is clear from this example that poor formatting makes a Drawn Table
 harder to read. However, as properly formatting each Drawn Table can be
 tedious, our framework provides the script ``formattable.py`` for doing this
-automatically. 
+automatically.
 The script is designed to be interfaced with extensible text editors so
 users can format a Drawn Table simply placing the cursor anywhere on a
 Drawn Table and executing the script. Integrating the script with the
@@ -411,7 +402,6 @@ user’s ETL flow by calling the user-defined method
 a new process in which the user’s ETL tool runs. It is *not* a
 requirement that the user’s ETL flow is implemented in Python despite
 the tests being so.
-
 
 Drawn Table Testing as a Stand-Alone Tool
 -----------------------------------------
@@ -504,7 +494,7 @@ Thus, any ETL program can be invoked.
 
 ::
 
-    $ ./dttr.py --etl "python3 myetl --loaddim browser" 
+    $ ./dttr.py --etl "python3 myetl --loaddim browser"
 
 When started, ``dttr`` by default looks for all ``.dtt`` test files
 under the current working directory, but optional arguments allow the
@@ -524,4 +514,3 @@ variables are in the same or different ``.dtt`` files. It is thus, e.g.,
 possible to have a test file for the fact table and another test file
 for a dimension table and still ensure that an inserted fact’s foreign
 key references a specific dimension member.
-
