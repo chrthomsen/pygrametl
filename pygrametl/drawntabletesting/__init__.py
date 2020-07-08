@@ -619,8 +619,8 @@ class Variable:
                 raise ValueError(("Ambiguous values for {}: {}({},{}) is {}"
                                   " and {}({},{}) is {}") .format(
                                       self.definition, existing.origin,
-                                      existing.row + 1, existing.column + 1,
-                                      existing.value, self.origin, self.row
-                                      + 1, self.column + 1, self.value))
+                                      existing.row, existing.column,
+                                      existing.value, self.origin, self.row,
+                                      self.column, self.value))
         else:
             type(self).__all[self.definition] = self
