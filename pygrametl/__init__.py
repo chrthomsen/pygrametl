@@ -64,7 +64,7 @@ else:  # For Python 3
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.6.0'
+__version__ = '2.6'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom',
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr',
            'getstrornullvalue', 'getdbfriendlystr', 'getbool', 'getdate', 

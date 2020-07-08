@@ -1,4 +1,4 @@
-DrawnTableTesting
+drawntabletesting
 =================
 
 .. automodule:: pygrametl.drawntabletesting

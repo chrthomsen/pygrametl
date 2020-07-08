@@ -1,4 +1,4 @@
-Jythonmultiprocessing
+jythonmultiprocessing
 =====================
 
 .. automodule:: pygrametl.jythonmultiprocessing

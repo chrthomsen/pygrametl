@@ -33,12 +33,14 @@ import pygrametl
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
-__version__ = '2.7.0'
+__version__ = '2.7'
 __all__ = ['connectionwrapper', 'Table']
 
 
 def connectionwrapper(connection=None):
-    """Create a new database connection for use with unit tests 
+    """Create a new database connection for use with unit tests.
+
+       Arguments:
 
        - connection: A PEP249 connection to use. If None (the default),
          a connection to a temporary SQLite in-memory database is created.
