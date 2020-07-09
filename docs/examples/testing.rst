@@ -319,11 +319,9 @@ to read. However, as properly formatting each Drawn Table can be tedious, DTT
 provides the script ``formattable.py`` that automates this task. The script
 is designed to be interfaced with extensible text editors so users
 can format a Drawn Table simply placing the cursor anywhere on a Drawn Table
-and executing the script. Integrating the script with the popular editors Emacs
-and Vim requires only a few lines of Elisp and Vimscript, respectively.
-
-An automatically formatted version of the Drawn Table from above can be seen
-below.
+and executing the script. An automatically formatted version of the Drawn Table
+from above can be seen below, and it is clear that this version of the Drawn
+Table is much easier to read.
 
 .. code-block::  rst
 
@@ -337,7 +335,33 @@ below.
     | 6            | Chrome          | MacOS   |
     | -1           | Unknown browser | Unknown |
 
-It is clear that this version of the Drawn Table is much easier to read.
+The following two functions demonstrate how ``formattable.py`` can be
+integrated with GNU Emacs and Vim, respectively. However, ``formattable.py`` is
+editor agnostic and the functions are simply intended as examples.
+
+GNU Emacs
+
+.. code-block:: elisp
+
+ (defun dtt-align-table ()
+   "Format the Drawn Table at point using an external Python script."
+   (interactive)
+   (save-buffer)
+   (shell-command
+    (concat "python3 formattable.py " (buffer-file-name)
+            " " (number-to-string (line-number-at-pos))))
+   (revert-buffer :ignore-auto :noconfirm))
+
+Vim
+
+.. code-block:: vim
+
+    function! DTTAlignTable()
+        write
+        call system("python3 formattable.py " . expand('%:p') . " " . line('.'))
+        edit!
+    endfunction
+
 
 Drawn Table Testing as a Python Library
 ---------------------------------------

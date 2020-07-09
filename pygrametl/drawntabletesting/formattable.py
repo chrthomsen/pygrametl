@@ -24,23 +24,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Example function for calling this script from Emacs
-# (defun dtt-align-table ()
-#   "Format the table at point using an external Python script."
-#   (interactive)
-#   (save-buffer)
-#   (shell-command
-#    (concat "python3 formattable.py " (buffer-file-name)
-#            " " (number-to-string (line-number-at-pos))))
-#   (revert-buffer :ignore-auto :noconfirm))
-
-
-# Example function for calling this script from Vim
-#function! DTTAlignTable()
-#    write
-#    call system("python3 formattable.py " . expand('%:p') . " " . line('.'))
-#    edit!
-#endfunction
 
 import sys
 import pygrametl.drawntabletesting as dtt
