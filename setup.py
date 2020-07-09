@@ -35,4 +35,8 @@ setup(
                 'Topic :: Software Development :: Libraries :: Python Modules',
                 'Topic :: Software Development :: Libraries :: Application '
                 'Frameworks'],
+    entry_points={
+        'console_scripts': [
+            'dttr = pygrametl.drawntabletesting.dttr:main']
+   }
 )

@@ -199,7 +199,7 @@ def assert_post_condition(post_condition):
 
 
 def usage(parser, verbose):
-    print("usage: " + sys.argv[0] + " [-" + "".join(map(
+    print("usage: " + Path(sys.argv[0]).stem + " [-" + "".join(map(
         lambda a: a.option_strings[0][1:], parser._actions)) + "]", end="\n\n")
 
     if verbose:
