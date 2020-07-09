@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import find_packages, setup
 import os
 import sys
 
@@ -12,7 +12,7 @@ setup(
     version=get_package_version(),
     author='Aalborg University',
     author_email='pygrametl@cs.aau.dk',
-    packages=['pygrametl'],
+    packages=find_packages(),
     package_data={
         'pygrametl': [
             'jythonsupport/Value.class',
