@@ -425,15 +425,19 @@ Drawn Table Testing as a Stand-Alone Tool
 -----------------------------------------
 DTT can also be used without doing any programming. To enable this, DTT
 provides a program with a command-line interface named ``dttr`` (for DTT
-Runner). Internally, ``dttr`` uses the library described above. ``dttr`` uses
-test files, which have the ``.dtt`` suffix, to specify preconditions and/or
+Runner). Internally, ``dttr`` uses the DTT library described above. ``dttr``
+uses test files, which have the ``.dtt`` suffix, to specify preconditions and/or
 postconditions. A test file only contains Drawn Tables but not any Python code.
-An example of a test file is given in below. This file only contains one
-precondition (i.e., a Drawn Table with a name, but without an assert above it)
-on Line 1–4 and one postcondition (i.e., a Drawn Table with both a name and an
-assert above it) on Line 6–12). This structure is, however, not a requirement
-as a ``.dtt`` file can contain any number of preconditions and/or
-postconditions.
+However, a configuration file named ``config.py`` can be created in the same
+folders as the ``.dtt`` files to define PEP 249 connections (i.e. in addition
+to the default in-memory SQlite database) and data sources (support for CSV and
+SQL is provided by ``dttr``) for use in the tests. More detail is provided as
+part of the following example. An example of a test file is given in below.
+This file only contains one precondition (i.e., a Drawn Table with a name, but
+without an assert above it) on Line 1–4 and one postcondition (i.e., a Drawn
+Table with both a name and an assert above it) on Line 6–12). This structure
+is, however, not a requirement as a ``.dtt`` file can contain any number of
+preconditions and/or postconditions.
 
 .. code-block:: rst
 
@@ -451,15 +455,15 @@ postconditions.
     | -1           | Unknown browser | Unknown |
 
 To specify a precondition, first the name of the table must be given, in the
-above example ``browser``. As ``dttr`` uses DTT internally, it uses an
-in-memory SQLite database as the test database by default, but users can define
-their own named PEP 249 connections in the configuration file ``config.py``.
-In that case, the table name may include an ``@`` sign followed the name of the
-connection to use for this table, e.g., ``browser@targetdw``. After the table
-name, a Drawn Table must be specified (Lines 2–4 in the file above).  Like for
-any other Drawn Table, the header must be given first, then the delimiter, and
-last the rows. To mark the end of the precondition, an empty line is specified
-(Line 5).
+above example ``browser``. As ``dttr`` uses the DTT library internally, it uses
+an in-memory SQLite database as the test database by default. Additional
+databases can be added by assigning PEP 249 connections to variables in the
+configuration file. To user a connection from the configuration file, the table
+name must be prefixed by ``<tablename>@`` e.g., ``browser@targetdw``. After the
+table name, a Drawn Table must be specified (Lines 2–4 in the file above).
+Like for any other Drawn Table, the header must be given first, then the
+delimiter, and last the rows. To mark the end of the precondition, an empty
+line is specified (Line 5).
 
 To specify a postcondition, a table name is must again be given first.
 The table name is followed by a comma and the name of the assertion to use as
@@ -486,12 +490,12 @@ the line ``csv browserdata.csv ,`` the contents of the CSV file
 separator, in addition to any rows drawn as part of the Drawn Table. By adding
 ``sql oltp SELECT bid, browser, os FROM browser`` as the last line all rows of
 the table ``browser`` from the PEP 249 connection ``oltp`` are added to the
-Drawn Table. This is user-extensible through the configuration file such that
+Drawn Table. This is also extensible through the configuration file such that
 support for other sources of data, e.g., XML or a NoSQL DBMS like MongoDB can
-be added. This is done by creating a function in ``config.py``. If, for
-example, the line ``xml teacher 8`` is found in a ``.dtt`` file,
-``xml('teacher', '8')`` is called (and the function ``xml`` must have been
-defined in ``config.py``).
+be added. This is done by creating a function in the configuration file. If,
+for example, the line ``xml teacher 8`` is found in a ``.dtt`` file,
+``dttr`` looks for the function ``xml`` in the configuration file and executes
+it with the arguments ``'teacher'`` and ``'8'``.
 
 ``dttr`` can be invoked from the command line as shown below. Note that the
 ETL program to test and its arguments simply are given to ``dttr`` as arguments
