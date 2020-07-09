@@ -34,7 +34,7 @@ import argparse
 from collections import namedtuple
 from pathlib import Path
 
-import drawntabletesting as dtt
+import pygrametl.drawntabletesting as dtt
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"

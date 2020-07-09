@@ -43,7 +43,7 @@
 #endfunction
 
 import sys
-import drawntabletesting as dtt
+import pygrametl.drawntabletesting as dtt
 
 __author__ = "Christian Thomsen"
 __maintainer__ = "Christian Thomsen"
