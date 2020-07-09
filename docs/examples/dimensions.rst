@@ -4,9 +4,8 @@ Dimensions
 ==========
 Multiple abstractions for representing dimensions in a data warehouse is
 provided by *pygrametl*, this is to allow for simple modelling of both star and
-snowflake schemas as well as type 2 or a combined type 1 and type 2 slowly
-changing dimension. A slowly changing dimension that is only type 1 is
-currently not supported. The abstractions can be used both for serial and
+snowflake schemas as well as type 1, type 2, and combined type 1 and type 2
+slowly changing dimensions. The abstractions can be used both for serial and
 parallel loading of data into the dimensions. For more information about the
 parallel capabilities of pygrametl see :ref:`parallel`. In the following
 examples we use PostgreSQL as a database management system and psycopg2 as the

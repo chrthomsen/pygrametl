@@ -22,7 +22,11 @@ Version 2.7 (unreleased)
 
   Generators in datasources don't raise StopIteration anymore as required by
   PEP479.
- 
+
+**Fixed**
+  Outdated information stating that type 1 slowly changing dimensions are not
+  supported have been removed from the documentation.
+
 Version 2.6
 ----------
 **Added**
