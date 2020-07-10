@@ -203,6 +203,7 @@ def usage(parser, verbose):
         lambda a: a.option_strings[0][1:], parser._actions)) + "]", end="\n\n")
 
     if verbose:
+        print("Run tests specified in .dtt files.\n")
         for action in parser._actions:
             print(", ".join(action.option_strings), end="\t\t")
             if action.metavar:
