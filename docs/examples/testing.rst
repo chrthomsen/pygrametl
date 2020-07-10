@@ -469,11 +469,11 @@ above example ``book``. As ``dttr`` uses the DTT library internally, it uses
 an in-memory SQLite database as the test database by default. Additional
 databases can be added by assigning PEP 249 connections to variables in the
 configuration file. To user a connection from the configuration file, the table
-name must be prefixed by ``<tablename>@`` e.g., ``book@targetdw``. After the
-table name, a Drawn Table must be specified (Lines 2–4 in the file above).
-Like for any other Drawn Table, the header must be given first, then the
-delimiter, and last the rows. To mark the end of the precondition, an empty
-line is specified (Line 5).
+name must be followed by an ``@`` sign and then the name of the connection to
+use for this table, e.g., ``book@targetdw``. After the table name, a Drawn
+Table must be specified (Lines 2–4 in the file above).  Like for any other
+Drawn Table, the header must be given first, then the delimiter, and last the
+rows. To mark the end of the precondition, an empty line is specified (Line 5).
 
 To specify a postcondition, a table name is must again be given first.  The
 table name is followed by a comma and the name of the assertion to use as shown
