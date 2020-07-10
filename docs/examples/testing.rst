@@ -112,17 +112,17 @@ database unless its :meth:`ensure() <.Table.ensure()>` method is invoked. By mak
 :class:`.Table` instances immutable and creating new instances when they are
 modified, it becomes very easy to reuse the :class:`.Table` instance
 representing the precondition for multiple tests, and then as part of each test
-create a new instance with the postcondition based on it. This is done using
-the :meth:`.changes()` After a number of additions and/or updates, it can be
-useful to get all modified rows. For example a test case where the ETL flow is
-executed for the new rows is shown below.
+create a new instance with the postcondition based on it.  After a number of
+additions and/or updates, it can be useful to get all modified rows. This is
+done using the method :meth:`.additions()`. For example a test case where the
+ETL flow is executed for the new rows is shown below.
 
 .. code-block:: python
 
     def test_canInsertIntoBrowserDimensionTable(self):
         expected = tbl + "| 2 | Chrome | Windows |" \
                        + "| 3 | Opera  | Linux |"
-        newrows = expected.changes()
+        newrows = expected.additions()
         etl.executeETLFlow(newrows)
         expected.assertEqual()
 
@@ -395,7 +395,7 @@ defined on Line 1. It inherits from :class:`.unittest.TestCase` as required by
 
         def test_insertNew(self):
             expected = self.initial + "| 3 | Firefox | Windows |"
-            newrows = expected.changes()
+            newrows = expected.additions()
             etl.executeETLFlow(self.cw, newrows)
             expected.assertEqual()
 
