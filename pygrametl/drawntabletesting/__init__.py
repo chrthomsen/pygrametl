@@ -482,7 +482,7 @@ class Table:
             if not verbose:
                 raise AssertionError(why)
             else:
-                selfStr = self.__table2str(dbSet, False)
+                selfStr = self.__table2str(rowSet, False)
                 dbStr = self.__table2str(dbSet, False)
                 violations = list(selfViolations(rowSet, dbSet)) + \
                     [()] + list(dbViolations(rowSet, dbSet))
@@ -534,6 +534,7 @@ class Table:
         prefix = violationPrefix + 'E ' if violation else indention * ' '
         for i, row in enumerate(rows):
             if violation and not row:
+                prefix = violationPrefix + '  '
                 rows[i] = fs.format(prefix,  *(('',) * len(self.__columns)))
                 prefix = violationPrefix + 'D '
             else:
