@@ -30,7 +30,8 @@ Version 2.7 (unreleased)
 
 **Fixed**
   Outdated information stating that type 1 slowly changing dimensions are not
-  supported have been removed from the documentation.
+  supported has been removed from the documentation (as they actually are 
+  supported).
 
 Version 2.6
 ----------
