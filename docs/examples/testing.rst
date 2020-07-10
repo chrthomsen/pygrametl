@@ -26,7 +26,7 @@ can be specified to make a column (part of) the primary key. ``UNIQUE`` and
 ``NOT NULL`` are also supported and must be defined in the same manner as a
 primary key. If multiple constraints are defined for one column, they must be
 separated by a comma. Foreign keys are also supported and will be explained
-later. A valid header is, e.g., ``| bid:int (pk) | browser:text | os:text |``.
+later. A valid header is, e.g., ``| bid:int (pk) | title:text | genre:text |``.
 If the table should hold any data, the header must be followed by a delimiter
 line only with vertical pipes, spaces, and dashes (``| -- | -- |``) and then
 each row follows on a line of its own. Columns must be given in the same order
@@ -37,14 +37,15 @@ An example is given below.
 
 .. code-block:: python
 
-    tbl = Table("browser", """
-    | bid:int (pk) | browser:text | os:text |
-    | ------------ | ------------ | ------- |
-    | -1           | Unknown      | Unknown |
-    | 1            | Firefox      | Linux   |
-    | 2            | Chrome       | MacOS   |
-    | 3            | Safari       | MacOS   |""")
-    tbl.ensure()
+    table = dtt.Table("book", """
+    | bid:int (pk) | title:text            | genre:text |
+    | ------------ | --------------------- | ---------- |
+    | 1            | Unknown               | Unknown    |
+    | 2            | Nineteen Eighty-Four  | Novel      |
+    | 3            | Calvin and Hobbes One | Comic      |
+    | 4            | Calvin and Hobbes Two | Comic      |
+    | 5            | The Silver Spoon      | Cookbook   |""")
+    table.ensure()
 
 Alternatively, a Drawn Table’s rows can be loaded from an external source by
 providing either a path to a file containing a Drawn Table without header or an
@@ -72,23 +73,28 @@ instances of :class:`.Table`. In such situations, foreign keys constraints are
 often required. In DTT, foreign keys are defined in the same manner as the
 other constraints and require that users specify ``fk target(att)`` where
 ``target`` is the name of the referenced table and ``att`` is the referenced
-column. An example using foreign keys to connect ``page`` and ``domain`` can be
+column. An example using foreign keys to connect ``book`` and ``genre`` can be
 seen below. All foreign key constraints are enforced by the RDMBS managing the
 test database.
 
 .. code-block:: python
 
-    page = dtt.Table("page", """
-    | pid:int (pk) | url:text    | did:int (fk domain(did)) |
-    | ------------ | ----------- | ------------------------ |
-    | 1            | www.aau.dk/ | 1                        |
-    | 2            | www.ufm.dk/ | 2                        |""")
+    genre = dtt.Table("genre", """
+    | bid:int (pk) | genre:text |
+    | ------------ | ---------- |
+    | 1            | Unknown    |
+    | 2            | Novel      |
+    | 3            | Comic      |
+    | 4            | Cookbook   |""")
 
-    domain = dtt.Table("domain", """
-    | did:int (pk) | domain:text |
-    | ------------ | ----------- |
-    | 1            | aau.dk      |
-    | 2            | ufm.dk      |""")
+    book = dtt.Table("book", """
+    | bid:int (pk) | title:text             | gid:int (fk domain(did)) |
+    | ------------ | ---------------------- | ------------------------ |
+    | 1            | Unknown                | 1                        |
+    | 2            | Nineteen Eighty-Four   | 2                        |
+    | 3            | Calvin and Hobbes One  | 3                        |
+    | 4            | Calvin and Hobbes Two  | 3                        |
+    | 5            | The Silver Spoon       | 4                        |""")
 
 :class:`.Table` instances are immutable once created. Typically, the
 postcondition is, however, similar to the precondition except for a few added
@@ -97,15 +103,15 @@ an existing one by using the `+` operator.
 
 .. code-block:: python
 
-    newtable1 = table + "| 2 | Chrome | Windows | + | 3 | Opera | Linux |"
+    newtable1 = book + "| 6 | Metro 2033 | 2 |" + "| 7 | Metro 2034 | 2 |"
 
 A new instance is also created when one of the rows is updated. This is done by
-calling the `.update(index, newrow)` method. For example, the first row in
-`table` can be changed with the line:
+calling the :meth:`update() <.Table.update()>` method. For example, the first
+row in `table` can be changed with the line:
 
 .. code-block:: python
 
-    newtable2 = table.update(0, "| -1 | Unknown | N/A |")
+    newtable2 = book.update(0, "| -1 | Unknown | -1 |")
 
 Note that a new instance of :class:`.Table` is not represented in the test
 database unless its :meth:`ensure() <.Table.ensure()>` method is invoked. By making
@@ -119,9 +125,9 @@ ETL flow is executed for the new rows is shown below.
 
 .. code-block:: python
 
-    def test_canInsertIntoBrowserDimensionTable(self):
-        expected = tbl + "| 2 | Chrome | Windows |" \
-                       + "| 3 | Opera  | Linux |"
+    def test_canInsertIntoBookDimensionTable(self):
+        expected = table + "| 6 | Metro 2033 | 2 |" \
+                         + "| 7 | Metro 2034 | 2 |"
         newrows = expected.additions()
         etl.executeETLFlow(newrows)
         expected.assertEqual()
@@ -149,45 +155,47 @@ explanation of why the test failed as shown here.
 
 .. code-block:: rst
 
-    AssertionError: browser's rows differ from the rows in the database.
-    Expected Table:
-      | bid:int (pk) | browser:text | os:text |
-      | ------------ | ------------ | ------- |
-      | -1           | Unknown      | Unknown |
-      | 1            | Firefox      | Linux   |
-      | 2            | Firefox      | MacOS   |
-      | 3            | Firefox      | Windows |
+    AssertionError: book's rows differ from the rows in the database.
+    Drawn Table:
+      | bid:int (pk) | title:text            | genre:text |
+      | ------------ | --------------------- | ---------- |
+      | 1            | Unknown               | Unknown    |
+      | 2            | Nineteen Eighty-Four  | Novel      |
+      | 3            | Calvin and Hobbes One | Comic      |
+      | 4            | Calvin and Hobbes Two | Comic      |
+      | 5            | The Silver Spoon      | Cookbook   |
 
     Database Table:
-      | bid:int (pk) | browser:text | os:text |
-      | ------------ | ------------ | ------- |
-      | 2            | Firefox      | MacOS   |
-      | 3            | Firefox      | Linux   |
-      | 1            | Firefox      | Linux   |
-      | -1           | Unknown      | Unknown |
+      | bid:int (pk) | title:text            | genre:text |
+      | ------------ | --------------------- | ---------- |
+      | 1            | Unknown               | Unknown    |
+      | 2            | Nineteen Eighty-Four  | Novel      |
+      | 3            | Calvin and Hobbes One | Comic      |
+      | 4            | Calvin and Hobbes Two | Cookbook   |
+      | 5            | The Silver Spoon      | Cookbook   |
 
     Violations:
-      | bid:int (pk) | browser:text | os:text |
-      | ------------ | ------------ | ------- |
-    E | 3            | Firefox      | Windows |
-      |              |              |         |
-    D | 3            | Firefox      | Linux   |
+      | bid:int (pk) | title:text            | genre:text |
+      | ------------ | --------------------- | ---------- |
+    E | 4            | Calvin and Hobbes Two | Comic      |
+      |              |                       |            |
+    D | 4            | Calvin and Hobbes Two | Cookbook   |
 
-In this example, the part of the ETL flow loading the ``browser`` table
-contains a bug. The :class:`.Table` instance in the test specifies that the
-dimension should contain a row for unknown browsers and operating systems and
-three rows for Firefox on different operating systems (see the expected state
-in the top of the output). However, the user’s ETL code added ``Firefox`` on
-``Linux`` a second time instead of ``Firefox`` on ``Windows`` (see the middle
-table in the output). To help the user quickly identify exactly what rows do
-not match, DTT prints the rows violating the assertion which for equality is
-the difference between the two relations (bottom). The expected rows (i.e.,
-those in the :class:`.Table` instance) are prefixed by an ``E`` and the rows in
-the database table are prefixed by a ``D``. The detailed information provided
-by :meth:`.assertEqual()` can be disabled, by setting the optional parameter
-:attr:`.verbose` to :class:`.False`. Note that the orders of the rows are
-allowed to differ between the Drawn Table and the database table without
-causing the test to fail.
+
+In this example, the part of the ETL flow loading the ``book`` table contains a
+bug. The :class:`.Table` instance in the test specifies that the dimension
+should contain a row for unknown books and four rows with known books (see the
+expected state in the top of the output). However, the user’s ETL code added
+``Calvin and Hobbes Two`` as a ``Cookbook`` instead of as a ``Comic`` (see
+the middle table in the output). To help the user quickly identify exactly what
+rows do not match, DTT prints the rows violating the assertion which for
+equality is the difference between the two relations (bottom). The expected
+rows (i.e., those in the :class:`.Table` instance) are prefixed by an ``E`` and
+the rows in the database table are prefixed by a ``D``. The detailed
+information provided by :meth:`.assertEqual()` can be disabled, by setting the
+optional parameter :attr:`.verbose` to :class:`.False`. Note that the orders of
+the rows are allowed to differ between the Drawn Table and the database table
+without causing the test to fail.
 
 When :meth:`.assertDisjoint()` is called on a :class:`.Table` instance, it is
 asserted that none of the :class:`.Table`\ ’s rows are present in the database
@@ -223,36 +231,41 @@ variables to test that foreign keys are assigned correctly.
 
 .. code-block:: python
 
-    domain = dtt.Table("domain", """
-    | did:int (pk) | domain:text |
-    | ------------ | ----------- |
-    | $1           | aau.dk      |
-    | $2           | ufm.dk      |""")
+    genre = dtt.Table("genre", """
+    | gid:int (pk)  | genre:text |
+    | ------------- | ---------- |
+    | $1            | Novel      |
+    | $2            | Comic      |""")
 
-    page = dtt.Table("page", """
-    | pid:int (pk) | url:text    | did:int (fk domain(did)) |
-    | ------------ | ----------- | ------------------------ |
-    | 1            | www.aau.dk/ | $1                       |
-    | 2            | www.ufm.dk/ | $2                       |""")
+    book = dtt.Table("book", """
+    | bid:int (pk) | title:text             | gid:int (fk domain(did))  |
+    | ------------ | ---------------------- | ------------------------- |
+    | 1            | Nineteen Eighty-Four   | $1                        |
+    | 2            | Calvin and Hobbes One  | $2                        |
+    | 3            | Calvin and Hobbes Two  | $2                        |""")
 
-Here the it is stated that the ``did`` for ``www.aau.dk/`` in ``page``
-must match the ``did`` for ``aau.dk`` in ``domain`` and likewise for
-``ufm.dk``. If variables with the same name do not have matching values,
-DTT raises errors.
+
+Here the it is stated that the ``gid`` for ``Nineteen Eighty-Four`` in ``book``
+must match the ``gid`` for ``Novel`` in ``genre``, while the ``gid`` for
+``Calvin and Hobbes One`` and ``Calvin and Hobbes Two`` in ``book`` must match
+the ``gid`` for ``Comic`` in ``genre``. If the variables with the same name do
+not have matching values, raises errors.
 
 .. code-block:: console
 
     ...
-    ValueError: Ambiguous values for $1: domain(0,0) is 2 and page(0,2) is 1
+    ValueError: Ambiguous values for $1: genre(0,0) is 1 and book(0,2) is 2
     ...
-    ValueError: Ambiguous values for $2: domain(1,0) is 1 and page(1,2) is 2
+    ValueError: Ambiguous values for $2: genre(1,0) is 2 and book(1,2) is 1
+    ...
+    ValueError: Ambiguous values for $2: genre(1,0) is 2 and book(2,2) is 1
 
 These error messages are excerpts from the output of a test case where
-``page`` and ``domain`` had the IDs defined in two different orders. As
-such, the foreign key constraints were satisfied although
-``www.aau.dk/`` was referencing the domain ``ufm.dk``. As such, variables can
-test parts of the ETL flow which cannot be verified by foreign keys as they
-only ensure that a value is present.
+``genre`` and ``book`` had the IDs defined in two different orders. As such,
+the foreign key constraints were satisfied although ``Nineteen Eighty-Four``
+was referencing the genre ``comic``. As such, variables can test parts of the
+ETL flow which cannot be verified by foreign keys as they only ensure that a
+value is present.
 
 Another example of using variables is shown below. Here the user verifies that
 in a type-2 Slowly Changing Dimension, the timestamp set for ``validto``
@@ -262,10 +275,10 @@ used to efficiently test automatically generated values are correct.
 .. code-block:: python
 
     page = dtt.Table("page", """
-    | url:text    | validfrom:date | validto:date  |
-    | ----------- | -------------- | ------------- |
-    | www.aau.dk/ | 2019-06-01     | $1            |
-    | www.aau.dk/ | $1             | NULL          |""")
+    | Location:text           | validfrom:date | validto:date  |
+    | ----------------------- | -------------- | ------------- |
+    | Fredrik Bajers Vej 7    | 1990-01-01     | $1            |
+    | Selma Lagerløfs Vej 300 | $1             | NULL          |""")
 
 It is also possible to specify that the value of a cell should not be included
 in the comparison. This is done with the special variable ``$_``. When compared
@@ -276,15 +289,14 @@ disallows ``NULL``.
 
 .. code-block:: python
 
-
-    domain = dtt.Table("domain", """
-    | did:int (pk)  | domain:text |
-    | ------------- | ----------- |
-    | 1             | aau.dk      |
-    | 2             | ufm.dk      |""")
+    page = dtt.Table("page", """
+    | Location:text           | validfrom:date | validto:date  |
+    | ----------------------- | -------------- | ------------- |
+    | Fredrik Bajers Vej 7    | 1990-01-01     | $1            |
+    | Selma Lagerløfs Vej 300 | $1             | NULL          |""")
     domain.ensure()
     etl.executeETLFLow()
-    expected = domain + "| $_ | python.org |"
+    expected = domain + "| $_ | Fredrik Bajers Vej 7 |"
 
 The methods :meth:`ensure() <.Table.ensure()>` and :meth:`.reset()` may not be
 called on a Drawn Table where any variables are used (this will raise an
@@ -304,15 +316,13 @@ seen below.
 
 .. code-block:: rst
 
-    | bid:int (pk) | browser:text    | os:text   |
-    |-----
-    | 1 | Firefox         | Linux     |
-    | 2     | Firefox         | Windows     |
-    | 3 | Firefox         | MacOS |
-    | 4     | Chrome | Linux     |
-    | 5 | Chrome | Windows     |
-    | 6    | Chrome | MacOS |
-    | -1 | Unknown browser | Unknown   |
+    | bid:int (pk)    | title:text       | genre:text |
+    | ----------------- |
+    | 1     | Unknown    | Unknown |
+    | 2 | Nineteen Eighty-Four | Novel     |
+    | 3     | Calvin and Hobbes One     | Comic |
+    | 4 | Calvin and Hobbes Two     | Comic |
+    | 5        | The Silver Spoon | Cookbook |
 
 It is clear from this example that poor formatting makes a Drawn Table harder
 to read. However, as properly formatting each Drawn Table can be tedious, DTT
@@ -325,15 +335,13 @@ Table is much easier to read.
 
 .. code-block::  rst
 
-    | bid:int (pk) | browser:text    | os:text |
-    | ------------ | --------------- | ------- |
-    | 1            | Firefox         | Linux   |
-    | 2            | Firefox         | Windows |
-    | 3            | Firefox         | MacOS   |
-    | 4            | Chrome          | Linux   |
-    | 5            | Chrome          | Windows |
-    | 6            | Chrome          | MacOS   |
-    | -1           | Unknown browser | Unknown |
+    | bid:int (pk) | title:text            | genre:text |
+    | ------------ | --------------------- | ---------- |
+    | 1            | Unknown               | Unknown    |
+    | 2            | Nineteen Eighty-Four  | Novel      |
+    | 3            | Calvin and Hobbes One | Comic      |
+    | 4            | Calvin and Hobbes Two | Comic      |
+    | 5            | The Silver Spoon      | Cookbook   |
 
 The following two functions demonstrate how ``formattable.py`` can be
 integrated with GNU Emacs and Vim, respectively. However, ``formattable.py`` is
@@ -372,35 +380,36 @@ both DTT and Python’s :mod:`.unittest` module is shown below.
 
 When using :mod:`.unittest`, a class must be defined for each set of tests. It
 is natural to group tests for a dimension into a class such that they can
-share. A class using DTT to test the ETL flow for the ``browser`` dimension is
+share. A class using DTT to test the ETL flow for the ``book`` dimension is
 defined on Line 1. It inherits from :class:`.unittest.TestCase` as required by
 :mod:`.unittest`. Two methods are then overridden :meth:`.setUpClass()` and
 :meth:`.setUp()`.
 
 .. code-block:: python
 
-    class BrowserStateTest(unittest.TestCase):
+    class BookStateTest(unittest.TestCase):
         @classmethod
         def setUpClass(cls):
             cls.cw = dtt.connectionwrapper()
-            cls.initial = dtt.Table("browser", """
-            | bid:int (pk) | browser:text | os:text |
-            | ------------ | ------------ | ------- |
-            | -1           | Unknown      | Unknown |
-            | 1            | Firefox      | Linux   |
-            | 2            | Firefox      | MacOS   |""")
+            cls.initial = dtt.Table("book", """
+            | bid:int (pk) | title:text            | genre:text |
+            | ------------ | --------------------- | ---------- |
+            | 1            | Unknown               | Unknown    |
+            | 2            | Nineteen Eighty-Four  | Novel      |
+            | 3            | Calvin and Hobbes One | Comic      |
+            | 4            | The Silver Spoon      | Cookbook   |""")
 
         def setUp(self):
             self.initial.reset()
 
         def test_insertNew(self):
-            expected = self.initial + "| 3 | Firefox | Windows |"
+            expected = self.initial + "| 4 | Calvin and Hobbes Two | Comic |"
             newrows = expected.additions()
             etl.executeETLFlow(self.cw, newrows)
             expected.assertEqual()
 
         def test_insertExisting(self):
-            row = {'bid':3, 'browser':'Firefox', 'os':'Linux'}
+            row = {'bid': 5, 'book': 'Calvin and Hobbes Two', 'genre': 'Comic'}
             etl.executeETLFlow(self.cw, [row])
             self.initial.assertEqual()
 
@@ -410,10 +419,10 @@ connection from DTT on Line 4 and defines a Drawn Table with the initial state
 of the dimension in Line 5. By creating them in :meth:`.setUpClass()`, they are
 only initialized once and can be reused for each test. To ensure the tests do
 not affect each other, which would make the result depend on the execution
-order of the tests, the ``browser`` table in the database is reset before each
+order of the tests, the ``book`` table in the database is reset before each
 test by :meth:`.setUp()`. Then on Line 15 and Line 21 the tests are implemented
 as separate methods. :meth:`.test_insertNew()` tests that a row that currently
-does not exist in ``browser`` is inserted correctly, while
+does not exist in ``book`` is inserted correctly, while
 :meth:`.test_insertExisting()` ensures that an already existing row does not
 become duplicated. In this example, both of these tests invoke the user’s ETL
 flow by calling the user-defined method :meth:`executeETLFlow()`. This method
@@ -441,69 +450,70 @@ preconditions and/or postconditions.
 
 .. code-block:: rst
 
-    browser
-    | bid:int (pk) | browser:text    | os:text |
-    | ------------ | --------------- | ------- |
-    | -1           | Unknown browser | Unknown |
+    book
+    | bid:int (pk) | title:text            | genre:text |
+    | ------------ | --------------------- | ---------- |
+    | 1            | Unknown               | Unknown    |
 
-    browser, equal
-    | bid:int (pk) | browser:text    | os:text |
-    | ------------ | --------------- | ------- |
-    | 1            | Firefox         | Linux   |
-    | 2            | Firefox         | Windows |
-    | 3            | Firefox         | MacOS   |
-    | -1           | Unknown browser | Unknown |
+    book, equal
+    | bid:int (pk) | title:text            | genre:text |
+    | ------------ | --------------------- | ---------- |
+    | 1            | Unknown               | Unknown    |
+    | 2            | Nineteen Eighty-Four  | Novel      |
+    | 3            | Calvin and Hobbes One | Comic      |
+    | 4            | Calvin and Hobbes Two | Comic      |
+    | 5            | The Silver Spoon      | Cookbook   |
 
 To specify a precondition, first the name of the table must be given, in the
-above example ``browser``. As ``dttr`` uses the DTT library internally, it uses
+above example ``book``. As ``dttr`` uses the DTT library internally, it uses
 an in-memory SQLite database as the test database by default. Additional
 databases can be added by assigning PEP 249 connections to variables in the
 configuration file. To user a connection from the configuration file, the table
-name must be prefixed by ``<tablename>@`` e.g., ``browser@targetdw``. After the
+name must be prefixed by ``<tablename>@`` e.g., ``book@targetdw``. After the
 table name, a Drawn Table must be specified (Lines 2–4 in the file above).
 Like for any other Drawn Table, the header must be given first, then the
 delimiter, and last the rows. To mark the end of the precondition, an empty
 line is specified (Line 5).
 
-To specify a postcondition, a table name is must again be given first.
-The table name is followed by a comma and the name of the assertion to use as
-shown in Line 6 in the file. In the shown example, the table name is
-``browser`` like for the precondition, but they may be different. For example,
-the precondition could define the initial state for ``inputdata@sourcedb`` and
-the postcondition could define the expected state for ``browser@targetdw``. As
-already mentioned, the name of the table to use for the postcondition is
-followed by a comma and the assertion to use, i.e., ``equal`` in this example.
-One can also use the other assertions in DTT: ``disjoint`` and ``subset``.
-Finally (Lines 7–12 in the file), the actual Drawn Table is given in the same
-way as for the precondition. The Drawn Table in the postcondition may also use
-variables. Note that a test does not require both a precondition and
-postcondition, both are optional. It is thus, e.g., possible to create a test
-file where no precondition is set, but the postcondition still is asserted
-after executing the ETL flow. Also, as stated, a ``.dtt`` file can contain any
-number of preconditions and postconditions.
+To specify a postcondition, a table name is must again be given first.  The
+table name is followed by a comma and the name of the assertion to use as shown
+in Line 6 in the file. In the shown example, the table name is ``book`` like
+for the precondition, but they may be different. For example, the precondition
+could define the initial state for ``inputdata@sourcedb`` and the postcondition
+could define the expected state for ``book@targetdw``. As already mentioned,
+the name of the table to use for the postcondition is followed by a comma and
+the assertion to use, i.e., ``equal`` in this example.  One can also use the
+other assertions in DTT: ``disjoint`` and ``subset``.  Finally (Lines 7–12 in
+the file), the actual Drawn Table is given in the same way as for the
+precondition. The Drawn Table in the postcondition may also use variables. Note
+that a test does not require both a precondition and postcondition, both are
+optional. It is thus, e.g., possible to create a test file where no
+precondition is set, but the postcondition still is asserted after executing
+the ETL flow. Also, as stated, a ``.dtt`` file can contain any number of
+preconditions and postconditions.
 
 For tests that require more data than what is feasible to embed directly in a
 Drawn Table, data in an external file or database can be added to a Drawn Table
 by specifying an external data source as its last line. For example, by adding
-the line ``csv browserdata.csv ,`` the contents of the CSV file
-``browserdata.csv`` is added to the Drawn Table with ``,`` used as field
-separator, in addition to any rows drawn as part of the Drawn Table. By adding
-``sql oltp SELECT bid, browser, os FROM browser`` as the last line all rows of
-the table ``browser`` from the PEP 249 connection ``oltp`` are added to the
-Drawn Table. This is also extensible through the configuration file such that
-support for other sources of data, e.g., XML or a NoSQL DBMS like MongoDB can
-be added. This is done by creating a function in the configuration file. If,
-for example, the line ``xml teacher 8`` is found in a ``.dtt`` file,
-``dttr`` looks for the function ``xml`` in the configuration file and executes
-it with the arguments ``'teacher'`` and ``'8'``.
+the line ``csv bookdata.csv ,`` the contents of the CSV file ``bookdata.csv``
+is added to the Drawn Table with ``,`` used as field separator, in addition to
+any rows drawn as part of the Drawn Table. By adding ``sql oltp SELECT bid,
+title, genre FROM book`` as the last line all rows of the table ``book`` from
+the PEP 249 connection ``oltp`` are added to the Drawn Table. This is also
+extensible through the configuration file such that support for other sources
+of data, e.g., XML or a NoSQL DBMS like MongoDB can be added. This is done by
+creating a function in the configuration file. If, for example, the line ``xml
+teacher 8`` is found in a ``.dtt`` file, ``dttr`` looks for the function
+``xml`` in the configuration file and executes it with the arguments
+``'teacher'`` and ``'8'``.
 
-``dttr`` can be invoked from the command line as shown below. Note that the
-ETL program to test and its arguments simply are given to ``dttr`` as arguments
+``dttr`` can be invoked from the command line as shown below. Note that the ETL
+program to test and its arguments simply are given to ``dttr`` as arguments
 (``–etl ...``). Thus, any ETL program can be invoked.
 
 .. code-block:: console
 
-    $ ./dttr.py --etl "python3 myetl --loaddim browser"
+    $ ./dttr.py --etl "python3 myetl --loaddim book"
 
 When executed, ``dttr`` by default looks for all ``.dtt`` test files in the
 current working directory, but optional arguments allow the user to select
