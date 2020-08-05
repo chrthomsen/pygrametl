@@ -28,10 +28,6 @@
 import sys
 import pygrametl.drawntabletesting as dtt
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.7'
-
 
 if len(sys.argv) != 3:
     print("usage: " + sys.argv[0] + " file line")

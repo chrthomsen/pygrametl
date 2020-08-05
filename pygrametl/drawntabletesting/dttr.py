@@ -36,10 +36,6 @@ from pathlib import Path
 
 import pygrametl.drawntabletesting as dtt
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.7'
-
 
 # Types
 ReaderError = namedtuple('ReaderError', 'path start end name cause')

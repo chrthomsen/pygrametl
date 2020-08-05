@@ -62,9 +62,6 @@ except ImportError:
     # Jython 2.5.X specific code
     pass
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.7'
 __all__ = ['definequote', 'Dimension', 'CachedDimension', 'BulkDimension',
            'CachedBulkDimension', 'TypeOneSlowlyChangingDimension',
            'SlowlyChangingDimension', 'SnowflakedDimension', 'FactTable',

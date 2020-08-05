@@ -31,9 +31,6 @@ import copy
 import sqlite3
 import pygrametl
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.7'
 __all__ = ['connectionwrapper', 'Table']
 
 

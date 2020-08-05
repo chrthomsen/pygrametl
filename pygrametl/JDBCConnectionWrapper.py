@@ -2,7 +2,7 @@
    JDBC Connection. The module should only be used when running Jython.
 """
 
-# Copyright (c) 2009-2014, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -44,9 +44,6 @@ except ImportError:
 
 # NOTE: This module is made for Jython.
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.3'
 __all__ = ['JDBCConnectionWrapper', 'BackgroundJDBCConnectionWrapper']
 
 

@@ -3,7 +3,7 @@
    documentation after Sphinx has processed them.
 """
 
-# Copyright (c) 2014, Aalborg University (chr@cs.aau.dk)
+# Copyright (c) 2014-2020, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without

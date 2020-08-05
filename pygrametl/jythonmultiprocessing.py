@@ -3,7 +3,7 @@
    threads when used from Jython (where there is no GIL).
 """
 
-# Copyright (c) 2011-2014, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2011-2020, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,6 @@ except ImportError:
 
 # NOTE: This module is made for Jython.
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.3'
 __all__ = ['JoinableQueue', 'Process', 'Queue', 'Value']
 
 
