@@ -275,9 +275,9 @@ matches ``validfrom`` for the new version of the member. Thus, variables can be
 used to efficiently test automatically generated values are correct. 
 It is also possible to specify that the value of a cell should not be included
 in the comparison. This is done with the special variable ``$_``. When compared
-to any value, ``$_`` is always considered to be equal. In the exampel below,
- the actual values of the primary key column are not taken into consideration.  
- ``$_!`` is a stricter version of ``$_`` which disallows ``NULL``.
+to any value, ``$_`` is always considered to be equal. In the example below,
+the actual values of the primary key column are not taken into consideration.  
+``$_!`` is a stricter version of ``$_`` which disallows ``NULL``.
 
 .. code-block:: python
 
