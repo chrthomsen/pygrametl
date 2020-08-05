@@ -4,10 +4,10 @@ Version 2.7 (unreleased)
   ``AccumulatingSnapshotFactTable`` a new class supporting accumulating
   snapshot fact tables where facts can be updated as a process progresses.
 
-  ``BatchFactTable.__init__`` now optionally takes the argument ``usevalues``.
+  ``BatchFactTable.__init__`` now optionally takes the argument ``usemultirow``.
   When this argument is ``True`` (the default is ``False``), batches are loaded
-  using an ``INSERT INTO name VALUES`` statement instead of ``executemany()``.
-  (GitHub issue #19).
+  using ``execute`` with a single ``INSERT INTO name VALUES`` statement instead 
+  of ``executemany()``. (GitHub issue #19).
 
   ``closecurrent`` method to ``SlowlyChangingDimension`` to make it possible
   to set an end date for the most current version without adding a new
@@ -15,7 +15,7 @@ Version 2.7 (unreleased)
 
 **Changed**
   ``SlowlyChangingDimension.scdensure`` now checks if the newest version
-  has its toatt set to a value different from maxto (if toatt is
+  has its ``toatt`` set to a value different from ``maxto`` (if ``toatt`` is
   defined). This can happen from a call to ``closecurrent`` or a manual
   update. If it is the case, a new version will be added when ``scdensure`` is
   called even if no other differences are present.
@@ -25,7 +25,7 @@ Version 2.7 (unreleased)
 
 **Fixed**
   Outdated information stating that type 1 slowly changing dimensions are not
-  supported have been removed from the documentation.
+  supported has been removed from the documentation.
 
 Version 2.6
 ----------
