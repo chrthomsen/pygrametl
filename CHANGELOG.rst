@@ -27,6 +27,8 @@ Version 2.7 (unreleased)
   Outdated information stating that type 1 slowly changing dimensions are not
   supported has been removed from the documentation.
 
+  Wrong use of paramstyle in ``ConnectionWrapper.executemany`` fixed.
+
 Version 2.6
 ----------
 **Added**
