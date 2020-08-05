@@ -248,8 +248,10 @@ variables to test that foreign keys are assigned correctly.
 Here the it is stated that the ``gid`` for ``Nineteen Eighty-Four`` in ``book``
 must match the ``gid`` for ``Novel`` in ``genre``, while the ``gid`` for
 ``Calvin and Hobbes One`` and ``Calvin and Hobbes Two`` in ``book`` must match
-the ``gid`` for ``Comic`` in ``genre``. If the variables with the same name do
-not have matching values, raises errors.
+the ``gid`` for ``Comic`` in ``genre``. 
+
+If the variables with the same name do not have matching values, errors are
+raised.
 
 .. code-block:: console
 
@@ -261,42 +263,31 @@ not have matching values, raises errors.
     ValueError: Ambiguous values for $2: genre(1,0) is 2 and book(2,2) is 1
 
 These error messages are excerpts from the output of a test case where
-``genre`` and ``book`` had the IDs defined in two different orders. As such,
+``genre`` and ``book`` had their IDs defined in different orders. In this case,
 the foreign key constraints were satisfied although ``Nineteen Eighty-Four``
-was referencing the genre ``comic``. As such, variables can test parts of the
+(wrongly) was referencing the genre ``comic``. Thus, variables can test parts of the
 ETL flow which cannot be verified by foreign keys as they only ensure that a
 value is present.
 
 Another example of using variables is shown below. Here the user verifies that
 in a type-2 Slowly Changing Dimension, the timestamp set for ``validto``
 matches ``validfrom`` for the new version of the member. Thus, variables can be
-used to efficiently test automatically generated values are correct.
-
-.. code-block:: python
-
-    page = dtt.Table("page", """
-    | Location:text           | validfrom:date | validto:date  |
-    | ----------------------- | -------------- | ------------- |
-    | Fredrik Bajers Vej 7    | 1990-01-01     | $1            |
-    | Selma Lagerløfs Vej 300 | $1             | NULL          |""")
-
+used to efficiently test automatically generated values are correct. 
 It is also possible to specify that the value of a cell should not be included
 in the comparison. This is done with the special variable ``$_``. When compared
-to any value, ``$_`` is always considered to be equal. An example is shown
-below where the actual value of the primary key of the expected new row is not
-taken into consideration.  ``$_!`` is a stricter version of ``$_`` which
-disallows ``NULL``.
+to any value, ``$_`` is always considered to be equal. In the exampel below,
+ the actual values of the primary key column are not taken into consideration.  
+ ``$_!`` is a stricter version of ``$_`` which disallows ``NULL``.
 
 .. code-block:: python
 
-    page = dtt.Table("page", """
-    | Location:text           | validfrom:date | validto:date  |
-    | ----------------------- | -------------- | ------------- |
-    | Fredrik Bajers Vej 7    | 1990-01-01     | $1            |
-    | Selma Lagerløfs Vej 300 | $1             | NULL          |""")
-    domain.ensure()
-    etl.executeETLFLow()
-    expected = domain + "| $_ | Fredrik Bajers Vej 7 |"
+    address = dtt.Table("address", """
+    | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date  |
+    | ------------ | --------- | ----------------------- | -------------- | ------------- |
+    | $_           | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | $1            |
+    | $_           | CS        | Selma Lagerløfs Vej 300 | $1             | NULL          |""")
+
+
 
 The methods :meth:`ensure() <.Table.ensure()>` and :meth:`.reset()` may not be
 called on a Drawn Table where any variables are used (this will raise an
@@ -438,10 +429,10 @@ Runner). Internally, ``dttr`` uses the DTT library described above. ``dttr``
 uses test files, which have the ``.dtt`` suffix, to specify preconditions and/or
 postconditions. A test file only contains Drawn Tables but not any Python code.
 However, a configuration file named ``config.py`` can be created in the same
-folders as the ``.dtt`` files to define PEP 249 connections (i.e. in addition
+folders as the ``.dtt`` files to define PEP 249 connections (i.e., in addition
 to the default in-memory SQlite database) and data sources (support for CSV and
-SQL is provided by ``dttr``) for use in the tests. More detail is provided as
-part of the following example. An example of a test file is given in below.
+SQL is provided by ``dttr``) for use in the tests. More details are provided as
+part of the following example. An example of a test file is given below.
 This file only contains one precondition (i.e., a Drawn Table with a name, but
 without an assert above it) on Line 1–4 and one postcondition (i.e., a Drawn
 Table with both a name and an assert above it) on Line 6–12). This structure
@@ -464,11 +455,11 @@ preconditions and/or postconditions.
     | 4            | Calvin and Hobbes Two | Comic      |
     | 5            | The Silver Spoon      | Cookbook   |
 
-To specify a precondition, first the name of the table must be given, in the
-above example ``book``. As ``dttr`` uses the DTT library internally, it uses
+To specify a precondition, first the name of the table must be given; in the
+example above that is  ``book``. As ``dttr`` uses the DTT library internally, it uses
 an in-memory SQLite database as the test database by default. Additional
 databases can be added by assigning PEP 249 connections to variables in the
-configuration file. To user a connection from the configuration file, the table
+configuration file. To use a connection from the configuration file, the table
 name must be followed by an ``@`` sign and then the name of the connection to
 use for this table, e.g., ``book@targetdw``. After the table name, a Drawn
 Table must be specified (Lines 2–4 in the file above).  Like for any other
@@ -478,7 +469,7 @@ rows. To mark the end of the precondition, an empty line is specified (Line 5).
 To specify a postcondition, a table name is must again be given first.  The
 table name is followed by a comma and the name of the assertion to use as shown
 in Line 6 in the file. In the shown example, the table name is ``book`` like
-for the precondition, but they may be different. For example, the precondition
+for the precondition, but they may also be different. For example, the precondition
 could define the initial state for ``inputdata@sourcedb`` and the postcondition
 could define the expected state for ``book@targetdw``. As already mentioned,
 the name of the table to use for the postcondition is followed by a comma and
@@ -498,7 +489,7 @@ by specifying an external data source as its last line. For example, by adding
 the line ``csv bookdata.csv ,`` the contents of the CSV file ``bookdata.csv``
 is added to the Drawn Table with ``,`` used as field separator, in addition to
 any rows drawn as part of the Drawn Table. By adding ``sql oltp SELECT bid,
-title, genre FROM book`` as the last line all rows of the table ``book`` from
+title, genre FROM book`` as the last line, all rows of the table ``book`` from
 the PEP 249 connection ``oltp`` are added to the Drawn Table. This is also
 extensible through the configuration file such that support for other sources
 of data, e.g., XML or a NoSQL DBMS like MongoDB can be added. This is done by
@@ -509,7 +500,7 @@ teacher 8`` is found in a ``.dtt`` file, ``dttr`` looks for the function
 
 ``dttr`` can be invoked from the command line as shown below. Note that the ETL
 program to test and its arguments simply are given to ``dttr`` as arguments
-(``–etl ...``). Thus, any ETL program can be invoked.
+(``–-etl ...``). Thus, any ETL program can be invoked.
 
 .. code-block:: console
 
@@ -524,7 +515,7 @@ method such that each table is created and its data is inserted if necessary.
 If a table with the given name already exists and has differing content, an
 error will be raised and the table will not be updated. After the preconditions
 have been set, the ETL flow is started. How to execute the ETL flow is
-specified using the ``–etl`` flag as shown above. When the ETL flow has
+specified using the ``--etl`` flag as shown above. When the ETL flow has
 finished, all postconditions are asserted and any violation raises an error. If
 multiple occurrences of the same variable have different values, an error will
 also be raised, no matter if the variables are in the same or different
