@@ -27,6 +27,13 @@ Version 2.7 (unreleased)
 
   Generators in datasources don't raise StopIteration anymore as required by
   PEP479.
+  
+  ``__author__`` and ``__maintainer__`` removed from all .py files.
+  
+  ``__version__`` removed from all .py files except ``pygrametl/__init__.py``
+  The version of pygrametl is thus now available as ``pygrametl.__version__``
+  and will be updated for every release.
+
 
 **Fixed**
   Outdated information stating that type 1 slowly changing dimensions are not
