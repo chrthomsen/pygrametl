@@ -32,7 +32,7 @@ line only with vertical pipes, spaces, and dashes (``| -- | -- |``) and then
 each row follows on a line of its own. Columns must be given in the same order
 as in the header and must be separated by pipes. For string values, any
 surrounding spaces are trimmed away. A Drawn Table is also a valid table in
-`GitHub Flowered Markdown <https://github.github.com/gfm/#tables-extension->`_.
+`GitHub Flavored Markdown <https://github.github.com/gfm/#tables-extension->`_.
 An example is given below.
 
 .. code-block:: python
@@ -60,7 +60,7 @@ the same name and rows exists in the test database and otherwise create it (or
 raise an error if it contains other rows). The :meth:`.reset()` creates and
 fills the table even if it already exists, while :meth:`.create()` creates the
 table without inserting any data into it. Finally, the SQL statement generated
-by the :class:`.Table` instance can retrieved using the methods
+by the :class:`.Table` instance can be retrieved using the methods
 :meth:`.getSQLToCreate()` and :meth:`.getSQLToInsert()`. By default, DTT uses
 an in-memory SQLite database to run all tests against as it is very fast and
 does not require any installation or configuration. It is thus a good choice to
@@ -98,7 +98,7 @@ test database.
 
 :class:`.Table` instances are immutable once created. Typically, the
 postcondition is, however, similar to the precondition except for a few added
-or updated rows. In DTT it simple to create a new :class:`.Table` instance from
+or updated rows. In DTT it is simple to create a new :class:`.Table` instance from
 an existing one by using the `+` operator.
 
 .. code-block:: python
