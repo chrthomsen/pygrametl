@@ -605,8 +605,8 @@ class Variable:
         # The value of variables named _! cannot be NULL
         if self.name == '_!':
             if value is None:
-                raise ValueError("Expected a NOT NULL value in '{}'(row {},"
-                                 " column {}), found NULL in database".format(
+                raise ValueError("Expected a NOT NULL value in {}(row {}, "
+                                 "column {}), found NULL in database".format(
                                      self.origin, self.row, self.column))
             return
 
@@ -614,11 +614,12 @@ class Variable:
         if self.definition in type(self).__all:
             existing = type(self).__all[self.definition]
             if not existing.value == value:
-                raise ValueError(("Ambiguous values for {}: {}({},{}) is {}"
-                                  " and {}({},{}) is {}") .format(
-                                      self.definition, existing.origin,
-                                      existing.row, existing.column,
-                                      existing.value, self.origin, self.row,
-                                      self.column, self.value))
+                raise ValueError(("Ambiguous values for {}; {}(row {}, column"
+                                  " {}) is {} and {}(row {}, column {}) is {}")
+                                 .format(
+                    self.definition, existing.origin,
+                    existing.row, existing.column,
+                    existing.value, self.origin, self.row,
+                    self.column, self.value))
         else:
             type(self).__all[self.definition] = self
