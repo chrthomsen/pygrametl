@@ -256,11 +256,11 @@ raised.
 .. code-block:: console
 
     ...
-    ValueError: Ambiguous values for $1: genre(0,0) is 1 and book(0,2) is 2
+    ValueError: Ambiguous values for $1; genre(row 0, column 0) is 1 and book(row 0, column 2) is 2
     ...
-    ValueError: Ambiguous values for $2: genre(1,0) is 2 and book(1,2) is 1
+    ValueError: Ambiguous values for $2; genre(row 1, column 0) is 2 and book(row 1, column 2) is 1
     ...
-    ValueError: Ambiguous values for $2: genre(1,0) is 2 and book(2,2) is 1
+    ValueError: Ambiguous values for $2; genre(row 1, column 0) is 2 and book(row 2, column 2) is 1
 
 These error messages are excerpts from the output of a test case where
 ``genre`` and ``book`` had their IDs defined in different orders. In this case,
