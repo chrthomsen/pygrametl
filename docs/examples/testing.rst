@@ -134,14 +134,15 @@ ETL flow is executed for the new rows is shown below.
 
 For the code above, :attr:`.expected` defines how the user expects the database
 state to become, but it is not the DTT framework that puts the database in this
-state. The database is modified by the ETL flow invoked by :attr:`etl.executeETLFlow(newrows)`
-on Line 5. The ETL flow may be implemented in Python, another programming language,
-or any other program. Using these features, DTT makes it simple to define the
-state of a database before a test is executed, and the rows the ETL flow should load.
-However, for the automatic test to be of any use, it is necessary to validate that
-the state of the database after the ETL flow has finished. This is done using
-assertions as shown on Line 6.
-
+state. The database is modified by the ETL flow invoked by
+:attr:`etl.executeETLFlow(newrows)` on Line 5. This method could, e.g., spawn a
+new process in which the user’s ETL tool runs. It is thus *not* a requirement
+that the user’s ETL flow is implemented in Python despite the tests being so.
+Using these features, DTT makes it simple to define the state of a database
+before a test is executed, and the rows the ETL flow should load. However, for
+the automatic test to be of any use, it is necessary to validate that the state
+of the database after the ETL flow has finished. This is done using assertions
+as shown on Line 6.
 
 Assertions
 ----------
@@ -286,7 +287,6 @@ the actual values of the primary key column are not taken into consideration.
     | $_           | CS        | Selma Lagerløfs Vej 300 | $1             | NULL          |""")
 
 
-
 The methods :meth:`ensure() <.Table.ensure()>` and :meth:`.reset()` may not be
 called on a Drawn Table where any variables are used (this will raise an
 error). This effectively means that variables can only be used when the
@@ -414,9 +414,8 @@ as separate methods. :meth:`.test_insertNew()` tests that a row that currently
 does not exist in ``book`` is inserted correctly, while :meth:`.test_insertExisting()`
 ensures that an already existing row does not become duplicated. In this example,
 both of these tests invoke the user’s ETL flow by calling the user-defined method
-:meth:`executeETLFlow()`. This method could, e.g., spawn a new process in which
-the user’s ETL tool runs. It is *not* a requirement that the user’s ETL flow is
-implemented in Python despite the tests being so.
+:meth:`executeETLFlow()`. As stated, the ETL flow may be implemented in Python,
+another programming language, or any other program.
 
 Drawn Table Testing as a Stand-Alone Tool
 -----------------------------------------
