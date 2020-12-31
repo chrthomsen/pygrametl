@@ -1,9 +1,9 @@
-"""This module contains classes and functions for defining pre-conditions and
-   post-conditions for database state. The conditions can be used in unit tests
-   to evaluate efficiently evaluate the expected database state.
+"""This module contains classes and functions for defining preconditions and
+   postconditions for database state. The conditions can be used in unit tests
+   to efficiently evaluate the expected database state.
 """
 
-# Copyright (c) 2020, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2021, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,7 @@ class Table:
            - testconnection: The connection wrapper to use for the unit tests.
              If None pygrametl's current default connection wrapper is used.
         """
-        # If a ConnectionWrapper is not provided we extract the default
+        # If a ConnectionWrapper is not provided the default wrapper is used
         if testconnection is None:
             testconnection = pygrametl.getdefaulttargetconnection()
             if testconnection is None:
@@ -114,10 +114,10 @@ class Table:
             'timestamp': str,
         }
 
-        # References to the variables separately so they can be iterated over
+        # References to the variables are stored so they can be iterated over
         self.__variables = []
 
-        # The header is parsed separately to extract the types
+        # The header is parsed separately to extract the column names and types
         self.name = name
         self.__nullsubst = nullsubst
         self.__prefix = variableprefix
@@ -129,7 +129,7 @@ class Table:
         for line in lines[2:]:
             self.__rows.append(self.__row(line, True))
 
-        # External rows are added from all none strings types to catch errors
+        # External rows from data sources are parsed to catch errors
         if loadFrom and type(loadFrom) is not str:
             for row in loadFrom:
                 parsed = []
@@ -137,10 +137,10 @@ class Table:
                     parsed.append(self.__parse(index, row[key], True))
                 self.__rows.append(tuple(parsed))
 
-        # The indexes for updated rows are stored so they can be returned
+        # The indexes of updated rows are stored so they can be returned
         self.__additions = set()
 
-        # Table is only allowed to drop a table if it created the table
+        # A Table is only allowed to drop a table if it created the table
         self.__createdTable = False
 
     # Public methods
@@ -149,11 +149,11 @@ class Table:
         return self.__table2str(self.__rows, False, indention=0)
 
     def __iter__(self):
-        """Return a iterator of the rows as dicts."""
+        """Return an iterator of the rows as dicts."""
         return map(lambda row: dict(zip(self.__columns, row)), self.__rows)
 
     def __add__(self, lines):
-        """Create a new instance with the new row provide appended.
+        """Create a new instance with the new rows provide appended.
 
            Arguments:
 
@@ -171,10 +171,10 @@ class Table:
         return table
 
     def key(self):
-        """Return the key.
+        """Return the primary key.
 
-           For a simple key, the name is returned. For a composite key,
-           all names are returned in a tuple.
+           For a simple primary key, the name is returned. For a composite
+           primary key, all names are returned in a tuple.
         """
         if not self.__keyrefs:
             raise ValueError("No primary key specified in this drawn table")
@@ -196,7 +196,7 @@ class Table:
         return sql
 
     def getSQLToInsert(self):
-        """Return a string of SQL that inserts all rows into the table"""
+        """Return a string of SQL that inserts all rows into the table."""
         if not self.__rows:
             raise ValueError("No rows are specified in this drawn table")
 
@@ -212,7 +212,7 @@ class Table:
            Arguments:
 
            - verbose: if True an ASCII representation of the rows violating the
-             assertion is printed.
+             assertion is printed as part of the AssertionError.
         """
         return self.__compareAndMaybeRaise(
             self.name + "'s rows differ from the rows in the database.",
@@ -228,7 +228,7 @@ class Table:
            Arguments:
 
            - verbose: if True an ASCII representation of the rows violating the
-             assertion is printed.
+             assertion is printed as part of the AssertionError.
         """
         return self.__compareAndMaybeRaise(
             self.name + " and the database contain equivalent rows.",
@@ -245,7 +245,7 @@ class Table:
            Arguments:
 
            - verbose: if True an ASCII representation of the rows violating the
-             assertion is printed.
+             assertion is printed as part of the AssertionError.
         """
         return self.__compareAndMaybeRaise(
             self.name + "'s rows are not a subset of the database's rows",
@@ -254,27 +254,27 @@ class Table:
             lambda rowSet, dbSet: [], True, verbose)
 
     def create(self):
-        """Create the table if it does not exist without adding any rows"""
+        """Create the table if it does not exist without adding any rows."""
         self.__testconnection.execute(self.getSQLToCreate())
         self.__testconnection.commit()
         self.__createdTable = True
 
     def clear(self):
-        """Clear the expected state of all variables"""
+        """Clear the expected state of all variables."""
         for variable in self.__variables:
             variable.clear()
 
     def reset(self):
-        """Forcefully create a new table and add the provided rows"""
+        """Forcefully create a new table and add the provided rows."""
         try:
             self.drop()
         except Exception:
-            # The exception thrown for missing table depends on the driver
+            # The exception thrown for a missing table depends on the driver
             pass
         self.ensure()
 
     def ensure(self):
-        """Create the table if it does not exist, otherwise verify the rows
+        """Create the table if it does not exist, otherwise verify the rows.
 
            If the table does exist but does not contain the expected set of
            rows an exception is raised to prevent overriding existing data.
@@ -286,7 +286,7 @@ class Table:
         try:
             self.__testconnection.execute('SELECT 1 FROM ' + self.name)
         except Exception:
-            # As the exception thrown depend on the driver we catch all
+            # The exception thrown for a missing table depends on the driver
             self.__testconnection.execute(self.getSQLToCreate())
 
             # If the table was drawn without any rows there are none to add
@@ -321,7 +321,7 @@ class Table:
                          format(self.name, index, len(self.__rows)))
 
     def additions(self, withKey=False):
-        """Return all rows added or updated since the original drawn table
+        """Return all rows added or updated since the original drawn table.
 
            Arguments:
 
@@ -344,7 +344,7 @@ class Table:
 
     # Private Methods
     def __header(self, line):
-        """ Parse the header of the drawn table."""
+        """Parse the header of the drawn table."""
         keyrefs = []
         attributes = []
         types = []
@@ -389,7 +389,7 @@ class Table:
                 afterKeyrefs = True
             types.append(column[1].strip())
 
-        # Formats both types of constraints to their use when generating SQL
+        # Formats both types of constraints for use with generated SQL
         localConstraints = list(map(lambda c: ' ' + c if c else c,
                                     localConstraints))
         if keyrefs:
@@ -415,7 +415,7 @@ class Table:
         """ Parse a field in the drawn table.
 
             Casting of missing values can be toggled so this method
-            can parse both full rows, new rows, and rows with updates.
+            can be used when parsing full, new, and updated rows.
         """
         if type(value) is Variable:
             self.__variables.append(value)
@@ -492,6 +492,7 @@ class Table:
         return success
 
     def __resolve(self, variable):
+        """Ensure the value of the variable is resolved."""
         row = filter(lambda t: type(t[1]) is not Variable,
                      zip(self.__columns, self.__rows[variable.row]))
         query = "SELECT " + ", ".join(self.__columns) + " FROM " + self.name \
@@ -516,7 +517,7 @@ class Table:
             for i, value in enumerate(row):
                 widths[i] = max(widths[i], len(str(value)))
 
-        # Format table with the column width determined by the longest value
+        # Format table with the column width determined by the widest cell
         prefix = indention * ' '
         fs = ('{{}}' + ('| {{: <{}}} ' * len(widths)) + '|').format(*widths)
         header = fs.format(prefix, *header)
@@ -539,8 +540,8 @@ class Table:
         return '\n'.join([header, delimiter] + rows)
 
     def __copy(self):
-        """Make a deep copy of the table with a pointer to the connection."""
-        # HACK: a database connection cannot be copied so we share it
+        """Make a deep copy of the table with a reference to the connection."""
+        # HACK: a database connection cannot be copied so it is shared
         testconnection = self.__testconnection
         self.__testconnection = None
         table = copy.deepcopy(self)
@@ -570,7 +571,7 @@ class Variable:
         self.definition = definition
         self.origin = origin
 
-        # Both are stored with zero being the first element to index Table
+        # Both are stored with zero being the first element of the index Table
         self.row = row
         self.column = column
 

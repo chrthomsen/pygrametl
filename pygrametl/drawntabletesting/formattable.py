@@ -1,6 +1,6 @@
-"""Script to automatically format a drawn table testing table."""
+"""Script that automatically format a drawn table testing table."""
 
-# Copyright (c) 2020, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2021, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ with open(path, 'r') as f:
         end += 1
     end -= 1  # Do not include the delimiter
 
-# The table indention must be taken into account
+# The table's indention must be taken into account
 table = ''.join(lines[start:end + 1])
 first_char = table.find('|')
 last_char = table.rfind('|')
@@ -58,13 +58,13 @@ prefix = table[:first_char]
 suffix = table[last_char + 1:]
 table = table[first_char:last_char + 1]
 
-# The indention must be added for each line
+# The indention level must be added for each line
 table = dtt.Table('', table, testconnection=object())
 table = str(table).split('\n')
 
 write = 0
 indention = '\n' + ' ' * first_char
-for output in range(start,end):
+for output in range(start, end):
     lines[output] = indention + table[write]
     write += 1
 lines[start] = prefix + table[0]
