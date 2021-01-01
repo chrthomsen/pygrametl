@@ -80,7 +80,7 @@ test database.
 .. code-block:: python
 
     genre = dtt.Table("genre", """
-    | bid:int (pk) | genre:text |
+    | gid:int (pk) | genre:text |
     | ------------ | ---------- |
     | 1            | Unknown    |
     | 2            | Novel      |
@@ -88,13 +88,13 @@ test database.
     | 4            | Cookbook   |""")
 
     book = dtt.Table("book", """
-    | bid:int (pk) | title:text             | gid:int (fk domain(did)) |
-    | ------------ | ---------------------- | ------------------------ |
-    | 1            | Unknown                | 1                        |
-    | 2            | Nineteen Eighty-Four   | 2                        |
-    | 3            | Calvin and Hobbes One  | 3                        |
-    | 4            | Calvin and Hobbes Two  | 3                        |
-    | 5            | The Silver Spoon       | 4                        |""")
+    | bid:int (pk) | title:text             | gid:int (fk genre(gid)) |
+    | ------------ | ---------------------- | ----------------------- |
+    | 1            | Unknown                | 1                       |
+    | 2            | Nineteen Eighty-Four   | 2                       |
+    | 3            | Calvin and Hobbes One  | 3                       |
+    | 4            | Calvin and Hobbes Two  | 3                       |
+    | 5            | The Silver Spoon       | 4                       |""")
 
 :class:`.Table` instances are immutable once created. Typically, the
 postcondition is, however, similar to the precondition except for a few added
@@ -239,11 +239,11 @@ correctly.
     | $2            | Comic      |""")
 
     book = dtt.Table("book", """
-    | bid:int (pk) | title:text             | gid:int (fk domain(did))  |
-    | ------------ | ---------------------- | ------------------------- |
-    | 1            | Nineteen Eighty-Four   | $1                        |
-    | 2            | Calvin and Hobbes One  | $2                        |
-    | 3            | Calvin and Hobbes Two  | $2                        |""")
+    | bid:int (pk) | title:text             | gid:int (fk genre(gid)) |
+    | ------------ | ---------------------- | ----------------------- |
+    | 1            | Nineteen Eighty-Four   | $1                      |
+    | 2            | Calvin and Hobbes One  | $2                      |
+    | 3            | Calvin and Hobbes Two  | $2                      |""")
 
 
 Here it is stated that the ``gid`` for ``Nineteen Eighty-Four`` in ``book``
@@ -281,10 +281,10 @@ the actual values of the primary key column are not taken into consideration.
 .. code-block:: python
 
     address = dtt.Table("address", """
-    | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date  |
-    | ------------ | --------- | ----------------------- | -------------- | ------------- |
-    | $_           | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | $1            |
-    | $_           | CS        | Selma Lagerløfs Vej 300 | $1             | NULL          |""")
+    | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date |
+    | ------------ | --------- | ----------------------- | -------------- | ------------ |
+    | $_           | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | $1           |
+    | $_           | CS        | Selma Lagerløfs Vej 300 | $1             | NULL         |""")
 
 
 The methods :meth:`ensure() <.Table.ensure()>` and :meth:`.reset()` may not be
