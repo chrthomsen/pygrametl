@@ -37,24 +37,24 @@
         <section class="main-content">
             <!-- Introduction Section -->
             <h1><a id="pygrametl---etl-programming-in-python" class="anchor" href="#pygrametl---etl-programming-in-python" aria-hidden="true"><span class="octicon octicon-link"></span></a>pygrametl - ETL programming in Python</h1>
-            <p>pygrametl (pronounced py-gram-e-t-l) is a Python framework which offers commonly used functionality for development of Extract-Transform-Load (ETL) processes. It is open source released under a BSD license. It works both with CPython and Jython such that you also can use existing Java code and JDBC drivers in your ETL program.</p>
+            <p>pygrametl (pronounced py-gram-e-t-l) is a Python framework that provides commonly used functionality for the development of Extract-Transform-Load (ETL) processes. It is open-source and released under a 2-clause BSD license.</p>
 
-            <p>When using pygrametl, the developer codes the ETL process in Python code. This turns out to be very efficient, also when compared to drawing the process in a graphical user interface (GUI).</p>
+            <p>When using pygrametl, the developer codes the ETL process in Python code. This turns out to be very efficient, also when compared to drawing the process in a graphical user interface (GUI) like Pentaho Data Integration. It supports both CPython and Jython so existing Java code and JDBC drivers can be used in the ETL program.</p>
 
-            <p>Concretely, the developer creates an object for each dimension and fact table. (S)he can then easily add new members by <code>dimension.insert(row)</code> where row is a dict holding the values to insert. This is a very simple example, but pygrametl also supports much more complicated scenarios. For example, it is possible to create a single object for a snowflaked dimension. It is then still possible to add a new dimension member with a single method call as in <code>snowflake.insert(row)</code>. This will automatically do the necessary lookups and insertions in the tables participating in the snowflake.</p>
+            <p>Concretely, the developer creates an object for each dimension and fact table. (S)he can then easily add new members by <code>dimension.insert(row)</code> where <code>row</code> is a <code>dict</code> holding the values to insert. This is a very simple example, but pygrametl also supports much more complicated scenarios. For example, it is possible to create a single object for a snowflaked dimension. It is then still possible to add a new dimension member with a single method call as in <code>snowflake.insert(row)</code>. This will automatically do the necessary lookups and insertions in the tables participating in the snowflake.</p>
 
-            <p>pygrametl also supports slowly changing dimensions. Again, the programmer only has to invoke a single method: <code>scdim.scdensure(row)</code>. This will perform the needed updates of both type 1 (i.e., overwrites) and type 2 (i.e., addition of new versions).</p>
+            <p>pygrametl also supports slowly changing dimensions. Again, the programmer only has to invoke a single method: <code>scdim.scdensure(row)</code>. This will perform the needed updates of both type 1 (i.e., overwrites) and type 2 (i.e., adding new versions).</p>
 
             <p>pygrametl was first made publicly available in 2009. Since then, we have made multiple improvements and added new features. Version 2.6 was released in December 2018. Today, pygrametl is used in production systems in different sectors such as healthcare, finance, and transport.</p>
 
 
             <!-- Installation Section -->
             <h2><a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
-            <p>You can install pygrametl from pypi with the following command.</p>
+            <p>pygrametl can be installed from <a href="https://pypi.org/project/pygrametl/" target="_top">PyPI</a> with the following command:</p>
 
             <pre><code>$ pip install pygrametl</code></pre>
 
-            <p>The currently developed version of pygrametl is available at <a href="https://github.com/chrthomsen/pygrametl" target="_top">GitHub</a>.</p>
+            <p>The current development version of pygrametl is available on <a href="https://github.com/chrthomsen/pygrametl" target="_top">GitHub</a>.</p>
 
             <pre><code>$ git clone https://github.com/chrthomsen/pygrametl.git</code></pre>
 
@@ -81,7 +81,7 @@
 
 
 <span class="pl-c">#</span>
-<span class="pl-c">#  Copyright (c) 2009-2020 Aalborg University (pygrametl@cs.aau.dk)</span>
+<span class="pl-c">#  Copyright (c) 2009-2021 Aalborg University (pygrametl@cs.aau.dk)</span>
 <span class="pl-c">#</span>
 <span class="pl-c">#  This file is free software: you may copy, redistribute and/or modify it</span>
 <span class="pl-c">#  under the terms of the GNU General Public License version 2</span>
@@ -296,7 +296,7 @@ inputdata <span class="pl-k">=</span> MergeJoiningSource(downloadlog, <span clas
 
                 <!-- Community -->
                 <h2><a id="community" class="anchor" href="#community" aria-hidden="true"><span class="octicon octicon-link"></span></a>Community</h2>
-                <p>To keep the development of pygrametl open for external participation, we have public mailing lists and use Github. Feel free to ask questions and provide all kinds of feedback.
+                <p>To keep the development of pygrametl open for external participation, we have public mailing lists and use Github. Feel free to ask questions and provide all kinds of feedback:
 
                 <ul>
                     <li><a href="https://groups.google.com/forum/#!forum/pygrametl-user" target="_top">pygrametl-user</a> - For any questions about how to deploy and utilize pygrametl for ETL.</li>
