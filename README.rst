@@ -16,7 +16,7 @@ pygrametl can be installed from `PyPI <https://pypi.org/project/pygrametl/>`_ wi
 
 :code:`$ pip install pygrametl`
 
-The currently developed version of pygrametl is available at `GitHub <https://github.com/chrthomsen/pygrametl>`_:
+The current development version of pygrametl is available on `GitHub <https://github.com/chrthomsen/pygrametl>`_:
 
 :code:`$ git clone https://github.com/chrthomsen/pygrametl.git`
 
@@ -43,7 +43,8 @@ When asking a question or reporting a possible bug in pygrametl, please first ve
 - Relational Database Management System.
 - Python Database Connector.
 - A short description of the problem with a minimal code example that reproduces the problem.
-- We encourage the use of Github and the mailing lists. For discussions not suitable for a public mailing list, you can, however, send us a private `email <mailto:pygrametl@cs.aau.dk>`_.
+
+We encourage the use of Github and the mailing lists. For discussions not suitable for a public mailing list, you can, however, send us a private `email <mailto:pygrametl@cs.aau.dk>`_.
 
 Maintainers
 -----------
