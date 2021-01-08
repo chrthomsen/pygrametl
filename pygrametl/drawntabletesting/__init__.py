@@ -197,6 +197,9 @@ class Table:
 
     def getSQLToInsert(self):
         """Return a string of SQL that inserts all rows into the table."""
+        if self.__variables:
+            raise ValueError(self.name + " contains variables")
+
         if not self.__rows:
             raise ValueError("No rows are specified in this drawn table")
 
