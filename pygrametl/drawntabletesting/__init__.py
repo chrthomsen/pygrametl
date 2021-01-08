@@ -64,7 +64,7 @@ class Table:
 
            - name: the name of the table in the database.
            - table: the contents of the table as an ASCII drawing.
-           - nullsubst: a string used to replace None values.
+           - nullsubst: a string that represents NULL in the drawn table.
            - variableprefix: a string all variables must have as a prefix.
            - loadFrom: additional rows to be loaded as a path to a file that
              continues the table argument or as an iterable producing dicts.
@@ -499,14 +499,20 @@ class Table:
         row = filter(lambda t: type(t[1]) is not Variable,
                      zip(self.__columns, self.__rows[variable.row]))
         query = "SELECT " + ", ".join(self.__columns) + " FROM " + self.name \
-            + " WHERE " + " AND ".join(["%s = %s" % (t[0], "'{}'".format(t[1]))
-                                        for t in row])
+            + " WHERE " + " AND ".join([self.__pair2equals(p) for p in row])
         self.__testconnection.execute(query)
         dbRows = list(self.__testconnection.fetchalltuples())
         if len(dbRows) != 1:
             raise ValueError("No unambigiuous value for the variable {} in {}"
                              .format(variable.name, self.name))
         variable.set(dbRows[0][variable.column])
+
+    def __pair2equals(self, columnAndValue):
+        """Create an SQL string that checks if a column is equal to a value."""
+        if columnAndValue[1] is None:
+            return columnAndValue[0] + " IS NULL"
+        else:
+            return columnAndValue[0] + " = '{}'".format(columnAndValue[1])
 
     def __table2str(self, rows, violation, indention=2):
         """Format a table as a string."""
@@ -525,8 +531,8 @@ class Table:
         fs = ('{{}}' + ('| {{: <{}}} ' * len(widths)) + '|').format(*widths)
         header = fs.format(prefix, *header)
         delimiter = fs.format(prefix, *map(lambda w: w * '-', widths))
-        rows = list(map(lambda r: tuple(map(lambda v: self.__nullsubst
-                                            if v is None else v, r)), rows))
+        rows = list(map(lambda r: tuple(map(lambda v: 'NULL' if v is None
+                                            else v, r)), rows))
 
         # The rows are formatted and a prefix is added to the rows violating
         # the assert. Expected rows are marked with an E while rows currently
@@ -553,13 +559,13 @@ class Table:
         return table
 
     def __tuple2str(self, t):
-        """Format a tuple as a string."""
+        """Format a tuple as a string for use in SQL."""
         return "(" + ", ".join(map(self.__element2str, t)) + ")"
 
     def __element2str(self, e):
-        """Format a value as a string """
+        """Format a value as a string for use in SQL."""
         if e is None:
-            return self.__nullsubst
+            return 'NULL'
         elif type(e) is str:
             return "'" + e + "'"
         else:
