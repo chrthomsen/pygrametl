@@ -426,8 +426,8 @@ class Table:
 
         if type(value) is str:
             if value.startswith(self.__prefix):
-                variable = Variable(value, self.__prefix, self.name,
-                                    len(self.__rows), index)
+                variable = Variable(value, self.__prefix, self.name, len(
+                    self.__rows), index, self.__columns[index])
                 self.__variables.append(variable)
                 return variable
 
@@ -575,7 +575,7 @@ class Table:
 class Variable:
     __all = {}
 
-    def __init__(self, definition, prefix, origin, row, column):
+    def __init__(self, definition, prefix, origin, row, column, column_name):
         self.name = definition[len(prefix):]
         self.definition = definition
         self.origin = origin
@@ -583,6 +583,7 @@ class Variable:
         # Both are stored with zero being the first element of the index Table
         self.row = row
         self.column = column
+        self.column_name = column_name
 
         # A placeholder value is set to allow printing a variable without value
         self.value = ''
@@ -616,8 +617,9 @@ class Variable:
         if self.name == '_!':
             if value is None:
                 raise ValueError("Expected a NOT NULL value in {}(row {}, "
-                                 "column {}), found NULL in database".format(
-                                     self.origin, self.row, self.column))
+                                 "column {}={}), found NULL in database"
+                                 .format(self.origin, self.row, self.column,
+                                         self.column_name))
             return
 
         # All variables with the same definition must also have the same values
@@ -625,11 +627,12 @@ class Variable:
             existing = type(self).__all[self.definition]
             if not existing.value == value:
                 raise ValueError(("Ambiguous values for {}; {}(row {}, column"
-                                  " {}) is {} and {}(row {}, column {}) is {}")
-                                 .format(
-                    self.definition, existing.origin,
-                    existing.row, existing.column,
-                    existing.value, self.origin, self.row,
-                    self.column, self.value))
+                                  " {}={}) is {} and {}(row {}, column {}={})"
+                                  " is {}").format(
+                                      self.definition, existing.origin,
+                                      existing.row, existing.column,
+                                      existing.column_name, existing.value,
+                                      self.origin, self.row, self.column,
+                                      self.column_name, self.value))
         else:
             type(self).__all[self.definition] = self
