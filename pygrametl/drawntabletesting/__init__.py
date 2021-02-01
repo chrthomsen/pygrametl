@@ -617,7 +617,7 @@ class Variable:
         if self.name == '_!':
             if value is None:
                 raise ValueError("Expected a NOT NULL value in {}(row {}, "
-                                 "column {}={}), found NULL in database"
+                                 "column {} {}), found NULL in database"
                                  .format(self.origin, self.row, self.column,
                                          self.column_name))
             return
@@ -627,7 +627,7 @@ class Variable:
             existing = type(self).__all[self.definition]
             if not existing.value == value:
                 raise ValueError(("Ambiguous values for {}; {}(row {}, column"
-                                  " {}={}) is {} and {}(row {}, column {}={})"
+                                  " {} {}) is {} and {}(row {}, column {} {})"
                                   " is {}").format(
                                       self.definition, existing.origin,
                                       existing.row, existing.column,
