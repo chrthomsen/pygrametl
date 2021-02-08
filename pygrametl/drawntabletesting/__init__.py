@@ -378,6 +378,9 @@ class Table:
                         reference = constraint.split(' ', 1)[1]
                         globalConstraints.append('FOREIGN KEY (' + name +
                                                  ') REFERENCES ' + reference)
+                    else:
+                        raise ValueError("Unknown constraint in {} for {}: {}"
+                                         .format(self.name, name, constraint))
                 column[1] = column[1][:startOfConstraints]
             localConstraints.append(' '.join(columnConstraints))
 
