@@ -3,7 +3,7 @@ Version 2.7 (unreleased)
 **Added**
   ``drawntabletesting`` a new module for testing ETL flows. The module makes it
   easy to define the preconditions and postconditions for the database as part
-  of each test. This is done simply by “drawing” the tables and their contents
+  of each test. This is done simply by "drawing" the tables and their contents
   using strings.
 
   ``AccumulatingSnapshotFactTable`` a new class supporting accumulating

@@ -35,7 +35,7 @@ __all__ = ['connectionwrapper', 'Table']
 
 
 def connectionwrapper(connection=None):
-    """Create a new database connection for use with unit tests.
+    """Create a new connection wrapper for use with unit tests.
 
        Arguments:
 
@@ -52,10 +52,10 @@ def connectionwrapper(connection=None):
 
 
 class Table:
-    """A class representing concrete a database table.
+    """A class representing a concrete database table.
 
-       Note that the asserts assumes that the Table instance and the database
-       table do not have duplicate rows, if they do the assets raise an error.
+       Note that the asserts assume that the Table instance and the database
+       table do not have duplicate rows, if they do the asserts raise an error.
     """
 
     def __init__(self, name, table, nullsubst='NULL', variableprefix='$',
@@ -592,7 +592,7 @@ class Variable:
         self.value = ''
 
     def __hash__(self):
-        # The value for variables defined as _ and __ are not stored in __all
+        # The values for variables defined as _ and __ are not stored in __all
         return hash(self.value)
 
     def __eq__(self, other):
@@ -612,7 +612,7 @@ class Variable:
     def set(self, value):
         self.value = value
 
-        # The value of underscore variables are ignored
+        # The values of underscore variables are ignored
         if self.name == '_':
             return
 
