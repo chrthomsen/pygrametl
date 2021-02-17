@@ -20,6 +20,7 @@ import os
 
 # Make sure we get this copy of pygrametl, and not one on the system
 sys.path.insert(1, dirname(dirname(abspath(__file__))))
+import pygrametl
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -32,10 +33,6 @@ sys.dont_write_bytecode = True
 # Creates mockups of Java code used in the Jython modules used in the framework
 import rtdmockup
 rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
-
-# Imports the version extraction script to automatically extract the version
-from version import get_package_version
-
 
 # -- General configuration -----------------------------------------------
 
@@ -60,14 +57,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pygrametl'
-copyright = u'2009 - 2016, Aalborg University'
+copyright = u'2009 - 2020, Aalborg University'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = get_package_version()
+version = pygrametl.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 

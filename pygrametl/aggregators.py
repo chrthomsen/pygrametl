@@ -10,7 +10,7 @@
    If no such results exists, default is returned.
 """
 
-# Copyright (c) 2011-2014, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2011-2020, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -34,9 +34,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.2'
 __all__ = ['Aggregator', 'SimpleAggregator', 'Sum', 'Count', 'CountDistinct',
            'Max', 'Min', 'Avg']
 

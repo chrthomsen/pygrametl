@@ -1,18 +1,16 @@
-from distutils.core import setup
+from setuptools import find_packages, setup
+
 import os
 import sys
 
-# Adds the location of the version extraction script also used by sphinx
-sys.path.insert(0, os.path.abspath('docs/_exts'))
-from version import get_package_version
+import pygrametl
 
-# The beginning of the main setup function
 setup(
     name='pygrametl',
-    version=get_package_version(),
+    version=pygrametl.__version__,
     author='Aalborg University',
     author_email='pygrametl@cs.aau.dk',
-    packages=['pygrametl'],
+    packages=find_packages(),
     package_data={
         'pygrametl': [
             'jythonsupport/Value.class',
@@ -35,4 +33,8 @@ setup(
                 'Topic :: Software Development :: Libraries :: Python Modules',
                 'Topic :: Software Development :: Libraries :: Application '
                 'Frameworks'],
+    entry_points={
+        'console_scripts': [
+            'dttr = pygrametl.drawntabletesting.dttr:main']
+   }
 )

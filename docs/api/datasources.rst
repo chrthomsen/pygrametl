@@ -1,4 +1,4 @@
-Datasources
+datasources
 ===========
 
 .. automodule:: pygrametl.datasources

@@ -1,4 +1,4 @@
-Steps
+steps
 =====
 
 .. automodule:: pygrametl.steps

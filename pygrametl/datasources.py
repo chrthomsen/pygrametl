@@ -43,9 +43,6 @@ except ImportError:
     from queue import Empty  # Python 3
 
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.6'
 __all__ = ['CSVSource', 'TypedCSVSource', 'SQLSource', 'PandasSource',
            'JoiningSource', 'HashJoiningSource', 'MergeJoiningSource',
            'BackgroundSource', 'ProcessSource', 'MappingSource',

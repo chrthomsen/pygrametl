@@ -2,7 +2,7 @@
    the max. capacity is reached, the first inserted key/value pair is deleted
 """
 
-# Copyright (c) 2009-2015, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source anqd binary forms, with or without
@@ -27,9 +27,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.4'
 __all__ = ['FIFODict']
 
 

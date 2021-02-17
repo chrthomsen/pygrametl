@@ -1,13 +1,9 @@
 """This module contains methods and classes for making parallel ETL flows.
    Note that this module in many cases will give better results with Jython
    (where it uses threads) than with CPython (where it uses processes).
-
-   Warning: This is still experimental and things may be changed drastically.
-   If you have ideas, comments, bug reports, etc., please report them to
-   Christian Thomsen (chr@cs.aau.dk)
 """
 
-# Copyright (c) 2011-2014, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2011-2020, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -51,9 +47,6 @@ else:
     # Use (C)Python's std. lib.
     import multiprocessing
 
-__author__ = "Christian Thomsen"
-__maintainer__ = "Christian Thomsen"
-__version__ = '2.3'
 __all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
            'shareconnectionwrapper', 'getsharedsequencefactory']
 

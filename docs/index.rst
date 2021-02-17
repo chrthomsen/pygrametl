@@ -2,9 +2,9 @@
 Pygrametl - ETL Development in Python
 #####################################
 *pygrametl* is a package for creating Extract-Transform-Load (ETL) programs in Python.
- 
+
 The package contains a number of classes for filling fact tables
-and dimensions (including snowflaked and slowly changing dimensions), 
+and dimensions (including snowflaked and slowly changing dimensions),
 classes for extracting data from different sources, classes for defining
 'steps' in an ETL flow, and convenient functions for often-needed ETL
 functionality.
@@ -18,6 +18,7 @@ The package's modules are:
 *   **aggregators** for aggregating data
 *   **steps** for defining steps in an ETL flow
 *   **FIFODict** for providing a dict with a limited size and where elements are removed in first-in first-out order
+*   **drawntabletesting** for testing an ETL flow
 
 
 Pygrametl is currently maintained at Aalborg University in Denmark by the following people:
@@ -36,7 +37,7 @@ Getting started
 .. toctree::
    :maxdepth: 1
 
-   quickstart/install 
+   quickstart/install
    quickstart/beginner
 
 Code Examples
@@ -52,6 +53,7 @@ Code Examples
    examples/bulkloading
    examples/parallel
    examples/jython
+   Testing <examples/testing>
 
 API
 ===
@@ -68,10 +70,11 @@ API
    api/aggregators
    api/steps
    api/fifodict
+   api/drawntabletesting
 
 .. To prevent the indices from being generated in the LaTeX documentation
 .. only:: html
-  
+
     Indices and tables
     ==================
 
