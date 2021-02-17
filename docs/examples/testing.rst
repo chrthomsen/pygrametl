@@ -37,6 +37,8 @@ An example is given below.
 
 .. code-block:: python
 
+    import pygrametl.drawntabletesting as dtt
+
     table = dtt.Table("book", """
     | bid:int (pk) | title:text            | genre:text |
     | ------------ | --------------------- | ---------- |
@@ -52,7 +54,7 @@ providing either a path to a file or an :class:`.iterable` to the constructor’
 :attr:`.loadFrom` parameter. The file must contain a Drawn Table without a
 header and the :class:`.iterable` must yield :class:`.dict`\ s mapping from
 column names to values. Data can thus be loaded from files, databases, etc.
-at the cost of the unit test not being self-contained.
+at the cost of the test not being self-contained.
 
 After a :class:`.Table` instance is created, its :meth:`ensure()
 <.Table.ensure()>` method can be invoked. This will determine if a table with
@@ -78,6 +80,8 @@ seen below. All foreign key constraints are enforced by the RDMBS managing the
 test database.
 
 .. code-block:: python
+
+    import pygrametl.drawntabletesting as dtt
 
     genre = dtt.Table("genre", """
     | gid:int (pk) | genre:text |
@@ -134,7 +138,7 @@ ETL flow is executed for the new rows is shown below.
 
 For the code above, :attr:`.expected` defines how the user expects the database
 state to become, but it is not the DTT framework that puts the database in this
-state. The database is modified by the ETL flow invoked by
+state. The database is modified by the ETL flow invoked by the user-provided
 :attr:`etl.executeETLFlow(newrows)` on Line 5. This method could, e.g., spawn a
 new process in which the user’s ETL tool runs. It is thus *not* a requirement
 that the user’s ETL flow is implemented in Python despite the tests being so.
@@ -148,7 +152,7 @@ Assertions
 ----------
 DTT offers multiple assertions to check the state of a database table.
 At the moment, the methods :meth:`.assertEqual()`, :meth:`.assertDisjoint()`,
-and :meth:`.assertSubset()` are implemented in the DTT framework. When
+and :meth:`.assertSubset()` are implemented in DTT. When
 :meth:`.assertEqual()` is called as shown above, DTT verifies that
 the table in the test database contains the expected rows (and only those) and
 if not, raises an :class:`.AssertionError` and provides an easy-to-read
@@ -186,7 +190,7 @@ explanation of why the test failed as shown below.
 In this example, the part of the ETL flow loading the ``book`` table contains a
 bug. The :class:`.Table` instance in the test specifies that the dimension
 should contain a row for unknown books and four rows with known books (see the
-expected state in the top of the output). However, the user’s ETL code added
+expected state in the top of the output). However, the user’s ETL code wrongly added
 ``Calvin and Hobbes Two`` as a ``Cookbook`` instead of as a ``Comic`` (see
 the middle table in the output). To help the user quickly identify exactly what
 rows do not match, DTT prints the rows violating the assertion which for
@@ -220,17 +224,19 @@ automatically generated primary key or audit information such as a timestamp.
 
 Variables
 ---------
-Cases can also occur where specific cells must be equal across different database
+In some cases specific cells must be equal across different database
 tables, but the exact values are unknown or do not matter. A prominent example is
 when foreign keys are used. In DTT this is easy to state using variables. A variable
 has a name prefixed by $ and can be used in any cell of a Drawn Table. The prefix
 can be changed by passing an argument to :attr:`.variableprefix` in :class:`.Table`'s
-constructor. The DTT framework checks if the cells with the same variable contain
-the same values in the database and fail the test if not. The code snippet below
+constructor. DTT checks if the cells with the same variable contain
+the same values in the database and fails the test if not. The code snippet below
 shows an example of how to use variables to test that foreign keys are assigned
 correctly.
 
 .. code-block:: python
+
+    import pygrametl.drawntabletesting as dtt
 
     genre = dtt.Table("genre", """
     | gid:int (pk)  | genre:text |
@@ -265,7 +271,7 @@ These error messages are excerpts from the output of a test case where
 ``genre`` and ``book`` had their IDs defined in different orders. In this case,
 the foreign key constraints were satisfied although ``Nineteen Eighty-Four``
 (wrongly) was referencing the genre ``comic``. Thus, variables can test parts of the
-ETL flow which cannot be verified by foreign keys as they only ensure that a
+ETL flow which cannot be verified by foreign keys as the latter only ensure that a
 value is present.
 
 Another example of using variables is shown below. Here the user verifies that
@@ -279,6 +285,8 @@ the actual values of the primary key column are not taken into consideration.
 ``$_!`` is a stricter version of ``$_`` which disallows ``NULL``.
 
 .. code-block:: python
+
+    import pygrametl.drawntabletesting as dtt
 
     address = dtt.Table("address", """
     | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date |
@@ -364,8 +372,8 @@ Drawn Table Testing as a Python Library
 ---------------------------------------
 Using the presented constructs, users can efficiently define preconditions and
 postconditions to test each part of their ETL flows.  DTT thus supports
-creation of tests during development, e.g., using TDD. A full example using
-both DTT and Python’s :mod:`.unittest` module is shown below.
+creation of tests during development, e.g., using test-driven development (TDD).
+A full example using both DTT and Python’s :mod:`.unittest` module is shown below.
 
 When using :mod:`.unittest`, a class must be defined for each set of tests. It
 is natural to group tests for a dimension into a class such that they can share a
@@ -375,6 +383,10 @@ as required by :mod:`.unittest`. Two methods are then overridden :meth:`.setUpCl
 and :meth:`.setUp()`.
 
 .. code-block:: python
+
+    import unittest
+
+    import pygrametl.drawntabletesting as dtt
 
     class BookStateTest(unittest.TestCase):
         @classmethod
