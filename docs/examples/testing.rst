@@ -261,13 +261,10 @@ not have matching values, the errors shown below are raised.
 .. code-block:: console
 
     ...
-    ValueError: Ambiguous values for $1; genre(row 0, column 0 gid) is 1 and book(row 0, column 2 gid) is 2
+    AssertionError: Ambiguous values for $1; genre(row 0, column 0 gid) is 1 and book(row 0, column 2 gid) is 2
     ...
-    ValueError: Ambiguous values for $2; genre(row 1, column 0 gid) is 2 and book(row 1, column 2 gid) is 1
-    ...
-    ValueError: Ambiguous values for $2; genre(row 1, column 0 gid) is 2 and book(row 2, column 2 gid) is 1
 
-These error messages are excerpts from the output of a test case where
+This error message is an excerpt from the output of a test case where
 ``genre`` and ``book`` had their IDs defined in different orders. In this case,
 the foreign key constraints were satisfied although ``Nineteen Eighty-Four``
 (wrongly) was referencing the genre ``comic``. Thus, variables can test parts of the

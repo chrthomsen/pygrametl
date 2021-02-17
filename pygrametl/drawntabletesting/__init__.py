@@ -619,23 +619,23 @@ class Variable:
         # The value of variables named _! cannot be NULL
         if self.name == '_!':
             if value is None:
-                raise ValueError("Expected a NOT NULL value in {}(row {}, "
-                                 "column {} {}), found NULL in database"
-                                 .format(self.origin, self.row, self.column,
-                                         self.column_name))
+                raise AssertionError("Expected a NOT NULL value in {}(row {},"
+                                     " column {} {}), found NULL in database"
+                                     .format(self.origin, self.row,
+                                             self.column, self.column_name))
             return
 
         # All variables with the same definition must also have the same values
         if self.definition in type(self).__all:
             existing = type(self).__all[self.definition]
             if not existing.value == value:
-                raise ValueError(("Ambiguous values for {}; {}(row {}, column"
-                                  " {} {}) is {} and {}(row {}, column {} {})"
-                                  " is {}").format(
-                                      self.definition, existing.origin,
-                                      existing.row, existing.column,
-                                      existing.column_name, existing.value,
-                                      self.origin, self.row, self.column,
-                                      self.column_name, self.value))
+                raise AssertionError(("Ambiguous values for {}; {}(row {}, "
+                                      "column {} {}) is {} and {}(row {}, "
+                                      "column {} {}) is {}").format(
+                                          self.definition, existing.origin,
+                                          existing.row, existing.column,
+                                          existing.column_name, existing.value,
+                                          self.origin, self.row, self.column,
+                                          self.column_name, self.value))
         else:
             type(self).__all[self.definition] = self
