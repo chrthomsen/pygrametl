@@ -18,6 +18,10 @@ Version 2.7 (unreleased)
   to set an end date for the most current version without adding a new
   version.
 
+  A (read-only) property ``currentsize`` to ``BatchFactTable`` and
+  ``_BaseBulkloadable`` to get the number of inserted rows awaiting
+  to be loaded into the database table. (GitHub issue #23)
+
 **Changed**
   ``SlowlyChangingDimension.scdensure`` now checks if the newest version
   has its ``toatt`` set to a value different from ``maxto`` (if ``toatt`` is
