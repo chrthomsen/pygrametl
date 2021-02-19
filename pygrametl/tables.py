@@ -1899,7 +1899,7 @@ class BatchFactTable(FactTable):
             self.__batch = []
 
     @property
-    def currentsize(self):
+    def awaitingrows(self):
         """Return the amount of rows awaiting to be loaded into the table"""
         return len(self.__batch)
 
@@ -2129,7 +2129,7 @@ class _BaseBulkloadable(object):
         self.__ready = True
 
     @property
-    def currentsize(self):
+    def awaitingrows(self):
         """Return the amount of rows awaiting to be loaded into the table"""
         return self.__count
 
