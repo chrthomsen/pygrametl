@@ -1898,6 +1898,11 @@ class BatchFactTable(FactTable):
             self.targetconnection.executemany(self.insertsql, self.__batch)
             self.__batch = []
 
+    @property
+    def awaitingrows(self):
+        """Return the amount of rows awaiting to be loaded into the table"""
+        return len(self.__batch)
+
 
 class AccumulatingSnapshotFactTable(FactTable):
 
@@ -2122,6 +2127,11 @@ class _BaseBulkloadable(object):
         self.tempdest = self.__namedtempfile.file
         self.__filename = self.__namedtempfile.name
         self.__ready = True
+
+    @property
+    def awaitingrows(self):
+        """Return the amount of rows awaiting to be loaded into the table"""
+        return self.__count
 
     def insert(self, row, namemapping={}):
         """Insert (eventually) a row into the table.
