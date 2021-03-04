@@ -5,7 +5,7 @@ Bulk Loading
 Performing bulk loading of rows instead of single insertions can dramatically
 increase the performance of an ETL program. Bulk loading works by loading data
 from a temporary file into the database. The actual process of bulk loading
-however differs between each database vendor. Because of this, a user defined
+however differs between each database vendor. Because of this, a user-defined
 function must be created defining how to perform the bulk loading on the
 particular database. The following is a short list of example functions showing
 how simple bulk loading can be performed with some of the more widely used

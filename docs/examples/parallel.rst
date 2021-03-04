@@ -231,7 +231,7 @@ loader used for pygrametl's :class:`.BulkFactTable`.
     jconn = java.sql.DriverManager.getConnection \
         ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
 
-    # A user defined function that specifies how to perform bulk loading for a
+    # A user-defined function that specifies how to perform bulk loading for a
     # specific database management system such as Postgresql or Oracle
     def bulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
         #DBMS specific bulk loading code here...
@@ -366,7 +366,7 @@ fact table in the database, so a simple auto incrementing integer is fine.
 
 Splitpoints
 -----------
-As CPU-intensive operations are often performed in user defined functions, the
+As CPU-intensive operations are often performed in user-defined functions, the
 decorator :func:`.splitpoint` is provided. This decorator functions in much the
 same way as decoupled classes does for tables, as a number of processes are
 spawned to run the function. The first time a functions with a decorator is
