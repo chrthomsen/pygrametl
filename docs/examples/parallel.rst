@@ -84,14 +84,14 @@ Python iterator, for more information about data sources in general see
     # sales.csv, first CSVSource to read the csv file, then
     # TransformationSource to transform the rows, and lastly ProcessSource to
     # do both the reading and transformation in a separate threads 
-    sales = CSVSource(csvfile=open('sales.csv'), delimiter=',')
+    sales = CSVSource(f=open('sales.csv'), delimiter=',')
     transSales = TransformingSource(sales, convertReals, trimProductname) 
     salesProcess = ProcessSource(transSales)
 
     # While the list of sales are being read and transformed by the spawned
     # process, the main process is occupied with pre loading the products
     # dimension with data from the products csv file
-    products = CSVSource(csvfile=open('product.csv'), delimiter=',')
+    products = CSVSource(f=open('product.csv'), delimiter=',')
     for row in products:
         productTable.insert(row)
 
@@ -143,7 +143,7 @@ which in nearly every case is undesirable.
     from pygrametl.parallel import shareconnectionwrapper
 
     # The data is read from a csv file
-    inputdata = CSVSource(csvfile=open('sales.csv', 'r'), delimiter=',')
+    inputdata = CSVSource(f=open('sales.csv', 'r'), delimiter=',')
 
     # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
@@ -271,7 +271,7 @@ all surrogate keys are unique despite being assigned by separate processes.
         getsharedsequencefactory
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
 
-    sales = CSVSource(csvfile=open('sales.csv', 'r'), delimiter=',')
+    sales = CSVSource(f=open('sales.csv', 'r'), delimiter=',')
 
     # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
@@ -390,7 +390,7 @@ points up to that point.
     from pygrametl.parallel import splitpoint, endsplits
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
 
-    sales = CSVSource(csvfile=file('sales.csv', 'r'), delimiter=',')
+    sales = CSVSource(f=file('sales.csv', 'r'), delimiter=',')
 
     # JDBC and Jython is used as threads allows for better performance
     import java.sql.DriverManager
@@ -462,7 +462,7 @@ values automatically by pygrametl.
     from pygrametl.jythonmultiprocessing import Queue
 
     queue = Queue()
-    sales = CSVSource(csvfile=file('sales.csv', 'r'), delimiter=',')
+    sales = CSVSource(f=file('sales.csv', 'r'), delimiter=',')
 
     # A queue is passed to the split point, which uses it to store return values
     @splitpoint(instances=5, output=queue)
@@ -533,7 +533,7 @@ processes.
 
     conn = JDBCConnectionWrapper(jdbcconn=jconn)
 
-    products = CSVSource(csvfile=file('product.csv', 'r'), delimiter=',')
+    products = CSVSource(f=file('product.csv', 'r'), delimiter=',')
 
     productDimension = Dimension(
             name='product',

@@ -81,7 +81,7 @@ which a file containing comma-separated values is loaded:
     import pygrametl
     from pygrametl.datasources import CSVSource
 
-    resultsSource = CSVSource(csvfile=open('ResultsFile.csv', 'r', 16384), \
+    resultsSource = CSVSource(f=open('ResultsFile.csv', 'r', 16384), \
                                 delimiter=',')
 
 In the above example, a CSVSource is created from a file delimited by commas,
@@ -102,7 +102,7 @@ being an alias for it.
 
     # ResultsFile.csv contain name, age, score
     resultsSource = TypedCSVSource(
-                                csvfile=open('ResultsFile.txt', 'r', 16384), \
+                                f=open('ResultsFile.txt', 'r', 16384), \
                                 casts={'age' : int, 'score' : float}, \
                                 delimiter=',')
 
@@ -165,8 +165,8 @@ attributes on which the join must be performed.
     import pygrametl
     from pygrametl.datasources import CSVSource, MergeJoiningSource
 
-    products = CSVSource(csvfile=open('products.csv', 'r', 16384), delimiter=',')
-    sales = CSVSource(csvfile=open('sales.txt', 'r', 16384), delimiter='\t')
+    products = CSVSource(f=open('products.csv', 'r', 16384), delimiter=',')
+    sales = CSVSource(f=open('sales.txt', 'r', 16384), delimiter='\t')
 
     data = MergeJoiningSource(src1=products, key1='productID',
                               src2=sales, key2='productID')
@@ -185,8 +185,8 @@ As such, it is not necessary for the two input data sources to be sorted.
     import pygrametl
     from pygrametl.datasources import CSVSource, HashJoiningSource
 
-    products = CSVSource(csvfile=open('products.csv', 'r', 16384), delimiter=',')
-    sales = CSVSource(csvfile=open('sales.txt', 'r', 16384), delimiter='\t')
+    products = CSVSource(f=open('products.csv', 'r', 16384), delimiter=',')
+    sales = CSVSource(f=open('sales.txt', 'r', 16384), delimiter='\t')
 
     data = HashJoiningSource(src1=products, key1='productID',
                               src2=sales, key2='productID')
@@ -203,9 +203,9 @@ rows.
     import pygrametl
     from pygrametl.datasources import CSVSource, UnionSource
 
-    salesOne = CSVSource(csvfile=open('sales1.csv', 'r', 16384), delimiter='\t')
-    salesTwo = CSVSource(csvfile=open('sales2.csv', 'r', 16384), delimiter='\t')
-    salesThree = CSVSource(csvfile=open('sales3.csv', 'r', 16384), delimiter=',')
+    salesOne = CSVSource(f=open('sales1.csv', 'r', 16384), delimiter='\t')
+    salesTwo = CSVSource(f=open('sales2.csv', 'r', 16384), delimiter='\t')
+    salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter=',')
 
     combinedSales = UnionSource(salesOne, salesTwo, salesThree)
 
@@ -222,9 +222,9 @@ It can also be beneficial to interleave rows, and for this purpose
     import pygrametl
     from pygrametl.datasources import CSVSource, RoundRobinSource
 
-    salesOne = CSVSource(csvfile=open('sales1.csv', 'r', 16384), delimiter='\t')
-    salesTwo = CSVSource(csvfile=open('sales2.csv', 'r', 16384), delimiter='\t')
-    salesThree = CSVSource(csvfile=open('sales3.csv', 'r', 16384), delimiter=',')
+    salesOne = CSVSource(f=open('sales1.csv', 'r', 16384), delimiter='\t')
+    salesTwo = CSVSource(f=open('sales2.csv', 'r', 16384), delimiter='\t')
+    salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter=',')
 
     combinedSales = RoundRobinSource((salesOne, salesTwo, salesThree), batchsize=500)
 
@@ -244,7 +244,7 @@ optional parameters to the class.
     import pygrametl
     from pygrametl.datasources import CSVSource, ProcessSource
 
-    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter='\t')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
 
     sales_process = ProcessSource(source=sales, batchsize=1000, queuesize=20)
 
@@ -271,7 +271,7 @@ row should be passed on.
         else:
             return False
 
-    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter='\t')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
 
     sales_filtered = FilteringSource(source=sales, filter=locationfilter)
 
@@ -290,7 +290,7 @@ in an undefined order.
     import pygrametl
     from pygrametl.datasources import CSVSource, MappingSource
 
-    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter=',')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
 
     sales_transformed = MappingSource(source=sales, {'price':int})
 
@@ -313,7 +313,7 @@ given order.
         oldprice = int(row['price'])
         row['price'] = oldprice / 7.46
 
-    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter=',')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
 
     sales_transformed = TransformingSource(source=sales, dkk_to_eur)
 
@@ -338,7 +338,7 @@ which can be found in the module :class:`pygrametl.aggregators`.
     def price_to_integer(row):
         row['price'] = int(row['price'])
 
-    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter=',')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
     sales_transformed = TransformingSource(source=sales, price_to_integer)
 
     crossTab = CrossTabbingSource(source=sales_transformed, rowvaluesatt='product',\
@@ -364,7 +364,7 @@ a new iterable source.
 
     # Opens a file and creates a CSVSource
     def createCSVSource(filename):
-        return CSVSource(csvfile=open(filename, 'r', 16384), delimiter=',')
+        return CSVSource(f=open(filename, 'r', 16384), delimiter=',')
 
     # Extract all .csv file names from the folder 'files'
     files = glob.glob('files/*.csv')

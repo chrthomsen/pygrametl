@@ -145,7 +145,7 @@ region information. For more information about the various data sources see
     # handle to the file, as pygrametl uses Pythons DictReader for CSV files, 
     # and the header of the CSV file contains information about each column.
     region_file_handle = open('region.csv', 'r', 16384)
-    region_source = CSVSource(csvfile=region_file_handle, delimiter=',')                                                                                                                                  
+    region_source = CSVSource(f=region_file_handle, delimiter=',')
 
 An object must then be created for each dimension in the data warehouse, as
 well as an object for the fact table. Pygrametl contains multiple different
@@ -317,7 +317,7 @@ more information about parallelism, see :ref:`parallel`.
                              query="SELECT * FROM sales", names=name_mapping)
 
     region_file_handle = open('region.csv', 'r', 16384)
-    region_source = CSVSource(csvfile=region_file_handle, delimiter=',')                                                                                                                                  
+    region_source = CSVSource(f=region_file_handle, delimiter=',')
     # Creation of dimension and fact table abstractions for use in the ETL flow
     book_dimension = Dimension(
         name='book',

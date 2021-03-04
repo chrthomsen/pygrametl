@@ -129,7 +129,7 @@ violation of this.
         keyrefs=['storeid', 'productid', 'dayid'])
 
     # The CSV file contains information about each product sold by a store
-    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter='\t')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
 
     # Looking up keys from the product dimension is done using the lookup
     # method with the information read from the sales.csv file. The second

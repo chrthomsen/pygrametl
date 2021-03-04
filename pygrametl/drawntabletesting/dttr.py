@@ -70,9 +70,8 @@ def print_reader_error(path, firstlinenumber, lastlinenumber, reader_name, e):
 
 
 def read_csv(columns, path, delimiter):
-    with open(path) as csvfile:
-        return list(csv.DictReader(csvfile, fieldnames=columns,
-                                   delimiter=delimiter))
+    with open(path) as f:
+        return list(csv.DictReader(f, fieldnames=columns, delimiter=delimiter))
 
 
 def read_sql(columns, config, *arguments):
