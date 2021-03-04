@@ -128,7 +128,9 @@ violation of this.
         measures=['sales'],
         keyrefs=['storeid', 'productid', 'dayid'])
 
-    # The CSV file containing information about products sold in stores
+    # The CSV file contains information about each product sold by a store
+    sales = CSVSource(csvfile=open('sales.csv', 'r', 16384), delimiter='\t')
+
     # Looking up keys from the product dimension is done using the lookup
     # method with the information read from the sales.csv file. The second
     # argument renames the column product_name from the CSV file to name
