@@ -255,7 +255,7 @@ def main():
         sys.path.insert(0, os.getcwd())
         import config  # Must specify a PEP 249 connection named 'connection'
         del(sys.path[0])
-    except ModuleNotFoundError:
+    except ImportError:
         config = types.ModuleType('config')
         config.connection = sqlite3.connect(':memory:')
 

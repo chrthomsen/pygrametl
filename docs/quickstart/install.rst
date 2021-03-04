@@ -13,19 +13,26 @@ Installing a Python Implementation
 Pygrametl requires an implementation of the Python programming language to run.
 Currently, pygrametl supports the following implementations:
 
-* `Jython <http://www.jython.org/>`_, version 2.5.3 or above
-* `Python 2 <http://www.python.org/>`_, version 2.6 or above
-* `Python 3 <http://www.python.org/>`_, any version
+* `Jython <http://www.jython.org/>`_, version 2.7 or above
+* `Python 2 <http://www.python.org/>`_, version 2.7 or above
+* `Python 3 <http://www.python.org/>`_, version 3.4 or above
+
+.. warning::
+    As Python 2 is no longer being `maintained
+    <https://www.python.org/doc/sunset-python-2/>`_ support for it will slowly
+    be reduced as we continue to develop pygrametl. Currently :mod:`.dttr` is
+    the only pygrametl module that requires Python 3 (version 3.4 or above).
 
 After either implementations have been installed and added to the system's
 path, they can be run from either the command prompt in Windows or the shell in
 Unix-like systems. This should launch the Python interpreter in interactive
 mode allowing commands to be executed directly on the command line. ::
 
-    Python 2.7.6 (default, Feb 26 2014, 12:07:17)
-    [GCC 4.8.2 20140206 (prerelease)] on linux2
+    Python 3.9.2 (default, Feb 20 2021, 18:40:11)
+    [GCC 10.2.0] on linux
     Type "help", "copyright", "credits" or "license" for more information.
     >>>
+
 
 Installing Pygrametl
 --------------------
@@ -103,8 +110,8 @@ accessible to the Python interpreter, is to start the interpreter in
 interactive mode from the command line and run the command ``import
 pygrametl``. ::
 
-    Python 2.7.6 (default, Feb 26 2014, 12:07:17)
-    [GCC 4.8.2 20140206 (prerelease)] on linux2
+    Python 3.9.2 (default, Feb 20 2021, 18:40:11)
+    [GCC 10.2.0] on linux
     Type "help", "copyright", "credits" or "license" for more information.
     >>> import pygrametl
     >>>
