@@ -22,21 +22,15 @@ SQLSource
 The class :class:`.SQLSource` is a data source used to iterate the results of a
 single SQL query. The data source accepts only a :PEP:`249` connection, and not
 a :class:`.ConnectionWrapper` object. For illustrative purposes, a PostgreSQL
-connection is used here, using the Psycopg package.
+connection is used here, using the psycopg2 package.
 
 .. code-block:: python
 
     import psycopg2
-    import pygrametl
     from pygrametl.datasources import SQLSource
 
-    conn = psycopg2.connect(database="db", user="dbuser", password="dbpass")
-
-    sql = "SELECT * FROM table;"
-    resultsSource = SQLSource(connection=conn, query=sql)
-
-    for row in resultsSource:
-        print(row)
+    conn = psycopg2.connect(database='db', user='dbuser', password='dbpass')
+    sqlSource = SQLSource(connection=conn, query='SELECT * FROM table')
 
 In the above example, an SQLSource is created in order to extract all rows from
 a table.
@@ -48,10 +42,12 @@ from the database:
 
 .. code-block:: python
 
-    ...
+    import psycopg2
+    from pygrametl.datasources import SQLSource
 
-    newnames = 'ID', 'Name', 'Price'
-    resultsSource = SQLSource(connection=conn, query=sql, names=newnames)
+    conn = psycopg2.connect(database='db', user='dbuser', password='dbpass')
+    sqlSource = SQLSource(connection=conn, query='SELECT * FROM table',
+                          names=('id', 'name', 'price'))
 
 The class also makes it possible to supply an SQL expression that will be
 executed before the query, through the initsql parameter. The result of the
@@ -59,11 +55,12 @@ expression will not be returned.
 
 .. code-block:: python
 
-    ...
+    import psycopg2
+    from pygrametl.datasources import SQLSource
 
-    sql = "SELECT * FROM newview;"
-    resultsSource = SQLSource(connection=conn, query=sql, \
-        initsql="CREATE VIEW newview AS SELECT ID, Name FROM table WHERE Price > 10;")
+    conn = psycopg2.connect(database='db', user='dbuser', password='dbpass')
+    sqlSource = SQLSource(connection=conn, query='SELECT * FROM view',
+        initsql='CREATE VIEW view AS SELECT id, name FROM table WHERE price > 10')
 
 In the previous example a new view is created, which is then used in the query.
 
@@ -78,11 +75,10 @@ which a file containing comma-separated values is loaded:
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource
 
-    resultsSource = CSVSource(f=open('ResultsFile.csv', 'r', 16384), \
-                                delimiter=',')
+    # ResultsFile.csv contain name, age, score
+    csvSource = CSVSource(f=open('ResultsFile.csv', 'r', 16384), delimiter=',')
 
 In the above example, a CSVSource is created from a file delimited by commas,
 using a buffer size of 16384. This particular buffer size is used as it
@@ -97,14 +93,12 @@ being an alias for it.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import TypedCSVSource
 
     # ResultsFile.csv contain name, age, score
-    resultsSource = TypedCSVSource(
-                                f=open('ResultsFile.txt', 'r', 16384), \
-                                casts={'age' : int, 'score' : float}, \
-                                delimiter=',')
+    typedCSVSource = TypedCSVSource(f=open('ResultsFile.csv', 'r', 16384),
+                                    casts={'age': int, 'score': float},
+                                    delimiter=',')
 
 In the above example, a :class:`.TypedCSVSource` is created from a file
 delimited by commas, using a buffer size of 16384. This particular buffer size
@@ -128,27 +122,16 @@ converted to an iterator of dictionaries for use with pygrametl:
     import pandas
     from pygrametl.datasources import PandasSource
 
-    # For this example the revenue of a store is kept in a spreadsheet, so
-    # we use Pandas to load the data into a DataFrame so we can manipulate it.
-    df = pandas.read_excel('revenue.xls')
-
-    # After constructing the DataFrame, the data can be easily transformed using
-    # the transformation and higher-order functions implemented as part of the
-    # DataFrame. In this example the price of each book is converted from Danish
-    # kroner (DKK) to euros.
-    df['price'] = df['price'].apply(lambda p : float(p) / 7.46)
-
-    # Afterwards, to load the DataFrame into the data warehouse, a
-    # PandasSource is constructed which returns each row from the DataFrame as a
-    # dictionary suitable for pygrametl to load.
-    ps = PandasSource(df)
+    df = pandas.read_excel('Revenue.xls')
+    df['price'] = df['price'].apply(lambda p: float(p) / 7.46)
+    pandasSource = PandasSource(df)
 
 In the above example, a Pandas DataFrame is created from a spreadsheet
-containing revenue from some form of sales. Afterwards, the data of one column
-is transformed using one of the higher-order functions build into the Pandas
-library. Last, so the data can be loaded into a data warehouse using pygrametl,
-a :class:`.PandasSource` is created with the DataFrame as argument, making the
-rows of the DataFrame accessible as an iterator of dict.
+containing revenue from some form of sales. Afterwards, the data of the price
+column is transformed using one of the higher-order functions build into the
+Pandas library. Last, so the data can be loaded into a data warehouse using
+pygrametl, a :class:`.PandasSource` is created with the DataFrame as argument,
+making the rows of the DataFrame accessible as an iterator of dict.
 
 MergeJoiningSource
 ------------------
@@ -162,17 +145,15 @@ attributes on which the join must be performed.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, MergeJoiningSource
 
     products = CSVSource(f=open('products.csv', 'r', 16384), delimiter=',')
-    sales = CSVSource(f=open('sales.txt', 'r', 16384), delimiter='\t')
-
-    data = MergeJoiningSource(src1=products, key1='productID',
-                              src2=sales, key2='productID')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
+    mergeJoiningSource = MergeJoiningSource(src1=products, key1='productid',
+                                            src2=sales, key2='productid')
 
 In the above example, the class is used to join two sources on a common
-attribute *productID*.
+attribute *productid*.
 
 HashJoiningSource
 -----------------
@@ -182,14 +163,12 @@ As such, it is not necessary for the two input data sources to be sorted.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, HashJoiningSource
 
     products = CSVSource(f=open('products.csv', 'r', 16384), delimiter=',')
-    sales = CSVSource(f=open('sales.txt', 'r', 16384), delimiter='\t')
-
-    data = HashJoiningSource(src1=products, key1='productID',
-                              src2=sales, key2='productID')
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
+    hashJoiningSource = HashJoiningSource(src1=products, key1='productid',
+                                          src2=sales, key2='productid')
 
 UnionSource
 -----------
@@ -200,12 +179,11 @@ rows.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, UnionSource
 
     salesOne = CSVSource(f=open('sales1.csv', 'r', 16384), delimiter='\t')
     salesTwo = CSVSource(f=open('sales2.csv', 'r', 16384), delimiter='\t')
-    salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter=',')
+    salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter='\t')
 
     combinedSales = UnionSource(salesOne, salesTwo, salesThree)
 
@@ -219,12 +197,11 @@ It can also be beneficial to interleave rows, and for this purpose
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, RoundRobinSource
 
     salesOne = CSVSource(f=open('sales1.csv', 'r', 16384), delimiter='\t')
     salesTwo = CSVSource(f=open('sales2.csv', 'r', 16384), delimiter='\t')
-    salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter=',')
+    salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter='\t')
 
     combinedSales = RoundRobinSource((salesOne, salesTwo, salesThree), batchsize=500)
 
@@ -241,12 +218,10 @@ optional parameters to the class.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, ProcessSource
 
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
-
-    sales_process = ProcessSource(source=sales, batchsize=1000, queuesize=20)
+    processSource = ProcessSource(source=sales, batchsize=1000, queuesize=20)
 
 For more examples of the parallel features of pygrametl, refer to
 :doc:`parallel`.
@@ -262,8 +237,8 @@ row should be passed on.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, FilteringSource
+
 
     def locationfilter(row):
         if row['location'] == 'Aalborg':
@@ -271,9 +246,9 @@ row should be passed on.
         else:
             return False
 
-    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
 
-    sales_filtered = FilteringSource(source=sales, filter=locationfilter)
+    sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
+    salesFiltered = FilteringSource(source=sales, filter=locationfilter)
 
 In the above example, a very simple filter is used, which filters out rows
 where the value of the *location* attribute is not *Aalborg*.
@@ -287,12 +262,10 @@ in an undefined order.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, MappingSource
 
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
-
-    sales_transformed = MappingSource(source=sales, {'price':int})
+    salesMapped = MappingSource(source=sales, callables={'price': int})
 
 In the above example, a function is used to cast all values of the column price
 to integer while rows are read from a .csv.
@@ -314,8 +287,7 @@ given order.
         row['price'] = oldprice / 7.46
 
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
-
-    sales_transformed = TransformingSource(source=sales, dkk_to_eur)
+    salesTransformed = TransformingSource(sales, dkk_to_eur)
 
 In the above example, a function is used which transforms the value of an
 attribute containing currency from Danish kroner (DKK) to euros
@@ -331,17 +303,19 @@ which can be found in the module :class:`pygrametl.aggregators`.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.datasources import CSVSource, CrossTabbingSource, TransformingSource
     from pygrametl.aggregators import Sum
 
-    def price_to_integer(row):
-        row['price'] = int(row['price'])
+
+    def dkk_to_eur(row):
+        oldprice = int(row['price'])
+        row['price'] = oldprice / 7.46
+
 
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
-    sales_transformed = TransformingSource(source=sales, price_to_integer)
+    salesTransformed = TransformingSource(sales, dkk_to_eur)
 
-    crossTab = CrossTabbingSource(source=sales_transformed, rowvaluesatt='product',\
+    crossTab = CrossTabbingSource(source=sales_transformed, rowvaluesatt='product',
                  colvaluesatt='location', values='price', aggregator=Sum())
 
 In the above example, a crosstab is made from a table containing sales data, in
@@ -358,24 +332,20 @@ a new iterable source.
 
 .. code-block:: python
 
-    import pygrametl
     import glob
     from pygrametl.datasources import CSVSource, DynamicForEachSource
 
-    # Opens a file and creates a CSVSource
+
     def createCSVSource(filename):
         return CSVSource(f=open(filename, 'r', 16384), delimiter=',')
 
-    # Extract all .csv file names from the folder 'files'
-    files = glob.glob('files/*.csv')
 
-    sources = DynamicForEachSource(seq=files, callee=createCSVSource)
+    salesFiles = glob.glob('sales/*.csv')
+    combinedSales = DynamicForEachSource(seq=salesFiles, callee=createCSVSource)
 
 In the above example, the class is used to create a number of *CSVSources* for
-each of a number of .csv files in a directory. `DynamicForEachSource` stores
-the input list in a safe multiprocessing queue, and as such the
+each of a number of .csv files in a directory. `DynamicForEachSource` stores the
+input list in a safe multiprocessing queue, and as such the
 `DynamicForEachSource` instance can be given to several :class:`.ProcessSource`
-instances.
-
-For more examples of the parallel features of pygrametl, refer to
+instances. For more examples of the parallel features of pygrametl, refer to
 :doc:`parallel`.

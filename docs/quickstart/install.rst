@@ -130,6 +130,7 @@ of pygrametl to :attr:`.sys.path`, before importing the package in your code.
     # The path to the to the pygramelt library is added to the path used by the
     # by the Python interpreter when libraries are being imported, this must be
     # done in all program using a module not included in the global Python path
+    import sys
     sys.path.append('/path/to/pygrametl')
 
     # After the folder have been added to Pythons path can the pygrametl

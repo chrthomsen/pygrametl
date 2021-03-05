@@ -40,14 +40,14 @@ fails, and a function for expanding a row automatically.
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
-        {'name' : 'Calvin and Hobbes 1', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 2', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 3', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Cake and Me', 'category' : 'Cookbook', 'price' : '15'},
-        {'name' : 'French Cooking', 'category' : 'Cookbook', 'price' : '50'},
-        {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30'},
-        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60'}
+        {'name': 'Calvin and Hobbes 1', 'category': 'Comic', 'price': '10'},
+        {'name': 'Calvin and Hobbes 2', 'category': 'Comic', 'price': '10'},
+        {'name': 'Calvin and Hobbes 3', 'category': 'Comic', 'price': '10'},
+        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15'},
+        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50'},
+        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30'},
+        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15'},
+        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
@@ -126,7 +126,7 @@ violation of this.
     factTable = FactTable(
         name='facttable',
         measures=['sales'],
-        keyrefs=['storeid', 'productid', 'dayid'])
+        keyrefs=['storeid', 'productid', 'dateid'])
 
     # The CSV file contains information about each product sold by a store
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
@@ -136,11 +136,11 @@ violation of this.
     # argument renames the column product_name from the CSV file to name
     for row in sales:
 
-        # Looking up a key in the cached dimension checks if a row containing
-        # a matching value of the attributes defined as lookupatts is present,
-        # if a match cannot be found the actual database table is checked for
-        # a match
-        row['productid'] = productDimension.lookup(row, {"name":"product_name"})
+        # Looking up a key in the cached dimension checks if a row containing a
+        # matching value of the attributes defined as lookupatts is present in
+        # the cache, if a match cannot be found the actual database table is
+        # checked for a match
+        row['productid'] = productDimension.lookup(row, {'name': 'product_name'})
         factTable.insert(row)
 
     # To ensure that all information is loaded and that the database connection
@@ -216,6 +216,7 @@ way to perform bulk loading differs from DBMS to DBMS.
     # A reference to the wrapper is saved to allow for easy access of it later
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
+
     # How to perform the bulk loading using psycopg2 is defined as this function
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
         cursor = conn.cursor()
@@ -224,6 +225,7 @@ way to perform bulk loading differs from DBMS to DBMS.
         # null values that we wish to substitute for a more descriptive value
         cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
                          columns=attributes)
+
 
     # In addition to arguments needed for a Dimension, a reference to the
     # bulk loader defined above must also be passed, so a BulkDimension
@@ -237,11 +239,11 @@ way to perform bulk loading differs from DBMS to DBMS.
 
     # A PEP249 connection is sufficient for an SQLSource so we do not need
     # to create a new instance of ConnectionWrapper to read from the database
-    sqconn = sqlite3.connect("product_catalog.db")
+    sqconn = sqlite3.connect('product_catalog.db')
 
     # Encapsulating a database query in an SQLSource allows it to be used as an
     # normal iterator, making it very simple to load the data into another table
-    sqlSource = SQLSource(connection=sqconn, query="SELECT * FROM product")
+    sqlSource = SQLSource(connection=sqconn, query='SELECT * FROM product')
 
     # Inserting data from a data source into a BulkDimension is performed just
     # like any other dimension type in pygrametl, as the interface is the same
@@ -343,14 +345,14 @@ can break this assumption.
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10'},
-        {'name' : 'Cake and Me', 'category' : 'Cookbook', 'price' : '15'},
-        {'name' : 'French Cooking', 'category' : 'Cookbook', 'price' : '50'},
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '20'},
-        {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30'},
-        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60'},
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10'}
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10'},
+        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15'},
+        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50'},
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20'},
+        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30'},
+        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15'},
+        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60'},
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
@@ -363,7 +365,7 @@ can break this assumption.
 
     # An instance of a Type 1 slowly changing dimension is created with 'price'
     # as a slowly changing attribute.
-    productDimension = TypeOneSlowlyChangingDimension (
+    productDimension = TypeOneSlowlyChangingDimension(
         name='product',
         key='productid',
         attributes=['name', 'category', 'price'],
@@ -419,22 +421,22 @@ inserted rows; an assumption the use of default values can break.
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '20',
-         'date' : '1990-10-01'},
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10',
-         'date' : '1990-12-10'},
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '20',
-         'date' : '1991-02-01'},
-        {'name' : 'Cake and Me', 'category' : 'Cookbook', 'price' : '15',
-         'date' : '1990-05-01'},
-        {'name' : 'French Cooking', 'category' : 'Cookbook', 'price' : '50',
-         'date' : '1990-05-01'},
-        {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30',
-         'date' : '1990-05-01'},
-        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15',
-         'date' : '1990-05-01'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60',
-         'date' : '1990-05-01'}
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+         'date': '1990-10-01'},
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10',
+         'date': '1990-12-10'},
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+         'date': '1991-02-01'},
+        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15',
+         'date': '1990-05-01'},
+        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50',
+         'date': '1990-05-01'},
+        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30',
+         'date': '1990-05-01'},
+        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15',
+         'date': '1990-05-01'},
+        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60',
+         'date': '1990-05-01'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
@@ -457,7 +459,7 @@ inserted rows; an assumption the use of default values can break.
     # value it should use. In this example, the function datareader from
     # pygrametl is used which converts time stamp from a string to a Python
     # datetime.date object to simplify the conversion to the Postgres Date type.
-    productDimension = SlowlyChangingDimension (
+    productDimension = SlowlyChangingDimension(
         name='product',
         key='productid',
         attributes=['name', 'category', 'price', 'validfrom', 'validto',
@@ -536,22 +538,22 @@ dimension. This feature should however be considered experimental.
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
-        {'name' : 'Calvin and Hobbes 1', 'category' : 'Comic',
-         'type' : 'Fiction', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 2', 'category' : 'Comic',
-         'type' : 'Fiction', 'price' : '10'},
-        {'name' : 'Calvin and Hobbes 3', 'category' : 'Comic',
-         'type' : 'Fiction', 'price' : '10'},
-        {'name' : 'Cake and Me', 'category' : 'Cookbook',
-         'type' : 'Non-Fiction', 'price' : '15'},
-        {'name' : 'French Cooking', 'category' : 'Cookbook',
-         'type' : 'Non-Fiction', 'price' : '50'},
-        {'name' : 'Sushi', 'category' : 'Cookbook',
-         'type' : 'Non-Fiction', 'price' : '30'},
-        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel',
-         'type' : 'Fiction', 'price' : '15'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel',
-         'type' : 'Fiction', 'price' : '60'}
+        {'name': 'Calvin and Hobbes 1', 'category': 'Comic',
+         'type': 'Fiction', 'price': '10'},
+        {'name': 'Calvin and Hobbes 2', 'category': 'Comic',
+         'type': 'Fiction', 'price': '10'},
+        {'name': 'Calvin and Hobbes 3', 'category': 'Comic',
+         'type': 'Fiction', 'price': '10'},
+        {'name': 'Cake and Me', 'category': 'Cookbook',
+         'type': 'Non-Fiction', 'price': '15'},
+        {'name': 'French Cooking', 'category': 'Cookbook',
+         'type': 'Non-Fiction', 'price': '50'},
+        {'name': 'Sushi', 'category': 'Cookbook',
+         'type': 'Non-Fiction', 'price': '30'},
+        {'name': 'Nineteen Eighty-Four', 'category': 'Novel',
+         'type': 'Fiction', 'price': '15'},
+        {'name': 'The Lord of the Rings', 'category': 'Novel',
+         'type': 'Fiction', 'price': '60'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
@@ -567,7 +569,7 @@ dimension. This feature should however be considered experimental.
     productTable = CachedDimension(
         name='product',
         key='productid',
-        attributes=['name', 'categoryid', 'price'],
+        attributes=['name', 'price', 'categoryid'],
         lookupatts=['name'])
 
     categoryTable = CachedDimension(
@@ -592,8 +594,8 @@ dimension. This feature should however be considered experimental.
     # Snowflaked dimension, a list must be passed as the second part of the tuple
     # with a Dimension object for each table the first argument references through
     # its foreign keys.
-    productDimension = SnowflakedDimension(references=[(productTable, categoryTable),
-                                            (categoryTable, typeTable)])
+    productDimension = SnowflakedDimension(references=[
+        (productTable, categoryTable), (categoryTable, typeTable)])
 
     # Using a SnowflakedDimension is done through the same interface as the
     # Dimension class. Some methods of the SnowflakedDimension have
@@ -633,22 +635,22 @@ to be computed based on the contents of the rows the object operates on.
 
     # Input is a list of "rows" which in pygrametl is modelled as dict
     products = [
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '20',
-         'date' : '1990-10-01'},
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '10',
-         'date' : '1990-12-10'},
-        {'name' : 'Calvin and Hobbes', 'category' : 'Comic', 'price' : '20',
-         'date' : '1991-02-01'},
-        {'name' : 'Cake and Me', 'category' : 'Cookbook', 'price' : '15',
-         'date' : '1990-05-01'},
-        {'name' : 'French Cooking', 'category' : 'Cookbook', 'price' : '50',
-         'date' : '1990-05-01'},
-        {'name' : 'Sushi', 'category' : 'Cookbook', 'price' : '30',
-         'date' : '1990-05-01'},
-        {'name' : 'Nineteen Eighty-Four', 'category' : 'Novel', 'price' : '15',
-         'date' : '1990-05-01'},
-        {'name' : 'The Lord of the Rings', 'category' : 'Novel', 'price' : '60',
-         'date' : '1990-05-01'}
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+         'date': '1990-10-01'},
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10',
+         'date': '1990-12-10'},
+        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+         'date': '1991-02-01'},
+        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15',
+         'date': '1990-05-01'},
+        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50',
+         'date': '1990-05-01'},
+        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30',
+         'date': '1990-05-01'},
+        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15',
+         'date': '1990-05-01'},
+        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60',
+         'date': '1990-05-01'}
     ]
 
     # The actual database connection is handled using a PEP 249 connection
@@ -667,7 +669,7 @@ to be computed based on the contents of the rows the object operates on.
         name='product',
         key='productid',
         attributes=['name', 'price', 'validfrom', 'validto', 'version',
-            'categoryid'],
+                    'categoryid'],
         lookupatts=['name'],
         fromatt='validfrom',
         fromfinder=pygrametl.datereader('date'),
@@ -679,7 +681,8 @@ to be computed based on the contents of the rows the object operates on.
         key='categoryid',
         attributes=['category'])
 
-    productDimension = SnowflakedDimension(references=[(productTable, categoryTable)])
+    productDimension = SnowflakedDimension(references=[(productTable,
+                                                        categoryTable)])
 
     # Using a SlowlyChangingDimension with a SnowflakedDimension is done in the
     # same manner as a normal SlowlyChangingDimension using scdensure

@@ -76,7 +76,6 @@ flags, see `Jython CLI <http://jython.org/docs/using/cmdline.html>`_.
 
 .. code-block:: python
 
-    import pygrametl
     from pygrametl.tables import FactTable
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
 
@@ -84,8 +83,8 @@ flags, see `Jython CLI <http://jython.org/docs/using/cmdline.html>`_.
     import java.sql.DriverManager
 
     # The actual database connection is handled using a JDBC connection
-    jconn = java.sql.DriverManager.getConnection \
-        ("jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
+    jconn = java.sql.DriverManager.getConnection(
+        "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
 
     # As PEP 249 and JDBC connections are different must JDBCConnectionWrapper
     # instead of ConnectionWrapper. The class has the same interface and a

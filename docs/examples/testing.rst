@@ -39,6 +39,8 @@ An example is given below.
 
     import pygrametl.drawntabletesting as dtt
 
+    conn = dtt.connectionwrapper()
+
     table = dtt.Table("book", """
     | bid:int (pk) | title:text            | genre:text |
     | ------------ | --------------------- | ---------- |
@@ -82,6 +84,8 @@ test database.
 .. code-block:: python
 
     import pygrametl.drawntabletesting as dtt
+
+    conn = dtt.connectionwrapper()
 
     genre = dtt.Table("genre", """
     | gid:int (pk) | genre:text |
@@ -238,6 +242,8 @@ correctly.
 
     import pygrametl.drawntabletesting as dtt
 
+    conn = dtt.connectionwrapper()
+
     genre = dtt.Table("genre", """
     | gid:int (pk)  | genre:text |
     | ------------- | ---------- |
@@ -284,6 +290,8 @@ the actual values of the primary key column are not taken into consideration.
 .. code-block:: python
 
     import pygrametl.drawntabletesting as dtt
+
+    conn = dtt.connectionwrapper()
 
     address = dtt.Table("address", """
     | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date |
@@ -382,8 +390,8 @@ and :meth:`.setUp()`.
 .. code-block:: python
 
     import unittest
-
     import pygrametl.drawntabletesting as dtt
+
 
     class BookStateTest(unittest.TestCase):
         @classmethod

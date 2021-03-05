@@ -37,24 +37,24 @@ Most pygrametl abstractions either produce, consume or operate on data in
 the values being the data the row contains. For more information about each
 available data source, refer to :ref:`datasources`.
 
-We use data from a database relation containing sales records, in order to load
-the data warehouse. The relation contains data as shown below.
+We use data from the database relation sales, which contains sales records, in
+order to load the data warehouse. The relation contains data as shown below.
 
 .. code-block:: none
 
-    book,                   genre,      store,      timestamp,  sale
-    ----------------------------------------------------------------
-    Nineteen Eighty-Four,   Novel,      Aalborg,    2005/08/05  50
-    Calvin and Hobbes One,  Comic,      Aalborg,    2005/08/05  25
-    The Silver Spoon,       Cookbook,   Aalborg,    2005/08/14  5
-    The Silver Spoon,       Cookbook,   Odense,     2005/09/01  7
-    ....
+   | book:text             | genre:text | store:text | timestamp:date | sale:int |
+   | --------------------- | ---------- | ---------- | -------------- | -------- |
+   | Nineteen Eighty-Four  | Novel      | Aalborg    | 2005/08/05     | 50       |
+   | Calvin and Hobbes One | Comic      | Aalborg    | 2005/08/05     | 25       |
+   | The Silver Spoon      | Cookbook   | Aalborg    | 2005/08/14     | 5        |
+   | The Silver Spoon      | Cookbook   | Odense     | 2005/09/01     | 7        |
+   | ....                  |            |            |                |	         |
 
 
-As the geographical information stored in the sales database about each store
-is limited, the Location dimension is pre-filled by data from a file. The file
-contains data as shown below with an extra tab added between each column for
-readability.
+As the geographical information stored in the sales database about each store is
+limited, the Location dimension is pre-filled by data from the CSV file
+region.csv. The file contains data as shown below with an extra tab added
+between each column for readability.
 
 .. code-block:: none
 
@@ -111,13 +111,13 @@ pygrametl see :ref:`database`.
 
     # Creation of a database connection to the sales database with a simple
     # connection string, specifying the necessary host, username and passowrd
-    sales_string = "host='10.0.0.12' dbname='sale' user='user' password='pass'"
+    sales_string = "host='localhost' dbname='sale' user='user' password='pass'"
     sales_pgconn = psycopg2.connect(sales_string)
 
     # A connection is also created for the data warehouse. The connection is
     # then given to a ConnectionWrapper for it to implicitly shared between
     # all the pygrametl abstractions that needs it with being passed around
-    dw_string = "host='10.0.0.13' dbname='dw' user='dwuser' password='dwpass'"
+    dw_string = "host='localhost' dbname='dw' user='dwuser' password='dwpass'"
     dw_pgconn = psycopg2.connect(dw_string)
 
     # Although the ConnectionWrapper is shared automatically between pygrametl
@@ -138,7 +138,7 @@ region information. For more information about the various data sources see
     name_mapping= 'book', 'genre', 'city', 'timestamp', 'sale'
    
     # Extraction of rows from a database using a PEP 249 connection and SQL
-    sales_source = SQLSource(connection=sales_pgconn, \
+    sales_source = SQLSource(connection=sales_pgconn,
                              query="SELECT * FROM sales", names=name_mapping)
 
     # Extraction of rows from a CSV file does not require SQL, just an open file
@@ -203,14 +203,11 @@ in standard Python without any syntactic additions or restrictions.
         # First the timestamp is extracted from the row dictionary
         timestamp = row['timestamp']
 
-        # Then the string is split on the / in the time stamp
-        timestamp_split = timestamp.split('/')
-
-        # Finally each part is reassigned to the row dictionary. It can then be
+        # Then each part is reassigned to the row dictionary. It can then be
         # accessed by the caller as the row is a reference to the dict object
-        row['year'] = timestamp_split[0]
-        row['month'] = timestamp_split[1]
-        row['day'] = timestamp_split[2]
+        row['year'] = timestamp.year
+        row['month'] = timestamp.month
+        row['day'] = timestamp.day
 
 Finally, the data can be inserted into the data warehouse. All rows from the
 CSV files are inserted into the location dimension as the file contains all the
@@ -266,7 +263,7 @@ database, the method :meth:`.ConnectionWrapper.commit` is called, before
         # errors can be handled in some way. Here we just give up, and throw
         # an error.
         if not row['locationid']:
-           raise ValueError("City was not present in the location dimension")
+            raise ValueError("City was not present in the location dimension")
 
         # As the number of sales was already conveniently aggregated in the
         # sales table, the row can now be inserted into the data warehouse as
@@ -303,21 +300,22 @@ more information about parallelism, see :ref:`parallel`.
     from pygrametl.tables import Dimension, FactTable
 
     # Opening of connections and creation of a ConnectionWrapper
-    sales_string = "host='10.0.0.12' dbname='sale' user='user' password='pass'"
+    sales_string = "host='localhost' dbname='sale' user='user' password='pass'"
     sales_pgconn = psycopg2.connect(sales_string)
 
-    dw_string = "host='10.0.0.13' dbname='dw' user='dwuser' password='dwpass'"
+    dw_string = "host='localhost' dbname='dw' user='dwuser' password='dwpass'"
     dw_pgconn = psycopg2.connect(dw_string)
     dw_conn_wrapper = pygrametl.ConnectionWrapper(connection=dw_pgconn)
 
     # Creation of data sources for the sales database and the CSV file,
     # containing extra information about cities and regions in Denmark.
-    name_mapping= 'book', 'genre', 'city', 'timestamp', 'sale'
-    sales_source = SQLSource(connection=sales_pgconn, \
+    name_mapping = 'book', 'genre', 'city', 'timestamp', 'sale'
+    sales_source = SQLSource(connection=sales_pgconn,
                              query="SELECT * FROM sales", names=name_mapping)
 
     region_file_handle = open('region.csv', 'r', 16384)
     region_source = CSVSource(f=region_file_handle, delimiter=',')
+
     # Creation of dimension and fact table abstractions for use in the ETL flow
     book_dimension = Dimension(
         name='book',
@@ -346,12 +344,9 @@ more information about parallelism, see :ref:`parallel`.
       
         # Splitting of the timestamp into parts 
         timestamp = row['timestamp']
-        timestamp_split = timestamp.split('/')
-       
-        # Assignment of each part to the dictionary 
-        row['year'] = timestamp_split[0]
-        row['month'] = timestamp_split[1]
-        row['day'] = timestamp_split[2]
+        row['year'] = timestamp.year
+        row['month'] = timestamp.month
+        row['day'] = timestamp.day
 
     # The location dimension is loaded from the CSV file, and in order for 
     # the data to be present in the database, the shared connection is asked 
@@ -376,7 +371,7 @@ more information about parallelism, see :ref:`parallel`.
         # missing row must be an error
         row['locationid'] = location_dimension.lookup(row)
         if not row['locationid']:
-           raise ValueError("city was not present in the location dimension")
+            raise ValueError("city was not present in the location dimension")
 
         # The row can then be inserted into the fact table
         fact_table.insert(row) 
@@ -385,5 +380,5 @@ more information about parallelism, see :ref:`parallel`.
     dw_conn_wrapper.commit()
     dw_conn_wrapper.close()
 
-    # Finally the connection to the sales database is closed
+    # Finally, the connection to the sales database is closed
     sales_pgconn.close()
