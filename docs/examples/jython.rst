@@ -2,110 +2,115 @@
 
 Jython
 ======
-*pygrametl* contains additional support for running ETL programs on Jython, the
-Java Virtual Machine implementation of Python. Using Jython compared to CPython
-allows for threads to be used instead of processes for performing operations in
-parallel. This is caused by the lack of global interpreter lock on the JVM,
-which in CPython prevents more then one thread in the same process from running
-at the same time. For more information about the GIL see the Python wiki `GIL
+pygrametl supports running ETL flows on Jython, an implementation of Python that
+run on the JVM. Using Jython instead of CPython allows an ETL flow to be
+parallelized using multiple threads instead of multiple processes. This is
+because Jython does not have a global interpreter lock, which in CPython ensures
+that only a single thread is running per process at a given time. For more
+information about the GIL see the Python wiki `GIL
 <https://wiki.python.org/moin/GlobalInterpreterLock>`_.
 
-To make the switch between CPython and Jython as simple as possible, two
+To make switching between CPython and Jython as simple as possible, two
 abstractions are provided by pygrametl. Firstly, :mod:`.JDBCConnectionWrapper`
-provides two wrappers for database connections following the Java Database
-Connectivity standard (JDBC), and as pygrametl uses a similar wrapper for
-:pep:`249` database connections, they can be used without any changes to the
-program code. For more information about database accesses in pygrametl see
-:ref:`database`. Secondly, as Jython currently has no support for
-:mod:`multiprocessing` due to threads being more lightweight and capable of
-running in parallel, another abstraction is provided by pygrametl in the form
-of the module :mod:`.jythonmultiprocessing`. This module wraps :mod:`threading`
-to implement a very small part of Python :mod:`multiprocessing` module, so the
-same library interface can used on both Jython and CPython.
+provides two connection wrappers for `JDBC
+<https://jcp.org/en/jsr/detail?id=221>`_ connections with the same interface as
+the connection wrappers for :pep:`249` connections. As the connection wrappers,
+all share the same interface the user usually only has to change the connection
+type (`JDBC <https://jcp.org/en/jsr/detail?id=221>`_ or :pep:`249`) and the
+connection wrapper when switching between CPython and Jython. For more
+information about database access in pygrametl see :ref:`database`. Secondly,
+Jython currently has no support for :mod:`multiprocessing` as threads are more
+lightweight than processes and multiple threads can be run in parallel. So
+pygrametl includes the module :mod:`.jythonmultiprocessing` which wraps Python's
+:mod:`threading` module and provides a very small part of Python's
+:mod:`multiprocessing` module. Thus, pygrametl exposes the same interface for
+creating parallel ETL flows no matter if a user is using CPython or Jython.
 
-Note, that while both Jython and CPython are capable of executing the same
-language, the two platforms are implemented differently, so optimisations
-suitable for one platform may be less effective for the other.  One aspect to
-be aware of when running high performance pygrametl flows on Jython, is memory
-management.  The JVM, which Jython runs on, uses a generational garbage
-collector with more expensive garbage collection strategies used for the old
-generation part of the heap. Allowing too many objects to be moved to this part
-of memory can reduce the throughput of an ETL flow significantly, something
-which can easily occur if values controlling caching such as
-:attr:`.Decoupled.batchsize`, are set too high. Similarly, a too low value
-would in the case of :attr:`.Decoupled.batchsize` increase the overhead of
-transferring data between threads, as smaller batches are used.  Multiple tools
-for profiling JVM based programs exist: `HPROF
-<http://docs.oracle.com/javase/8/docs/technotes/samples/hprof.html>`_ and
-`JConsole
+While both Jython and CPython are capable of executing the same language, the
+two platforms are implemented differently, so optimizations suitable for one
+platform may be less effective on the other. One aspect to be aware of when
+running high-performance pygrametl-based ETL flows on Jython is memory
+management. For example, Oracle's HotSpot JVM implements a generational garbage
+collector that uses a much slower garbage collection strategy for the old
+generations than for the young. Thus, allowing too many objects to be promoted
+to the old generations can reduce the throughput of an ETL flow significantly.
+Unfortunately, this can easily occur if the values controlling caching, such as
+:attr:`.Decoupled.batchsize`, are set too high. Similarly, if the value for
+:attr:`.Decoupled.batchsize` is set too low the overhead of transferring data
+between threads increases as smaller batches are used. Many tools for profiling
+programs running on the JVM exist: `JFR
+<https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/about.htm>`_
+and `JConsole
 <http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html>`_
 are bundled with the JDK, while tools such as `VisualVM
-<http://visualvm.java.net/>`_ must be installed separately but often provide
+<https://visualvm.github.io/>`_ must be installed separately but often provide
 additional functionality.
 
 Setup
 -----
-Using pygrametl with Jython requires a few extra steps compared to CPython, as
-Jython is less integrated with Python's package management system, and the JVM
-needs access to the necessary libraries. First, install pygrametl either
-through `PyPI <https://pypi.python.org/pypi/pygrametl/>`_ or by downloading the
-latest development version from `Github
-<https://github.com/chrthomsen/pygrametl>`_, for more information about
-installation of pygrametl for CPython see :ref:`install`.
+Using pygrametl with Jython requires an extra step compared to CPython, as
+Jython is less integrated with Python's package management system. Firstly,
+install pygrametl from `PyPI <https://pypi.python.org/pypi/pygrametl/>`_ or by
+downloading the development version from `GitHub
+<https://github.com/chrthomsen/pygrametl>`_. For more information about
+installing pygrametl for use with CPython see :ref:`install`.
 
-After pygrametl has been installed, the install location must be added to the
-environment variable ``JYTHONPATH``, as Jython purposely does not read the
-locations used by CPython as a default. The default pip install directory
-depends on the operating system, and whether packages are installed locally or
-globally, check the output of the pip install command or its log for precise
-information about where the packages are installed.  The method for setting
-this variable depends on your operating system. On most Unix-like systems , the
-variable can be set in ``~/.profile``, which will be sourced on login. On
-Windows, environment variables can be changed through the System setting in in
-the Control Panel. The module path can also be set programmatically through
-:attr:`.sys.path`.
+After pygrametl has been installed, the location it has been installed to must
+be added to the environment variable ``JYTHONPATH``, as Jython purposely does
+not import modules from CPython by default. The default directory used by
+CPython for packages depends on the operating system and whether a package is
+installed locally or globally. Check the output of the ``pip install`` command
+or its log for precise information about where the package has being installed.
+The method for setting this variable depends on the operating system. On most
+Unix-like systems, the variable can be set in ``~/.profile``, which will be
+sourced on login. On Windows, environment variables can be changed through the
+System setting in the Control Panel. Python's module search path can also be
+extended on a per program basis by adding a path to :attr:`.sys.path` at the
+start of a Python program.
 
 Usage
 -----
-Jython can in most cases be used as a replacement for Jython, with the
-exception of C-Extensions which Jython replaces with the capability to use
-libraries from languages targeting the JVM such as Java, Scala or Clojure.  To
-accesses JVM libraries, they must be added to the JVM classpath by using the
-``-J-cp`` command line option. For more information about Jython's command line
-flags, see `Jython CLI <http://jython.org/docs/using/cmdline.html>`_.
+Jython can in most cases be used as a direct replacement for CPython unless its
+C API is being used. While Jython does not implement CPython C API, it can use
+libraries implemented in other JVM-based languages like Java, Scala, Clojure,
+and Kotlin. To use such libraries, they must be added to the JVM classpath by
+using the ``-J-cp`` command-line option. For more information about Jython's
+command-line flags run the command ``jython -h``.
 
 .. code-block:: python
 
     from pygrametl.tables import FactTable
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
 
-    # Java classes used must be imported into the program
+    # The Java classes used must be explicitly imported into the program
     import java.sql.DriverManager
 
-    # The actual database connection is handled using a JDBC connection
+    # The actual database connection is handled by a JDBC connection
     jconn = java.sql.DriverManager.getConnection(
         "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
 
-    # As PEP 249 and JDBC connections are different must JDBCConnectionWrapper
-    # instead of ConnectionWrapper. The class has the same interface and a
-    # reference to the wrapper is also saved to allow for easy access of it
+    # As PEP 249 and JDBC connections provide different interfaces, is it
+    # necessary to use a JDBCConnectionWrapper instead of a ConnectionWrapper.
+    # Both provides the same interface, thus pygrametl can execute queries
+    # without taking into account how the connection is implemented
     conn = JDBCConnectionWrapper(jdbcconn=jconn)
 
-    # The instance of FactTable connects to the table "facttable" in the
-    # database using the default connection wrapper we just created
+    # This instance of FactTable manages the table "facttable" in the
+    # database using the default connection wrapper created above
     factTable = FactTable(
         name='testresults',
         measures=['errors'],
         keyrefs=['pageid', 'testid', 'dateid'])
 
-The above example demonstrates how few changes are needed to in order to change
-the first example from :ref:`facttables` from using CPython to Jython. The
-database connection is changed to use a JDBC connection, and
+The above example demonstrates how few changes are needed to change the first
+example from :ref:`facttables` from using CPython to Jython. The database
+connection is changed from a :pep:`249` connection to a `JDBC
+<https://jcp.org/en/jsr/detail?id=221>`_ connection, and
 :class:`.ConnectionWrapper` is changed to
-:class:`.JDBCConnectionWrapper.JDBCConnectionWrapper`. The creation of the fact
-table does not need to be changed in any way to run on Jython, as the
-connection wrappers abstract away the differences between JDBC and :pep:`249`.
-The other Jython module, :mod:`.jythonmultiprocessing`, is even simpler to use
-as pygrametl's parallel module :mod:`.parallel` imports either it, or CPythons
-built-in :mod:`.multiprocessing` module depending on whether Jython or CPython
-is used.
+:class:`.JDBCConnectionWrapper.JDBCConnectionWrapper`. The creation of the
+:class:`.FactTable` object does not need to be changed to run on Jython, as the
+connection wrappers abstract away the differences between `JDBC
+<https://jcp.org/en/jsr/detail?id=221>`_ and :pep:`249`. The other Jython
+module, :mod:`.jythonmultiprocessing`, is even simpler to use as pygrametl's
+parallel module :mod:`.parallel` imports either it or CPython's built-in
+:mod:`.multiprocessing` module depending on whether Jython or CPython is used.

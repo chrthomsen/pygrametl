@@ -1,27 +1,27 @@
 #####################################
-Pygrametl - ETL Development in Python
+pygrametl - ETL Development in Python
 #####################################
-*pygrametl* is a package for creating Extract-Transform-Load (ETL) programs in Python.
+pygrametl is a package for creating Extract-Transform-Load (ETL) programs in Python.
 
-The package contains a number of classes for filling fact tables
-and dimensions (including snowflaked and slowly changing dimensions),
-classes for extracting data from different sources, classes for defining
-'steps' in an ETL flow, and convenient functions for often-needed ETL
-functionality.
+The package contains several classes for filling fact tables and dimensions
+(including snowflaked and slowly changing dimensions), classes for extracting
+data from different sources, classes for optionally defining an ETL flow using
+steps, classes for parallelizing an ETL flow, classes for testing an ETL flow,
+and convenient functions for often-needed ETL functionality.
 
 The package's modules are:
 
 *   **datasources** for access to different data sources
 *   **tables** for giving easy and abstracted access to dimension and fact tables
-*   **parallel** for parallelizing ETL operations
-*   **JDBCConnectionWrapper** and **jythonmultiprocessing** for support of Jython
+*   **parallel** for parallelizing an ETL flow
+*   **JDBCConnectionWrapper** and **jythonmultiprocessing** for Jython support
 *   **aggregators** for aggregating data
 *   **steps** for defining steps in an ETL flow
-*   **FIFODict** for providing a dict with a limited size and where elements are removed in first-in first-out order
+*   **FIFODict** for providing a dict with a limited size and where elements are removed in first-in, first-out order
 *   **drawntabletesting** for testing an ETL flow
 
 
-Pygrametl is currently maintained at Aalborg University in Denmark by the following people:
+pygrametl is currently being maintained at Aalborg University in Denmark by the following people:
 
 **Maintainers**
     - Christian Thomsen <chr@cs.aau.dk>
@@ -72,7 +72,7 @@ API
    api/fifodict
    api/drawntabletesting
 
-.. To prevent the indices from being generated in the LaTeX documentation
+.. Prevents the indices from being generated in the LaTeX documentation
 .. only:: html
 
     Indices and tables

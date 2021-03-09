@@ -2,16 +2,16 @@
 
 Drawn Table Testing
 ===================
-*pygrametl* provides the Drawn Table abstraction to simplify testing. A Drawn
-Table is a string-based representation of a database table. It is implemented
-in the Drawn Table Testing (DTT) module, but this *does not* mean that the
-user necessarily must implement the ETL flow itself with pygrametl or in Python
-– the ETL flow can be implemented using any programming language or program,
-including GUI-based ETL tools. First, the functionality provided by DTT is
-described, then how DTT can be used as a library (i.e., together with user-written
-Python code such as unit tests), and last how DTT can be used as a stand-alone tool
-that provides the same functionality without requiring the users to implement their
-tests using Python code.
+pygrametl provides the Drawn Table abstraction to simplify testing. A Drawn
+Table is a string-based representation of a database table. It is implemented in
+the Drawn Table Testing (DTT) module, but this *does not* mean that the user
+necessarily must implement the ETL flow itself with pygrametl or in Python – the
+ETL flow can be implemented using any programming language or program, including
+GUI-based ETL tools. First, the functionality provided by DTT is described, then
+how DTT can be used as a Python package (i.e., together with user-written Python
+code such as unit tests), and last how DTT can be used as a stand-alone tool
+that provides the same functionality without requiring the users to implement
+their tests using Python code.
 
 The Table Class
 ---------------
@@ -194,17 +194,17 @@ explanation of why the test failed as shown below.
 In this example, the part of the ETL flow loading the ``book`` table contains a
 bug. The :class:`.Table` instance in the test specifies that the dimension
 should contain a row for unknown books and four rows with known books (see the
-expected state in the top of the output). However, the user’s ETL code wrongly added
-``Calvin and Hobbes Two`` as a ``Cookbook`` instead of as a ``Comic`` (see
+expected state in the top of the output). However, the user’s ETL code wrongly
+added ``Calvin and Hobbes Two`` as a ``Cookbook`` instead of as a ``Comic`` (see
 the middle table in the output). To help the user quickly identify exactly what
 rows do not match, DTT prints the rows violating the assertion which for
-equality is the difference between the two relations (bottom). The expected
-rows (i.e., those in the :class:`.Table` instance) are prefixed by an ``E`` and
-the rows in the database table are prefixed by a ``D``. The detailed
-information provided by :meth:`.assertEqual()` can be disabled, by setting the
-optional parameter :attr:`.verbose` to :class:`.False`. Note that the orders of
-the rows are allowed to differ between the Drawn Table and the database table
-without causing the test to fail.
+equality is the difference between the two drawn table and the database table
+(bottom). The expected rows (i.e., those in the :class:`.Table` instance) are
+prefixed by an ``E`` and the rows in the database table are prefixed by a ``D``.
+The detailed information provided by :meth:`.assertEqual()` can be disabled, by
+setting the optional parameter :attr:`.verbose` to :class:`.False`. Note that
+the orders of the rows are allowed to differ between the Drawn Table and the
+database table without causing the test to fail.
 
 When :meth:`.assertDisjoint()` is called on a :class:`.Table` instance, it is
 asserted that none of the :class:`.Table`\ ’s rows are present in the database
@@ -373,7 +373,7 @@ Vim
     endfunction
 
 
-Drawn Table Testing as a Python Library
+Drawn Table Testing as a Python Package
 ---------------------------------------
 Using the presented constructs, users can efficiently define preconditions and
 postconditions to test each part of their ETL flows.  DTT thus supports
@@ -436,20 +436,20 @@ another programming language, or any other program.
 
 Drawn Table Testing as a Stand-Alone Tool
 -----------------------------------------
-DTT can also be used without doing any programming. To enable this, DTT
-provides a program with a command-line interface named ``dttr`` (for DTT
-Runner). Internally, ``dttr`` uses the DTT library described above. ``dttr``
-uses test files, which have the ``.dtt`` suffix, to specify preconditions and/or
+DTT can also be used without doing any programming. To enable this, DTT provides
+a program with a command-line interface named ``dttr`` (for DTT Runner).
+Internally, ``dttr`` uses the DTT module described above. ``dttr`` uses test
+files, which have the ``.dtt`` suffix, to specify preconditions and/or
 postconditions. A test file only contains Drawn Tables but not any Python code.
 However, a configuration file named ``config.py`` can be created in the same
 folders as the ``.dtt`` files to define PEP 249 connections (i.e., in addition
 to the default in-memory SQlite database) and data sources (support for CSV and
 SQL is provided by ``dttr``) for use in the tests. An example of a test file is
 given below. This file only contains one precondition (i.e., a Drawn Table with
-a name, but without an assert, on the first line) on Line 1–4 and one postcondition
-(i.e., a Drawn Table with both a name and an assert on the first line) on Line 6–13).
-This structure is, however, not a requirement as a ``.dtt`` file can contain any
-number of preconditions and/or postconditions.
+a name, but without an assert, on the first line) on Line 1–4 and one
+postcondition (i.e., a Drawn Table with both a name and an assert on the first
+line) on Line 6–13). This structure is, however, not a requirement as a ``.dtt``
+file can contain any number of preconditions and/or postconditions.
 
 .. code-block:: rst
 
@@ -468,15 +468,15 @@ number of preconditions and/or postconditions.
     | 5            | The Silver Spoon      | Cookbook   |
 
 To specify a precondition, first the name of the table must be given; in the
-example above that is  ``book``. As ``dttr`` uses the DTT library internally, it uses
-an in-memory SQLite database as the test database by default. Additional
+example above that is ``book``. As ``dttr`` uses the DTT module internally, it
+uses an in-memory SQLite database as the test database by default. Additional
 databases can be added by assigning PEP 249 connections to variables in the
 configuration file. To use a connection from the configuration file, the table
 name must be followed by an ``@`` sign and then the name of the connection to
-use for this table, e.g., ``book@targetdw``. After the table name, a Drawn
-Table must be specified (Lines 2–4 in the example above). Like for any other
-Drawn Table, the header must be given first, then the delimiter, and last the
-rows. To mark the end of the precondition, an empty line is specified (Line 5).
+use for this table, e.g., ``book@targetdw``. After the table name, a Drawn Table
+must be specified (Lines 2–4 in the example above). Like for any other Drawn
+Table, the header must be given first, then the delimiter, and last the rows. To
+mark the end of the precondition, an empty line is specified (Line 5).
 
 To specify a postcondition, a table name must be given first. The table name must
 then followed by a comma and the name of the assertion to use as shown in Line
