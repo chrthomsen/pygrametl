@@ -147,10 +147,10 @@ a simple-to-miss violation of this.
     conn.close()
 
 The example shows how to utilize :class:`.CachedDimension` to automatically
-improve the performance of :meth:`lookup`. The :class:`.CachedDimension` caches
-the values from the product dimension locally, allowing increased performance
-when looking up keys as fewer, or none if all rows are cached, round trips are
-made to the database.
+improve the performance of :meth:`.CachedDimension.lookup`. The
+:class:`.CachedDimension` caches the values from the product dimension locally,
+allowing increased performance when looking up keys as fewer, or none if all
+rows are cached, round trips are made to the database.
 
 BulkDimension
 -------------
@@ -159,23 +159,25 @@ inserting rows and fast lookups. This is done by inserting rows in bulk from a
 file while using an in-memory cache for lookup. To support this the RDBMS are
 not allowed to modify the rows in any way, as this would make the cache and the
 database table inconsistent. Another aspect of :class:`.BulkDimension` is that
-:meth:`update` and :meth:`getbyvals` calls :meth:`endload` which inserts all
-rows stored in the file into the database using a user-defined bulk loading
-function. Thus, calling these functions often will negate the benefit of bulk
-loading. The method :meth:`getbykey` also forces :class:`.BulkDimension` to bulk
-load by default but can use the cache if :attr:`.cachefullrows` is enabled at
-the cost of additional memory. :meth:`lookup` and :meth:`ensure` will always use
-the cache and does not invoke any database operations as :class:`.BulkDimension`
-never evicts rows from its cache. If the dimension is too large to be cached in
-memory, the class :class:`.CachedBulkDimension` should be used instead as it
-supports bulk loading using a finite cache. To support bulk loading from a file
-on disk, multiple additional parameters have been added to
-:class:`.BulkDimension` constructor. These provide control over the temporary
-file used to store rows, such as specific delimiters and the number of rows to
-be bulk loaded. All of these parameters have a default value except for
-:attr:`.bulkloader`. This parameter must be passed a function to be called for
-each set of rows to be bulk loaded, this is necessary as the exact way to
-perform bulk loading differs from RDBMS to RDBMS.
+:meth:`.BulkDimension.update` and :meth:`.BulkDimension.getbyvals` calls
+:meth:`.BulkDimension.endload` which inserts all rows stored in the file into
+the database using a user-defined bulk loading function. Thus, calling these
+functions often will negate the benefit of bulk loading. The method
+:meth:`.BulkDimension.getbykey` also forces :class:`.BulkDimension` to bulk load
+by default but can use the cache if :attr:`.cachefullrows` is enabled at the
+cost of additional memory. :meth:`.BulkDimension.lookup` and
+:meth:`.BulkDimension.ensure` will always use the cache and does not invoke any
+database operations as :class:`.BulkDimension` never evicts rows from its cache.
+If the dimension is too large to be cached in memory, the class
+:class:`.CachedBulkDimension` should be used instead as it supports bulk loading
+using a finite cache. To support bulk loading from a file on disk, multiple
+additional parameters have been added to :class:`.BulkDimension` constructor.
+These provide control over the temporary file used to store rows, such as
+specific delimiters and the number of rows to be bulk loaded. All of these
+parameters have a default value except for :attr:`.bulkloader`. This parameter
+must be passed a function to be called for each set of rows to be bulk loaded,
+this is necessary as the exact way to perform bulk loading differs from RDBMS to
+RDBMS.
 
 .. py:function:: func(name, attributes, fieldsep, rowsep, nullval, filehandle):
 
@@ -255,16 +257,17 @@ perform bulk loading differs from RDBMS to RDBMS.
 
 The example above shows how to use :class:`.BulkDimension` to efficiently load
 the contents of a local SQLite database into a data warehouse dimension. This
-process is a good use case for :class:`.BulkDimension` as :meth:`update`,
-:meth:`getbykey` and :meth:`getbyval` are not used, so no additional calls to
-:meth:`endload` are made. By bulk loading the rows from a file using
-:meth:`copy_from` instead of inserting them one at a time, the time required to
-load the dimension is significantly reduced. However, it is important that
-:meth:`.ConnectionWrapper.commit()` is executed after all rows have been
-inserted into :class:`.BulkDimension` as it ensures that the last set of rows
-are bulk loaded by calling :meth:`endload` on all tables. A downside of
-:class:`.BulkDimension` is that it caches the entire dimension in memory. If the
-dimension can be bulk loaded but is too large to cache in memory
+process is a good use case for :class:`.BulkDimension` as
+:meth:`.BulkDimension.update`, :meth:`.BulkDimension.getbykey` and
+:meth:`.BulkDimension.getbyval` are not used, so no additional calls to
+:meth:`.BulkDimension.endload` are made. By bulk loading the rows from a file
+using :meth:`copy_from` instead of inserting them one at a time, the time
+required to load the dimension is significantly reduced. However, it is
+important that :meth:`.ConnectionWrapper.commit()` is executed after all rows
+have been inserted into :class:`.BulkDimension` as it ensures that the last set
+of rows are bulk loaded by calling :meth:`.BulkDimension.endload` on all tables.
+A downside of :class:`.BulkDimension` is that it caches the entire dimension in
+memory. If the dimension can be bulk loaded but is too large to cache in memory
 :class:`.CachedBulkDimension` should be used instead of :class:`.BulkDimension`.
 
 
@@ -275,19 +278,21 @@ also intended for bulk loading a dimension, so only their differences are
 described here. Unlike :class:`.BulkDimension` the size of
 :class:`.CachedBulkDimension` cache is limited by the parameter
 :attr:`cachesize`. This allows it to be used with a dataset too large to be
-cached entirely in memory. The trade-off is that :meth:`lookup` and
-:meth:`ensure` sometimes have to lookup keys in the database instead of always
-using the cache. However, the method :meth:`getbykey` also no longer needs to
-call :meth:`endload` if :attr:`.cachefullrows` is not enabled. This is because
-:class:`.CachedBulkDimension` caches the rows currently in the file
-in a separate cache. All rows in the file are cached as there is no guarantee
-that the cache storing rows from the database does not evict rows currently in
-the file but not yet in the database when the cache is full, So an additional cache
-is needed to ensure that :meth:`lookup` and :meth:`getbykey` can locate rows
-before they are loaded into the database. :meth:`insert` caches rows in the file
+cached entirely in memory. The trade-off is that
+:meth:`.CachedBulkDimension.lookup` and :meth:`.CachedBulkDimension.ensure`
+sometimes have to lookup keys in the database instead of always using the cache.
+However, the method :meth:`.CachedBulkDimension.getbykey` also no longer needs
+to call :meth:`.CachedBulkDimension.endload` if :attr:`.cachefullrows` is not
+enabled. This is because :class:`.CachedBulkDimension` caches the rows currently
+in the file in a separate cache. All rows in the file are cached as there is no
+guarantee that the cache storing rows from the database does not evict rows
+currently in the file but not yet in the database when the cache is full, So an
+additional cache is needed to ensure that :meth:`.CachedBulkDimension.lookup`
+and :meth:`.CachedBulkDimension.getbykey` can locate rows before they are loaded
+into the database. :meth:`.CachedBulkDimension.insert` caches rows in the file
 cache, and only when the rows in the file are loaded into the database are they
-moved to the database row cache, in which :meth:`lookup` also stores rows if the
-method had to query the database for them.
+moved to the database row cache, in which :meth:`.CachedBulkDimension.lookup`
+also stores rows if the method had to query the database for them.
 
 Due to the use of two caches, caching in :class:`.CachedBulkDimension` is
 controlled by two parameters. The parameter :attr:`.cachesize` can be set to
@@ -310,19 +315,19 @@ TypeOneSlowlyChanging Dimension
 :class:`.TypeOneSlowlyChangingDimension` allows the creation of a type 1 slowly
 changing dimension. The dimension is based on :class:`.CachedDimension`, albeit
 with a few differences. The primary difference between the two classes besides
-the additional method :meth:`scdensure`, is that
+the additional method :meth:`.TypeOneSlowlyChangingDimension.scdensure`, is that
 :class:`.TypeOneSlowlyChangingDimension` always caches rows when they are
 inserted. This is done to minimize the number of round trips to the database
-needed for :meth:`scdensure` to increase its throughput. The user must also
-specify the sequence of attributes to use for looking up keys as
-:attr:`.lookupatts`, and can optionally specify the sequence of type 1 slowly
-changing attributes :attr:`.type1atts`. If :attr:`.type1atts` is not given it
-will default to all attributes minus :attr:`.lookupatts`. The sequences
-:attr:`.lookupatts` and :attr:`.lookupatts` must be disjoint and an error will
-be raised if they are not. As caching is used to increase to speedup lookups, it
-is assumed that the database does not change or add any attribute values to the
-rows. For example, a default value set by RDBMS and automatic type coercion can
-break this assumption.
+needed for :meth:`.TypeOneSlowlyChangingDimension.scdensure` to increase its
+throughput. The user must also specify the sequence of attributes to use for
+looking up keys as :attr:`.lookupatts`, and can optionally specify the sequence
+of type 1 slowly changing attributes :attr:`.type1atts`. If :attr:`.type1atts`
+is not given it will default to all attributes minus :attr:`.lookupatts`. The
+sequences :attr:`.lookupatts` and :attr:`.lookupatts` must be disjoint and an
+error will be raised if they are not. As caching is used to increase to speedup
+lookups, it is assumed that the database does not change or add any attribute
+values to the rows. For example, a default value set by RDBMS and automatic type
+coercion can break this assumption.
 
 .. code-block:: python
 
@@ -386,16 +391,16 @@ dimension. To support this functionality, multiple additional attributes have
 been added to :class:`.SlowlyChangingDimension` compared to :class:`.Dimension`.
 However, only the additional parameter :attr:`.versionatt` is required when
 creating a :class:`.SlowlyChangingDimension`. This parameter indicates which of
-the dimensions attribute stores the row's version number. Like in
-:class:`.TypeOneSlowlyChangingDimension` the method :meth:`scdensure` takes the
+the dimensions attribute stores the row's version number. The method
+:meth:`.SlowlyChangingDimension.scdensure` updates the table while taking the
 slowly changing aspect of the dimension into account. If the row is already
 available then the primary key is returned, if the row is not available then it
 is inserted into the dimension, and if an attributes have changed a new version
-is created. The method :meth:`lookup` is also changed slightly as it returns
-the latest version of a row. To improve the performance of lookups for a slowly
-changing dimension, caching is used, which assumes that the database does not
-modify any values in the inserted rows; an assumption that the use of default
-values can break.
+is created. The method :meth:`.SlowlyChangingDimension.lookup` is also changed
+slightly as it returns the latest version of a row. To improve the performance
+of lookups for a slowly changing dimension, caching is used, which assumes that
+the database does not modify any values in the inserted rows; an assumption that
+the use of default values can break.
 
 .. code-block:: python
 
@@ -473,17 +478,18 @@ information about how these timestamps should be interpreted is provided to the
 constructor. In this case, is it fairly simple as the timestamp provided in the
 input data is simple enough to be converted directly to :class:`.datetime.date`
 object. These can then be inserted into a column of type Date. To automate this
-conversion, the parameter :attr:`.SlowlyChangingDimension.fromfinder` is set to
-the function returned by :func:`.pygrametl.datareader` which constructs
-:class:`.datetime.date` objects from the :class:`.str` in date. However, a
-user-defined function with the same interface as the function generated by
-:func:`.pygrametl.datareader` could also be used. When inserting the rows the
-method :func:`scdensure` is used instead of :func:`insert` as it first
-performs a lookup to verify that an existing version of the row is not already
-present. If a row is already present, this row is updated with the from
-timestamp inserted into its to time attribute indicating when this version of
-the row was deemed obsolete, and an incremented version number is added to the
-new row indicating that this is a newer version of an existing row.
+conversion, the parameter :attr:`fromfinder` is set to the function returned by
+:func:`.pygrametl.datareader` which constructs :class:`.datetime.date` objects
+from the :class:`.str` in date. However, a user-defined function with the same
+interface as the function generated by :func:`.pygrametl.datareader` could also
+be used. When inserting the rows the method
+:meth:`.SlowlyChangingDimension.scdensure` is used instead of
+:meth:`.SlowlyChangingDimension.insert` as it first performs a lookup to verify
+that an existing version of the row is not already present. If a row is already
+present, this row is updated with the from timestamp inserted into its to time
+attribute indicating when this version of the row was deemed obsolete, and an
+incremented version number is added to the new row indicating that this is a
+newer version of an existing row.
 
 SnowflakedDimension
 -------------------

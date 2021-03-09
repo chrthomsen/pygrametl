@@ -54,8 +54,8 @@ provided as alternatives to :class:`.ConnectionWrapper` and
 operations in a separate thread instead of the same thread as the ETL program.
 As they are considered experimental, they are not set as default upon creation,
 and must thus manually be set as the default with the method
-:meth:`setasdefault`, available on both classes, or manually passed around the
-program.
+:meth:`setasdefault`, available on all connection wrappers, or be manually
+passed around the program.
 
 For most usage the classes :class:`.ConnectionWrapper` and
 :class:`.JDBCConnectionWrapper.JDBCConnectionWrapper` will likely provide better

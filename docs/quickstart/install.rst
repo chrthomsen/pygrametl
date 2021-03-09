@@ -39,13 +39,14 @@ mode, allowing commands to be executed directly on the command line. ::
 Installing pygrametl
 --------------------
 pygrametl can either be installed from `PyPI
-<https://pypi.python.org/pypi/pygrametl/>`_ using a package manager, such as `pip
-<https://pip.pypa.io/>`_ or `conda <http://conda.pydata.org/>`_, or by manually
-checking out the latest development version from the official `GitHub repository
-<https://github.com/chrthomsen/pygrametl>`_. Installing pygrametl from PyPI is
-currently the simplest way to install pygrametl as the process is automated by
-the package manager. Bug fixes and new experimental features are, however, of
-course, available first in the GitHub repository.
+<https://pypi.python.org/pypi/pygrametl/>`_ using a package manager, such as
+`pip <https://pip.pypa.io/>`_ or `conda <http://conda.pydata.org/>`_, or by
+manually checking out the latest development version from the official `GitHub
+repository <https://github.com/chrthomsen/pygrametl>`_. Installing pygrametl
+from `PyPI <https://pypi.python.org/pypi/pygrametl/>`_ is currently the simplest
+way to install pygrametl as the process is automated by the package manager. Bug
+fixes and new experimental features are, however, of course, available first in
+the `GitHub repository <https://github.com/chrthomsen/pygrametl>`_.
 
 Install from PyPI with pip
 ##########################

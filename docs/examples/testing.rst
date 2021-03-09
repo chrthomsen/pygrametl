@@ -346,7 +346,7 @@ Table is much easier to read.
     | 5            | The Silver Spoon      | Cookbook   |
 
 The following two functions demonstrate how ``formattable.py`` can be
-integrated with GNU Emacs and Vim, respectively. However, ``formattable.py`` is
+integrated with GNU Emacs and Vim/NeoVim, respectively. However, ``formattable.py`` is
 editor agnostic and the functions are simply intended as examples.
 
 GNU Emacs
@@ -362,7 +362,7 @@ GNU Emacs
             " " (number-to-string (line-number-at-pos))))
    (revert-buffer :ignore-auto :noconfirm))
 
-Vim
+Vim and NeoVim
 
 .. code-block:: vim
 
