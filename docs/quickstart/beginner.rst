@@ -71,10 +71,11 @@ ETL Flow
 --------
 The ETL flow is designed to run on CPython and use PostgreSQL as the RDBMS.
 However, it can easily be run on other Python implementations like Jython. For
-example, to use Jython the PEP 249 database driver psycopg2 and
-:class:`.ConnectionWrapper` must simply be replaced with PostgreSQL JDBC driver
-and :class:`.JDBCConnectionWrapper`. For more information about running
-pygrametl on Jython see :ref:`jython`.
+example, to use Jython the :pep:`249` database driver psycopg2 and
+:class:`.ConnectionWrapper` must simply be replaced with PostgreSQL `JDBC
+<https://jcp.org/en/jsr/detail?id=221>`_ driver and
+:class:`.JDBCConnectionWrapper`. For more information about running pygrametl on
+Jython see :ref:`jython`.
 
 We start by importing the various functions and classes needed for the simple
 ETL flow. The psycopg2 database driver must be imported so a connection to
