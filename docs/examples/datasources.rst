@@ -125,7 +125,7 @@ converted to an iterable that produce :class:`.dict` for use with pygrametl:
 
 In the above example, a Pandas DataFrame is created from a spreadsheet
 containing revenue from some form of sales. Afterwards the data of the price
-column is transformed using one of the higher-order functions build into the
+column is transformed using one of the higher-order functions built into the
 Pandas package. Last, so the data can be loaded into a data warehouse using
 pygrametl, a :class:`.PandasSource` is created with the DataFrame as an
 argument, making the rows of the DataFrame accessible through a data source.
