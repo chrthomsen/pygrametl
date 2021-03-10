@@ -156,7 +156,7 @@ BulkDimension
 -------------
 :class:`.BulkDimension` is a dimension optimized for high throughput when
 inserting rows and fast lookups. This is done by inserting rows in bulk from a
-file while using an in-memory cache for lookup. To support this the RDBMS are
+file while using an in-memory cache for lookup. To support this the RDBMS is
 not allowed to modify the rows in any way, as this would make the cache and the
 database table inconsistent. Another aspect of :class:`.BulkDimension` is that
 :meth:`.BulkDimension.update` and :meth:`.BulkDimension.getbyvals` calls
@@ -166,7 +166,7 @@ functions often will negate the benefit of bulk loading. The method
 :meth:`.BulkDimension.getbykey` also forces :class:`.BulkDimension` to bulk load
 by default but can use the cache if :attr:`.cachefullrows` is enabled at the
 cost of additional memory. :meth:`.BulkDimension.lookup` and
-:meth:`.BulkDimension.ensure` will always use the cache and does not invoke any
+:meth:`.BulkDimension.ensure` will always use the cache and do not invoke any
 database operations as :class:`.BulkDimension` never evicts rows from its cache.
 If the dimension is too large to be cached in memory, the class
 :class:`.CachedBulkDimension` should be used instead as it supports bulk loading
