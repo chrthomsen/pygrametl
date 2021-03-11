@@ -70,9 +70,8 @@ def print_reader_error(path, firstlinenumber, lastlinenumber, reader_name, e):
 
 
 def read_csv(columns, path, delimiter):
-    with open(path) as csvfile:
-        return list(csv.DictReader(csvfile, fieldnames=columns,
-                                   delimiter=delimiter))
+    with open(path) as f:
+        return list(csv.DictReader(f, fieldnames=columns, delimiter=delimiter))
 
 
 def read_sql(columns, config, *arguments):
@@ -256,7 +255,7 @@ def main():
         sys.path.insert(0, os.getcwd())
         import config  # Must specify a PEP 249 connection named 'connection'
         del(sys.path[0])
-    except ModuleNotFoundError:
+    except ImportError:
         config = types.ModuleType('config')
         config.connection = sqlite3.connect(':memory:')
 
