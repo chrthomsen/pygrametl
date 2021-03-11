@@ -120,7 +120,7 @@ BatchFactTable
 :class:`.BatchFactTable` loads facts into the fact table in batches instead of
 one at a time like :class:`.FactTable`. Thus reducing the number of round trips
 to the database which improves the performance of the ETL flow. The size of each
-batch is determined by the :attr:`batchsize` parameter added to the classes
+batch is determined by the :attr:`batchsize` parameter added to the class's
 constructor. :class:`.BatchFactTable` loads each batch using either the
 :meth:`executemany` method specified in :pep:`249` or a single SQL ``INSERT INTO
 facttable VALUES(...)`` statement depending on the value passed to
@@ -130,7 +130,7 @@ been inserted into the fact table to both ensure that the last batch is loaded
 into the database from memory and that the transaction is committed.
 
 .. note:: Both :meth:`.BatchFactTable.lookup` and :meth:`.BatchFactTable.ensure`
-	  forces the current batch of facts to be an inserted. This is to keep
+	  force the current batch of facts to be an inserted. This is to keep
 	  them consistent with all of facts inserted into the fact table. Thus
 	  using these methods can reduce the benefit of batching insertions.
 
@@ -144,7 +144,7 @@ However, this prevents :meth:`BulkFactTable.lookup` and
 methods are not available. Like for :class:`.BatchFactTable`, the method
 :meth:`.ConnectionWrapper.commit` must be called to ensure that the last batch
 of facts is loaded into the database. Multiple additional parameters have been
-added to the classes constructor to provide control over the temporary file used
+added to the class's constructor to provide control over the temporary file used
 to store facts, such as what delimiters to use and the number of facts to be
 bulk loaded in each batch. All of these parameters have a default value except
 for :attr:`.bulkloader`. This parameter must be passed a function that will be
@@ -198,7 +198,7 @@ how to bulk loading data into other RDBMSs see :ref:`bulkloading`.
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
         cursor = conn.cursor()
         # psycopg2 does not accept the default value used to represent NULL
-        # bv BulkDimension, which is None. Here this is ignored as we have no
+        # by BulkDimension, which is None. Here this is ignored as we have no
         # NULL values that we wish to substitute for a more descriptive value
         cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
                          columns=attributes)
@@ -211,8 +211,9 @@ how to bulk loading data into other RDBMSs see :ref:`bulkloading`.
         keyrefs=['storeid', 'productid', 'dateid'],
         bulkloader=pgbulkloader)
 
-    # commit() and close() must be called to ensure that all facts have inserted
-    # into the database and that the connection is closed correctly afterward
+    # commit() and close() must be called to ensure that all facts have been
+    # inserted into the database and that the connection is closed correctly
+    #  afterward
     for row in facts:
         factTable.insert(row)
     conn.commit()
@@ -221,7 +222,7 @@ how to bulk loading data into other RDBMSs see :ref:`bulkloading`.
 AccumulatingSnapshotFactTable
 -----------------------------
 :class:`.AccumulatingSnapshotFactTable` represents a fact table where facts are
-updated as a process evolves. Typically different date references (OrderData,
+updated as a process evolves. Typically different date references (OrderDate,
 PaymentDate, ShipDate, DeliveryDate, etc.) are set when they become known.
 Measures (e.g., measuring the lag between the different dates) are also often
 set as they become available. Like for :class:`.FactTable`, the class
