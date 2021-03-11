@@ -125,4 +125,4 @@ class Avg(Aggregator):
         if tmp is None:
             return default
         else:
-            return float(tmp) / self.__count(group)
+            return float(tmp) / self.__count.finish(group)

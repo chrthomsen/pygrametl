@@ -46,6 +46,8 @@ Version 2.7 (unreleased)
 
   Wrong use of paramstyle in ``ConnectionWrapper.executemany`` fixed.
 
+  A call to an incorrect method in ``aggregators.Avg.finish()``.
+
 Version 2.6
 ----------
 **Added**
