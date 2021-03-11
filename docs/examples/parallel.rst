@@ -47,7 +47,7 @@ Python iterator. For more information about data sources see :ref:`datasources`.
             TransformingSource
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
 
-    # JDBC and Jython is used as threads usually provides better performance
+    # JDBC and Jython are used as threads usually provide better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection(
         "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -143,7 +143,7 @@ database instead.
     # The data is read from a csv file
     inputdata = CSVSource(f=open('sales.csv', 'r'), delimiter=',')
 
-    # JDBC and Jython is used as threads usually provides better performance
+    # JDBC and Jython are used as threads usually provide better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection(
         "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -273,7 +273,7 @@ unique despite being assigned by separate processes.
 
     sales = CSVSource(f=open('sales.csv', 'r'), delimiter=',')
 
-    # JDBC and Jython is used as threads usually provides better performance
+    # JDBC and Jython are used as threads usually provide better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection(
         "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -335,7 +335,7 @@ unique despite being assigned by separate processes.
             )
 
     # A partitioned table can be used in the same way as any other pygrametl
-    # table since the frameworks take care of the partitioning behind the scenes
+    # table since the framework takes care of the partitioning behind the scenes
     for row in sales:
 	# A new row is created for each fact, as having values not present in a
         # decoupled table that consumes another dimension, can make pygrametl
@@ -369,8 +369,8 @@ same way as decoupled classes do for tables, as a number of processes are
 spawned to run the function. The number of processes to spawn can be passed to
 the decorator, allowing more processes to be created for functions with a longer
 run time. The first time a function with a decorator is called, a process is
-created to handle the call. This is done until the number of created process
-match the argument given to the decorator. Then, if a process is not available,
+created to handle the call. This is done until the number of created processes
+matches the argument given to the decorator. Then, if a process is not available,
 the call and its arguments are added to a :class:`.queue` shared by the process
 created for the splitpoint. If a split function calls another function that
 requires synchronization it can be annotated with a new splitpoint with one as
@@ -388,7 +388,7 @@ points up to that point.
 
     sales = CSVSource(f=open('sales.csv', 'r'), delimiter=',')
 
-    # JDBC and Jython is used as threads usually provides better performance
+    # JDBC and Jython are used as threads usually provide better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection(
         "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
@@ -403,18 +403,18 @@ points up to that point.
 
 
     # Five threads are created to run this function, so five rows can be
-    # transformed at the same time. If no threads are available will the row
-    # be added to a queue and later transformed when a thread becomes idle
+    # transformed at the same time. If no threads are available, the row
+    # is added to a queue and transformed when a thread becomes idle
     @splitpoint(instances=5)
     def performExpensiveTransformations(row):
         # Do some (expensive) transformations...
 
-        # As multiple threads performs the operation inside this function must a
-        # second function be created to synchronize inserting rows into the database
+        # As multiple threads perform the operation inside this function. a second
+        # function must be created to synchronize inserting rows into the database
         insertRowIntoData(row)
 
 
-    # The function is annotated with an argument free splitpoint, so its argument
+    # The function is annotated with an argument-free splitpoint, so its argument
     # becomes one, thereby specifying that this function should run in one thread
     @splitpoint
     def insertRowIntoData(row):
@@ -427,7 +427,7 @@ points up to that point.
         performExpensiveTransformations(row)
 
     # To ensure that all splitpoint annotated functions are finished before
-    # the ETL flow is terminated, must the function endsplits be called as it
+    # the ETL flow is terminated, the function endsplits must be called as it
     # joins all the threads created by splitpoints up to this point
     endsplits()
     conn.commit()
@@ -440,13 +440,13 @@ second :attr:`splitpoint` without an argument ensures that only one process is
 allowed to execute that function at a time, so even though it is called from
 :func:`.performExpensiveTransformation` only one process can insert rows into
 the fact table at the same time. Should the operations on the fact table become
-a bottleneck it could be partitioned using :class:`.FactTablePartitioner`. To
+a bottleneck, it could be partitioned using :class:`.FactTablePartitioner`. To
 ensure that all splitpoints have finished execution, the function
 :func:`.endsplits` is executed, which joins all splitpoints, before the database
 connection is closed.
 
 As splitpoint annotated functions run in separate processes, any values they
-return are not available to process calling them. To work around this
+return are not available to the process calling them. To work around this
 restriction a queue can be passed as an argument to :attr:`splitpoint` in which
 the split function's returned values will be added.
 
@@ -493,8 +493,8 @@ the split function's returned values will be added.
         # Use the returned elements after the sentinel check to prevent errors
         # ......
 
-    # To ensure that a all splitpoint annotated function are finished before
-    # the ETL flow is terminated, must the function endsplits be called as it
+    # To ensure that all splitpoint annotated functions are finished before
+    # the ETL flow is terminated, the function endsplits must be called as it
     # joins all the process created by splitpoints up to this point
     endsplits()
 
@@ -518,7 +518,7 @@ and not as single values to reduce the overhead of synchronization.
     from pygrametl.parallel import splitpoint, endsplits, createflow
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
 
-    # JDBC and Jython is used as threads usually provides better performance
+    # JDBC and Jython are used as threads usually provide better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection(
         "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
