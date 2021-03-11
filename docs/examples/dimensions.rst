@@ -323,7 +323,7 @@ throughput. The user must also specify the sequence of attributes to use for
 looking up keys as :attr:`.lookupatts`, and can optionally specify the sequence
 of type 1 slowly changing attributes :attr:`.type1atts`. If :attr:`.type1atts`
 is not given it will default to all attributes minus :attr:`.lookupatts`. The
-sequences :attr:`.lookupatts` and :attr:`.lookupatts` must be disjoint and an
+sequences :attr:`.lookupatts` and :attr:`.type1atts` must be disjoint and an
 error will be raised if they are not. As caching is used to increase to speedup
 lookups, it is assumed that the database does not change or add any attribute
 values to the rows. For example, a default value set by RDBMS and automatic type
@@ -377,7 +377,7 @@ time. The instance of :class:`.TypeOneSlowlyChangingDimension` automatically
 checks if a product already exists, and if it does, updates the price if the old
 and new values differ. As a type 1 slowly changing dimension does store the
 history of the changes only the value of the last row to be inserted will be
-stored, so the rows most bu loaded in chronological order. If the history of the
+stored, so the rows most be loaded in chronological order. If the history of the
 changes must be stored a type 2 slowly changing dimension should be created, and
 :class:`.SlowlyChangingDimension` should be used instead of
 :class:`.TypeOneSlowlyChangingDimension`.
@@ -437,7 +437,7 @@ the use of default values can break.
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # This slowly changing dimension is created as type 2 only. Meaning that a
-    # new row only changes the validto attribute in the previous rows. validto
+    # new row only changes the validto attribute in the previous row. validto
     # is a timestamp indicating when the row is no longer valid. As additional
     # parameters, the object is initialized with information about which
     # attribute holds a timestamp for when the row's validity starts and ends.
