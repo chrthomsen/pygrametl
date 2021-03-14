@@ -46,7 +46,7 @@ supplied names must match the number of elements in the result:
 
     conn = psycopg2.connect(database='db', user='dbuser', password='dbpass')
     sqlSource = SQLSource(connection=conn, query='SELECT * FROM table',
-                          names=('id', 'name', 'price'))
+			  names=('id', 'name', 'price'))
 
 :class:`.SQLSource` also makes it possible to supply an SQL expression that will
 be executed before the query, through the :attr:`.initsql` parameter. The result
@@ -60,7 +60,7 @@ created and then used in the query:
 
     conn = psycopg2.connect(database='db', user='dbuser', password='dbpass')
     sqlSource = SQLSource(connection=conn, query='SELECT * FROM view',
-        initsql='CREATE VIEW view AS SELECT id, name FROM table WHERE price > 10')
+	initsql='CREATE VIEW view AS SELECT id, name FROM table WHERE price > 10')
 
 CSVSource
 ---------
@@ -95,8 +95,8 @@ being an alias.
 
     # ResultsFile.csv contains: name,age,score
     typedCSVSource = TypedCSVSource(f=open('ResultsFile.csv', 'r', 16384),
-                                    casts={'age': int, 'score': float},
-                                    delimiter=',')
+				    casts={'age': int, 'score': float},
+				    delimiter=',')
 
 In the above example, a :class:`.TypedCSVSource` is initialized with a file
 handler that uses a buffer size of 16384. This particular buffer size is used as
@@ -147,7 +147,7 @@ shared attributes on which the rows are to be joined must also be given.
     products = CSVSource(f=open('products.csv', 'r', 16384), delimiter=',')
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
     mergeJoiningSource = MergeJoiningSource(src1=products, key1='productid',
-                                            src2=sales, key2='productid')
+					    src2=sales, key2='productid')
 
 In the above example, a :class:`.MergeJoiningSource` is used to join two data
 sources on their shared attribute productid.
@@ -165,7 +165,7 @@ not produce their rows in sorted order.
     products = CSVSource(f=open('products.csv', 'r', 16384), delimiter=',')
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
     hashJoiningSource = HashJoiningSource(src1=products, key1='productid',
-                                          src2=sales, key2='productid')
+					  src2=sales, key2='productid')
 
 UnionSource
 -----------
@@ -203,7 +203,7 @@ It can also be beneficial to interleave rows, and for this purpose,
     salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter='\t')
 
     combinedSales = RoundRobinSource((salesOne, salesTwo, salesThree),
-                                     batchsize=500)
+				     batchsize=500)
 
 In the above example, :class:`.RoundRobinSource` is given a number of data
 sources, and the argument :attr:`.batchsize`, which are the number of rows to be
@@ -243,7 +243,7 @@ removed if the value of their location attribute is not Aalborg.
 
 
     def locationfilter(row):
-        row['location'] == 'Aalborg'
+	row['location'] == 'Aalborg'
 
 
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
@@ -278,9 +278,9 @@ the form :attr:`f(row)`, which will be applied to the source in the given order.
 
 
     def dkk_to_eur(row):
-        price_as_a_number = int(row['price'])
-        row['dkk'] = price_as_a_number
-        row['eur'] = price_as_a_number / 7.43
+	price_as_a_number = int(row['price'])
+	row['dkk'] = price_as_a_number
+	row['eur'] = price_as_a_number / 7.43
 
 
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
@@ -301,22 +301,22 @@ aggregator from the module :class:`pygrametl.aggregators`.
 .. code-block:: python
 
      from pygrametl.datasources import CSVSource, CrossTabbingSource, \
-         TransformingSource
+	 TransformingSource
      from pygrametl.aggregators import Avg
 
 
      def dkk_to_eur(row):
-         price_as_a_number = int(row['price'])
-         row['dkk'] = price_as_a_number
-         row['eur'] = price_as_a_number / 7.43
+	 price_as_a_number = int(row['price'])
+	 row['dkk'] = price_as_a_number
+	 row['eur'] = price_as_a_number / 7.43
 
 
      sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter=',')
      salesTransformed = TransformingSource(sales, dkk_to_eur)
 
      crossTab = CrossTabbingSource(source=salesTransformed, rowvaluesatt='product',
-                                   colvaluesatt='location', values='eur',
-                                   aggregator=Avg())
+				   colvaluesatt='location', values='eur',
+				   aggregator=Avg())
 
 In the above example, a crosstab is made from a table containing sales data in
 order to view the average price of products across different locations.
@@ -342,7 +342,7 @@ features see :doc:`parallel`.
 
 
     def createCSVSource(filename):
-        return CSVSource(f=open(filename, 'r', 16384), delimiter=',')
+	return CSVSource(f=open(filename, 'r', 16384), delimiter=',')
 
 
     salesFiles = glob.glob('sales/*.csv')

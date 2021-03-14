@@ -134,11 +134,11 @@ ETL flow is executed for the new rows is shown below.
 .. code-block:: python
 
     def test_canInsertIntoBookDimensionTable(self):
-        expected = table + "| 6 | Metro 2033 | 2 |" \
-                         + "| 7 | Metro 2034 | 2 |"
-        newrows = expected.additions()
-        etl.executeETLFlow(newrows)
-        expected.assertEqual()
+	expected = table + "| 6 | Metro 2033 | 2 |" \
+			 + "| 7 | Metro 2034 | 2 |"
+	newrows = expected.additions()
+	etl.executeETLFlow(newrows)
+	expected.assertEqual()
 
 For the code above, :attr:`.expected` defines how the user expects the database
 state to become, but it is not the DTT framework that puts the database in this
@@ -213,7 +213,7 @@ database table, e.g., to test a filter or to check for the absence of erroneous
 rows that previously fixed bugs wrongly added. When :meth:`.assertSubset()` is
 called, it is asserted that all the :class:`.Table`\ ’s rows are present in the
 database table which, however, may contain more rows which the user then does
-not have to specify. :meth:`.assertSubset()` makes it easy to define a small set 
+not have to specify. :meth:`.assertSubset()` makes it easy to define a small set
 of rows that can be compared to a table with so many rows that they cannot be
 effectively embedded in the test itself. For example, it can easily be used to
 test if the leap day ``2020-02-29`` exists in the time dimension.
@@ -280,11 +280,11 @@ value is present.
 Another example of using variables is shown below. Here the user verifies that
 in a type-2 Slowly Changing Dimension, the timestamp set for ``validto``
 matches ``validfrom`` for the new version of the member. Thus, variables can be
-used to efficiently test automatically generated values are correct. 
+used to efficiently test automatically generated values are correct.
 It is also possible to specify that the value of a cell should not be included
 in the comparison. This is done with the special variable ``$_``. When compared
 to any value, ``$_`` is always considered to be equal. In the example below,
-the actual values of the primary key column are not taken into consideration.  
+the actual values of the primary key column are not taken into consideration.
 ``$_!`` is a stricter version of ``$_`` which disallows ``NULL``.
 
 .. code-block:: python
@@ -359,7 +359,7 @@ GNU Emacs
    (save-buffer)
    (shell-command
     (concat "python3 formattable.py " (buffer-file-name)
-            " " (number-to-string (line-number-at-pos))))
+	    " " (number-to-string (line-number-at-pos))))
    (revert-buffer :ignore-auto :noconfirm))
 
 Vim and NeoVim
@@ -367,9 +367,9 @@ Vim and NeoVim
 .. code-block:: vim
 
     function! DTTAlignTable()
-        write
-        call system("python3 formattable.py " . expand('%:p') . " " . line('.'))
-        edit!
+	write
+	call system("python3 formattable.py " . expand('%:p') . " " . line('.'))
+	edit!
     endfunction
 
 
@@ -394,30 +394,30 @@ and :meth:`.setUp()`.
 
 
     class BookStateTest(unittest.TestCase):
-        @classmethod
-        def setUpClass(cls):
-            cls.cw = dtt.connectionwrapper()
-            cls.initial = dtt.Table("book", """
-            | bid:int (pk) | title:text            | genre:text |
-            | ------------ | --------------------- | ---------- |
-            | 1            | Unknown               | Unknown    |
-            | 2            | Nineteen Eighty-Four  | Novel      |
-            | 3            | Calvin and Hobbes One | Comic      |
-            | 4            | The Silver Spoon      | Cookbook   |""")
+	@classmethod
+	def setUpClass(cls):
+	    cls.cw = dtt.connectionwrapper()
+	    cls.initial = dtt.Table("book", """
+	    | bid:int (pk) | title:text            | genre:text |
+	    | ------------ | --------------------- | ---------- |
+	    | 1            | Unknown               | Unknown    |
+	    | 2            | Nineteen Eighty-Four  | Novel      |
+	    | 3            | Calvin and Hobbes One | Comic      |
+	    | 4            | The Silver Spoon      | Cookbook   |""")
 
-        def setUp(self):
-            self.initial.reset()
+	def setUp(self):
+	    self.initial.reset()
 
-        def test_insertNew(self):
-            expected = self.initial + "| 5 | Calvin and Hobbes Two | Comic |"
-            newrows = expected.additions()
-            etl.executeETLFlow(self.cw, newrows)
-            expected.assertEqual()
+	def test_insertNew(self):
+	    expected = self.initial + "| 5 | Calvin and Hobbes Two | Comic |"
+	    newrows = expected.additions()
+	    etl.executeETLFlow(self.cw, newrows)
+	    expected.assertEqual()
 
-        def test_insertExisting(self):
-            row = {'bid': 6, 'book': 'Calvin and Hobbes One', 'genre': 'Comic'}
-            etl.executeETLFlow(self.cw, [row])
-            self.initial.assertEqual()
+	def test_insertExisting(self):
+	    row = {'bid': 6, 'book': 'Calvin and Hobbes One', 'genre': 'Comic'}
+	    etl.executeETLFlow(self.cw, [row])
+	    self.initial.assertEqual()
 
 The method :meth:`.setUpClass()` is executed before the tests (methods starting
 with :attr:`test_`) in the class are executed. The method requests a database

@@ -87,7 +87,7 @@ command-line flags run the command ``jython -h``.
 
     # The actual database connection is handled by a JDBC connection
     jconn = java.sql.DriverManager.getConnection(
-        "jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
+	"jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
 
     # As PEP 249 and JDBC connections provide different interfaces, is it
     # necessary to use a JDBCConnectionWrapper instead of a ConnectionWrapper.
@@ -98,9 +98,9 @@ command-line flags run the command ``jython -h``.
     # This instance of FactTable manages the table "facttable" in the
     # database using the default connection wrapper created above
     factTable = FactTable(
-        name='testresults',
-        measures=['errors'],
-        keyrefs=['pageid', 'testid', 'dateid'])
+	name='testresults',
+	measures=['errors'],
+	keyrefs=['pageid', 'testid', 'dateid'])
 
 The above example demonstrates how few changes are needed to change the first
 example from :ref:`facttables` from using CPython to Jython. The database

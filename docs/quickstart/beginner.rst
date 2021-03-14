@@ -53,7 +53,7 @@ this data is shown below:
    | Calvin and Hobbes One | Comic      | Aalborg    | 2005/08/05     | 25       |
    | The Silver Spoon      | Cookbook   | Aalborg    | 2005/08/14     | 5        |
    | The Silver Spoon      | Cookbook   | Odense     | 2005/09/01     | 7        |
-   | ....                  |            |            |                |	         |
+   | ....                  |            |            |                |		 |
 
 
 As the geographical information stored in the sales records are limited, the
@@ -147,7 +147,7 @@ region information. For more information about the various data sources see
     # Extraction of rows from a database using a PEP 249 connection and SQL
     query = "SELECT book, genre, store, timestamp, sale FROM sales"
     sales_source = SQLSource(connection=sales_pgconn, query=query,
-                             names=name_mapping)
+			     names=name_mapping)
 
     # Extraction of rows from a CSV file does not require a PEP 249 connection,
     # just an open file handler. pygrametl uses Python's DictReader for CSV
@@ -170,28 +170,28 @@ and :ref:`facttables`.
     # should be used to lookup the primary key are given As mentioned in the
     # beginning of this guide, using named parameters is strongly encouraged
     book_dimension = Dimension(
-        name='book',
-        key='bookid',
-        attributes=['book', 'genre'])
+	name='book',
+	key='bookid',
+	attributes=['book', 'genre'])
 
     time_dimension = Dimension(
-        name='time',
-        key='timeid',
-        attributes=['day', 'month', 'year'])
+	name='time',
+	key='timeid',
+	attributes=['day', 'month', 'year'])
 
     location_dimension = Dimension(
-        name='location',
-        key='locationid',
-        attributes=['city', 'region'],
-        lookupatts=['city'])
+	name='location',
+	key='locationid',
+	attributes=['city', 'region'],
+	lookupatts=['city'])
 
     # A single instance of FactTable is created for the data warehouse's single
     # fact table. It is created with the name of the table, a list of columns
     # constituting the primary key of the fact table, and the list of measures
     fact_table = FactTable(
-        name='facttable',
-        keyrefs=['bookid', 'locationid', 'timeid'],
-        measures=['sale'])
+	name='facttable',
+	keyrefs=['bookid', 'locationid', 'timeid'],
+	measures=['sale'])
 
 As the input timestamp is a datetime object and the time dimension consists of
 multiple levels (day, month, and year), the datetime object must be split into
@@ -205,16 +205,16 @@ an ETL flow.
 
     # A normal Python function is used to split the timestamp into its parts
     def split_timestamp(row):
-        """Splits a timestamp containing a date into its three parts"""
+	"""Splits a timestamp containing a date into its three parts"""
 
-        # First the timestamp is extracted from the row dictionary
-        timestamp = row['timestamp']
+	# First the timestamp is extracted from the row dictionary
+	timestamp = row['timestamp']
 
-        # Then each part is reassigned to the row dictionary. It can then be
-        # accessed by the caller as the row is a reference to the dict object
-        row['year'] = timestamp.year
-        row['month'] = timestamp.month
-        row['day'] = timestamp.day
+	# Then each part is reassigned to the row dictionary. It can then be
+	# accessed by the caller as the row is a reference to the dict object
+	row['year'] = timestamp.year
+	row['month'] = timestamp.month
+	row['day'] = timestamp.day
 
 Finally, the data can be inserted into the data warehouse. All rows from
 region.csv are inserted into the location dimension first. This is necessary for
@@ -249,28 +249,28 @@ executed at the end.
     # dimension or fact table if it does not yet exist
     for row in sales_source:
 
-        # The timestamp is split into its three parts
-        split_timestamp(row)
+	# The timestamp is split into its three parts
+	split_timestamp(row)
 
-        # The row is updated with the correct primary keys for each dimension, and
-        # any new data are inserted into each of the dimensions at the same time
-        row['bookid'] = book_dimension.ensure(row)
-        row['timeid'] = time_dimension.ensure(row)
+	# The row is updated with the correct primary keys for each dimension, and
+	# any new data are inserted into each of the dimensions at the same time
+	row['bookid'] = book_dimension.ensure(row)
+	row['timeid'] = time_dimension.ensure(row)
 
-        # ensure() is not used for the location dimension as it has already been
+	# ensure() is not used for the location dimension as it has already been
 	# filled. lookup() does not insert any data and returns None, if no row
 	# with the requested data is available. This allow users to control
 	# error handling in the ETL flow. In this case an error is raised if a
 	# location is missing from region.csv as recovery is not possible
-        row['locationid'] = location_dimension.lookup(row)
-        if not row['locationid']:
-            raise ValueError("A city was not present in the location dimension")
+	row['locationid'] = location_dimension.lookup(row)
+	if not row['locationid']:
+	    raise ValueError("A city was not present in the location dimension")
 
-        # As the number of sales is already aggregated in the sales records, the
-        # row can now be inserted into the data warehouse. If aggregation, or
-        # other more advanced transformations are required, the full power
-        # Python is available as shown with the call to split_timestamp
-        fact_table.insert(row)
+	# As the number of sales is already aggregated in the sales records, the
+	# row can now be inserted into the data warehouse. If aggregation, or
+	# other more advanced transformations are required, the full power
+	# Python is available as shown with the call to split_timestamp
+	fact_table.insert(row)
 
     # After all the data have been inserted, the connection is asked to commit
     # and then closed to ensure that all data is committed to the database and
@@ -313,42 +313,42 @@ set of automated repeatable tests (see :ref:`testing`).
     name_mapping = 'book', 'genre', 'city', 'timestamp', 'sale'
     query = "SELECT book, genre, store, timestamp, sale FROM sales"
     sales_source = SQLSource(connection=sales_pgconn, query=query,
-                             names=name_mapping)
+			     names=name_mapping)
 
     region_file_handle = open('region.csv', 'r', 16384)
     region_source = CSVSource(f=region_file_handle, delimiter=',')
 
     # Creation of dimension and fact table abstractions for use in the ETL flow
     book_dimension = Dimension(
-        name='book',
-        key='bookid',
-        attributes=['book', 'genre'])
+	name='book',
+	key='bookid',
+	attributes=['book', 'genre'])
 
     time_dimension = Dimension(
-        name='time',
-        key='timeid',
-        attributes=['day', 'month', 'year'])
+	name='time',
+	key='timeid',
+	attributes=['day', 'month', 'year'])
 
     location_dimension = Dimension(
-        name='location',
-        key='locationid',
-        attributes=['city', 'region'],
-        lookupatts=['city'])
+	name='location',
+	key='locationid',
+	attributes=['city', 'region'],
+	lookupatts=['city'])
 
     fact_table = FactTable(
-        name='facttable',
-        keyrefs=['bookid', 'locationid', 'timeid'],
-        measures=['sale'])
+	name='facttable',
+	keyrefs=['bookid', 'locationid', 'timeid'],
+	measures=['sale'])
 
     # Python function needed to split the timestamp into its three parts
     def split_timestamp(row):
-        """Splits a timestamp containing a date into its three parts"""
+	"""Splits a timestamp containing a date into its three parts"""
 
-        # Splitting of the timestamp into parts
-        timestamp = row['timestamp']
-        row['year'] = timestamp.year
-        row['month'] = timestamp.month
-        row['day'] = timestamp.day
+	# Splitting of the timestamp into parts
+	timestamp = row['timestamp']
+	row['year'] = timestamp.year
+	row['month'] = timestamp.month
+	row['day'] = timestamp.day
 
     # The location dimension is loaded from the CSV file, and in order for
     # the data to be present in the database, the shared connection is asked
@@ -361,21 +361,21 @@ set of automated repeatable tests (see :ref:`testing`).
     # Each row in the sales database is iterated through and inserted
     for row in sales_source:
 
-        # Each row is passed to the timestamp split function for splitting
-        split_timestamp(row)
+	# Each row is passed to the timestamp split function for splitting
+	split_timestamp(row)
 
-        # Lookups are performed to find the key in each dimension for the fact
-        # and if the data is not there, it is inserted from the sales row
-        row['bookid'] = book_dimension.ensure(row)
-        row['timeid'] = time_dimension.ensure(row)
+	# Lookups are performed to find the key in each dimension for the fact
+	# and if the data is not there, it is inserted from the sales row
+	row['bookid'] = book_dimension.ensure(row)
+	row['timeid'] = time_dimension.ensure(row)
 
-        # The location dimension is pre-filled, so a missing row is an error
-        row['locationid'] = location_dimension.lookup(row)
-        if not row['locationid']:
-            raise ValueError("city was not present in the location dimension")
+	# The location dimension is pre-filled, so a missing row is an error
+	row['locationid'] = location_dimension.lookup(row)
+	if not row['locationid']:
+	    raise ValueError("city was not present in the location dimension")
 
-        # The row can then be inserted into the fact table
-        fact_table.insert(row)
+	# The row can then be inserted into the fact table
+	fact_table.insert(row)
 
     # The data warehouse connection is then ordered to commit and close
     dw_conn_wrapper.commit()

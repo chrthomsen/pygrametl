@@ -34,7 +34,7 @@ bottleneck.
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -44,9 +44,9 @@ bottleneck.
     # This instance of FactTable connects to the table facttable in the
     # database using the default connection wrapper created above
     factTable = FactTable(
-        name='facttable',
-        measures=['price'],
-        keyrefs=['storeid', 'productid', 'dateid'])
+	name='facttable',
+	measures=['price'],
+	keyrefs=['storeid', 'productid', 'dateid'])
 
 The above example shows the three step process needed to connect an instance of
 :class:`.FactTable` to an existing database table. Firstly, a :PEP:`249`
@@ -74,7 +74,7 @@ seen below, where the fact table from the last example is reused.
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -84,19 +84,19 @@ seen below, where the fact table from the last example is reused.
     # This instance of FactTable connects to the table facttable in the
     # database using the default connection wrapper created above
     factTable = FactTable(
-        name='facttable',
-        measures=['price'],
-        keyrefs=['storeid', 'productid', 'dateid'])
+	name='facttable',
+	measures=['price'],
+	keyrefs=['storeid', 'productid', 'dateid'])
 
     # A list of facts ready to inserted into the fact table
     facts = [{'storeid': 1, 'productid': 13, 'dateid': 4, 'price': 50},
-             {'storeid': 2, 'productid':  7, 'dateid': 4, 'price': 75},
-             {'storeid': 1, 'productid':  7, 'dateid': 4, 'price': 50},
-             {'storeid': 3, 'productid':  9, 'dateid': 4, 'price': 25}]
+	     {'storeid': 2, 'productid':  7, 'dateid': 4, 'price': 75},
+	     {'storeid': 1, 'productid':  7, 'dateid': 4, 'price': 50},
+	     {'storeid': 3, 'productid':  9, 'dateid': 4, 'price': 25}]
 
     # The facts can be inserted using the insert method
     for row in facts:
-        factTable.insert(row)
+	factTable.insert(row)
     conn.commit()
 
     # Lookup returns the keys and measures given only the keys
@@ -104,15 +104,15 @@ seen below, where the fact table from the last example is reused.
 
     # Ensure should be used when loading facts that might already be loaded
     newFacts = [{'storeid': 2, 'itemid':  7, 'dateid': 4, 'price': 75},
-                {'storeid': 1, 'itemid':  7, 'dateid': 4, 'price': 50},
-                {'storeid': 1, 'itemid':  2, 'dateid': 7, 'price': 150},
-                {'storeid': 3, 'itemid':  3, 'dateid': 6, 'price': 100}]
+		{'storeid': 1, 'itemid':  7, 'dateid': 4, 'price': 50},
+		{'storeid': 1, 'itemid':  2, 'dateid': 7, 'price': 150},
+		{'storeid': 3, 'itemid':  3, 'dateid': 6, 'price': 100}]
 
     for row in newFacts:
-        # The second argument forces ensure to not only match the keys for facts
-        # to be considered equal, but also checks if the measures are the same
-        # for facts with the same key, and if not raises a ValueError. The third
-        # argument renames itemid to productid using a name mapping
+	# The second argument forces ensure to not only match the keys for facts
+	# to be considered equal, but also checks if the measures are the same
+	# for facts with the same key, and if not raises a ValueError. The third
+	# argument renames itemid to productid using a name mapping
 	factTable.ensure(row, True, {'productid': 'itemid'})
     conn.commit()
     conn.close()
@@ -186,38 +186,38 @@ how to bulk loading data into other RDBMSs see :ref:`bulkloading`.
     from pygrametl.tables import BulkFactTable
 
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     facts = [{'storeid': 1, 'productid': 13, 'dateid': 4, 'price': 50},
-             {'storeid': 2, 'productid':  7, 'dateid': 4, 'price': 75},
-             {'storeid': 1, 'productid':  7, 'dateid': 4, 'price': 50},
-             {'storeid': 3, 'productid':  9, 'dateid': 4, 'price': 25}]
+	     {'storeid': 2, 'productid':  7, 'dateid': 4, 'price': 75},
+	     {'storeid': 1, 'productid':  7, 'dateid': 4, 'price': 50},
+	     {'storeid': 3, 'productid':  9, 'dateid': 4, 'price': 25}]
 
 
     # This function bulk loads a file into PostgreSQL using psycopg2
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
-        cursor = conn.cursor()
-        # psycopg2 does not accept the default value used to represent NULL
-        # by BulkDimension, which is None. Here this is ignored as we have no
-        # NULL values that we wish to substitute for a more descriptive value
-        cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
-                         columns=attributes)
+	cursor = conn.cursor()
+	# psycopg2 does not accept the default value used to represent NULL
+	# by BulkDimension, which is None. Here this is ignored as we have no
+	# NULL values that we wish to substitute for a more descriptive value
+	cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
+			 columns=attributes)
 
 
     # The bulk loading function must be passed to BulkFactTable's constructor
     factTable = BulkFactTable(
-        name='facttable',
-        measures=['price'],
-        keyrefs=['storeid', 'productid', 'dateid'],
-        bulkloader=pgbulkloader)
+	name='facttable',
+	measures=['price'],
+	keyrefs=['storeid', 'productid', 'dateid'],
+	bulkloader=pgbulkloader)
 
     # commit() and close() must be called to ensure that all facts have been
     # inserted into the database and that the connection is closed correctly
     #  afterward
     for row in facts:
-        factTable.insert(row)
+	factTable.insert(row)
     conn.commit()
     conn.close()
 
@@ -240,7 +240,7 @@ following example illustrates how to create the class:
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -251,20 +251,20 @@ following example illustrates how to create the class:
     # A factexpander can be used to modify a row only if it has been updated, note
     # that we only ignore namemapping for brevity, production code should use it
     def computelag(row, namemapping, updated):
-        if 'shipmentdateid' in updated:
-            row['shipmentlag'] = row['shipmentdateid'] - row['paymentdateid']
-        if 'deliverydateid' in updated:
-            row['deliverylag'] = row['deliverydate'] - row['shipmentdateid']
+	if 'shipmentdateid' in updated:
+	    row['shipmentlag'] = row['shipmentdateid'] - row['paymentdateid']
+	if 'deliverydateid' in updated:
+	    row['deliverylag'] = row['deliverydate'] - row['shipmentdateid']
 
 
     # This instance of AccumulatingSnapshotFactTable connects to the table
     # orderprocessing in the database using the connection created above
     asft = AccumulatingSnapshotFactTable(
-        name='orderprocessing',
-        keyrefs=['orderid', 'customerid', 'productid'],
-        otherrefs=['paymentdateid', 'shipmentdateid', 'deliverydateid'],
-        measures=['price', 'shipmentlag', 'deliverylag'],
-        factexpander=computelag)
+	name='orderprocessing',
+	keyrefs=['orderid', 'customerid', 'productid'],
+	otherrefs=['paymentdateid', 'shipmentdateid', 'deliverydateid'],
+	measures=['price', 'shipmentlag', 'deliverylag'],
+	factexpander=computelag)
 
 Firstly a :PEP:`249` connection is created to perform the actual database
 operations, then an instance of the :class:`.ConnectionWrapper` is created as a
@@ -298,7 +298,7 @@ how to use the class can be seen below:
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # A factexpander can be used to modify a row only if it has been updated, note
     # that we only ignore namemapping for brevity, production code should use it
@@ -308,24 +308,24 @@ how to use the class can be seen below:
     # A factexpander can be used to modify a row only if it has been updated, note
     # that we only ignore namemapping for brevity, production code should use it
     def computelag(row, namemapping, updated):
-        if 'shipmentdateid' in updated:
-            row['shipmentlag'] = row['shipmentdateid'] - row['paymentdateid']
-        if 'deliverydateid' in updated:
-            row['deliverylag'] = row['deliverydate'] - row['shipmentdateid']
+	if 'shipmentdateid' in updated:
+	    row['shipmentlag'] = row['shipmentdateid'] - row['paymentdateid']
+	if 'deliverydateid' in updated:
+	    row['deliverylag'] = row['deliverydate'] - row['shipmentdateid']
 
 
     # This instance of AccumulatingSnapshotFactTable connects to the table
     # orderprocessing in the database using the connection created above
     asft = AccumulatingSnapshotFactTable(
-        name='orderprocessing',
-        keyrefs=['orderid', 'customerid', 'productid'],
-        otherrefs=['paymentdateid', 'shipmentdateid', 'deliverydateid'],
-        measures=['price', 'shipmentlag', 'deliverylag'],
-        factexpander=computelag)
+	name='orderprocessing',
+	keyrefs=['orderid', 'customerid', 'productid'],
+	otherrefs=['paymentdateid', 'shipmentdateid', 'deliverydateid'],
+	measures=['price', 'shipmentlag', 'deliverylag'],
+	factexpander=computelag)
 
     # A list of facts that are ready to inserted into the fact table
     facts = [{'orderid': 1, 'customerid': 1, 'productid': 1, 'price': 10},
-             {'orderid': 2, 'customerid': 2, 'productid': 2, 'price': 20},
+	     {'orderid': 2, 'customerid': 2, 'productid': 2, 'price': 20},
 	     {'orderid': 3, 'customerid': 3, 'productid': 3, 'price': 30}]
 
     # The facts can be inserted using the ensure method. (If we had used the
@@ -333,7 +333,7 @@ how to use the class can be seen below:
     # value for each attribute in the fact table. When using ensure, missing
     # attributes will be set to None before an insertion.)
     for row in facts:
-        asft.ensure(row)
+	asft.ensure(row)
 
     # Now assume that the the orders get paid and shipped
     facts[0]['paymentdateid'] = 12
@@ -342,7 +342,7 @@ how to use the class can be seen below:
 
     # Update the accumulating fact table in the DW
     for row in facts:
-        asft.ensure(row)  # will call computelag and do the needed updates
+	asft.ensure(row)  # will call computelag and do the needed updates
 
     conn.commit()
     conn.close()

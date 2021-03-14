@@ -41,10 +41,10 @@ psycopg2 can be used:
 
     # psycopg2
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
-        global connection
-        cursor = connection.cursor()
-        cursor.copy_from(file=filehandle, table=name, sep=fieldsep, null=nullval,
-                             columns=attributes)
+	global connection
+	cursor = connection.cursor()
+	cursor.copy_from(file=filehandle, table=name, sep=fieldsep, null=nullval,
+			     columns=attributes)
 
 If Jython is used the `copyIn
 <https://jdbc.postgresql.org/documentation/publicapi/org/postgresql/copy/CopyManager.html#copyIn-java.lang.String->`__
@@ -54,11 +54,11 @@ method in JDBC's :class:`CopyManager` class can be used:
 
     # JDBC
     def pgcopybulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
-        global pgconnection
-        copymgr = pgconnection.getCopyAPI()
-        sql = "COPY %s(%s) FROM STDIN WITH DELIMITER '%s'" % \
-              (name, ', '.join(attributes), fieldsep)
-        copymgr.copyIn(sql, filehandle)
+	global pgconnection
+	copymgr = pgconnection.getCopyAPI()
+	sql = "COPY %s(%s) FROM STDIN WITH DELIMITER '%s'" % \
+	      (name, ', '.join(attributes), fieldsep)
+	copymgr.copyIn(sql, filehandle)
 
 MySQL
 -----
@@ -70,11 +70,11 @@ provided by MySQL SQL dialect can be used.
 
     # MySQLdb
     def mysqlbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
-        global connection
-        cursor = connection.cursor()
-        sql = "LOAD DATA LOCAL INFILE '%s' INTO TABLE %s FIELDS TERMINATED BY '%s' LINES TERMINATED BY '%s' (%s);" % \
-                (filehandle, name, fieldsep, rowsep, ', '.join(attributes))
-        cursor.execute(sql)
+	global connection
+	cursor = connection.cursor()
+	sql = "LOAD DATA LOCAL INFILE '%s' INTO TABLE %s FIELDS TERMINATED BY '%s' LINES TERMINATED BY '%s' (%s);" % \
+		(filehandle, name, fieldsep, rowsep, ', '.join(attributes))
+	cursor.execute(sql)
 
 Oracle
 ------
@@ -91,9 +91,9 @@ created with the suffix .dat and passed to any bulk loading table as
 .. code-block:: python
 
     with tempfile.NamedTemporaryFile(suffix=".dat") as dat_handle:
-        BulkDimension(
-            ...
-            tempdest=dat_handle)
+	BulkDimension(
+	    ...
+	    tempdest=dat_handle)
 
 
 The bulk loading function shown below constructs a control file with the .ctl
@@ -105,28 +105,28 @@ must in the system path) and passed the constructed .ctl file.
     # cx_Oracle or JDBC
     def oraclebulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
 
-        # The configuration file used by SQL Loader must use the suffix .ctf
-        with tempfile.NamedTemporaryFile(suffix=".ctl") as ctl_handle:
+	# The configuration file used by SQL Loader must use the suffix .ctf
+	with tempfile.NamedTemporaryFile(suffix=".ctl") as ctl_handle:
 
-            # The attributes to be loaded must be qouted using double quotes
-            unqouted_atts = str(tuple(attributes)).replace("'", "")
-            ctl_contents = """
-                LOAD DATA INFILE '%s' "str %r"
-                APPEND INTO TABLE %s
-                FIELDS TERMINATED BY %r
-                %s
-                """ % (filehandle.name, rowsep, name, fieldsep, unqouted_atts)
+	    # The attributes to be loaded must be qouted using double quotes
+	    unqouted_atts = str(tuple(attributes)).replace("'", "")
+	    ctl_contents = """
+		LOAD DATA INFILE '%s' "str %r"
+		APPEND INTO TABLE %s
+		FIELDS TERMINATED BY %r
+		%s
+		""" % (filehandle.name, rowsep, name, fieldsep, unqouted_atts)
 
-            # Strips the multi line string of unnecessary indention, and ensures
-            # that the contents are written to the file by flushing it
-            ctl_contents = textwrap.dedent(ctl_handle).lstrip()
-            ctl_handle.write(ctl_contents)
-            ctl_handle.flush()
+	    # Strips the multi line string of unnecessary indention, and ensures
+	    # that the contents are written to the file by flushing it
+	    ctl_contents = textwrap.dedent(ctl_handle).lstrip()
+	    ctl_handle.write(ctl_contents)
+	    ctl_handle.flush()
 
-            # Bulk loads the data using Oracle's SQL Loader. As a new connection
-            # is created, the same username, passowrd, etc. must be given again
-            os.system("sqlldr username/password@ip:port/sid control=" +
-                    str(ctl_handle.name))
+	    # Bulk loads the data using Oracle's SQL Loader. As a new connection
+	    # is created, the same username, passowrd, etc. must be given again
+	    os.system("sqlldr username/password@ip:port/sid control=" +
+		    str(ctl_handle.name))
 
 
 Microsoft SQL Server
@@ -154,27 +154,27 @@ format file can be seen below:
 .. code-block:: python
 
     def sqlserverbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
-        global msconn
-        cursor = msconn.cursor()
+	global msconn
+	cursor = msconn.cursor()
 
-        # Copy the tempdest
-        shutil.copyfile(filehandle, r'd:\dw\tmpfilecopy')
+	# Copy the tempdest
+	shutil.copyfile(filehandle, r'd:\dw\tmpfilecopy')
 
-        # Create format file
-        fmt = open(r'd:\dw\format.fmt', 'w+')
-        # 12.0 corresponds to the version of the bcp utility being used by SQL Server.
-        # For more information, see the above link on non-XML format files.
-        fmt.write("12.0\r\n%d\r\n" % len(attributes))
-        count = 0
-        sep = "\\t"
-        for a in attributes:
-            count += 1
-            if count == len(attributes): sep = "\\n"
-            # For information regarding the format values,
-            # see the above link on non-XML format files.
-            fmt.write('%d SQLCHAR 0 8000 "%s" %d %s "Latin1_General_100_CI_AS_SC"\r\n' % (count, sep, count, a))
-        fmt.close()
+	# Create format file
+	fmt = open(r'd:\dw\format.fmt', 'w+')
+	# 12.0 corresponds to the version of the bcp utility being used by SQL Server.
+	# For more information, see the above link on non-XML format files.
+	fmt.write("12.0\r\n%d\r\n" % len(attributes))
+	count = 0
+	sep = "\\t"
+	for a in attributes:
+	    count += 1
+	    if count == len(attributes): sep = "\\n"
+	    # For information regarding the format values,
+	    # see the above link on non-XML format files.
+	    fmt.write('%d SQLCHAR 0 8000 "%s" %d %s "Latin1_General_100_CI_AS_SC"\r\n' % (count, sep, count, a))
+	fmt.close()
 
-        sql = "BULK INSERT %s FROM '%s' WITH (FORMATFILE = '%s', FIELDTERMINATOR = '%s', ROWTERMINATOR = '%s')" % \
-                (name, r'd:\dw\tmpfilecopy', r'd:\dw\format.fmt', fieldsep, rowsep,)
-        cursor.execute(sql)
+	sql = "BULK INSERT %s FROM '%s' WITH (FORMATFILE = '%s', FIELDTERMINATOR = '%s', ROWTERMINATOR = '%s')" % \
+		(name, r'd:\dw\tmpfilecopy', r'd:\dw\format.fmt', fieldsep, rowsep,)
+	cursor.execute(sql)

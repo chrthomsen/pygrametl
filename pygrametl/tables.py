@@ -76,9 +76,9 @@ def _quote(x): return x
 def definequote(quotechar):
     """Defines the global quote function, for wrapping identifiers with quotes.
 
-    
+
        Arguments:
-           
+
        - quotechar: If None, do not wrap identifier. If a string, prepend and
          append quotechar to identifier. If a tuple of two strings, prepend with
          first element and append with last.
@@ -103,7 +103,7 @@ class Dimension(object):
                  idfinder=None, defaultidvalue=None, rowexpander=None,
                  targetconnection=None):
         """Arguments:
-            
+
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
            - attributes: a sequence of the attribute names in the dimension
@@ -195,7 +195,7 @@ class Dimension(object):
         """Find the key for the row with the given values.
 
            Arguments:
-               
+
            - row: a dict which must contain at least the lookup attributes
            - namemapping: an optional namemapping (see module's documentation)
         """
@@ -245,7 +245,7 @@ class Dimension(object):
         """Return a list of all rows with values identical to the given.
 
            Arguments:
-               
+
            - values: a dict which must hold a subset of the tables attributes.
              All rows that have identical values for all attributes in this
              dict are returned.
@@ -280,7 +280,7 @@ class Dimension(object):
         """Update a single row in the dimension table.
 
            Arguments:
-               
+
            - row: a dict which must contain the key for the dimension.
              The row with this key value is updated such that it takes
              the value of row[att] for each attribute att which is also in
@@ -321,7 +321,7 @@ class Dimension(object):
            instance, this rowexpander is called before the insert takes place.
 
            Arguments:
-               
+
            - row: the row to lookup or insert. Must contain the lookup
              attributes. Key is not required to be present but will be added
              using idfinder if missing.
@@ -339,7 +339,7 @@ class Dimension(object):
         """Insert the given row. Return the new key value.
 
            Arguments:
-               
+
            - row: the row to insert. The dict is not updated. It must contain
              all attributes, and is allowed to contain more attributes than
              that. Key is not required to be present but will be added using
@@ -393,7 +393,7 @@ class CachedDimension(Dimension):
                  cacheoninsert=True, usefetchfirst=False,
                  targetconnection=None):
         """Arguments:
-            
+
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
            - attributes: a sequence of the attribute names in the dimension
@@ -593,7 +593,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                  usefetchfirst=False, cachefullrows=False,
                  targetconnection=None):
         """Arguments:
-            
+
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
            - attributes: a sequence of the attribute names in the dimension
@@ -679,7 +679,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
            .. Note:: Has side-effects on the given row.
 
            Arguments:
-               
+
            - row: a dict containing the attributes for the table. It must
              contain all attributes if it is the first version of the row to be
              inserted, updates of existing rows need only contain lookupatts
@@ -789,7 +789,7 @@ class SlowlyChangingDimension(Dimension):
        break this assumption.
     """
 
-    def __init__(self, name, key, attributes, lookupatts, orderingatt=None, 
+    def __init__(self, name, key, attributes, lookupatts, orderingatt=None,
                  versionatt=None,
                  fromatt=None, fromfinder=None,
                  toatt=None, tofinder=None, minfrom=None, maxto=None,
@@ -797,7 +797,7 @@ class SlowlyChangingDimension(Dimension):
                  type1atts=(), cachesize=10000, prefill=False, idfinder=None,
                  usefetchfirst=False, useorderby=True, targetconnection=None):
         """Arguments:
-            
+
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
            - attributes: a sequence of the attribute names in the dimension
@@ -808,9 +808,9 @@ class SlowlyChangingDimension(Dimension):
              uniquely identify a dimension members. These attributes are thus
              used for looking up members.
            - orderingatt: the name of the attribute used to identify the newest
-             version. The version holding the greatest value is considered to 
+             version. The version holding the greatest value is considered to
              be the newest. If orderingatt is None, versionatt is used. If
-             versionatt is also None, toatt is used and NULL is  considered as 
+             versionatt is also None, toatt is used and NULL is  considered as
              the greatest value. If orderingatt, versionatt,toatt are all None,
              an error is raised.
            - versionatt: the name of the attribute holding the version number
@@ -878,8 +878,8 @@ class SlowlyChangingDimension(Dimension):
              the default target connection is used.
            - useorderby: a flag deciding if ORDER BY is used in the SQL to
              select the newest version. If True, the DBMS thus does the
-             sorting. If False, all versions are fetched and the highest 
-             version is found in Python. For some systems, this can lead to 
+             sorting. If False, all versions are fetched and the highest
+             version is found in Python. For some systems, this can lead to
              significant performance improvements. Default: True
         """
         # TODO: Should scdensure just override ensure instead of being a new
@@ -905,7 +905,7 @@ class SlowlyChangingDimension(Dimension):
             raise ValueError(
                 "If orderingatt is None, either versionatt or toatt must not be None"
                 )
-            
+
         self.versionatt = versionatt
         self.fromatt = fromatt
         if fromfinder is not None:
@@ -946,7 +946,7 @@ class SlowlyChangingDimension(Dimension):
                              (self.quote(self.orderingatt),)
 
         # Now create SQL for looking up the key with a local sort
-        # This gives "SELECT key, version FROM name WHERE 
+        # This gives "SELECT key, version FROM name WHERE
         # lookupval1 = %(lookupval1)s AND lookupval2 = %(lookupval2)s AND ..."
         self.keyversionlookupsql = "SELECT " + self.quote(key) + ", " + \
             self.quote(self.orderingatt) + " FROM " + name + \
@@ -1015,7 +1015,7 @@ class SlowlyChangingDimension(Dimension):
         """Find the key for the newest version with the given values.
 
            Arguments:
-               
+
            - row: a dict which must contain at least the lookup attributes
            - namemapping: an optional namemapping (see module's documentation)
         """
@@ -1035,17 +1035,17 @@ class SlowlyChangingDimension(Dimension):
         """Find the key for the newest version of the row with the given values.
 
            Arguments:
-               
+
            - row: a dict which must contain at least the lookup attributes
            - namemapping: an optional namemapping (see module's documentation)
         """
-        # Based on Dimension.lookup, but uses keyversionlookupsql and 
+        # Based on Dimension.lookup, but uses keyversionlookupsql and
         # finds the newest version locally (no sorting on the DBMS)
         key = self._before_lookup(row, namemapping)
         if key is not None:
             return key
 
-        self.targetconnection.execute(self.keyversionlookupsql, row, 
+        self.targetconnection.execute(self.keyversionlookupsql, row,
                                       namemapping)
 
         versions = [kv for kv in self.targetconnection.fetchalltuples()]
@@ -1070,7 +1070,7 @@ class SlowlyChangingDimension(Dimension):
            .. Note:: Has side-effects on the given row.
 
            Arguments:
-               
+
            - row: a dict containing the attributes for the member.
              key, versionatt, fromatt, and toatt are not required to be
              present but will be added (if defined).
@@ -1100,7 +1100,7 @@ class SlowlyChangingDimension(Dimension):
             # It is a new member. We add the first version.
             if versionatt:
                 row[versionatt] = 1
-                   
+
             if fromatt and fromatt not in row:
                 if self.minfrom is not None:
                     # We need the following hack to distinguish between
@@ -1181,7 +1181,7 @@ class SlowlyChangingDimension(Dimension):
                 row.pop(key, None)
                 if versionatt:
                     row[versionatt] = other[self.versionatt] + 1
-                       
+
                 if fromatt:
                     row[fromatt] = self.fromfinder(self.targetconnection,
                                                    row, namemapping)
@@ -1296,14 +1296,14 @@ class SlowlyChangingDimension(Dimension):
     def closecurrent(self, row, namemapping={}, end=pygrametl.today()):
         """Close the current version by setting its toatt if it is maxto.
 
-           The newest version will have its toatt set to the given end 
+           The newest version will have its toatt set to the given end
            argument (default pygrametl.today(), i.e., the current date) only
-           if, the value for the newest row's toatt currently is maxto. 
+           if, the value for the newest row's toatt currently is maxto.
            Otherwise no update will be done.
-           If toatt is not defined an exception is raised. 
+           If toatt is not defined an exception is raised.
 
            Arguments:
-               
+
            - row: a dict which must contain at least the lookup attributes
            - namemapping: an optional namemapping (see module's documentation)
            - end: the value to set for the newest version. Default: The current
@@ -1335,7 +1335,7 @@ class SnowflakedDimension(object):
 
     def __init__(self, references, expectboguskeyvalues=False):
         """Arguments:
-            
+
            - references: a sequence of pairs of Dimension objects
              [(a1,a2), (b1,b2), ...] meaning that a1 has a foreign key to a2
              etc. a2 may itself be a sequence of Dimensions:
@@ -1440,7 +1440,7 @@ class SnowflakedDimension(object):
         """Find the key for the row with the given values.
 
            Arguments:
-               
+
            - row: a dict which must contain at least the lookup attributes
              which all must come from the root (the table closest to the
              fact table).
@@ -1466,7 +1466,7 @@ class SnowflakedDimension(object):
            a row where all values (including the key) are None.
 
            Arguments:
-               
+
            - keyvalue: the key value of the row to lookup
            - fullrow: a flag deciding if the full row (with data from
              all tables in the snowflake) should be returned. If False,
@@ -1495,7 +1495,7 @@ class SnowflakedDimension(object):
         """Return a list of all rows with values identical to the given.
 
            Arguments:
-               
+
            - values: a dict which must hold a subset of the tables attributes.
              All rows that have identical values for all attributes in this
              dict are returned.
@@ -1548,7 +1548,7 @@ class SnowflakedDimension(object):
            directly on the Dimensions that should be updated.
 
            Arguments:
-               
+
            - row: a dict. If the key of a participating dimension D is in the
              dict, D.update(...) is invoked.
            - namemapping: an optional namemapping (see module's documentation)
@@ -1583,7 +1583,7 @@ class SnowflakedDimension(object):
            afterwards.
 
            Arguments:
-               
+
            - row: the row to lookup or insert. Must contain the lookup
              attributes. Key is not required to be present but will be added
              using idfinder if missing.
@@ -1604,7 +1604,7 @@ class SnowflakedDimension(object):
            afterwards.
 
            Arguments:
-               
+
            - row: the row to lookup or insert. Must contain the lookup
              attributes. Key is not required to be present but will be added
              using idfinder if missing.
@@ -1683,7 +1683,7 @@ class SnowflakedDimension(object):
            .. Note:: Has side-effects on the given row.
 
            Arguments:
-               
+
            - row: a dict containing the attributes for the member. Key is not
              required to be present but will be added using idfinder if
              missing.
@@ -1747,8 +1747,8 @@ class FactTable(object):
         """Insert a fact into the fact table.
 
            Arguments:
-               
-           - row: a dict at least containing values for all the fact table's 
+
+           - row: a dict at least containing values for all the fact table's
              attributes (both keys/references and measures).
            - namemapping: an optional namemapping (see module's documentation)
         """
@@ -1779,7 +1779,7 @@ class FactTable(object):
            Return None if no fact is found.
 
            Arguments:
-               
+
            - keyvalues: a dict at least containing values for all keys
            - namemapping: an optional namemapping (see module's documentation)
         """
@@ -1804,7 +1804,7 @@ class FactTable(object):
            was already present in the fact table; False if not.
 
            Arguments:
-               
+
            - row: a dict at least containing the attributes of the fact table
            - compare: a flag deciding if measure vales from a fact that was
              looked up are compared to those in the given row. If True and
@@ -1842,7 +1842,7 @@ class BatchFactTable(FactTable):
     def __init__(self, name, keyrefs, measures=(), batchsize=10000,
                  usemultirow=False, targetconnection=None):
         """Arguments:
-            
+
            - name: the name of the fact table in the DW
            - keyrefs: a sequence of attribute names that constitute the
              primary key of the fact tables (i.e., the dimension references)
@@ -1916,25 +1916,25 @@ class AccumulatingSnapshotFactTable(FactTable):
                  ignorenonerefs=True, ignorenonemeasures=True,
                  factexpander=None, targetconnection=None):
         """Arguments:
-            
+
            - name: the name of the fact table in the DW
            - keyrefs: a sequence of attribute names that constitute the
-             primary key of the fact tables. This is a subset of the dimension 
+             primary key of the fact tables. This is a subset of the dimension
              references and these references are not allowed to be updated.
            - otherrefs: a sequence of dimension references that can be updated.
            - measures: a possibly empty sequence of measure names. Default: ()
            - ignorenonerefs: A flag deciding if None values for attributes in
              otherrefs are ignored when doing an update. If True (default), the
              existing value in the database will not be overwritten by a None.
-           - ignorenonemeasures: A flag deciding if None values for attributes 
-             in measures are ignored when doing an update. If True (default), 
-             the existing value in the database will not be overwritten by a 
+           - ignorenonemeasures: A flag deciding if None values for attributes
+             in measures are ignored when doing an update. If True (default),
+             the existing value in the database will not be overwritten by a
              None.
-           - factexpander: A function(row, namemapping, set of names of updated 
-             attributes). This function is called by the ensure method before 
-             it calls the update method if a row has been changed. This is, 
-             e.g., practical if lag measures should be computed before the row 
-             in the fact table is updated. The function should make its 
+           - factexpander: A function(row, namemapping, set of names of updated
+             attributes). This function is called by the ensure method before
+             it calls the update method if a row has been changed. This is,
+             e.g., practical if lag measures should be computed before the row
+             in the fact table is updated. The function should make its
              changes directly on the passed row.
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
@@ -1951,9 +1951,9 @@ class AccumulatingSnapshotFactTable(FactTable):
         self.ignorenonerefs = ignorenonerefs
         self.ignorenonemeasures = ignorenonemeasures
         self.factexpander = factexpander
-        
+
     # insert and lookup are inherited from FactTable
-    
+
     def ensure(self, row, namemapping={}):
         """Lookup the given row. If that fails, insert it. If found, see
            if values for attributes in otherrefs or measures have changed and
@@ -1961,11 +1961,11 @@ class AccumulatingSnapshotFactTable(FactTable):
            in keyrefs are not allowed to change). If an update is necessary
            and a factexpander is defined, the row will first be updated with
            any missing otherrefs/measures and the factexpander will be run on
-           it. Return nothing. 
+           it. Return nothing.
 
            Arguments:
-               
-           - row: the row to insert or update if needed. Must contain the 
+
+           - row: the row to insert or update if needed. Must contain the
              keyrefs attributes. For missing attributes from otherrefs and
              measures, the value is set to None if the row has to be
              inserted.
@@ -1990,17 +1990,17 @@ class AccumulatingSnapshotFactTable(FactTable):
                     self.factexpander(row, namemapping, updated)
                     updated = self.__differences(oldrow, row, namemapping)
                 self.__doupdates(row, namemapping, updated)
-                
+
     def __differences(self, oldrow, newrow, namemapping):
-        # finds differences between oldrow and newrow wrt. otherrefs and 
-        # measures (namemapping is used for newrow only) 
+        # finds differences between oldrow and newrow wrt. otherrefs and
+        # measures (namemapping is used for newrow only)
         differences = set()
         self.__diffhelper(oldrow, newrow, namemapping, self.otherrefs, \
                            self.ignorenonerefs, differences)
         self.__diffhelper(oldrow, newrow, namemapping, self.measures, \
                           self.ignorenonemeasures, differences)
         return differences
-        
+
     def __diffhelper(self, oldrow, newrow, namemapping, atts, ignorenone, res):
         for a in atts:
             newa = namemapping.get(a) or a
@@ -2037,10 +2037,10 @@ class _BaseBulkloadable(object):
     def __init__(self, name, atts, bulkloader,
                  fieldsep='\t', rowsep='\n', nullsubst=None,
                  tempdest=None, bulksize=500000, usefilename=False,
-                 strconverter=pygrametl.getdbfriendlystr, encoding=None, 
+                 strconverter=pygrametl.getdbfriendlystr, encoding=None,
                  dependson=()):
         r"""Arguments:
-            
+
            - name: the name of the table in the DW
            - atts: a sequence of the bulkloadable tables' attribute names
            - bulkloader: A method
@@ -2067,8 +2067,8 @@ class _BaseBulkloadable(object):
            - usefilename: a value deciding if the file should be passed to the
              bulkloader by its name instead of as a file-like object.
              Default: False
-           - strconverter: a method m(value, nullsubst) -> str to convert 
-             values into strings that can be written to the temporary file and 
+           - strconverter: a method m(value, nullsubst) -> str to convert
+             values into strings that can be written to the temporary file and
              eventually bulkloaded. Default: pygrametl.getdbfriendlystr
            - encoding: a string with the encoding to use. If None,
              locale.getpreferredencoding() is used. This argument is
@@ -2137,7 +2137,7 @@ class _BaseBulkloadable(object):
         """Insert (eventually) a row into the table.
 
            Arguments:
-               
+
            - row: a dict at least containing values for each of the tables'
              attributes.
            - namemapping: an optional namemapping (see module's documentation)
@@ -2204,7 +2204,7 @@ class BulkFactTable(_BaseBulkloadable):
                  strconverter=pygrametl.getdbfriendlystr,
                  encoding=None, dependson=()):
         r"""Arguments:
-            
+
            - name: the name of the fact table in the DW
            - keyrefs: a sequence of attribute names that constitute the
              primary key of the fact tables (i.e., the dimension references)
@@ -2239,8 +2239,8 @@ class BulkFactTable(_BaseBulkloadable):
              (for example, when if the BulkFactTable is wrapped by a
              DecoupledFactTable and invokes the bulkloader on a shared
              connection wrapper). Default: False
-           - strconverter: a method m(value, nullsubst) -> str to convert 
-             values into strings that can be written to the temporary file and 
+           - strconverter: a method m(value, nullsubst) -> str to convert
+             values into strings that can be written to the temporary file and
              eventually bulkloaded. Default: pygrametl.getdbfriendlystr
            - encoding: a string with the encoding to use. If None,
              locale.getpreferredencoding() is used. This argument is
@@ -2305,7 +2305,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
                  usefilename=False, strconverter=pygrametl.getdbfriendlystr,
                  encoding=None, dependson=(), targetconnection=None):
         r"""Arguments:
-            
+
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
            - attributes: a sequence of the attribute names in the dimension
@@ -2360,8 +2360,8 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
              (instead of directly via a method on the PEP249 driver). It is
              also necessary if the bulkloader runs in another process.
              Default: False
-           - strconverter: a method m(value, nullsubst) -> str to convert 
-             values into strings that can be written to the temporary file and 
+           - strconverter: a method m(value, nullsubst) -> str to convert
+             values into strings that can be written to the temporary file and
              eventually bulkloaded. Default: pygrametl.getdbfriendlystr
            - encoding: a string with the encoding to use. If None,
              locale.getpreferredencoding() is used. This argument is
@@ -2436,7 +2436,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
         """Insert the given row. Return the new key value.
 
            Arguments:
-               
+
            - row: the row to insert. The dict is not updated. It must contain
              all attributes, and is allowed to contain more attributes than
              that. Key is not required to be present but will be added using
@@ -2497,7 +2497,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
                  usefilename=False, strconverter=pygrametl.getdbfriendlystr,
                  encoding=None, dependson=(), targetconnection=None):
         r"""Arguments:
-            
+
            - name: the name of the dimension table in the DW
            - key: the name of the primary key in the DW
            - attributes: a sequence of the attribute names in the dimension
@@ -2558,8 +2558,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              (instead of directly via a method on the PEP249 driver). It is
              also necessary if the bulkloader runs in another process.
              Default: False
-           - strconverter: a method m(value, nullsubst) -> str to convert 
-             values into strings that can be written to the temporary file and 
+           - strconverter: a method m(value, nullsubst) -> str to convert
+             values into strings that can be written to the temporary file and
              eventually bulkloaded. Default: pygrametl.getdbfriendlystr
            - encoding: a string with the encoding to use. If None,
              locale.getpreferredencoding() is used. This argument is
@@ -2648,7 +2648,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         """Insert the given row. Return the new key value.
 
            Arguments:
-               
+
            - row: the row to insert. The dict is not updated. It must contain
              all attributes, and is allowed to contain more attributes than
              that. Key is not required to be present but will be added using
@@ -2693,7 +2693,7 @@ class SubprocessFactTable(object):
                  strconverter=pygrametl.getdbfriendlystr,
                  buffersize=16384):
         r"""Arguments:
-            
+
            - keyrefs: a sequence of attribute names that constitute the
              primary key of the fact table (i.e., the dimension references)
            - measures: a possibly empty sequence of measure names. Default: ()
@@ -2711,8 +2711,8 @@ class SubprocessFactTable(object):
              subprocess. Default: '\n'
            - nullsubst: an optional string used to replace None values.
              If nullsubst=None, no substitution takes place. Default: None
-           - strconverter: a method m(value, nullsubst) -> str to convert 
-             values into strings that can be written to the subprocess. 
+           - strconverter: a method m(value, nullsubst) -> str to convert
+             values into strings that can be written to the subprocess.
              Default: pygrametl.getdbfriendlystr
         """
 
@@ -2739,7 +2739,7 @@ class SubprocessFactTable(object):
         """Insert a fact into the fact table.
 
            Arguments:
-               
+
            - row: a dict at least containing values for the keys and measures.
            - namemapping: an optional namemapping (see module's documentation)
         """
@@ -2780,7 +2780,7 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
     def __init__(self, dim, returnvalues=True, consumes=(), attstoconsume=(),
                  batchsize=500, queuesize=200):
         """Arguments:
-            
+
            - dim: the Dimension object to use in a separate process
            - returnvalues: decides if return values from method calls on dim
              should be kept such that they can be fetched by the caller or
@@ -2866,7 +2866,7 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
     def __init__(self, facttbl, returnvalues=True, consumes=(),
                  attstoconsume=(), batchsize=500, queuesize=200):
         """Arguments:
-            
+
            - facttbl: the FactTable object to use in a separate process
            - returnvalues: decides if return values from method calls on
              facttbl should be kept such that they can be fetched by the caller
@@ -2989,7 +2989,7 @@ class DimensionPartitioner(BasePartitioner):
 
     def __init__(self, parts, getbyvalsfromall=False, partitioner=None):
         """Arguments:
-            
+
            - parts: a sequence of Dimension objects.
            - getbyvalsfromall: determines if getbyvals should be answered by
              means of all parts (when getbyvalsfromall = True) or only the
@@ -3096,7 +3096,7 @@ class FactTablePartitioner(BasePartitioner):
     def __init__(self, parts, partitioner=None):
         """
         Arguments:
-            
+
         - parts: a sequence of FactTable objects.
         - partitioner: None or a callable p(dict) -> int where the argument
           is a dict mapping from the names of the keyrefs to the values of

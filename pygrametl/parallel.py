@@ -187,7 +187,7 @@ def splitpoint(*arg, **kwargs):
            all of keyword arguments above are given.`
 
        Keyword arguments:
-           
+
        - output: If given, it should be a queue-like object (offering the
          .put(obj) method). The annotated function's results will then be put
          in the output
@@ -439,7 +439,7 @@ def createflow(*functions, **options):
        memory .
 
        Arguments:
-           
+
        - *functions: A sequence of functions of sequences of functions.
          Each element in the sequence will be executed in a separate process.
          For example, the argument (f1, (f2, f3), f4) leads to that
@@ -512,7 +512,7 @@ class FutureResult(object):
 
     def __init__(self, creator, id):
         """Arguments:
-            
+
         - creator: a value that identifies the creator of the FutureResult.
           Use a primitive value.
         - id: a unique identifier for the FutureResult.
@@ -809,7 +809,7 @@ class SharedConnectionWrapperClient(object):
         """Execute a statement.
 
            Arguments:
-               
+
            - stmt: the statement to execute
            - arguments: a mapping with the arguments (default: None)
            - namemapping: a mapping of names such that if stmt uses %(arg)s
@@ -1012,7 +1012,7 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
     .. Note:: The SharedConnectionWrapper must be copied using .copy().
 
     Arguments:
-        
+
     - targetconnection: a pygrametl ConnectionWrapper
     - maxclients: the maximum number of concurrent clients. Default: 10
     - userfuncs: a sequence of functions to add to the shared
@@ -1072,7 +1072,7 @@ def getsharedsequencefactory(startvalue, intervallen=5000):
         threads.
 
         Arguments:
-            
+
         - startvalue: The first value to return. If None, 0 is assumed.
         - intervallen: The amount of numbers that a single g from above
           can return before synchronization is needed to get a new amount.

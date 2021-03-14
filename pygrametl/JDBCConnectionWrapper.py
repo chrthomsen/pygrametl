@@ -64,7 +64,7 @@ class JDBCConnectionWrapper(object):
            ConnectionWrapper is set to be the default ConnectionWrapper.
 
            Arguments:
-               
+
            - jdbcconn: An open JDBC Connection (not a PEP249 Connection)
            - stmtcachesize: The maximum number of PreparedStatements kept
              open. Default: 20.
@@ -179,7 +179,7 @@ class JDBCConnectionWrapper(object):
         """Execute a statement.
 
            Arguments:
-               
+
            - stmt: the statement to execute
            - arguments: a mapping with the arguments. Default: None.
            - namemapping: a mapping of names such that if stmt uses %(arg)s
@@ -196,7 +196,7 @@ class JDBCConnectionWrapper(object):
         """Execute a sequence of statements.
 
            Arguments:
-               
+
            - stmt: the statement to execute
            - params: a sequence of arguments
            - ignored: An ignored argument only present to accept the same
@@ -323,7 +323,7 @@ class BackgroundJDBCConnectionWrapper(object):
         """Create a ConnectionWrapper around the given JDBC connection
 
            Arguments:
-               
+
            - jdbcconn: An open JDBC Connection (not a PEP249 Connection)
            - stmtcachesize: The maximum number of PreparedStatements kept
              open. Default: 20.
@@ -443,7 +443,7 @@ class BackgroundJDBCConnectionWrapper(object):
         """Execute a statement.
 
            Arguments:
-               
+
            - stmt: the statement to execute
            - arguments: a mapping with the arguments. Default: None.
            - namemapping: a mapping of names such that if stmt uses %(arg)s
@@ -462,7 +462,7 @@ class BackgroundJDBCConnectionWrapper(object):
         """Execute a sequence of statements.
 
            Arguments:
-               
+
            - stmt: the statement to execute
            - params: a sequence of arguments
            - ignored: An ignored argument only present to accept the same

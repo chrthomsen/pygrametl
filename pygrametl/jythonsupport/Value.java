@@ -33,7 +33,7 @@ public class Value {
     public Value(char type, int value) {
 	if(!(type == 'b' || type == 'i' || type == 'B' || type == 'h' ||
 	     type == 'H' || type == 'l')) {
-	    throw new 
+	    throw new
 		IllegalArgumentException("Only the types 'b', 'B', 'h', "
 					 + "'H', 'i', and 'l' are supported");
 	}

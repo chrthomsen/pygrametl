@@ -48,4 +48,4 @@ We encourage the use of Github and the mailing lists. For discussions not suitab
 
 Maintainers
 -----------
-pygrametl is maintained at `Aalborg University <http://www.cs.aau.dk/>`_ by `Christian Thomsen <https://github.com/chrthomsen>`_ and `Søren Kejser Jensen <https://github.com/skejserjensen>`_. 
+pygrametl is maintained at `Aalborg University <http://www.cs.aau.dk/>`_ by `Christian Thomsen <https://github.com/chrthomsen>`_ and `Søren Kejser Jensen <https://github.com/skejserjensen>`_.

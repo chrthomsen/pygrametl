@@ -41,7 +41,7 @@ class FIFODictDeque:
         """Create a FIFODictDeque with the given maximum size.
 
            Arguments:
-               
+
            - size: Determines the maximum size of the dict.
            - finalizer: If finalizer is given, it must be a callable
              f(key, value). It is then called, when a item is removed due to
@@ -143,7 +143,7 @@ class FIFODictOrderedDict:
         """Create a FIFODictOrderedDict with the given maximum size.
 
            Arguments:
-               
+
            - size: Determines the maximum size of the dict.
            - finalizer: If finalizer is given, it must be a callable
              f(key, value). It is then called, when a item is removed due to

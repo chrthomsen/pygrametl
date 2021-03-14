@@ -40,19 +40,19 @@ fails, and a function for expanding a row automatically.
 
     # Input is a list of rows which in pygrametl is modeled as dicts
     products = [
-        {'name': 'Calvin and Hobbes 1', 'category': 'Comic', 'price': '10'},
-        {'name': 'Calvin and Hobbes 2', 'category': 'Comic', 'price': '10'},
-        {'name': 'Calvin and Hobbes 3', 'category': 'Comic', 'price': '10'},
-        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15'},
-        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50'},
-        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30'},
-        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15'},
-        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60'}
+	{'name': 'Calvin and Hobbes 1', 'category': 'Comic', 'price': '10'},
+	{'name': 'Calvin and Hobbes 2', 'category': 'Comic', 'price': '10'},
+	{'name': 'Calvin and Hobbes 3', 'category': 'Comic', 'price': '10'},
+	{'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15'},
+	{'name': 'French Cooking', 'category': 'Cookbook', 'price': '50'},
+	{'name': 'Sushi', 'category': 'Cookbook', 'price': '30'},
+	{'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15'},
+	{'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60'}
     ]
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -64,14 +64,14 @@ fails, and a function for expanding a row automatically.
     # argument lookupatts specifies the column which needs to match
     # when doing a lookup for the key from this dimension
     productDimension = Dimension(
-        name='product',
-        key='productid',
-        attributes=['name', 'category', 'price'],
-        lookupatts=['name'])
+	name='product',
+	key='productid',
+	attributes=['name', 'category', 'price'],
+	lookupatts=['name'])
 
     # Filling a dimension is simply done by using the insert method
     for row in products:
-        productDimension.insert(row)
+	productDimension.insert(row)
 
     # Ensures that the data is committed and the connection is closed correctly
     conn.commit()
@@ -107,7 +107,7 @@ a simple-to-miss violation of this.
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -118,17 +118,17 @@ a simple-to-miss violation of this.
     # the database, allowing for more efficient lookups of keys for the fact
     # table, at the cost of requiring it to already contain the necessary data
     productDimension = CachedDimension(
-        name='product',
-        key='productid',
-        attributes=['name', 'category', 'price'],
-        lookupatts=['name'],
-        prefill=True)
+	name='product',
+	key='productid',
+	attributes=['name', 'category', 'price'],
+	lookupatts=['name'],
+	prefill=True)
 
     # A similar abstraction is created for the data warehouse fact table
     factTable = FactTable(
-        name='facttable',
-        measures=['sales'],
-        keyrefs=['storeid', 'productid', 'dateid'])
+	name='facttable',
+	measures=['sales'],
+	keyrefs=['storeid', 'productid', 'dateid'])
 
     # A CSV file contains information about each product sold by a store
     sales = CSVSource(f=open('sales.csv', 'r', 16384), delimiter='\t')
@@ -138,11 +138,11 @@ a simple-to-miss violation of this.
     # argument renames the column product_name from the CSV file to name
     for row in sales:
 
-        # Using only the attributes defined as lookupatts, lookup() checks if a
-        # row with matching values are present in the cache. Only if a match
-        # cannot be found in the cache does lookup() check the database table.
-        row['productid'] = productDimension.lookup(row, {'name': 'product_name'})
-        factTable.insert(row)
+	# Using only the attributes defined as lookupatts, lookup() checks if a
+	# row with matching values are present in the cache. Only if a match
+	# cannot be found in the cache does lookup() check the database table.
+	row['productid'] = productDimension.lookup(row, {'name': 'product_name'})
+	factTable.insert(row)
 
     # Ensures that the data is committed and the connection is closed correctly
     conn.commit()
@@ -213,7 +213,7 @@ RDBMS.
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -223,22 +223,22 @@ RDBMS.
 
     # This function bulk loads a file into PostgreSQL using psycopg2
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
-        cursor = conn.cursor()
-        # psycopg2 does not accept the default value used to represent NULL
-        # bv BulkDimension, which is None. Here this is ignored as we have no
-        # NULL values that we wish to substitute for a more descriptive value
-        cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
-                         columns=attributes)
+	cursor = conn.cursor()
+	# psycopg2 does not accept the default value used to represent NULL
+	# bv BulkDimension, which is None. Here this is ignored as we have no
+	# NULL values that we wish to substitute for a more descriptive value
+	cursor.copy_from(file=filehandle, table=name, sep=fieldsep,
+			 columns=attributes)
 
 
     # In addition to arguments needed for a Dimension, a reference to the
     # bulk loader defined above must also be passed to BulkDimension
     productDimension = BulkDimension(
-        name='product',
-        key='productid',
-        attributes=['name', 'category', 'price'],
-        lookupatts=['name'],
-        bulkloader=pgbulkloader)
+	name='product',
+	key='productid',
+	attributes=['name', 'category', 'price'],
+	lookupatts=['name'],
+	bulkloader=pgbulkloader)
 
     # A PEP249 connection is sufficient for an SQLSource so we do not need
     # to create a new instance of ConnectionWrapper to read from the database
@@ -251,7 +251,7 @@ RDBMS.
     # Inserting data from a data source into a BulkDimension is performed just
     # like any other dimension type in pygrametl, as the interface is the same
     for row in sqlSource:
-        productDimension.insert(row)
+	productDimension.insert(row)
 
     # Ensures that the data is committed and the connections are closed correctly
     conn.commit()
@@ -340,19 +340,19 @@ coercion can break this assumption.
 
     # Input is a list of rows which in pygrametl is modeled as dicts
     products = [
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10'},
-        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15'},
-        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50'},
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20'},
-        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30'},
-        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15'},
-        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60'},
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10'}
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10'},
+	{'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15'},
+	{'name': 'French Cooking', 'category': 'Cookbook', 'price': '50'},
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20'},
+	{'name': 'Sushi', 'category': 'Cookbook', 'price': '30'},
+	{'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15'},
+	{'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60'},
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10'}
     ]
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -361,16 +361,16 @@ coercion can break this assumption.
 
     # TypeOneSlowlyChangingDimension is created with price as a changing attribute
     productDimension = TypeOneSlowlyChangingDimension(
-        name='product',
-        key='productid',
-        attributes=['name', 'category', 'price'],
-        lookupatts=['name'],
-        type1atts=['price'])
+	name='product',
+	key='productid',
+	attributes=['name', 'category', 'price'],
+	lookupatts=['name'],
+	type1atts=['price'])
 
     # scdensure determines whether the row already exists in the database
     # and inserts a new row or updates any type1atts that have changed
     for row in products:
-        productDimension.scdensure(row)
+	productDimension.scdensure(row)
 
     # Ensures that the data is committed and the connections are closed correctly
     conn.commit()
@@ -414,27 +414,27 @@ the use of default values can break.
 
     # Input is a list of rows which in pygrametl is modeled as dicts
     products = [
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
-         'date': '1990-10-01'},
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10',
-         'date': '1990-12-10'},
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
-         'date': '1991-02-01'},
-        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15',
-         'date': '1990-05-01'},
-        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50',
-         'date': '1990-05-01'},
-        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30',
-         'date': '1990-05-01'},
-        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15',
-         'date': '1990-05-01'},
-        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60',
-         'date': '1990-05-01'}
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+	 'date': '1990-10-01'},
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10',
+	 'date': '1990-12-10'},
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+	 'date': '1991-02-01'},
+	{'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15',
+	 'date': '1990-05-01'},
+	{'name': 'French Cooking', 'category': 'Cookbook', 'price': '50',
+	 'date': '1990-05-01'},
+	{'name': 'Sushi', 'category': 'Cookbook', 'price': '30',
+	 'date': '1990-05-01'},
+	{'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15',
+	 'date': '1990-05-01'},
+	{'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60',
+	 'date': '1990-05-01'}
     ]
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -451,15 +451,15 @@ the use of default values can break.
     # the function datareader from pygrametl is used which converts a timestamp
     # from a str to a datetime.date which PostgresSQL stores as Date type.
     productDimension = SlowlyChangingDimension(
-        name='product',
-        key='productid',
-        attributes=['name', 'category', 'price', 'validfrom', 'validto',
-                    'version'],
-        lookupatts=['name'],
-        fromatt='validfrom',
-        fromfinder=pygrametl.datereader('date'),
-        toatt='validto',
-        versionatt='version')
+	name='product',
+	key='productid',
+	attributes=['name', 'category', 'price', 'validfrom', 'validto',
+		    'version'],
+	lookupatts=['name'],
+	fromatt='validfrom',
+	fromfinder=pygrametl.datereader('date'),
+	toatt='validto',
+	versionatt='version')
 
     # scdensure extends the ensure methods with support for updating slowly
     # changing attributes of rows where lookupparts match. This is done by
@@ -467,7 +467,7 @@ the use of default values can break.
     # rows fromatt to the old rows toatt, indicating that the old row is no
     # longer valid.
     for row in products:
-        productDimension.scdensure(row)
+	productDimension.scdensure(row)
 
     # Ensures that the data is committed and the connections are closed correctly
     conn.commit()
@@ -525,27 +525,27 @@ experimental.
 
     # Input is a list of rows which in pygrametl is modeled as dicts
     products = [
-        {'name': 'Calvin and Hobbes 1', 'category': 'Comic',
-         'type': 'Fiction', 'price': '10'},
-        {'name': 'Calvin and Hobbes 2', 'category': 'Comic',
-         'type': 'Fiction', 'price': '10'},
-        {'name': 'Calvin and Hobbes 3', 'category': 'Comic',
-         'type': 'Fiction', 'price': '10'},
-        {'name': 'Cake and Me', 'category': 'Cookbook',
-         'type': 'Non-Fiction', 'price': '15'},
-        {'name': 'French Cooking', 'category': 'Cookbook',
-         'type': 'Non-Fiction', 'price': '50'},
-        {'name': 'Sushi', 'category': 'Cookbook',
-         'type': 'Non-Fiction', 'price': '30'},
-        {'name': 'Nineteen Eighty-Four', 'category': 'Novel',
-         'type': 'Fiction', 'price': '15'},
-        {'name': 'The Lord of the Rings', 'category': 'Novel',
-         'type': 'Fiction', 'price': '60'}
+	{'name': 'Calvin and Hobbes 1', 'category': 'Comic',
+	 'type': 'Fiction', 'price': '10'},
+	{'name': 'Calvin and Hobbes 2', 'category': 'Comic',
+	 'type': 'Fiction', 'price': '10'},
+	{'name': 'Calvin and Hobbes 3', 'category': 'Comic',
+	 'type': 'Fiction', 'price': '10'},
+	{'name': 'Cake and Me', 'category': 'Cookbook',
+	 'type': 'Non-Fiction', 'price': '15'},
+	{'name': 'French Cooking', 'category': 'Cookbook',
+	 'type': 'Non-Fiction', 'price': '50'},
+	{'name': 'Sushi', 'category': 'Cookbook',
+	 'type': 'Non-Fiction', 'price': '30'},
+	{'name': 'Nineteen Eighty-Four', 'category': 'Novel',
+	 'type': 'Fiction', 'price': '15'},
+	{'name': 'The Lord of the Rings', 'category': 'Novel',
+	 'type': 'Fiction', 'price': '60'}
     ]
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -555,21 +555,21 @@ experimental.
     # The product dimension is in the database represented as a snowflaked
     # dimension, so a CachedDimension object is created for each table
     productTable = CachedDimension(
-        name='product',
-        key='productid',
-        attributes=['name', 'price', 'categoryid'],
-        lookupatts=['name'])
+	name='product',
+	key='productid',
+	attributes=['name', 'price', 'categoryid'],
+	lookupatts=['name'])
 
     categoryTable = CachedDimension(
-        name='category',
-        key='categoryid',
-        attributes=['category', 'typeid'],
-        lookupatts=['category'])
+	name='category',
+	key='categoryid',
+	attributes=['category', 'typeid'],
+	lookupatts=['category'])
 
     typeTable = CachedDimension(
-        name='type',
-        key='typeid',
-        attributes=['type'])
+	name='type',
+	key='typeid',
+	attributes=['type'])
 
     # An instance of SnowflakedDimension is initialized with the created
     # dimensions as input. Thus allowing a snowflaked dimension to be used in
@@ -582,12 +582,12 @@ experimental.
     # as the second part of the tuple with a dimension object for each table the
     # first argument references through its foreign keys.
     productDimension = SnowflakedDimension(references=[
-        (productTable, categoryTable), (categoryTable, typeTable)])
+	(productTable, categoryTable), (categoryTable, typeTable)])
 
     # SnowflakedDimension provides the same interface as the dimensions classes,
     # however, some of its methods stores keys in the row when they are computed
     for row in products:
-        productDimension.insert(row)
+	productDimension.insert(row)
 
     # Ensures that the data is committed and the connections are closed correctly
     conn.commit()
@@ -613,31 +613,31 @@ operates on.
     import psycopg2
     import pygrametl
     from pygrametl.tables import CachedDimension, SnowflakedDimension, \
-        SlowlyChangingDimension
+	SlowlyChangingDimension
 
     # Input is a list of rows which in pygrametl is modeled as dicts
     products = [
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
-         'date': '1990-10-01'},
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10',
-         'date': '1990-12-10'},
-        {'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
-         'date': '1991-02-01'},
-        {'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15',
-         'date': '1990-05-01'},
-        {'name': 'French Cooking', 'category': 'Cookbook', 'price': '50',
-         'date': '1990-05-01'},
-        {'name': 'Sushi', 'category': 'Cookbook', 'price': '30',
-         'date': '1990-05-01'},
-        {'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15',
-         'date': '1990-05-01'},
-        {'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60',
-         'date': '1990-05-01'}
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+	 'date': '1990-10-01'},
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '10',
+	 'date': '1990-12-10'},
+	{'name': 'Calvin and Hobbes', 'category': 'Comic', 'price': '20',
+	 'date': '1991-02-01'},
+	{'name': 'Cake and Me', 'category': 'Cookbook', 'price': '15',
+	 'date': '1990-05-01'},
+	{'name': 'French Cooking', 'category': 'Cookbook', 'price': '50',
+	 'date': '1990-05-01'},
+	{'name': 'Sushi', 'category': 'Cookbook', 'price': '30',
+	 'date': '1990-05-01'},
+	{'name': 'Nineteen Eighty-Four', 'category': 'Novel', 'price': '15',
+	 'date': '1990-05-01'},
+	{'name': 'The Lord of the Rings', 'category': 'Novel', 'price': '60',
+	 'date': '1990-05-01'}
     ]
 
     # The actual database connection is handled by a PEP 249 connection
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
-                              password='dwpass'""")
+			      password='dwpass'""")
 
     # This ConnectionWrapper will be set as a default and is then implicitly
     # used, but it is stored in conn so transactions can be committed and the
@@ -647,28 +647,28 @@ operates on.
     # The dimension is snowflaked into two tables, one with categories, and the
     # other at the root with name and the slowly changing attribute price
     productTable = SlowlyChangingDimension(
-        name='product',
-        key='productid',
-        attributes=['name', 'price', 'validfrom', 'validto', 'version',
-                    'categoryid'],
-        lookupatts=['name'],
-        fromatt='validfrom',
-        fromfinder=pygrametl.datereader('date'),
-        toatt='validto',
-        versionatt='version')
+	name='product',
+	key='productid',
+	attributes=['name', 'price', 'validfrom', 'validto', 'version',
+		    'categoryid'],
+	lookupatts=['name'],
+	fromatt='validfrom',
+	fromfinder=pygrametl.datereader('date'),
+	toatt='validto',
+	versionatt='version')
 
     categoryTable = CachedDimension(
-        name='category',
-        key='categoryid',
-        attributes=['category'])
+	name='category',
+	key='categoryid',
+	attributes=['category'])
 
     productDimension = SnowflakedDimension(references=[(productTable,
-                                                        categoryTable)])
+							categoryTable)])
 
     # Using a SlowlyChangingDimension with a SnowflakedDimension is done in the
     # same manner as a normal SlowlyChangingDimension using scdensure
     for row in products:
-        productDimension.scdensure(row)
+	productDimension.scdensure(row)
 
     # Ensures that the data is committed and the connections are closed correctly
     conn.commit()
