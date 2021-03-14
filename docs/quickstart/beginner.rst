@@ -25,9 +25,10 @@ flow without relying on external files for the input and the expected results
    instantiating classes, both to improve readability and to prevent future
    errors in the event of changes to the API
 
+.. .* means 'make html' uses .svg and 'make latex' .uses pdf
 .. _dwexample:
 
-.. figure:: ../_static/example.svg
+.. figure:: ../_static/example.*
     :align: center
     :alt: bookstore data warehouse example
 
