@@ -54,8 +54,9 @@ fails, and a function for expanding a row automatically.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # The instance of Dimension connects to the table product in the
@@ -108,8 +109,9 @@ a simple-to-miss violation of this.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(pgconn)
 
     # The cached dimension is initialized with data from the product table in
@@ -213,8 +215,9 @@ RDBMS.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
 
@@ -351,11 +354,12 @@ coercion can break this assumption.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
-    # TypeOneSlowlyChangingDimension is created with price as the changing attribute
+    # TypeOneSlowlyChangingDimension is created with price as a changing attribute
     productDimension = TypeOneSlowlyChangingDimension(
         name='product',
         key='productid',
@@ -432,8 +436,9 @@ the use of default values can break.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # This slowly changing dimension is created as type 2 only. Meaning that a
@@ -542,8 +547,9 @@ experimental.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # The product dimension is in the database represented as a snowflaked
@@ -633,8 +639,9 @@ operates on.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # The dimension is snowflaked into two tables, one with categories, and the
@@ -655,7 +662,8 @@ operates on.
         key='categoryid',
         attributes=['category'])
 
-    productDimension = SnowflakedDimension(references=[(productTable, categoryTable)])
+    productDimension = SnowflakedDimension(references=[(productTable,
+                                                        categoryTable)])
 
     # Using a SlowlyChangingDimension with a SnowflakedDimension is done in the
     # same manner as a normal SlowlyChangingDimension using scdensure

@@ -142,11 +142,11 @@ region information. For more information about the various data sources see
     # instead of in the column store as in the input data from the sales
     # database. By passing SQLSource a sequence of names matching the number of
     # columns in the table it can automatically rename the columns
-    name_mapping= 'book', 'genre', 'city', 'timestamp', 'sale'
+    name_mapping = 'book', 'genre', 'city', 'timestamp', 'sale'
 
     # Extraction of rows from a database using a PEP 249 connection and SQL
-    sales_source = SQLSource(connection=sales_pgconn, query=
-                             "SELECT book, genre, store, timestamp, sale FROM sales",
+    query = "SELECT book, genre, store, timestamp, sale FROM sales"
+    sales_source = SQLSource(connection=sales_pgconn, query=query,
                              names=name_mapping)
 
     # Extraction of rows from a CSV file does not require a PEP 249 connection,
@@ -311,8 +311,8 @@ set of automated repeatable tests (see :ref:`testing`).
     # Creation of data sources for the sales database and the CSV file,
     # containing extra information about cities and regions in Denmark
     name_mapping = 'book', 'genre', 'city', 'timestamp', 'sale'
-    sales_source = SQLSource(connection=sales_pgconn, query=
-                             "SELECT book, genre, store, timestamp, sale FROM sales",
+    query = "SELECT book, genre, store, timestamp, sale FROM sales"
+    sales_source = SQLSource(connection=sales_pgconn, query=query,
                              names=name_mapping)
 
     region_file_handle = open('region.csv', 'r', 16384)

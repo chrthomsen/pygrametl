@@ -36,8 +36,9 @@ bottleneck.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # This instance of FactTable connects to the table facttable in the
@@ -75,8 +76,9 @@ seen below, where the fact table from the last example is reused.
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
     # This instance of FactTable connects to the table facttable in the
@@ -100,17 +102,17 @@ seen below, where the fact table from the last example is reused.
     # Lookup returns the keys and measures given only the keys
     row = factTable.lookup({'storeid': 1, 'productid': 13, 'dateid': 4})
 
-    # FactTable.ensure should be used when loading facts that might already be loaded
+    # Ensure should be used when loading facts that might already be loaded
     newFacts = [{'storeid': 2, 'itemid':  7, 'dateid': 4, 'price': 75},
                 {'storeid': 1, 'itemid':  7, 'dateid': 4, 'price': 50},
                 {'storeid': 1, 'itemid':  2, 'dateid': 7, 'price': 150},
                 {'storeid': 3, 'itemid':  3, 'dateid': 6, 'price': 100}]
 
     for row in newFacts:
-        # The second argument forces FactTable.ensure to not only match the keys
-        # for facts to be considered equal, but also checks if the measures are
-        # the same for facts with the same key, and if not raises a ValueError.
-        # The third argument renames 'itemid' to 'productid' using a name mapping
+        # The second argument forces ensure to not only match the keys for facts
+        # to be considered equal, but also checks if the measures are the same
+        # for facts with the same key, and if not raises a ValueError. The third
+        # argument renames itemid to productid using a name mapping
 	factTable.ensure(row, True, {'productid': 'itemid'})
     conn.commit()
     conn.close()
@@ -240,8 +242,9 @@ following example illustrates how to create the class:
     pgconn = psycopg2.connect("""host='localhost' dbname='dw' user='dwuser'
                               password='dwpass'""")
 
-    # This ConnectionWrapper will be set as a default and is then implicitly used, but
-    # it is stored in conn so transactions can be committed and the connection closed
+    # This ConnectionWrapper will be set as a default and is then implicitly
+    # used, but it is stored in conn so transactions can be committed and the
+    # connection closed
     conn = pygrametl.ConnectionWrapper(connection=pgconn)
 
 

@@ -315,9 +315,9 @@ unique despite being assigned by separate processes.
 
     # The partitioning of data is automated by the DimensionPartitioner using
     # a hash on the name of product. A FactTablePartitioner is also provided
-    productDimension = DimensionPartitioner(parts=[productDimensionOne,
-                                                   productDimensionTwo],
-                                            partitioner=lambda row: hash(row['name']))
+    productDimension = DimensionPartitioner(
+        parts=[productDimensionOne, productDimensionTwo],
+        partitioner=lambda row: hash(row['name']))
 
     # Only partitioned tables needs to use the sharedsequencefactory, normal tables
     # can without any problems use the default self-incrementing surrogate key

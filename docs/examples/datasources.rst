@@ -202,7 +202,8 @@ It can also be beneficial to interleave rows, and for this purpose,
     salesTwo = CSVSource(f=open('sales2.csv', 'r', 16384), delimiter='\t')
     salesThree = CSVSource(f=open('sales3.csv', 'r', 16384), delimiter='\t')
 
-    combinedSales = RoundRobinSource((salesOne, salesTwo, salesThree), batchsize=500)
+    combinedSales = RoundRobinSource((salesOne, salesTwo, salesThree),
+                                     batchsize=500)
 
 In the above example, :class:`.RoundRobinSource` is given a number of data
 sources, and the argument :attr:`.batchsize`, which are the number of rows to be

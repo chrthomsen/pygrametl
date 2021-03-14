@@ -17,13 +17,13 @@ The package's modules are:
 *   **JDBCConnectionWrapper** and **jythonmultiprocessing** for Jython support
 *   **aggregators** for aggregating data
 *   **steps** for defining steps in an ETL flow
-*   **FIFODict** for providing a dict with a limited size and where elements are removed in first-in, first-out order
+*   **FIFODict** for a dict with a limited size and where elements are removed in first-in, first-out order
 *   **drawntabletesting** for testing an ETL flow
 
 
 pygrametl is currently being maintained at Aalborg University in Denmark by the following people:
 
-**Maintainers**
+**Current Maintainers**
     - Christian Thomsen <chr@cs.aau.dk>
     - Søren Kejser Jensen <devel@kejserjensen.dk>
 
