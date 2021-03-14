@@ -12,12 +12,12 @@ Installing a Python Implementation
 ----------------------------------
 pygrametl requires an implementation of the Python programming language to run.
 Currently, pygrametl officially supports the following implementations (other
-implementations like `PyPy <https://www.pypy.org/>`_ and `IronPython
-<https://ironpython.net/>`_ might also work):
+implementations like `PyPy <https://www.pypy.org/>`__ and `IronPython
+<https://ironpython.net/>`__ might also work):
 
-* `Jython <http://www.jython.org/>`_, version 2.7 or above
-* `Python 2 <http://www.python.org/>`_, version 2.7 or above
-* `Python 3 <http://www.python.org/>`_, version 3.4 or above
+* `Jython <http://www.jython.org/>`__, version 2.7 or above
+* `Python 2 <http://www.python.org/>`__, version 2.7 or above
+* `Python 3 <http://www.python.org/>`__, version 3.4 or above
 
 .. warning::
     As Python 2 is no longer being `maintained
@@ -39,14 +39,15 @@ mode, allowing commands to be executed directly on the command line. ::
 Installing pygrametl
 --------------------
 pygrametl can either be installed from `PyPI
-<https://pypi.python.org/pypi/pygrametl/>`_ using a package manager, such as
-`pip <https://pip.pypa.io/>`_ or `conda <http://conda.pydata.org/>`_, or by
+<https://pypi.python.org/pypi/pygrametl/>`__ using a package manager, such as
+`pip <https://pip.pypa.io/>`__ or `conda <http://conda.pydata.org/>`__, or by
 manually checking out the latest development version from the official `GitHub
-repository <https://github.com/chrthomsen/pygrametl>`_. Installing pygrametl
-from `PyPI <https://pypi.python.org/pypi/pygrametl/>`_ is currently the simplest
-way to install pygrametl as the process is automated by the package manager. Bug
-fixes and new experimental features are, however, of course, available first in
-the `GitHub repository <https://github.com/chrthomsen/pygrametl>`_.
+repository <https://github.com/chrthomsen/pygrametl>`__. Installing pygrametl
+from `PyPI <https://pypi.python.org/pypi/pygrametl/>`__ is currently the
+simplest way to install pygrametl as the process is automated by the package
+manager. Bug fixes and new experimental features are, however, of course,
+available first in the `GitHub repository
+<https://github.com/chrthomsen/pygrametl>`__.
 
 Install from PyPI with pip
 ##########################
@@ -68,8 +69,8 @@ of the following commands: ::
 Install from PyPI with conda
 ############################
 conda is an alternative package manager for Python. It is bundled with the
-`Anaconda <https://www.anaconda.com/products/individual>`_ CPython distribution
-from `Anaconda, Inc <https://www.anaconda.com/>`_. There is no official
+`Anaconda <https://www.anaconda.com/products/individual>`__ CPython distribution
+from `Anaconda, Inc <https://www.anaconda.com/>`__. There is no official
 pygrametl conda package as it uses a different package format than pip. It is
 however trivial to download, convert, and install the PyPI package using conda
 with only a few commands. ::
@@ -89,7 +90,7 @@ only used for building the package.
 Install from GitHub
 ###################
 The latest development version of pygrametl can be downloaded from the official
-`GitHub repository <https://github.com/chrthomsen/pygrametl>`_. The project
+`GitHub repository <https://github.com/chrthomsen/pygrametl>`__. The project
 currently uses Git for version control, so the repository can be cloned using
 the following command. ::
 
@@ -100,9 +101,9 @@ Before Python can import the modules, the pygrametl package must be added to
 :attr:`.sys.path`. This can be done manually in your Python programs, by setting
 ``PYTHONPATH`` if CPython is used, or by setting ``JYTHONPATH`` if Jython is
 used. More information about how `CPython
-<http://docs.python.org/3/tutorial/modules.html#the-module-search-path>`_ and
+<http://docs.python.org/3/tutorial/modules.html#the-module-search-path>`__ and
 `Jython
-<https://jython.readthedocs.io/en/latest/ModulesPackages/#module-search-path-compilation-and-loading>`_
+<https://jython.readthedocs.io/en/latest/ModulesPackages/#module-search-path-compilation-and-loading>`__
 locate modules can be found in the two links provided.
 
 Verifying installation

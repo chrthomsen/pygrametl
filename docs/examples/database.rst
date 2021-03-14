@@ -3,7 +3,7 @@
 Database
 ========
 Database access in pygrametl is done through either a :PEP:`249` connection if
-CPython is used, or with a `JDBC <https://jcp.org/en/jsr/detail?id=221>`_
+CPython is used, or with a `JDBC <https://jcp.org/en/jsr/detail?id=221>`__
 connection when pygrametl is running on Jython. pygrametl provides multiple
 abstractions on top of these connections and direct usage of these to manipulate
 the database should generally not be necessary. As an abstraction for database
@@ -14,7 +14,7 @@ columns in the table and the values are the data stored in that row.
 Connection Wrappers
 -------------------
 Multiple connection wrappers are provided by the pygrametl framework to allow
-:PEP:`249` connections and `JDBC <https://jcp.org/en/jsr/detail?id=221>`_
+:PEP:`249` connections and `JDBC <https://jcp.org/en/jsr/detail?id=221>`__
 connections to be used uniformly, and to allow multiple threads and process to
 use the connection safely. In addition, the connection wrappers for :PEP:`249`
 connections also automatically convert from the pyformat parameter style used by

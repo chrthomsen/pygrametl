@@ -25,7 +25,7 @@ sequence of functions that run in separate processes. In a flow a row is first
 given to the first function, then the second, and so forth. This also means the
 passed row must be modified as the functions return values are ignored.
 
-Due to CPython's `GIL <https://wiki.python.org/moin/GlobalInterpreterLock>`_,
+Due to CPython's `GIL <https://wiki.python.org/moin/GlobalInterpreterLock>`__,
 Jython should be used to run ETL flows that use pygrametl parallel constructs.
 This is because Jython allows threads to be used for parallel processing, while
 it is necessary to use processes in CPython. Thus the term process is used to

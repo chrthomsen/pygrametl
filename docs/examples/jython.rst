@@ -8,15 +8,15 @@ parallelized using multiple threads instead of multiple processes. This is
 because Jython does not have a global interpreter lock, which in CPython ensures
 that only a single thread is running per process at a given time. For more
 information about the GIL see the Python wiki `GIL
-<https://wiki.python.org/moin/GlobalInterpreterLock>`_.
+<https://wiki.python.org/moin/GlobalInterpreterLock>`__.
 
 To make switching between CPython and Jython as simple as possible, two
 abstractions are provided by pygrametl. Firstly, :mod:`.JDBCConnectionWrapper`
 provides two connection wrappers for `JDBC
-<https://jcp.org/en/jsr/detail?id=221>`_ connections with the same interface as
+<https://jcp.org/en/jsr/detail?id=221>`__ connections with the same interface as
 the connection wrappers for :pep:`249` connections. As the connection wrappers,
 all share the same interface the user usually only has to change the connection
-type (`JDBC <https://jcp.org/en/jsr/detail?id=221>`_ or :pep:`249`) and the
+type (`JDBC <https://jcp.org/en/jsr/detail?id=221>`__ or :pep:`249`) and the
 connection wrapper when switching between CPython and Jython. For more
 information about database access in pygrametl see :ref:`database`. Secondly,
 Jython currently has no support for :mod:`multiprocessing` as threads are more
@@ -39,20 +39,20 @@ Unfortunately, this can easily occur if the values controlling caching, such as
 :attr:`.Decoupled.batchsize` is set too low the overhead of transferring data
 between threads increases as smaller batches are used. Many tools for profiling
 programs running on the JVM exist: `JFR
-<https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/about.htm>`_
+<https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/about.htm>`__
 and `JConsole
-<http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html>`_
+<http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html>`__
 are bundled with the JDK, while tools such as `VisualVM
-<https://visualvm.github.io/>`_ must be installed separately but often provide
+<https://visualvm.github.io/>`__ must be installed separately but often provide
 additional functionality.
 
 Setup
 -----
 Using pygrametl with Jython requires an extra step compared to CPython, as
 Jython is less integrated with Python's package management system. Firstly,
-install pygrametl from `PyPI <https://pypi.python.org/pypi/pygrametl/>`_ or by
+install pygrametl from `PyPI <https://pypi.python.org/pypi/pygrametl/>`__ or by
 downloading the development version from `GitHub
-<https://github.com/chrthomsen/pygrametl>`_. For more information about
+<https://github.com/chrthomsen/pygrametl>`__. For more information about
 installing pygrametl for use with CPython see :ref:`install`.
 
 After pygrametl has been installed, the location it has been installed to must
@@ -105,12 +105,12 @@ command-line flags run the command ``jython -h``.
 The above example demonstrates how few changes are needed to change the first
 example from :ref:`facttables` from using CPython to Jython. The database
 connection is changed from a :pep:`249` connection to a `JDBC
-<https://jcp.org/en/jsr/detail?id=221>`_ connection, and
+<https://jcp.org/en/jsr/detail?id=221>`__ connection, and
 :class:`.ConnectionWrapper` is changed to
 :class:`.JDBCConnectionWrapper.JDBCConnectionWrapper`. The creation of the
 :class:`.FactTable` object does not need to be changed to run on Jython, as the
 connection wrappers abstract away the differences between `JDBC
-<https://jcp.org/en/jsr/detail?id=221>`_ and :pep:`249`. The other Jython
+<https://jcp.org/en/jsr/detail?id=221>`__ and :pep:`249`. The other Jython
 module, :mod:`.jythonmultiprocessing`, is even simpler to use as pygrametl's
 parallel module :mod:`.parallel` imports either it or CPython's built-in
 :mod:`.multiprocessing` module depending on whether Jython or CPython is used.

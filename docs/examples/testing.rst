@@ -32,7 +32,7 @@ line containing only vertical pipes, spaces, and dashes (``| -- | -- |``) and th
 each row follows on a line of its own. Columns must be given in the same order
 as in the header and must be separated by pipes. For string values, any
 surrounding spaces are trimmed away. A Drawn Table is also a valid table in
-`GitHub Flavored Markdown <https://github.github.com/gfm/#tables-extension->`_.
+`GitHub Flavored Markdown <https://github.github.com/gfm/#tables-extension->`__.
 An example is given below.
 
 .. code-block:: python

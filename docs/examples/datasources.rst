@@ -66,7 +66,7 @@ CSVSource
 ---------
 :class:`.CSVSource` is a data source that returns a row for each line in a
 character-separated file. It is an alias for Python's `csv.DictReader
-<http://docs.python.org/3/library/csv.html#csv.DictReader>`_ as it already is
+<http://docs.python.org/3/library/csv.html#csv.DictReader>`__ as it already is
 iterable and returns :class:`.dict`. An example of how to use
 :class:`.CSVSource` to read a file containing comma-separated values is shown
 below:
@@ -86,7 +86,7 @@ TypedCSVSource
 --------------
 :class:`.TypedCSVSource` extends :class:`.CSVSource` with typecasting by
 wrapping `csv.DictReader
-<http://docs.python.org/3/library/csv.html#csv.DictReader>`_ instead of simply
+<http://docs.python.org/3/library/csv.html#csv.DictReader>`__ instead of simply
 being an alias.
 
 .. code-block:: python
@@ -109,7 +109,7 @@ PandasSource
 -------------
 :class:`.PandasSource` wraps a Pandas DataFrame so it can be used as a data
 source. The class reuses existing functionality provided by `DataFrame
-<https://pandas.pydata.org/pandas-docs/stable/reference/frame.html>`_. An
+<https://pandas.pydata.org/pandas-docs/stable/reference/frame.html>`__. An
 example of how to use this class can be seen below. In this example data is
 loaded from a spreadsheet, then transformed using a Pandas DataFrame, and last
 converted to an iterable that produce :class:`.dict` for use with pygrametl:
@@ -230,7 +230,7 @@ FilteringSource
 ---------------
 :class:`.FilteringSource` is used to apply a filter to a data source. By
 default, the built-in Python function `bool
-<http://docs.python.org/3/library/functions.html#bool>`_ is used, which can be
+<http://docs.python.org/3/library/functions.html#bool>`__ is used, which can be
 used to remove empty rows. Alternatively, the user can supply a custom filter
 function, which should be a callable function :attr:`f(row)`, which returns
 :attr:`True` when a row should be passed on. In the example below, rows are

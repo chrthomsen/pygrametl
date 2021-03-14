@@ -34,7 +34,7 @@ must have the following signature:
 PostgreSQL
 ----------
 For PostgreSQL the `copy_from
-<http://initd.org/psycopg/docs/cursor.html#cursor.copy_from>`_ method from
+<http://initd.org/psycopg/docs/cursor.html#cursor.copy_from>`__ method from
 psycopg2 can be used:
 
 .. code-block:: python
@@ -47,7 +47,7 @@ psycopg2 can be used:
                              columns=attributes)
 
 If Jython is used the `copyIn
-<https://jdbc.postgresql.org/documentation/publicapi/org/postgresql/copy/CopyManager.html>`_
+<https://jdbc.postgresql.org/documentation/publicapi/org/postgresql/copy/CopyManager.html#copyIn-java.lang.String->`__
 method in JDBC's :class:`CopyManager` class can be used:
 
 .. code-block:: python
@@ -63,8 +63,8 @@ method in JDBC's :class:`CopyManager` class can be used:
 MySQL
 -----
 For MySQL the `LOAD DATA INFILE
-<http://dev.mysql.com/doc/refman/5.7/en/load-data.html>`_ functionality provided
-by MySQL SQL dialect can be used.
+<http://dev.mysql.com/doc/refman/5.7/en/load-data.html>`__ functionality
+provided by MySQL SQL dialect can be used.
 
 .. code-block:: python
 
@@ -132,21 +132,21 @@ must in the system path) and passed the constructed .ctl file.
 Microsoft SQL Server
 --------------------
 For Microsoft SQL Server the `BULK INSERT
-<https://msdn.microsoft.com/en-us/library/ms188365.aspx>`_ functionality
+<https://msdn.microsoft.com/en-us/library/ms188365.aspx>`__ functionality
 provided by Transact-SQL can be used.
 
 There are a number of things to be aware of when using pygrametl with SQL
 Server. If the file used for bulk loading is located on a machine running
-Windows, the file must be copied before bulk loading, as the locks placed on
-the file by the OS and pygrametl, prevents SQL Server from opening it directly.
+Windows, the file must be copied before bulk loading, as the locks placed on the
+file by the OS and pygrametl, prevents SQL Server from opening it directly.
 Copying the file can be done e.g. using `shutil.copyfile
-<https://docs.python.org/3/library/shutil.html#shutil.copyfile>`_.
+<https://docs.python.org/3/library/shutil.html#shutil.copyfile>`__.
 
 By default, BULK INSERT ignores column names, so the number and order of columns
 must match the table you are inserting into. This can be overcome by adding a
-`format file <https://msdn.microsoft.com/en-us/library/ms178129.aspx>`_. In this
-case, we create a `non-XML format file
-<https://msdn.microsoft.com/en-us/library/ms191479.aspx>`_.
+`format file <https://msdn.microsoft.com/en-us/library/ms178129.aspx>`__. In
+this case, we create a `non-XML format file
+<https://msdn.microsoft.com/en-us/library/ms191479.aspx>`__.
 
 A simple example of bulk loading in SQL Server along with the creation of a
 format file can be seen below:
