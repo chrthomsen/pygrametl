@@ -1,6 +1,6 @@
 .. _datasources:
 
-Data sources
+Data Sources
 ============
 pygrametl supports numerous data sources, which are iterable classes that
 produce rows. A row is a Python :class:`.dict` where the keys are the names of

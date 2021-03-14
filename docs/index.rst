@@ -49,7 +49,7 @@ Code Examples
    examples/database
    examples/datasources
    examples/dimensions
-   examples/facttable
+   examples/facttables
    examples/bulkloading
    examples/parallel
    examples/jython

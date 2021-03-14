@@ -106,7 +106,7 @@ used. More information about how `CPython
 <https://jython.readthedocs.io/en/latest/ModulesPackages/#module-search-path-compilation-and-loading>`__
 locate modules can be found in the two links provided.
 
-Verifying installation
+Verifying Installation
 ----------------------
 A simple way to verify that pygrametl has been installed correctly and is
 accessible to the Python interpreter is to start the interpreter in
