@@ -29,6 +29,7 @@
 
 import copy
 import sqlite3
+import collections
 import pygrametl
 
 __all__ = ['connectionwrapper', 'Table']
@@ -57,6 +58,7 @@ class Table:
        Note that the asserts assume that the Table instance and the database
        table do not have duplicate rows, if they do the asserts raise an error.
     """
+    __createdTables = collections.OrderedDict()
 
     def __init__(self, name, table, nullsubst='NULL', variableprefix='$',
                  loadFrom=None, testconnection=None):
@@ -139,9 +141,6 @@ class Table:
 
         # The indexes of updated rows are stored so they can be returned
         self.__additions = set()
-
-        # A Table is only allowed to drop a table if it created the table
-        self.__createdTable = False
 
     # Public methods
     def __str__(self):
@@ -260,19 +259,28 @@ class Table:
         """Create the table if it does not exist without adding any rows."""
         self.__testconnection.execute(self.getSQLToCreate())
         self.__testconnection.commit()
-        self.__createdTable = True
+        type(self).__createdTables[self.name] = self
 
-    def clear(self):
-        """Clear the expected state of all variables."""
-        for variable in self.__variables:
-            variable.clear()
+    @classmethod
+    def clear(cls):
+        """Drop all tables and variables without checking their contents."""
+        # The latest table is dropped first as other tables cannot refer to it
+        for name, table in reversed(cls.__createdTables.items()):
+            try:
+                # A table might not use the default connection wrapper
+                table.__testconnection.execute('DROP TABLE ' + name)
+            except Exception:
+                # The exception raised for a missing table is driver dependent
+                pass
+        cls.__createdTables.clear()
+        Variable.clear()
 
     def reset(self):
         """Forcefully create a new table and add the provided rows."""
         try:
             self.drop()
         except Exception:
-            # The exception thrown for a missing table depends on the driver
+            # The exception raised for a missing table depends on the driver
             pass
         self.ensure()
 
@@ -289,14 +297,13 @@ class Table:
         try:
             self.__testconnection.execute('SELECT 1 FROM ' + self.name)
         except Exception:
-            # The exception thrown for a missing table depends on the driver
-            self.__testconnection.execute(self.getSQLToCreate())
+            # The exception raised for a missing table depends on the driver
+            self.create()
 
             # If the table was drawn without any rows there are none to add
             if self.__rows:
                 self.__testconnection.execute(self.getSQLToInsert())
-            self.__testconnection.commit()
-            self.__createdTable = True
+                self.__testconnection.commit()
             return
 
         # If the table exists and contain the correct rows we just use it as is
@@ -340,10 +347,11 @@ class Table:
 
     def drop(self):
         """Drop the table in the database without checking the contents."""
-        if self.__createdTable:
+        if self.name in type(self).__createdTables:
             self.__testconnection.execute('DROP TABLE ' + self.name)
+            del type(self).__createdTables[self.name]
         else:
-            raise ValueError(self.name + " not created by this instance")
+            raise ValueError(self.name + " is not created by a Table instance")
 
     # Private Methods
     def __header(self, line):
@@ -605,9 +613,9 @@ class Variable:
     def __str__(self):
         return str(self.value)
 
-    def clear(self):
-        type(self).__all.clear()
-        self.value = object()
+    @classmethod
+    def clear(cls):
+        cls.__all.clear()
 
     def set(self, value):
         self.value = value
