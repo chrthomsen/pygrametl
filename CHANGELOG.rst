@@ -48,7 +48,11 @@ Version 2.7 (unreleased)
   Wrong use of paramstyle in ``ConnectionWrapper.executemany`` fixed.
 
   A call to an incorrect method in ``aggregators.Avg.finish()``.
-
+  
+  The ``datepan()`` function now checks whether ``fromdate`` and ``todate`` are 
+  strings before calling ``.split()``. In addition, the function now uses ``dict.items()``
+  instead of ``dict.iteritems()`` which is not supported in Python 3.
+  
 Version 2.6
 -----------
 **Added**
