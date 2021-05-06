@@ -531,11 +531,13 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
                 "fromdate and today must be datetime.dates or " +
                 "YYYY-MM-DD formatted strings")
 
-    (year, month, day) = fromdate.split('-')
-    fromdate = date(int(year), int(month), int(day))
+    if type(fromdate) in _stringtypes:
+        (year, month, day) = fromdate.split('-')
+        fromdate = date(int(year), int(month), int(day))
 
-    (year, month, day) = todate.split('-')
-    todate = date(int(year), int(month), int(day))
+    if type(todate) in _stringtypes:
+        (year, month, day) = todate.split('-')
+        todate = date(int(year), int(month), int(day))
 
     start = fromdate.toordinal()
     if not fromdateincl:
@@ -549,9 +551,9 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
         d = date.fromordinal(i)
         res = {}
         res[key] = int(d.strftime('%Y%m%d'))
-        for (att, attformat) in strings.iteritems():
+        for (att, attformat) in strings.items():
             res[att] = d.strftime(attformat)
-        for (att, attformat) in ints.iteritems():
+        for (att, attformat) in ints.items():
             res[att] = int(d.strftime(attformat))
         if expander is not None:
             expander(d, res)
