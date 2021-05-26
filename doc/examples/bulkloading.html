@@ -1,115 +1,93 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Bulk Loading &#8212; pygrametl 2.6 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Bulk Loading &#8212; pygrametl 2.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Parallel" href="parallel.html" />
-    <link rel="prev" title="Fact Tables" href="facttable.html" />
- 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  
-    ga('create', 'UA-30772056-2', 'auto');
-    ga('send', 'pageview');
-  
-  </script>
+    <link rel="prev" title="Fact Tables" href="facttables.html" />
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+</script>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="parallel.html" title="Parallel"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="facttable.html" title="Fact Tables"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="bulk-loading">
+  <section id="bulk-loading">
 <span id="bulkloading"></span><h1>Bulk Loading<a class="headerlink" href="#bulk-loading" title="Permalink to this headline">¶</a></h1>
-<p>Performing bulk loading of rows instead of single insertions can dramatically
-increase the performance of an ETL program. Bulk loading works by loading data
-from a temporary file into the database. The actual process of bulk loading
-however differs between each database vendor. Because of this, a user defined
-function must be created defining how to perform the bulk loading on the
-particular database. The following is a short list of example functions showing
-how simple bulk loading can be performed with some of the more widely used
-databases.</p>
-<p>Currently three classes in pygrametl use bulk loading, <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a>,
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkFactTable</span></code></a>, and <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a>, meaning that they
-require the specification of a loader function. All three classes accept a
-function with the following signature to be passed as a parameter to their
-constructors.</p>
-<dl class="function">
-<dt>
-<code class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</code></dt>
-<dd><p>Expected signature of a bulk loader function by either classes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> – The name of the table in the data warehouse.</li>
-<li><strong>attributes</strong> – A list containing the sequence of attributes in the table.</li>
-<li><strong>fieldsep</strong> – The string used to separate fields in the temporary file.</li>
-<li><strong>rowsep</strong> – The string used to separate rows in the temporary file.</li>
-<li><strong>nullval</strong> – If the class was passed a string to substitute None values with,
-then it will be passed, if not then None is passed.</li>
-<li><strong>filehandle</strong> – Either the name of the file or the file object itself,
-depending upon on the value of member <code class="xref py py-attr docutils literal notranslate"><span class="pre">usefilename</span></code> on the class.</li>
+<p>Bulk loading rows instead of inserting them one at a time can dramatically
+increase the throughput of an ETL program. Bulk loading works by loading data
+from a temporary file into the database. The actual process of bulk loading is
+unfortunately different for each RDBMS. Because of this, a user-defined function
+must be created that uses the functionality provided by a particular RDBMS to
+bulk load the data from a file. The following is a list of example functions
+showing how bulk loading can be performed for some of the more commonly used
+RDBMSs.</p>
+<p>Currently, three classes in pygrametl use bulk loading: <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a>,
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a>, and <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkFactTable" title="pygrametl.tables.BulkFactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkFactTable</span></code></a>. Thus a function that
+can bulk load data from a file into the specific RDBMS used for the data
+warehouse, must be passed to each of these classes constructors. The function
+must have the following signature:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">func(name,</span> <span class="pre">attributes,</span> <span class="pre">fieldsep,</span> <span class="pre">rowsep,</span> <span class="pre">nullval,</span> <span class="pre">filehandle):</span></span></dt>
+<dd><p>Required signature of a function bulk loading data from a file into an RDBMS
+in pygrametl.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the table in the data warehouse.</p></li>
+<li><p><strong>attributes</strong> – A list containing the sequence of attributes in the table.</p></li>
+<li><p><strong>fieldsep</strong> – The string used to separate fields in the temporary file.</p></li>
+<li><p><strong>rowsep</strong> – The string used to separate rows in the temporary file.</p></li>
+<li><p><strong>nullval</strong> – If the class was passed a string to substitute None values with,
+then it will be passed, if not then None is passed.</p></li>
+<li><p><strong>filehandle</strong> – Either the name of the file or the file object itself,
+depending upon the value of member <code class="xref py py-attr docutils literal notranslate"><span class="pre">usefilename</span></code> on the class.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<div class="section" id="postgresql">
+<section id="postgresql">
 <h2>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
-<p>For PostgreSQL we can use the <a class="reference external" href="http://initd.org/psycopg/docs/cursor.html#cursor.copy_from">copy_from</a> function from
-Psycopg</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Psycopg</span>
+<p>For PostgreSQL the <a class="reference external" href="http://initd.org/psycopg/docs/cursor.html#cursor.copy_from">copy_from</a> method from
+psycopg2 can be used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># psycopg2</span>
 <span class="k">def</span> <span class="nf">pgbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">connection</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">copy_from</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">fieldsep</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="n">nullval</span><span class="p">,</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">copy_from</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">fieldsep</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="n">nullval</span><span class="p">,</span>
                          <span class="n">columns</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For PostgreSQL using Jython, we can use the <a class="reference external" href="https://jdbc.postgresql.org/documentation/publicapi/org/postgresql/copy/CopyManager.html">copyIn</a>
-function from the JDBC CopyManager</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#JDBC</span>
+<p>If Jython is used the <a class="reference external" href="https://jdbc.postgresql.org/documentation/publicapi/org/postgresql/copy/CopyManager.html#copyIn-java.lang.String-">copyIn</a>
+method in JDBC’s <code class="xref py py-class docutils literal notranslate"><span class="pre">CopyManager</span></code> class can be used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># JDBC</span>
 <span class="k">def</span> <span class="nf">pgcopybulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">pgconnection</span>
     <span class="n">copymgr</span> <span class="o">=</span> <span class="n">pgconnection</span><span class="o">.</span><span class="n">getCopyAPI</span><span class="p">()</span>
@@ -118,12 +96,12 @@ function from the JDBC CopyManager</p>
     <span class="n">copymgr</span><span class="o">.</span><span class="n">copyIn</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="mysql">
+</section>
+<section id="mysql">
 <h2>MySQL<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h2>
-<p>For MySQL we can use the <a class="reference external" href="http://dev.mysql.com/doc/refman/5.7/en/load-data.html">LOAD DATA INFILE</a> functionality
-included in the language supported by MySQL.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#MySQLdb</span>
+<p>For MySQL the <a class="reference external" href="http://dev.mysql.com/doc/refman/5.7/en/load-data.html">LOAD DATA INFILE</a> functionality
+provided by MySQL SQL dialect can be used.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MySQLdb</span>
 <span class="k">def</span> <span class="nf">mysqlbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">connection</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -132,30 +110,30 @@ included in the language supported by MySQL.</p>
     <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oracle">
+</section>
+<section id="oracle">
 <h2>Oracle<a class="headerlink" href="#oracle" title="Permalink to this headline">¶</a></h2>
-<p>Oracle supports two methods for bulkloading from text files, SQL Loader and
+<p>Oracle supports two methods for bulk loading from text files, SQL Loader and
 External Tables. The following example uses SQL Loader as it does not require
-the creation of an additional table, which becomes problematic to do in a
-program due to the need for specifying data types.</p>
-<p>SQL Loader is part of Oracle’s client package which must be installed, also
-SQL Loader requires all configuration and data files to have specific suffixes,
-so a file must be created with the suffix .dat and passed to any bulkloading
-table as <code class="xref py py-attr docutils literal notranslate"><span class="pre">tempdest</span></code>.</p>
+the creation of an additional table, which is problematic to do in a bulk
+loading function as the data types of each column must be specified.</p>
+<p>SQL Loader is part of Oracle’s client package. SQL Loader requires all
+configuration and data files to have specific suffixes, so a file must be
+created with the suffix .dat and passed to any bulk loading table as
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">tempdest</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.dat&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dat_handle</span><span class="p">:</span>
     <span class="n">BulkDimension</span><span class="p">(</span>
         <span class="o">...</span>
         <span class="n">tempdest</span><span class="o">=</span><span class="n">dat_handle</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The example below shows the bulkloading function, where the .ctl file is
-constructed based on the arguments given, and SQL Loader is executed using the
-generated .ctl file.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#cx_Oracle or JDBC</span>
+<p>The bulk loading function shown below constructs a control file with the .ctl
+suffix using the functions arguments. The SQL Loader is then executed (sqlldr
+must in the system path) and passed the constructed .ctl file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># cx_Oracle or JDBC</span>
 <span class="k">def</span> <span class="nf">oraclebulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
 
-    <span class="c1"># The configuration file used by SQL Loader must have the suffix .ctf</span>
+    <span class="c1"># The configuration file used by SQL Loader must use the suffix .ctf</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.ctl&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ctl_handle</span><span class="p">:</span>
 
         <span class="c1"># The attributes to be loaded must be qouted using double quotes</span>
@@ -168,33 +146,33 @@ generated .ctl file.</p>
 <span class="s2">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filehandle</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">unqouted_atts</span><span class="p">)</span>
 
         <span class="c1"># Strips the multi line string of unnecessary indention, and ensures</span>
-        <span class="c1"># the contents are written to the file by flushing it</span>
+        <span class="c1"># that the contents are written to the file by flushing it</span>
         <span class="n">ctl_contents</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">ctl_handle</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
         <span class="n">ctl_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ctl_contents</span><span class="p">)</span>
         <span class="n">ctl_handle</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-        <span class="c1"># Bulk loads the data using Oracle DB&#39;s SQL Loader. As a new</span>
-        <span class="c1"># connection is created, the same username, passowrd etc. must be given</span>
+        <span class="c1"># Bulk loads the data using Oracle&#39;s SQL Loader. As a new connection</span>
+        <span class="c1"># is created, the same username, passowrd, etc. must be given again</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;sqlldr username/password@ip:port/sid control=&quot;</span> <span class="o">+</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">ctl_handle</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="microsoft-sql-server">
+</section>
+<section id="microsoft-sql-server">
 <h2>Microsoft SQL Server<a class="headerlink" href="#microsoft-sql-server" title="Permalink to this headline">¶</a></h2>
-<p>For Microsoft SQL Server we can use the <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms188365.aspx">BULK INSERT</a> functionality
-included in Transact-SQL.</p>
+<p>For Microsoft SQL Server the <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms188365.aspx">BULK INSERT</a> functionality
+provided by Transact-SQL can be used.</p>
 <p>There are a number of things to be aware of when using pygrametl with SQL
 Server. If the file used for bulk loading is located on a machine running
-Windows, the file must be copied before bulk loading, as the locks placed on
-the file by the OS and pygrametl, prevents SQL Server from opening it directly.
-Copying the file can be done e.g. using <a class="reference external" href="https://docs.python.org/2/library/shutil.html#shutil.copyfile">shutil.copyfile</a>.</p>
-<p>By default, BULK INSERT ignores column names and the number and order of
-columns must also match the table you are inserting into. This can be overcome
-by adding a <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms178129.aspx">format file</a>.  In this case we
-create a <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms191479.aspx">non-XML format file</a>.</p>
+Windows, the file must be copied before bulk loading, as the locks placed on the
+file by the OS and pygrametl, prevents SQL Server from opening it directly.
+Copying the file can be done e.g. using <a class="reference external" href="https://docs.python.org/3/library/shutil.html#shutil.copyfile">shutil.copyfile</a>.</p>
+<p>By default, BULK INSERT ignores column names, so the number and order of columns
+must match the table you are inserting into. This can be overcome by adding a
+<a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms178129.aspx">format file</a>. In
+this case, we create a <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms191479.aspx">non-XML format file</a>.</p>
 <p>A simple example of bulk loading in SQL Server along with the creation of a
-format file, is seen below:</p>
+format file can be seen below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sqlserverbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">msconn</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">msconn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -222,76 +200,98 @@ format file, is seen below:</p>
     <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Bulk Loading</a><ul>
-<li><a class="reference internal" href="#postgresql">PostgreSQL</a></li>
-<li><a class="reference internal" href="#mysql">MySQL</a></li>
-<li><a class="reference internal" href="#oracle">Oracle</a></li>
-<li><a class="reference internal" href="#microsoft-sql-server">Microsoft SQL Server</a></li>
+<h1 class="logo"><a href="../index.html">pygrametl</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/install.html">Install Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/beginner.html">Beginner Guide</a></li>
 </ul>
-</li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dimensions.html">Dimensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="facttables.html">Fact Tables</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bulk Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel.html">Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jython.html">Jython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/pygrametl.html">pygrametl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/datasources.html">datasources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tables.html">tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/parallel.html">parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jdbcconnectionwrapper.html">JDBCConnectionWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jythonmultiprocessing.html">jythonmultiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/aggregators.html">aggregators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/steps.html">steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fifodict.html">FIFODict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/drawntabletesting.html">drawntabletesting</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="facttable.html"
-                        title="previous chapter">Fact Tables</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="parallel.html"
-                        title="next chapter">Parallel</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/examples/bulkloading.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="facttables.html" title="previous chapter">Fact Tables</a></li>
+      <li>Next: <a href="parallel.html" title="next chapter">Parallel</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="parallel.html" title="Parallel"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="facttable.html" title="Fact Tables"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2009 - 2021, Aalborg University.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/examples/bulkloading.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2009 - 2016, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
-    </div>
+
+    
+
+    
   </body>
 </html>

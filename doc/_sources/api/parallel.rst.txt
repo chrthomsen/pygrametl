@@ -1,4 +1,4 @@
-Parallel
+parallel
 ========
 
 .. automodule:: pygrametl.parallel

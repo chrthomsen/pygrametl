@@ -1,192 +1,195 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Database &#8212; pygrametl 2.6 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Database &#8212; pygrametl 2.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data sources" href="datasources.html" />
+    <link rel="next" title="Data Sources" href="datasources.html" />
     <link rel="prev" title="Beginner Guide" href="../quickstart/beginner.html" />
- 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  
-    ga('create', 'UA-30772056-2', 'auto');
-    ga('send', 'pageview');
-  
-  </script>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+</script>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="datasources.html" title="Data sources"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../quickstart/beginner.html" title="Beginner Guide"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="database">
+  <section id="database">
 <span id="id1"></span><h1>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h1>
-<p>Database access in <em>pygrametl</em> is done through either a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connection
-if CPython is used, or with a JDBC connection when pygrametl is running on
-Jython. pygrametl provides multiple abstractions on top of these connections
-and direct usage of these to manipulate the database should generally not be
-necessary. As an abstraction for database rows, Python’s <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> type is
-used, where the keys are named after the attributes in the table and the values
-being the values stored in that particular row.</p>
-<div class="section" id="connection-wrappers">
+<p>Database access in pygrametl is done through either a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connection if
+CPython is used, or with a <a class="reference external" href="https://jcp.org/en/jsr/detail?id=221">JDBC</a>
+connection when pygrametl is running on Jython. pygrametl provides multiple
+abstractions on top of these connections and direct usage of these to manipulate
+the database should generally not be necessary. As an abstraction for database
+rows Python’s <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> type is used, where the keys the names of the
+columns in the table and the values are the data stored in that row.</p>
+<section id="connection-wrappers">
 <h2>Connection Wrappers<a class="headerlink" href="#connection-wrappers" title="Permalink to this headline">¶</a></h2>
-<p>Multiple connection wrappers are provided by the pygrametl framework in order
-to allow <span class="target" id="index-1"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connections and JDBC connections to be used uniformly, and
-to allow multiple threads and process to use the connection safely. In addition
-the connection wrappers for <span class="target" id="index-2"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connections also automatically converts
-from the pyformat parameter style used by pygrametl to any of the other
-parameter styles defined in <span class="target" id="index-3"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249#paramstyle"><strong>PEP 249#paramstyle</strong></a>.  To simplify the use of the
-database connection the first connection wrapper created is set as a default,
-which can then be accessed directly by the database abstractions such as
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">tables.FactTable</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">tables.Dimension</span></code></a> without the user
-having to pass around the connection explicitly in the ETL program. If an
-alternative database connection is used, for example if data is read from one
-database and written to another, a specific connection wrapper can be passed as
-argument to the abstraction in question.</p>
-<p>The two simplest connection wrappers provided by pygrametl are
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> and
-<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.JDBCConnectionWrapper</span></code></a>. The interface provided
-by these two classes is just an abstraction on top of database operations, and
-provides methods, among others, for executing statements, iterating over returned
-rows and committing transactions. Note however that these connection wrappers
-cannot be accessed in parallel, and creating a unique database connection
-abstraction that needs access to the database in a parallel ETL flow, has a
-very high resource consumption and might also lead to inconsistencies.</p>
-<p>To ensure that database access is done correctly in a parallel ETL program
-without burdening the user with the task, the class
-<code class="xref py py-class docutils literal notranslate"><span class="pre">parallel.SharedConnectionWrapperClient</span></code> is provided. This class can be
-created from an existing connection wrapper using the function
-<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">parallel.shareconnectionwrapper()</span></code></a>. Each separate process can then be
-given a unique copy of the client in order to access the database safely. For
-more information about the parallel capabilities of pygrametl see
-<a class="reference internal" href="parallel.html#parallel"><span class="std std-ref">Parallel</span></a>.</p>
-</div>
-<div class="section" id="experimental-connection-wrappers">
+<p>Multiple connection wrappers are provided by the pygrametl framework to allow
+<span class="target" id="index-1"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connections and <a class="reference external" href="https://jcp.org/en/jsr/detail?id=221">JDBC</a>
+connections to be used uniformly, and to allow multiple threads and process to
+use the connection safely. In addition, the connection wrappers for <span class="target" id="index-2"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a>
+connections also automatically convert from the pyformat parameter style used by
+pygrametl to any of the other parameter styles defined in <span class="target" id="index-3"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249#paramstyle"><strong>PEP 249#paramstyle</strong></a>.
+To simplify the use of database connections, the first connection wrapper
+created is set as the default. The default connection wrapper can be used by
+abstractions such as <a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">tables.FactTable</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">tables.Dimension</span></code></a>
+without the user having to pass the connection wrapper to them explicitly. If
+another database connection should be used, for example, if data is read from one
+database and written to another, a specific connection can be explicitly passed
+as an argument to all pygrametl abstractions that can read to and/or write from
+a database.</p>
+<p><a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> and
+<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.JDBCConnectionWrapper</span></code></a> are the two main
+connection wrappers provided by pygrametl. The interface provided by these two
+classes is just an abstraction on top of database operations, and provides
+methods, among others, for executing statements, iterating over returned rows,
+and committing transactions. Note however that these connection wrappers cannot
+be used by multiple threads or processes in parallel. To ensure that database
+access is performed correctly in a parallel ETL program without burdening the
+user with the task, the class <code class="xref py py-class docutils literal notranslate"><span class="pre">parallel.SharedConnectionWrapperClient</span></code>
+is provided. This class can be created from an existing connection wrapper using
+the function <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">parallel.shareconnectionwrapper()</span></code></a>. Each separate process can
+then be given a unique copy of the shared connection to access the database
+safely in parallel. For more information about the parallel capabilities of
+pygrametl see <a class="reference internal" href="parallel.html#parallel"><span class="std std-ref">Parallel</span></a>.</p>
+</section>
+<section id="experimental-connection-wrappers">
 <h2>Experimental Connection Wrappers<a class="headerlink" href="#experimental-connection-wrappers" title="Permalink to this headline">¶</a></h2>
-<p>In addition to the previously documented connection wrappers, two experimental
-connection wrappers are also provided by pygrametl.
+<p>pygrametl also provides two very experimental connection wrappers:
 <code class="xref py py-class docutils literal notranslate"><span class="pre">BackgroundConnectionWrapper</span></code> and
 <a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.BackgroundJDBCConnectionWrapper</span></code></a>. They are
 provided as alternatives to <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> and
 <a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.JDBCConnectionWrapper</span></code></a> and perform the database
 operations in a separate thread instead of the same thread as the ETL program.
 As they are considered experimental, they are not set as default upon creation,
-and must thus be set with the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">setasdefault()</span></code>, available on both
-classes, or manually passed around the program.</p>
-<p>For most usage the classes <code class="xref py py-class docutils literal notranslate"><span class="pre">BackgroundConnectionWrapper</span></code> and
-<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.JDBCConnectionWrapper</span></code></a> will likely provide
-better performance compared to the background versions. Furthermore, a
-connection wrapper used in a parallel ETL program should always be wrapped
-using <a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">parallel.shareconnectionwrapper()</span></code></a> to ensure safe parallel database
-access, which itself runs the connection wrapper in a separate process or
-thread depending on the implementation.  As the two implementations are very
-similar and provide an identical interface, either set of implementations might
-be removed in a future release.</p>
-</div>
-</div>
+and must thus manually be set as the default with the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">setasdefault()</span></code>, available on all connection wrappers, or be manually
+passed around the program.</p>
+<p>For most usage the classes <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> and
+<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.JDBCConnectionWrapper</span></code></a> will likely provide better
+performance compared to the background versions. Furthermore, a connection
+wrapper used in a parallel ETL program should always be wrapped using
+<a class="reference internal" href="../api/parallel.html#pygrametl.parallel.shareconnectionwrapper" title="pygrametl.parallel.shareconnectionwrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">parallel.shareconnectionwrapper()</span></code></a> to ensure safe parallel database
+access, which itself runs the connection wrapper in a separate process or thread
+depending on the implementation. As the two implementations are very similar and
+provide an identical interface, either set of implementations might be removed
+in a future release.</p>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Database</a><ul>
-<li><a class="reference internal" href="#connection-wrappers">Connection Wrappers</a></li>
-<li><a class="reference internal" href="#experimental-connection-wrappers">Experimental Connection Wrappers</a></li>
+<h1 class="logo"><a href="../index.html">pygrametl</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/install.html">Install Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/beginner.html">Beginner Guide</a></li>
 </ul>
-</li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dimensions.html">Dimensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="facttables.html">Fact Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bulkloading.html">Bulk Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel.html">Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jython.html">Jython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/pygrametl.html">pygrametl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/datasources.html">datasources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tables.html">tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/parallel.html">parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jdbcconnectionwrapper.html">JDBCConnectionWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jythonmultiprocessing.html">jythonmultiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/aggregators.html">aggregators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/steps.html">steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fifodict.html">FIFODict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/drawntabletesting.html">drawntabletesting</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../quickstart/beginner.html"
-                        title="previous chapter">Beginner Guide</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="datasources.html"
-                        title="next chapter">Data sources</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/examples/database.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../quickstart/beginner.html" title="previous chapter">Beginner Guide</a></li>
+      <li>Next: <a href="datasources.html" title="next chapter">Data Sources</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="datasources.html" title="Data sources"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../quickstart/beginner.html" title="Beginner Guide"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2009 - 2021, Aalborg University.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/examples/database.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2009 - 2016, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
-    </div>
+
+    
+
+    
   </body>
 </html>

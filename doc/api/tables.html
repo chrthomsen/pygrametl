@@ -1,63 +1,44 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Tables &#8212; pygrametl 2.6 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>tables &#8212; pygrametl 2.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Parallel" href="parallel.html" />
-    <link rel="prev" title="Datasources" href="datasources.html" />
- 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  
-    ga('create', 'UA-30772056-2', 'auto');
-    ga('send', 'pageview');
-  
-  </script>
+    <link rel="next" title="parallel" href="parallel.html" />
+    <link rel="prev" title="datasources" href="datasources.html" />
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+</script>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="parallel.html" title="Parallel"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="datasources.html" title="Datasources"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="module-pygrametl.tables">
-<span id="tables"></span><h1>Tables<a class="headerlink" href="#module-pygrametl.tables" title="Permalink to this headline">¶</a></h1>
+  <section id="module-pygrametl.tables">
+<span id="tables"></span><h1>tables<a class="headerlink" href="#module-pygrametl.tables" title="Permalink to this headline">¶</a></h1>
 <p>This module contains classes for looking up rows, inserting rows
 and updating rows in dimensions and fact tables. Rows are represented
 as dictionaries mapping between attribute names and attribute values.</p>
@@ -75,204 +56,144 @@ DW tables differ. If, for example, data is inserted into an order dimension
 in the DW that has the attribute order_date, but the source data uses the
 attribte name date, we can use a name mapping from order_date to date:
 dim.insert(row=…, namemapping={‘order_date’:’date’})</p>
-<dl class="function">
-<dt id="pygrametl.tables.definequote">
-<code class="descclassname">pygrametl.tables.</code><code class="descname">definequote</code><span class="sig-paren">(</span><em>quotechar</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.definequote" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the global quote function, for wrapping identifiers with quotes.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.AccumulatingSnapshotFactTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">AccumulatingSnapshotFactTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">otherrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignorenonerefs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignorenonemeasures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factexpander</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.AccumulatingSnapshotFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.FactTable</span></code></a></p>
+<p>A class for accessing and updating an accumulating fact table in the DW.
+Facts in an accumulating fact table can be updated. The class does
+no caching and all lookups and updates are sent to the DBMS (and an
+index on the keyrefs should thus be considered).</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>quotechar: If None, do not wrap identifier. If a string, prepend and
-append quotechar to identifier. If a tuple of two strings, prepend with
-first element and append with last.</li>
+<li><p>name: the name of the fact table in the DW</p></li>
+<li><p>keyrefs: a sequence of attribute names that constitute the
+primary key of the fact tables. This is a subset of the dimension
+references and these references are not allowed to be updated.</p></li>
+<li><p>otherrefs: a sequence of dimension references that can be updated.</p></li>
+<li><p>measures: a possibly empty sequence of measure names. Default: ()</p></li>
+<li><p>ignorenonerefs: A flag deciding if None values for attributes in
+otherrefs are ignored when doing an update. If True (default), the
+existing value in the database will not be overwritten by a None.</p></li>
+<li><p>ignorenonemeasures: A flag deciding if None values for attributes
+in measures are ignored when doing an update. If True (default),
+the existing value in the database will not be overwritten by a
+None.</p></li>
+<li><p>factexpander: A function(row, namemapping, set of names of updated
+attributes). This function is called by the ensure method before
+it calls the update method if a row has been changed. This is,
+e.g., practical if lag measures should be computed before the row
+in the fact table is updated. The function should make its
+changes directly on the passed row.</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.AccumulatingSnapshotFactTable.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.AccumulatingSnapshotFactTable.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup the given row. If that fails, insert it. If found, see
+if values for attributes in otherrefs or measures have changed and
+update the found row if necessary (note that values for attributes
+in keyrefs are not allowed to change). If an update is necessary
+and a factexpander is defined, the row will first be updated with
+any missing otherrefs/measures and the factexpander will be run on
+it. Return nothing.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: the row to insert or update if needed. Must contain the
+keyrefs attributes. For missing attributes from otherrefs and
+measures, the value is set to None if the row has to be
+inserted.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
-<dl class="class">
-<dt id="pygrametl.tables.Dimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">Dimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.AccumulatingSnapshotFactTable.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.AccumulatingSnapshotFactTable.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.BasePartitioner">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">BasePartitioner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class for accessing a dimension. Does no caching.</p>
+<p>A base class for partitioning between several parts.</p>
+<p>See also DimensionPartitioner and FactTablePartitioner.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BasePartitioner.addpart">
+<span class="sig-name descname"><span class="pre">addpart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.addpart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BasePartitioner.droppart">
+<span class="sig-name descname"><span class="pre">droppart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.droppart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop a part. If an argument is given, it must be a part of the
+patitioner and it will then be removed. If no argument is given,
+the first part is removed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BasePartitioner.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.endload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call endload on all parts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BasePartitioner.getpart">
+<span class="sig-name descname"><span class="pre">getpart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find  the part that should handle the given row. The provided
+implementation in BasePartitioner does only use round robin
+partitioning, but subclasses apply other methods</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BasePartitioner.parts">
+<span class="sig-name descname"><span class="pre">parts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.parts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the parts the partitioner works on</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.BatchFactTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">BatchFactTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usemultirow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BatchFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.FactTable</span></code></a></p>
+<p>A class for accessing a fact table in the DW. This class performs
+performs insertions in batches.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>name: the name of the dimension table in the DW</li>
-<li>key: the name of the primary key in the DW</li>
-<li>attributes: a sequence of the attribute names in the dimension
-table. Should not include the name of the primary key which is
-given in the key argument.</li>
-<li>lookupatts: A subset of the attributes that uniquely identify
-a dimension members. These attributes are thus used for looking
-up members. If not given, it is assumed that
-lookupatts = attributes</li>
-<li>idfinder: A function(row, namemapping) -&gt; key value that assigns
-a value to the primary key attribute based on the content of the
-row and namemapping. If not given, it is assumed that the primary
-key is an integer, and the assigned key value is then the current
-maximum plus one.</li>
-<li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded “Unknown” member.</li>
-<li>rowexpander: A function(row, namemapping) -&gt; row. This function
-is called by ensure before insertion if a lookup of the row fails.
-This is practical if expensive calculations only have to be done
-for rows that are not already present. For example, for a date
-dimension where the full date is used for looking up rows, a
-rowexpander can be set such that week day, week number, season,
-year, etc. are only calculated for dates that are not already
-represented. If not given, no automatic expansion of rows is
-done.</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given,
-the default target connection is used.</li>
+<li><p>name: the name of the fact table in the DW</p></li>
+<li><p>keyrefs: a sequence of attribute names that constitute the
+primary key of the fact tables (i.e., the dimension references)</p></li>
+<li><p>measures: a possibly empty sequence of measure names. Default: ()</p></li>
+<li><p>batchsize: an int deciding many insert operations should be done
+in one batch. Default: 10000</p></li>
+<li><p>usemultirow: load batches with an INSERT INTO name VALUES statement
+instead of executemany(). WARNING: single quotes are automatically
+escaped. Other forms of sanitization must be manually performed.</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.Dimension.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.endload" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="pygrametl.tables.BatchFactTable.awaitingrows">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">awaitingrows</span></span><a class="headerlink" href="#pygrametl.tables.BatchFactTable.awaitingrows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the amount of rows awaiting to be loaded into the table</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BatchFactTable.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BatchFactTable.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.Dimension.ensure">
-<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.ensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lookup the given row. If that fails, insert it. Return the key value.</p>
-<p>If the lookup fails and a rowexpander was set when creating the
-instance, this rowexpander is called before the insert takes place.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: the row to lookup or insert. Must contain the lookup
-attributes. Key is not required to be present but will be added
-using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.Dimension.getbykey">
-<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.getbykey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lookup and return the row with the given key value.</p>
-<p>If no row is found in the dimension table, the function returns
-a row where all values (including the key) are None.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.Dimension.getbyvals">
-<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>values</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.getbyvals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of all rows with values identical to the given.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>values: a dict which must hold a subset of the tables attributes.
-All rows that have identical values for all attributes in this
-dict are returned.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.Dimension.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert the given row. Return the new key value.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: the row to insert. The dict is not updated. It must contain
-all attributes, and is allowed to contain more attributes than
-that. Key is not required to be present but will be added using
-idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.Dimension.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the key for the row with the given values.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: a dict which must contain at least the lookup attributes</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.Dimension.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update a single row in the dimension table.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: a dict which must contain the key for the dimension.
-The row with this key value is updated such that it takes
-the value of row[att] for each attribute att which is also in
-row.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.CachedDimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">CachedDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>size=10000</em>, <em>prefill=False</em>, <em>cachefullrows=False</em>, <em>cacheoninsert=True</em>, <em>usefetchfirst=False</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.Dimension</span></code></a></p>
-<p>A class for accessing a dimension. Does caching.</p>
-<p>We assume that the DB doesn’t change or add any attribute
-values that are cached.
-For example, a DEFAULT value in the DB or automatic type coercion can
-break this assumption.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>name: the name of the dimension table in the DW</li>
-<li>key: the name of the primary key in the DW</li>
-<li>attributes: a sequence of the attribute names in the dimension
-table. Should not include the name of the primary key which is
-given in the key argument.</li>
-<li>lookupatts: A subset of the attributes that uniquely identify
-a dimension members. These attributes are thus used for looking
-up members. If not given, it is assumed that
-lookupatts = attributes</li>
-<li>idfinder: A function(row, namemapping) -&gt; key value that assigns
-a value to the primary key attribute based on the content of the
-row and namemapping. If not given, it is assumed that the primary
-key is an integer, and the assigned key value is then the current
-maximum plus one.</li>
-<li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded “Unknown” member.</li>
-<li>rowexpander: A function(row, namemapping) -&gt; row. This function
-is called by ensure before insertion if a lookup of the row fails.
-This is practical if expensive calculations only have to be done
-for rows that are not already present. For example, for a date
-dimension where the full date is used for looking up rows, a
-rowexpander can be set such that week day, week number, season,
-year, etc. are only calculated for dates that are not already
-represented. If not given, no automatic expansion of rows is
-done.</li>
-<li>size: the maximum number of rows to cache. If less than or equal
-to 0, unlimited caching is used. Default: 10000</li>
-<li>prefill: a flag deciding if the cache should be filled when
-initialized. Default: False</li>
-<li>cachefullrows: a flag deciding if full rows should be
-cached. If not, the cache only holds a mapping from
-lookupattributes to key values. Default: False.</li>
-<li>cacheoninsert: a flag deciding if the cache should be updated
-when insertions are done. Default: True</li>
-<li>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
-clause is used when prefil is True. Depending on the used DBMS
-and DB driver, this can give significant savings wrt. to time and
-memory. Not all DBMSs support this clause yet. Default: False</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given,
-the default target connection is used.</li>
-</ul>
-<dl class="method">
-<dt id="pygrametl.tables.CachedDimension.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedDimension.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the key for the row with the given values.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: a dict which must contain at least the lookup attributes</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.BulkDimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BulkDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.BulkDimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">BulkDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulkloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookupatts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idfinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultidvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowexpander</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachefullrows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullsubst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempdest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usefilename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strconverter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">pygrametl.getdbfriendlystr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependson</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables._BaseBulkloadable</span></code>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.CachedDimension</span></code></a></p>
 <p>A class for accessing a dimension table. Does caching and bulk loading.</p>
 <p>Unlike CachedBulkDimension, this class always caches all dimension data.</p>
@@ -296,12 +217,12 @@ For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>name: the name of the dimension table in the DW</li>
-<li>key: the name of the primary key in the DW</li>
-<li>attributes: a sequence of the attribute names in the dimension
+<li><p>name: the name of the dimension table in the DW</p></li>
+<li><p>key: the name of the primary key in the DW</p></li>
+<li><p>attributes: a sequence of the attribute names in the dimension
 table. Should not include the name of the primary key which is
-given in the key argument.</li>
-<li>bulkloader: A method
+given in the key argument.</p></li>
+<li><p>bulkloader: A method
 m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
 is called to load data from a temporary file into the DW. The
 argument “attributes” is a list of the names of the columns to
@@ -310,19 +231,19 @@ values appear in the temporary file.  The rest of the arguments
 are similar to those arguments with identical names that are
 described below. The argument “tempdest” can, however, be
 1) a string with a filename or 2) a file object. This is
-determined by the usefilename argument (see below).</li>
-<li>lookupatts: A subset of the attributes that uniquely identify
+determined by the usefilename argument (see below).</p></li>
+<li><p>lookupatts: A subset of the attributes that uniquely identify
 a dimension members. These attributes are thus used for looking
 up members. If not given, it is assumed that
-lookupatts = attributes</li>
-<li>idfinder: A function(row, namemapping) -&gt; key value that assigns
+lookupatts = attributes</p></li>
+<li><p>idfinder: A function(row, namemapping) -&gt; key value that assigns
 a value to the primary key attribute based on the content of the
 row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
-maximum plus one.</li>
-<li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded “Unknown” member.</li>
-<li>rowexpander: A function(row, namemapping) -&gt; row. This function
+maximum plus one.</p></li>
+<li><p>defaultidvalue: An optional value to return when a lookup fails.
+This should thus be the ID for a preloaded “Unknown” member.</p></li>
+<li><p>rowexpander: A function(row, namemapping) -&gt; row. This function
 is called by ensure before insertion if a lookup of the row fails.
 This is practical if expensive calculations only have to be done
 for rows that are not already present. For example, for a date
@@ -330,64 +251,118 @@ dimension where the full date is used for looking up rows, a
 rowexpander can be set such that week day, week number, season,
 year, etc. are only calculated for dates that are not already
 represented. If not given, no automatic expansion of rows is
-done.</li>
-<li>cachefullrows: a flag deciding if full rows should be
+done.</p></li>
+<li><p>cachefullrows: a flag deciding if full rows should be
 cached. If not, the cache only holds a mapping from
-lookupattributes to key values. Default: False.</li>
-<li>fieldsep: a string used to separate fields in the temporary
-file. Default: ‘\t’</li>
-<li>rowsep: a string used to separate rows in the temporary file.
-Default: ‘\n’</li>
-<li>nullsubst: an optional string used to replace None values.
-If nullsubst=None, no substitution takes place. Default: None</li>
-<li>tempdest: a file object or None. If None a named temporary file
-is used. Default: None</li>
-<li>bulksize: an int deciding the number of rows to load in one
-bulk operation. Default: 500000</li>
-<li>usefilename: a value deciding if the file should be passed to the
+lookupattributes to key values. Default: False.</p></li>
+<li><p>fieldsep: a string used to separate fields in the temporary
+file. Default: ‘\t’</p></li>
+<li><p>rowsep: a string used to separate rows in the temporary file.
+Default: ‘\n’</p></li>
+<li><p>nullsubst: an optional string used to replace None values.
+If nullsubst=None, no substitution takes place. Default: None</p></li>
+<li><p>tempdest: a file object or None. If None a named temporary file
+is used. Default: None</p></li>
+<li><p>bulksize: an int deciding the number of rows to load in one
+bulk operation. Default: 500000</p></li>
+<li><p>usefilename: a value deciding if the file should be passed to the
 bulkloader by its name instead of as a file-like object. This is,
 e.g., necessary when the bulk loading is invoked through SQL
 (instead of directly via a method on the PEP249 driver). It is
 also necessary if the bulkloader runs in another process.
-Default: False</li>
-<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
-values into strings that can be written to the temporary file and 
-eventually bulkloaded. Default: pygrametl.getdbfriendlystr</li>
-<li>encoding: a string with the encoding to use. If None,
+Default: False</p></li>
+<li><p>strconverter: a method m(value, nullsubst) -&gt; str to convert
+values into strings that can be written to the temporary file and
+eventually bulkloaded. Default: pygrametl.getdbfriendlystr</p></li>
+<li><p>encoding: a string with the encoding to use. If None,
 locale.getpreferredencoding() is used. This argument is
-ignored under Python 2! Default: None</li>
-<li>dependson: a sequence of other bulkloadble tables that should
-be loaded before this instance does bulkloading. Default: ()</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given,
-the default target connection is used.</li>
+ignored under Python 2! Default: None</p></li>
+<li><p>dependson: a sequence of other bulkloadble tables that should
+be loaded before this instance does bulkloading. Default: ()</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.BulkDimension.getbykey">
-<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BulkDimension.getbykey">
+<span class="sig-name descname"><span class="pre">getbykey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyvalue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup and return the row with the given key value.</p>
 <p>If no row is found in the dimension table, the function returns
 a row where all values (including the key) are None.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.BulkDimension.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension.insert" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.BulkDimension.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkDimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the given row. Return the new key value.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: the row to insert. The dict is not updated. It must contain
+<li><p>row: the row to insert. The dict is not updated. It must contain
 all attributes, and is allowed to contain more attributes than
 that. Key is not required to be present but will be added using
-idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+idfinder if missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pygrametl.tables.CachedBulkDimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">CachedBulkDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>bulkloader</em>, <em>lookupatts=()</em>, <em>idfinder=None</em>, <em>defaultidvalue=None</em>, <em>rowexpander=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=5000</em>, <em>cachesize=10000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.BulkFactTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">BulkFactTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulkloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullsubst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempdest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usefilename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strconverter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">pygrametl.getdbfriendlystr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependson</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables._BaseBulkloadable</span></code></p>
+<p>Class for addition of facts to a fact table. Reads are not supported.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>name: the name of the fact table in the DW</p></li>
+<li><p>keyrefs: a sequence of attribute names that constitute the
+primary key of the fact tables (i.e., the dimension references)</p></li>
+<li><p>measures: a possibly empty sequence of measure names.</p></li>
+<li><p>bulkloader: A method
+m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
+is called to load data from a temporary file into the DW. The
+argument “attributes” is the combination of keyrefs and measures
+(i.e., a list of the names of the columns to insert values into)
+and show the order in which the attribute values appear in the
+temporary file.  The rest of the arguments are similar to those
+arguments with identical names that are given to
+BulkFactTable.__init__ as described here. The argument “tempdest”
+can, however, be 1) a string with a filename or 2) a file
+object. This is determined by the usefilename argument to
+BulkFactTable.__init__ (see below).</p></li>
+<li><p>fieldsep: a string used to separate fields in the temporary
+file. Default: ‘\t’</p></li>
+<li><p>rowsep: a string used to separate rows in the temporary file.
+Default: ‘\n’</p></li>
+<li><p>nullsubst: an optional string used to replace None values.
+If nullsubst=None, no substitution takes place. Default: None</p></li>
+<li><p>tempdest: a file object or None. If None a named temporary file
+is used. Default: None</p></li>
+<li><p>bulksize: an int deciding the number of rows to load in one
+bulk operation. Default: 500000</p></li>
+<li><p>usefilename: a value deciding if the file should be passed to the
+bulkloader by its name instead of as a file-like object. This is,
+e.g., necessary when the bulk loading is invoked through SQL
+(instead of directly via a method on the PEP249 driver). It is
+also necessary if the bulkloader runs in another process
+(for example, when if the BulkFactTable is wrapped by a
+DecoupledFactTable and invokes the bulkloader on a shared
+connection wrapper). Default: False</p></li>
+<li><p>strconverter: a method m(value, nullsubst) -&gt; str to convert
+values into strings that can be written to the temporary file and
+eventually bulkloaded. Default: pygrametl.getdbfriendlystr</p></li>
+<li><p>encoding: a string with the encoding to use. If None,
+locale.getpreferredencoding() is used. This argument is
+ignored under Python 2! Default: None</p></li>
+<li><p>dependson: a sequence of other bulkloadble tables that should
+be bulkloaded before this instance does bulkloading (e.g., if
+the fact table has foreign keys to some bulk-loaded dimension
+table). Default: ()</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.CachedBulkDimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">CachedBulkDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulkloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookupatts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idfinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultidvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowexpander</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usefetchfirst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachefullrows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullsubst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempdest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachesize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usefilename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strconverter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">pygrametl.getdbfriendlystr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependson</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables._BaseBulkloadable</span></code>, <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.CachedDimension</span></code></a></p>
 <p>A class for accessing a dimension table. Does caching and bulk loading.</p>
 <p>Unlike BulkDimension, the cache size is configurable and lookups may
@@ -411,12 +386,12 @@ For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>name: the name of the dimension table in the DW</li>
-<li>key: the name of the primary key in the DW</li>
-<li>attributes: a sequence of the attribute names in the dimension
+<li><p>name: the name of the dimension table in the DW</p></li>
+<li><p>key: the name of the primary key in the DW</p></li>
+<li><p>attributes: a sequence of the attribute names in the dimension
 table. Should not include the name of the primary key which is
-given in the key argument.</li>
-<li>bulkloader: A method
+given in the key argument.</p></li>
+<li><p>bulkloader: A method
 m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
 is called to load data from a temporary file into the DW. The
 argument “attributes” is a list of the names of the columns to
@@ -425,19 +400,19 @@ values appear in the temporary file.  The rest of the arguments
 are similar to those arguments with identical names that are
 described below. The argument “tempdest” can, however, be
 1) a string with a filename or 2) a file object. This is
-determined by the usefilename argument (see below).</li>
-<li>lookupatts: A subset of the attributes that uniquely identify
+determined by the usefilename argument (see below).</p></li>
+<li><p>lookupatts: A subset of the attributes that uniquely identify
 a dimension members. These attributes are thus used for looking
 up members. If not given, it is assumed that
-lookupatts = attributes</li>
-<li>idfinder: A function(row, namemapping) -&gt; key value that assigns
+lookupatts = attributes</p></li>
+<li><p>idfinder: A function(row, namemapping) -&gt; key value that assigns
 a value to the primary key attribute based on the content of the
 row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
-maximum plus one.</li>
-<li>defaultidvalue: An optional value to return when a lookup fails.
-This should thus be the ID for a preloaded “Unknown” member.</li>
-<li>rowexpander: A function(row, namemapping) -&gt; row. This function
+maximum plus one.</p></li>
+<li><p>defaultidvalue: An optional value to return when a lookup fails.
+This should thus be the ID for a preloaded “Unknown” member.</p></li>
+<li><p>rowexpander: A function(row, namemapping) -&gt; row. This function
 is called by ensure before insertion if a lookup of the row fails.
 This is practical if expensive calculations only have to be done
 for rows that are not already present. For example, for a date
@@ -445,145 +420,583 @@ dimension where the full date is used for looking up rows, a
 rowexpander can be set such that week day, week number, season,
 year, etc. are only calculated for dates that are not already
 represented. If not given, no automatic expansion of rows is
-done.</li>
-<li>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+done.</p></li>
+<li><p>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
 clause is used when prefil is True. Depending on the used DBMS
 and DB driver, this can give significant savings wrt. to time and
-memory. Not all DBMSs support this clause yet. Default: False</li>
-<li>cachefullrows: a flag deciding if full rows should be
+memory. Not all DBMSs support this clause yet. Default: False</p></li>
+<li><p>cachefullrows: a flag deciding if full rows should be
 cached. If not, the cache only holds a mapping from
-lookupattributes to key values. Default: False.</li>
-<li>fieldsep: a string used to separate fields in the temporary
-file. Default: ‘\t’</li>
-<li>rowsep: a string used to separate rows in the temporary file.
-Default: ‘\n’</li>
-<li>nullsubst: an optional string used to replace None values.
-If nullsubst=None, no substitution takes place. Default: None</li>
-<li>tempdest: a file object or None. If None a named temporary file
-is used. Default: None</li>
-<li>bulksize: an int deciding the number of rows to load in one
-bulk operation. Default: 5000</li>
-<li>cachesize: the maximum number of rows to cache. If less than or
-equal to 0, unlimited caching is used. Default: 10000</li>
-<li>usefilename: a value deciding if the file should be passed to the
+lookupattributes to key values. Default: False.</p></li>
+<li><p>fieldsep: a string used to separate fields in the temporary
+file. Default: ‘\t’</p></li>
+<li><p>rowsep: a string used to separate rows in the temporary file.
+Default: ‘\n’</p></li>
+<li><p>nullsubst: an optional string used to replace None values.
+If nullsubst=None, no substitution takes place. Default: None</p></li>
+<li><p>tempdest: a file object or None. If None a named temporary file
+is used. Default: None</p></li>
+<li><p>bulksize: an int deciding the number of rows to load in one
+bulk operation. Default: 5000</p></li>
+<li><p>cachesize: the maximum number of rows to cache. If less than or
+equal to 0, unlimited caching is used. Default: 10000</p></li>
+<li><p>usefilename: a value deciding if the file should be passed to the
 bulkloader by its name instead of as a file-like object. This is,
 e.g., necessary when the bulk loading is invoked through SQL
 (instead of directly via a method on the PEP249 driver). It is
 also necessary if the bulkloader runs in another process.
-Default: False</li>
-<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
-values into strings that can be written to the temporary file and 
-eventually bulkloaded. Default: pygrametl.getdbfriendlystr</li>
-<li>encoding: a string with the encoding to use. If None,
+Default: False</p></li>
+<li><p>strconverter: a method m(value, nullsubst) -&gt; str to convert
+values into strings that can be written to the temporary file and
+eventually bulkloaded. Default: pygrametl.getdbfriendlystr</p></li>
+<li><p>encoding: a string with the encoding to use. If None,
 locale.getpreferredencoding() is used. This argument is
-ignored under Python 2! Default: None</li>
-<li>dependson: a sequence of other bulkloadble tables that should
-be loaded before this instance does bulkloading. Default: ()</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given,
-the default target connection is used.</li>
+ignored under Python 2! Default: None</p></li>
+<li><p>dependson: a sequence of other bulkloadble tables that should
+be loaded before this instance does bulkloading. Default: ()</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.CachedBulkDimension.getbykey">
-<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.CachedBulkDimension.getbykey">
+<span class="sig-name descname"><span class="pre">getbykey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyvalue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup and return the row with the given key value.</p>
 <p>If no row is found in the dimension table, the function returns
 a row where all values (including the key) are None.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.CachedBulkDimension.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.insert" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.CachedBulkDimension.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the given row. Return the new key value.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: the row to insert. The dict is not updated. It must contain
+<li><p>row: the row to insert. The dict is not updated. It must contain
 all attributes, and is allowed to contain more attributes than
 that. Key is not required to be present but will be added using
-idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+idfinder if missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.CachedBulkDimension.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.CachedBulkDimension.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedBulkDimension.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the key for the row with the given values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict which must contain at least the lookup attributes</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+<li><p>row: a dict which must contain at least the lookup attributes</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pygrametl.tables.TypeOneSlowlyChangingDimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">TypeOneSlowlyChangingDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>cachefullrows=False</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.CachedDimension</span></code></a></p>
-<p>A class for accessing a slowly changing dimension of “type 1”.</p>
-<p>Caching is used. We assume that the DB doesn’t change or add any
-attribute values that are cached.
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.CachedDimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">CachedDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookupatts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idfinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultidvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowexpander</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachefullrows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cacheoninsert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usefetchfirst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.Dimension</span></code></a></p>
+<p>A class for accessing a dimension. Does caching.</p>
+<p>We assume that the DB doesn’t change or add any attribute
+values that are cached.
 For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>name: the name of the dimension table in the DW</li>
-<li>key: the name of the primary key in the DW</li>
-<li>attributes: a sequence of the attribute names in the dimension
+<li><p>name: the name of the dimension table in the DW</p></li>
+<li><p>key: the name of the primary key in the DW</p></li>
+<li><p>attributes: a sequence of the attribute names in the dimension
 table. Should not include the name of the primary key which is
-given in the key argument.</li>
-<li>lookupatts: A subset of the attributes that uniquely identify
+given in the key argument.</p></li>
+<li><p>lookupatts: A subset of the attributes that uniquely identify
 a dimension members. These attributes are thus used for looking
-up members.</li>
-<li>type1atts: A sequence of attributes that should have type1 updates
-applied, it cannot intersect with lookupatts. If not given, it is
-assumed that type1atts = attributes - lookupatts</li>
-<li>cachesize: the maximum number of rows to cache. If less than or
-equal to 0, unlimited caching is used. Default: 10000</li>
-<li>prefill: a flag deciding if the cache should be filled when
-initialized. Default: False</li>
-<li>idfinder: A function(row, namemapping) -&gt; key value that assigns
+up members. If not given, it is assumed that
+lookupatts = attributes</p></li>
+<li><p>idfinder: A function(row, namemapping) -&gt; key value that assigns
 a value to the primary key attribute based on the content of the
 row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
-maximum plus one.</li>
-<li>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+maximum plus one.</p></li>
+<li><p>defaultidvalue: An optional value to return when a lookup fails.
+This should thus be the ID for a preloaded “Unknown” member.</p></li>
+<li><p>rowexpander: A function(row, namemapping) -&gt; row. This function
+is called by ensure before insertion if a lookup of the row fails.
+This is practical if expensive calculations only have to be done
+for rows that are not already present. For example, for a date
+dimension where the full date is used for looking up rows, a
+rowexpander can be set such that week day, week number, season,
+year, etc. are only calculated for dates that are not already
+represented. If not given, no automatic expansion of rows is
+done.</p></li>
+<li><p>size: the maximum number of rows to cache. If less than or equal
+to 0, unlimited caching is used. Default: 10000</p></li>
+<li><p>prefill: a flag deciding if the cache should be filled when
+initialized. Default: False</p></li>
+<li><p>cachefullrows: a flag deciding if full rows should be
+cached. If not, the cache only holds a mapping from
+lookupattributes to key values. Default: False.</p></li>
+<li><p>cacheoninsert: a flag deciding if the cache should be updated
+when insertions are done. Default: True</p></li>
+<li><p>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
 clause is used when prefil is True. Depending on the used DBMS
 and DB driver, this can give significant savings wrt. to time and
-memory. Not all DBMSs support this clause yet. Default: False</li>
-<li>cachefullrows: a flag deciding if full rows should be cached. If
-not, the cache only holds a mapping from lookupattributes to key
-values, and from key to the type 1 slowly changing attributes.
-Default: False.</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given, the
-default target connection is used.</li>
+memory. Not all DBMSs support this clause yet. Default: False</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure">
-<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lookup or insert a version of a slowly changing dimension member.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Has side-effects on the given row.</p>
-</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.CachedDimension.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.CachedDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the key for the row with the given values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict containing the attributes for the table. It must
-contain all attributes if it is the first version of the row to be
-inserted, updates of existing rows need only contain lookupatts
-and a subset of type1atts as a missing type1atts is ignored and
-the existing value left as is in the database. Key is not required
-to be present but will be added using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+<li><p>row: a dict which must contain at least the lookup attributes</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pygrametl.tables.SlowlyChangingDimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">SlowlyChangingDimension</code><span class="sig-paren">(</span><em>name</em>, <em>key</em>, <em>attributes</em>, <em>lookupatts</em>, <em>orderingatt=None</em>, <em>versionatt=None</em>, <em>fromatt=None</em>, <em>fromfinder=None</em>, <em>toatt=None</em>, <em>tofinder=None</em>, <em>minfrom=None</em>, <em>maxto=None</em>, <em>srcdateatt=None</em>, <em>srcdateparser=pygrametl.ymdparser</em>, <em>type1atts=()</em>, <em>cachesize=10000</em>, <em>prefill=False</em>, <em>idfinder=None</em>, <em>usefetchfirst=False</em>, <em>useorderby=True</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">DecoupledDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnvalues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consumes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attstoconsume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queuesize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.parallel.Decoupled</span></code></a></p>
+<p>A Dimension-like class that enables parallelism by executing all
+operations on a given Dimension in a separate, dedicated process
+(that Dimension is said to be “decoupled”).</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>dim: the Dimension object to use in a separate process</p></li>
+<li><p>returnvalues: decides if return values from method calls on dim
+should be kept such that they can be fetched by the caller or
+another Decoupled instance</p></li>
+<li><p>consumes: a sequence of Decoupled objects from which to fetch
+returnvalues (that are used to replace FutureResults in
+arguments).
+Default: ()</p></li>
+<li><p>attstoconsume: a sequence of the attribute names in rows that
+should have FutureResults replaced by actual return values. Does
+not have to be given, but may improve performance when given.
+Default: ()</p></li>
+<li><p>batchsize: the size of batches (grouped method calls) transferred
+between the processes. NB: Large values do not necessarily give
+good performance
+Default: 500</p></li>
+<li><p>queuesize: the maximum amount of waiting batches. Infinite if
+less than or equal to 0. NB: Large values do not necessarily give
+good performance.
+Default: 200</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.endload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke endload on the decoupled Dimension in the separate process and
+return when all waiting method calls have been executed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke ensure on the decoupled Dimension in the separate process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension.getbykey">
+<span class="sig-name descname"><span class="pre">getbykey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyvalue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke getbykey on the decoupled Dimension in the separate
+process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension.getbyvals">
+<span class="sig-name descname"><span class="pre">getbyvals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke betbycals on the decoupled Dimension in the separate process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke insert on the decoupled Dimension in the separate process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke lookup on the decoupled Dimension in the separate process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledDimension.scdensure">
+<span class="sig-name descname"><span class="pre">scdensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke scdensure on the decoupled Dimension in the separate process</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledFactTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">DecoupledFactTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">facttbl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnvalues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consumes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attstoconsume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queuesize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.parallel.Decoupled</span></code></a></p>
+<p>A FactTable-like class that enables parallelism by executing all
+operations on a given FactTable in a separate, dedicated process
+(that FactTable is said to be “decoupled”).</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>facttbl: the FactTable object to use in a separate process</p></li>
+<li><p>returnvalues: decides if return values from method calls on
+facttbl should be kept such that they can be fetched by the caller
+or another Decoupled instance</p></li>
+<li><p>consumes: a sequence of Decoupled objects from which to fetch
+returnvalues (that are used to replace FutureResults in
+arguments).
+Default: ()</p></li>
+<li><p>attstoconsume: a sequence of the attribute names in rows that
+should have FutureResults replaced by actual return values. Does
+not have to be given, but may improve performance when given.
+Default: ()</p></li>
+<li><p>batchsize: the size of batches (grouped method calls) transferred
+between the processes. NB: Large values do not necessarily give
+good performance
+Default: 500</p></li>
+<li><p>queuesize: the maximum amount of waiting batches. Infinite if
+less than or equal to 0. NB: Large values do not necessarily give
+good performance.
+Default: 200</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledFactTable.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.endload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke endload on the decoupled FactTable in the separate process and
+return when all waiting method calls have been executed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledFactTable.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke ensure on the decoupled FactTable in the separate process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledFactTable.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke insert on the decoupled FactTable in the separate process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DecoupledFactTable.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke lookup on the decoupled FactTable in the separate process</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">Dimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookupatts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idfinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultidvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowexpander</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for accessing a dimension. Does no caching.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>name: the name of the dimension table in the DW</p></li>
+<li><p>key: the name of the primary key in the DW</p></li>
+<li><p>attributes: a sequence of the attribute names in the dimension
+table. Should not include the name of the primary key which is
+given in the key argument.</p></li>
+<li><p>lookupatts: A subset of the attributes that uniquely identify
+a dimension members. These attributes are thus used for looking
+up members. If not given, it is assumed that
+lookupatts = attributes</p></li>
+<li><p>idfinder: A function(row, namemapping) -&gt; key value that assigns
+a value to the primary key attribute based on the content of the
+row and namemapping. If not given, it is assumed that the primary
+key is an integer, and the assigned key value is then the current
+maximum plus one.</p></li>
+<li><p>defaultidvalue: An optional value to return when a lookup fails.
+This should thus be the ID for a preloaded “Unknown” member.</p></li>
+<li><p>rowexpander: A function(row, namemapping) -&gt; row. This function
+is called by ensure before insertion if a lookup of the row fails.
+This is practical if expensive calculations only have to be done
+for rows that are not already present. For example, for a date
+dimension where the full date is used for looking up rows, a
+rowexpander can be set such that week day, week number, season,
+year, etc. are only calculated for dates that are not already
+represented. If not given, no automatic expansion of rows is
+done.</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.endload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the load.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup the given row. If that fails, insert it. Return the key value.</p>
+<p>If the lookup fails and a rowexpander was set when creating the
+instance, this rowexpander is called before the insert takes place.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: the row to lookup or insert. Must contain the lookup
+attributes. Key is not required to be present but will be added
+using idfinder if missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension.getbykey">
+<span class="sig-name descname"><span class="pre">getbykey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyvalue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup and return the row with the given key value.</p>
+<p>If no row is found in the dimension table, the function returns
+a row where all values (including the key) are None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension.getbyvals">
+<span class="sig-name descname"><span class="pre">getbyvals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.getbyvals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all rows with values identical to the given.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>values: a dict which must hold a subset of the tables attributes.
+All rows that have identical values for all attributes in this
+dict are returned.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert the given row. Return the new key value.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: the row to insert. The dict is not updated. It must contain
+all attributes, and is allowed to contain more attributes than
+that. Key is not required to be present but will be added using
+idfinder if missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the key for the row with the given values.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: a dict which must contain at least the lookup attributes</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.Dimension.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.Dimension.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a single row in the dimension table.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: a dict which must contain the key for the dimension.
+The row with this key value is updated such that it takes
+the value of row[att] for each attribute att which is also in
+row.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">DimensionPartitioner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getbyvalsfromall</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partitioner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.BasePartitioner</span></code></a></p>
+<p>A Dimension-like class that handles partitioning.</p>
+<p>Partitioning is done between a number of Dimension objects called the
+parts. The class offers the interface of Dimensions (incl. scdensure
+from SlowlyChangingDimension). When a method is called, the
+corresponding method on one of the parts (chosen by a user-definable
+partitioner function) will be invoked. The parts can operate on a
+single physical dimension table or different physical tables.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>parts: a sequence of Dimension objects.</p></li>
+<li><p>getbyvalsfromall: determines if getbyvals should be answered by
+means of all parts (when getbyvalsfromall = True) or only the
+first part, i.e., parts[0] (when getbybalsfromall = False).
+Default: False</p></li>
+<li><p>partitioner: None or a callable p(dict) -&gt; int where the argument
+is a dict mapping from the names of the lookupatts to the values
+of the lookupatts. The resulting int is used to determine which
+part a given row should be handled by.
+When partitioner is None, a default partitioner is used. This
+partitioner computes the hash value of each value of the
+lookupatts and adds them together.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke ensure on the relevant Dimension part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.getbykey">
+<span class="sig-name descname"><span class="pre">getbykey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyvalue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbykey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke getbykey on the relevant Dimension part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.getbyvals">
+<span class="sig-name descname"><span class="pre">getbyvals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbyvals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke getbyvals on the first part or all parts (depending on the
+value of the instance’s getbyvalsfromall)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.getpart">
+<span class="sig-name descname"><span class="pre">getpart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getpart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the part that should handle the given row</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke insert on the relevant Dimension part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke lookup on the relevant Dimension part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.scdensure">
+<span class="sig-name descname"><span class="pre">scdensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.scdensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke scdensure on the relevant Dimension part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.DimensionPartitioner.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke update on the relevant Dimension part</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">FactTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measures</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for accessing a fact table in the DW.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>name: the name of the fact table in the DW</p></li>
+<li><p>keyrefs: a sequence of attribute names that constitute the
+primary key of the fact tables (i.e., the dimension references)</p></li>
+<li><p>measures: a possibly empty sequence of measure names. Default: ()</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTable.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.endload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the load.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTable.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that a fact is present (insert it if it is not already there).</p>
+<p>Return True if a fact with identical values for keyrefs attributes
+was already present in the fact table; False if not.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: a dict at least containing the attributes of the fact table</p></li>
+<li><p>compare: a flag deciding if measure vales from a fact that was
+looked up are compared to those in the given row. If True and
+differences are found, a ValueError is raised. Default: False</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTable.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a fact into the fact table.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: a dict at least containing values for all the fact table’s
+attributes (both keys/references and measures).</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTable.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyvalues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup a fact from the given key values. Return key and measure vals.</p>
+<p>Return None if no fact is found.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>keyvalues: a dict at least containing values for all keys</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTablePartitioner">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">FactTablePartitioner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partitioner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.BasePartitioner</span></code></a></p>
+<p>A FactTable-like class that handles partitioning.</p>
+<p>Partitioning is done between a number of FactTable objects called the
+parts. The class offers the interface of FactTable. When a method is
+called, the corresponding method on one of the parts (chosen by a
+user-definable partitioner function) will be invoked. The parts can
+operate on a single physical fact table or different physical
+tables.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>parts: a sequence of FactTable objects.</p></li>
+<li><p>partitioner: None or a callable p(dict) -&gt; int where the argument
+is a dict mapping from the names of the keyrefs to the values of
+the keyrefs. The resulting int is used to determine which part
+a given row should be handled by.
+When partitioner is None, a default partitioner is used. This
+partitioner computes the sum of all the keyrefs values.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTablePartitioner.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke ensure on the relevant part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTablePartitioner.getpart">
+<span class="sig-name descname"><span class="pre">getpart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the relevant part for the given row</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTablePartitioner.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke insert on the relevant part</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.FactTablePartitioner.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke lookup on the relevant part</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.SlowlyChangingDimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">SlowlyChangingDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookupatts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orderingatt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">versionatt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromatt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromfinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toatt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tofinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minfrom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcdateatt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcdateparser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">pygrametl.ymdparser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type1atts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachesize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idfinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usefetchfirst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useorderby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.Dimension</span></code></a></p>
 <p>A class for accessing a slowly changing dimension of “type 2”.</p>
 <p>“Type 1” updates can also be applied for a subset of the attributes.</p>
@@ -593,25 +1006,25 @@ For example, a DEFAULT value in the DB or automatic type coercion can
 break this assumption.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>name: the name of the dimension table in the DW</li>
-<li>key: the name of the primary key in the DW</li>
-<li>attributes: a sequence of the attribute names in the dimension
+<li><p>name: the name of the dimension table in the DW</p></li>
+<li><p>key: the name of the primary key in the DW</p></li>
+<li><p>attributes: a sequence of the attribute names in the dimension
 table. Should not include the name of the primary key which is
 given in the key argument, but should include versionatt,
-fromatt, and toatt.</li>
-<li>lookupatts: a sequence with a subset of the attributes that
+fromatt, and toatt.</p></li>
+<li><p>lookupatts: a sequence with a subset of the attributes that
 uniquely identify a dimension members. These attributes are thus
-used for looking up members.</li>
-<li>orderingatt: the name of the attribute used to identify the newest
-version. The version holding the greatest value is considered to 
+used for looking up members.</p></li>
+<li><p>orderingatt: the name of the attribute used to identify the newest
+version. The version holding the greatest value is considered to
 be the newest. If orderingatt is None, versionatt is used. If
-versionatt is also None, toatt is used and NULL is  considered as 
+versionatt is also None, toatt is used and NULL is  considered as
 the greatest value. If orderingatt, versionatt,toatt are all None,
-an error is raised.</li>
-<li>versionatt: the name of the attribute holding the version number</li>
-<li>fromatt: the name of the attribute telling from when the version
-becomes valid. Not used if None. Default: None</li>
-<li>fromfinder: a function(targetconnection, row, namemapping)
+an error is raised.</p></li>
+<li><p>versionatt: the name of the attribute holding the version number</p></li>
+<li><p>fromatt: the name of the attribute telling from when the version
+becomes valid. Not used if None. Default: None</p></li>
+<li><p>fromfinder: a function(targetconnection, row, namemapping)
 returning a value for the fromatt for a new version (the function
 is first used when it is determined that a new version must be
 added; it is not applied to determine this).
@@ -624,15 +1037,15 @@ date function are given, new versions get the date of the current
 day. If a date attribute is given (but no date function), the
 date attribute’s value is converted (by means of srcdateparser)
 and a new version gets the result of this as the date it is valid
-from. Default: None</li>
-<li>toatt: the name of the attribute telling until when the version
-is valid. Not used if None. Default: None</li>
-<li>tofinder: a function(targetconnection, row, namemapping)
+from. Default: None</p></li>
+<li><p>toatt: the name of the attribute telling until when the version
+is valid. Not used if None. Default: None</p></li>
+<li><p>tofinder: a function(targetconnection, row, namemapping)
 returning a value for the toatt. If not set, fromfinder is used
 (note that if fromfinder is None, it is set to a default
 function – see the comments about fromfinder. The possibly
-modified value is used here.) Default: None</li>
-<li>minfrom: the value to use for fromatt for the 1st version of a
+modified value is used here.) Default: None</p></li>
+<li><p>minfrom: the value to use for fromatt for the 1st version of a
 member if fromatt is not already set. If None, the value is
 found in the same way as for other new versions, i.e., as
 described for fromfinder. If fromatt should take the value
@@ -641,75 +1054,93 @@ element which is None: (None,). Note that minto affects the 1st
 version, not any following versions. Note also that if the member
 to insert already contains a value for fromatt, minfrom is
 ignored.
-Default: None.</li>
-<li>maxto: the value to use for toatt for new members. Default: None</li>
-<li>srcdateatt: the name of the attribute in the source data that
+Default: None.</p></li>
+<li><p>maxto: the value to use for toatt for new members. Default: None</p></li>
+<li><p>srcdateatt: the name of the attribute in the source data that
 holds a date showing when a version is valid from. The data is
 converted to a datetime by applying srcdateparser on it.
 If not None, the date attribute is also used when comparing
 a potential new version to the newest version in the DB.
-If None, the date fields are not compared. Default: None</li>
-<li>srcdateparser: a function that takes one argument (a date in the
+If None, the date fields are not compared. Default: None</p></li>
+<li><p>srcdateparser: a function that takes one argument (a date in the
 format scrdateatt has) and returns a datetime.datetime.
 If srcdateatt is None, srcdateparser is not used.
 Default: pygrametl.ymdparser (i.e., the default value is a
-function that parses a string of the form ‘yyyy-MM-dd’)</li>
-<li>type1atts: a sequence of attributes that should have type1 updates
-applied. Default: ()</li>
-<li>cachesize: the maximum size of the cache. 0 disables caching
-and values smaller than 0 allows unlimited caching</li>
-<li>prefill: decides if the cache should be prefilled with the newest
-versions. Default: False.</li>
-<li>idfinder: a function(row, namemapping) -&gt; key value that assigns
+function that parses a string of the form ‘yyyy-MM-dd’)</p></li>
+<li><p>type1atts: a sequence of attributes that should have type1 updates
+applied. Default: ()</p></li>
+<li><p>cachesize: the maximum size of the cache. 0 disables caching
+and values smaller than 0 allows unlimited caching</p></li>
+<li><p>prefill: decides if the cache should be prefilled with the newest
+versions. Default: False.</p></li>
+<li><p>idfinder: a function(row, namemapping) -&gt; key value that assigns
 a value to the primary key attribute based on the content of the
 row and namemapping. If not given, it is assumed that the primary
 key is an integer, and the assigned key value is then the current
-maximum plus one.</li>
-<li>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+maximum plus one.</p></li>
+<li><p>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
 clause is used when prefil is True. Depending on the used DBMS
 and DB driver, this can give significant savings wrt. to time and
-memory. Not all DBMSs support this clause yet. Default: False</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given,
-the default target connection is used.</li>
-<li>useorderby: a flag deciding if ORDER BY is used in the SQL to
+memory. Not all DBMSs support this clause yet. Default: False</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given,
+the default target connection is used.</p></li>
+<li><p>useorderby: a flag deciding if ORDER BY is used in the SQL to
 select the newest version. If True, the DBMS thus does the
-sorting. If False, all versions are fetched and the highest 
-version is found in Python. For some systems, this can lead to 
-significant performance improvements. Default: True</li>
+sorting. If False, all versions are fetched and the highest
+version is found in Python. For some systems, this can lead to
+significant performance improvements. Default: True</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.SlowlyChangingDimension.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SlowlyChangingDimension.closecurrent">
+<span class="sig-name descname"><span class="pre">closecurrent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.date(2021,</span> <span class="pre">5,</span> <span class="pre">26)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.closecurrent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the current version by setting its toatt if it is maxto.</p>
+<p>The newest version will have its toatt set to the given end
+argument (default pygrametl.today(), i.e., the current date) only
+if, the value for the newest row’s toatt currently is maxto.
+Otherwise no update will be done.
+If toatt is not defined an exception is raised.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: a dict which must contain at least the lookup attributes</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+<li><p>end: the value to set for the newest version. Default: The current
+date as given by pygrametl.today()</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SlowlyChangingDimension.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the key for the newest version with the given values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict which must contain at least the lookup attributes</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+<li><p>row: a dict which must contain at least the lookup attributes</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SlowlyChangingDimension.scdensure">
-<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SlowlyChangingDimension.scdensure">
+<span class="sig-name descname"><span class="pre">scdensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup or insert a version of a slowly changing dimension member.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Has side-effects on the given row.</p>
+<p class="admonition-title">Note</p>
+<p>Has side-effects on the given row.</p>
 </div>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict containing the attributes for the member.
+<li><p>row: a dict containing the attributes for the member.
 key, versionatt, fromatt, and toatt are not required to be
-present but will be added (if defined).</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+present but will be added (if defined).</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pygrametl.tables.SnowflakedDimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">SnowflakedDimension</code><span class="sig-paren">(</span><em>references</em>, <em>expectboguskeyvalues=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">SnowflakedDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">references</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expectboguskeyvalues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class for accessing a snowflaked dimension spanning several tables
 in the underlying database. Lookups and inserts are then automatically
@@ -717,7 +1148,7 @@ spread out over the relevant tables while the programmer only needs
 to interact with a single SnowflakedDimension instance.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
-<li><p class="first">references: a sequence of pairs of Dimension objects
+<li><p>references: a sequence of pairs of Dimension objects
 [(a1,a2), (b1,b2), …] meaning that a1 has a foreign key to a2
 etc. a2 may itself be a sequence of Dimensions:
 [(a1, [a21, a22, …]), (b1, [b21, b22, …]), …].</p>
@@ -730,24 +1161,23 @@ given dimensions form a tree).</p>
 <p>A foreign key must have the same name as the primary key it
 references.</p>
 </li>
-<li><p class="first">expectboguskeyvalues: If expectboguskeyvalues is True, we allow a
+<li><p>expectboguskeyvalues: If expectboguskeyvalues is True, we allow a
 key that is used as lookup attribute in a lower level to hold a
 wrong value (which would typically be None). When ensure or
 insert is called, we find the correct value for the key in the
 higher level.  If expectboguskeyvalues, we again try a lookup on
 the lower level after this. If expectboguskeyvalues is False, we
-move directly on to do an insert. Default: False</p>
-</li>
+move directly on to do an insert. Default: False</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.endload" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.ensure">
-<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.ensure" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.ensure">
+<span class="sig-name descname"><span class="pre">ensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.ensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup the given member. If that fails, insert it. Return key value.</p>
 <p>If the member must be inserted, data is automatically inserted in
 all participating tables where (part of) the member is not
@@ -757,49 +1187,49 @@ NOT guaranteed that key values for all levels exist in row
 afterwards.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: the row to lookup or insert. Must contain the lookup
+<li><p>row: the row to lookup or insert. Must contain the lookup
 attributes. Key is not required to be present but will be added
-using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+using idfinder if missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.getbykey">
-<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em>, <em>fullrow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbykey" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.getbykey">
+<span class="sig-name descname"><span class="pre">getbykey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyvalue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullrow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbykey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup and return the row with the given key value.</p>
 <p>If no row is found in the dimension table, the function returns
 a row where all values (including the key) are None.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>keyvalue: the key value of the row to lookup</li>
-<li>fullrow: a flag deciding if the full row (with data from
+<li><p>keyvalue: the key value of the row to lookup</p></li>
+<li><p>fullrow: a flag deciding if the full row (with data from
 all tables in the snowflake) should be returned. If False,
 only data from the lowest level in the hierarchy (i.e., the table
-the closest to the fact table) is returned. Default: False</li>
+the closest to the fact table) is returned. Default: False</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.getbyvals">
-<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>values</em>, <em>namemapping={}</em>, <em>fullrow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.getbyvals">
+<span class="sig-name descname"><span class="pre">getbyvals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullrow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all rows with values identical to the given.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>values: a dict which must hold a subset of the tables attributes.
+<li><p>values: a dict which must hold a subset of the tables attributes.
 All rows that have identical values for all attributes in this
-dict are returned.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-<li>fullrow: a flag deciding if the full row (with data from
+dict are returned.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+<li><p>fullrow: a flag deciding if the full row (with data from
 all tables in the snowflake) should be returned. If False,
 only data from the lowest level in the hierarchy (i.e., the table
-the closest to the fact table) is returned. Default: False</li>
+the closest to the fact table) is returned. Default: False</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.insert" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert the given member. If that fails, insert it. Return key value.</p>
 <p>Data is automatically inserted in all participating tables where
 (part of) the member is not already represented. If nothing is
@@ -809,51 +1239,51 @@ NOT guaranteed that key values for all levels exist in row
 afterwards.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: the row to lookup or insert. Must contain the lookup
+<li><p>row: the row to lookup or insert. Must contain the lookup
 attributes. Key is not required to be present but will be added
-using idfinder if missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+using idfinder if missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.lookup" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the key for the row with the given values.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict which must contain at least the lookup attributes
+<li><p>row: a dict which must contain at least the lookup attributes
 which all must come from the root (the table closest to the
-fact table).</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+fact table).</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.scdensure">
-<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.scdensure">
+<span class="sig-name descname"><span class="pre">scdensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.scdensure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lookup or insert a version of a slowly changing dimension member.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Still experimental!!! For now we require that only the
+<p class="admonition-title">Warning</p>
+<p>Still experimental!!! For now we require that only the
 root is a SlowlyChangingDimension.</p>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Has side-effects on the given row.</p>
+<p class="admonition-title">Note</p>
+<p>Has side-effects on the given row.</p>
 </div>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict containing the attributes for the member. Key is not
+<li><p>row: a dict containing the attributes for the member. Key is not
 required to be present but will be added using idfinder if
-missing.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SnowflakedDimension.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.update" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SnowflakedDimension.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SnowflakedDimension.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update rows in the participating dimension tables.</p>
 <p>If the key of a participating dimension D is in the given row,
 D.update(…) is invoked.</p>
@@ -865,157 +1295,17 @@ that none of its attributes are present in the given row.</p>
 directly on the Dimensions that should be updated.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict. If the key of a participating dimension D is in the
-dict, D.update(…) is invoked.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+<li><p>row: a dict. If the key of a participating dimension D is in the
+dict, D.update(…) is invoked.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pygrametl.tables.FactTable">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">FactTable</code><span class="sig-paren">(</span><em>name</em>, <em>keyrefs</em>, <em>measures=()</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class for accessing a fact table in the DW.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>name: the name of the fact table in the DW</li>
-<li>keyrefs: a sequence of attribute names that constitute the
-primary key of the fact tables (i.e., the dimension references)</li>
-<li>measures: a possibly empty sequence of measure names. Default: ()</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given,
-the default target connection is used.</li>
-</ul>
-<dl class="method">
-<dt id="pygrametl.tables.FactTable.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.endload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finalize the load.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.FactTable.ensure">
-<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>compare=False</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.ensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensure that a fact is present (insert it if it is not already there).</p>
-<p>Return True if a fact with identical values for keyrefs attributes
-was already present in the fact table; False if not.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: a dict at least containing the attributes of the fact table</li>
-<li>compare: a flag deciding if measure vales from a fact that was
-looked up are compared to those in the given row. If True and
-differences are found, a ValueError is raised. Default: False</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.FactTable.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert a fact into the fact table.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>row: a dict at least containing values for the keys and measures.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.FactTable.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>keyvalues</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTable.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lookup a fact from the given key values. Return key and measure vals.</p>
-<p>Return None if no fact is found.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>keyvalues: a dict at least containing values for all keys</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.BatchFactTable">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BatchFactTable</code><span class="sig-paren">(</span><em>name</em>, <em>keyrefs</em>, <em>measures=()</em>, <em>batchsize=10000</em>, <em>targetconnection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BatchFactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.FactTable</span></code></a></p>
-<p>A class for accessing a fact table in the DW. This class performs
-performs insertions in batches.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>name: the name of the fact table in the DW</li>
-<li>keyrefs: a sequence of attribute names that constitute the
-primary key of the fact tables (i.e., the dimension references)</li>
-<li>measures: a possibly empty sequence of measure names. Default: ()</li>
-<li>batchsize: an int deciding many insert operations should be done
-in one batch. Default: 10000</li>
-<li>targetconnection: The ConnectionWrapper to use. If not given,
-the default target connection is used.</li>
-</ul>
-<dl class="method">
-<dt id="pygrametl.tables.BatchFactTable.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BatchFactTable.endload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finalize the load.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.BulkFactTable">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BulkFactTable</code><span class="sig-paren">(</span><em>name</em>, <em>keyrefs</em>, <em>measures</em>, <em>bulkloader</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>tempdest=None</em>, <em>bulksize=500000</em>, <em>usefilename=False</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>encoding=None</em>, <em>dependson=()</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BulkFactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables._BaseBulkloadable</span></code></p>
-<p>Class for addition of facts to a fact table. Reads are not supported.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>name: the name of the fact table in the DW</li>
-<li>keyrefs: a sequence of attribute names that constitute the
-primary key of the fact tables (i.e., the dimension references)</li>
-<li>measures: a possibly empty sequence of measure names.</li>
-<li>bulkloader: A method
-m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
-is called to load data from a temporary file into the DW. The
-argument “attributes” is the combination of keyrefs and measures
-(i.e., a list of the names of the columns to insert values into)
-and show the order in which the attribute values appear in the
-temporary file.  The rest of the arguments are similar to those
-arguments with identical names that are given to
-BulkFactTable.__init__ as described here. The argument “tempdest”
-can, however, be 1) a string with a filename or 2) a file
-object. This is determined by the usefilename argument to
-BulkFactTable.__init__ (see below).</li>
-<li>fieldsep: a string used to separate fields in the temporary
-file. Default: ‘\t’</li>
-<li>rowsep: a string used to separate rows in the temporary file.
-Default: ‘\n’</li>
-<li>nullsubst: an optional string used to replace None values.
-If nullsubst=None, no substitution takes place. Default: None</li>
-<li>tempdest: a file object or None. If None a named temporary file
-is used. Default: None</li>
-<li>bulksize: an int deciding the number of rows to load in one
-bulk operation. Default: 500000</li>
-<li>usefilename: a value deciding if the file should be passed to the
-bulkloader by its name instead of as a file-like object. This is,
-e.g., necessary when the bulk loading is invoked through SQL
-(instead of directly via a method on the PEP249 driver). It is
-also necessary if the bulkloader runs in another process
-(for example, when if the BulkFactTable is wrapped by a
-DecoupledFactTable and invokes the bulkloader on a shared
-connection wrapper). Default: False</li>
-<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
-values into strings that can be written to the temporary file and 
-eventually bulkloaded. Default: pygrametl.getdbfriendlystr</li>
-<li>encoding: a string with the encoding to use. If None,
-locale.getpreferredencoding() is used. This argument is
-ignored under Python 2! Default: None</li>
-<li>dependson: a sequence of other bulkloadble tables that should
-be bulkloaded before this instance does bulkloading (e.g., if
-the fact table has foreign keys to some bulk-loaded dimension
-table). Default: ()</li>
-</ul>
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.SubprocessFactTable">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">SubprocessFactTable</code><span class="sig-paren">(</span><em>keyrefs</em>, <em>measures</em>, <em>executable</em>, <em>initcommand=None</em>, <em>endcommand=None</em>, <em>terminateafter=-1</em>, <em>fieldsep='\t'</em>, <em>rowsep='\n'</em>, <em>nullsubst=None</em>, <em>strconverter=pygrametl.getdbfriendlystr</em>, <em>buffersize=16384</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.SubprocessFactTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">SubprocessFactTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initcommand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endcommand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminateafter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowsep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nullsubst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strconverter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">pygrametl.getdbfriendlystr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffersize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16384</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for addition of facts to a subprocess.</p>
 <p>The subprocess can, e.g., be a logger or bulkloader. Reads are not
@@ -1024,403 +1314,213 @@ supported.</p>
 called (and endload() is called from pygrametl.commit()).</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>keyrefs: a sequence of attribute names that constitute the
-primary key of the fact table (i.e., the dimension references)</li>
-<li>measures: a possibly empty sequence of measure names. Default: ()</li>
-<li>executable: The subprocess to start.</li>
-<li>initcommand: If not None, this command is written to the
-subprocess before any data.</li>
-<li>endcommand: If not None, this command is written to the subprocess
-after all data has been written.</li>
-<li>terminateafter: If greater than or equal to 0, the subprocess
+<li><p>keyrefs: a sequence of attribute names that constitute the
+primary key of the fact table (i.e., the dimension references)</p></li>
+<li><p>measures: a possibly empty sequence of measure names. Default: ()</p></li>
+<li><p>executable: The subprocess to start.</p></li>
+<li><p>initcommand: If not None, this command is written to the
+subprocess before any data.</p></li>
+<li><p>endcommand: If not None, this command is written to the subprocess
+after all data has been written.</p></li>
+<li><p>terminateafter: If greater than or equal to 0, the subprocess
 is terminated after this amount of seconds after the pipe to
-the subprocess is closed.</li>
-<li>fieldsep: a string used to separate fields in the output
-sent to the subprocess. Default: ‘\t</li>
-<li>rowsep: a string used to separate rows in the output sent to the
-subprocess. Default: ‘\n’</li>
-<li>nullsubst: an optional string used to replace None values.
-If nullsubst=None, no substitution takes place. Default: None</li>
-<li>strconverter: a method m(value, nullsubst) -&gt; str to convert 
-values into strings that can be written to the subprocess. 
-Default: pygrametl.getdbfriendlystr</li>
+the subprocess is closed.</p></li>
+<li><p>fieldsep: a string used to separate fields in the output
+sent to the subprocess. Default: ‘\t</p></li>
+<li><p>rowsep: a string used to separate rows in the output sent to the
+subprocess. Default: ‘\n’</p></li>
+<li><p>nullsubst: an optional string used to replace None values.
+If nullsubst=None, no substitution takes place. Default: None</p></li>
+<li><p>strconverter: a method m(value, nullsubst) -&gt; str to convert
+values into strings that can be written to the subprocess.
+Default: pygrametl.getdbfriendlystr</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.SubprocessFactTable.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.endload" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SubprocessFactTable.endload">
+<span class="sig-name descname"><span class="pre">endload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.endload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finalize the load.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="pygrametl.tables.SubprocessFactTable.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.insert" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.SubprocessFactTable.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.SubprocessFactTable.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a fact into the fact table.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>row: a dict at least containing values for the keys and measures.</li>
-<li>namemapping: an optional namemapping (see module’s documentation)</li>
+<li><p>row: a dict at least containing values for the keys and measures.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
 </ul>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pygrametl.tables.DecoupledDimension">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">DecoupledDimension</code><span class="sig-paren">(</span><em>dim</em>, <em>returnvalues=True</em>, <em>consumes=()</em>, <em>attstoconsume=()</em>, <em>batchsize=500</em>, <em>queuesize=200</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.parallel.Decoupled</span></code></a></p>
-<p>A Dimension-like class that enables parallelism by executing all
-operations on a given Dimension in a separate, dedicated process
-(that Dimension is said to be “decoupled”).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pygrametl.tables.TypeOneSlowlyChangingDimension">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">TypeOneSlowlyChangingDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookupatts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type1atts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachesize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idfinder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usefetchfirst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachefullrows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetconnection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.CachedDimension</span></code></a></p>
+<p>A class for accessing a slowly changing dimension of “type 1”.</p>
+<p>Caching is used. We assume that the DB doesn’t change or add any
+attribute values that are cached.
+For example, a DEFAULT value in the DB or automatic type coercion can
+break this assumption.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>dim: the Dimension object to use in a separate process</li>
-<li>returnvalues: decides if return values from method calls on dim
-should be kept such that they can be fetched by the caller or
-another Decoupled instance</li>
-<li>consumes: a sequence of Decoupled objects from which to fetch
-returnvalues (that are used to replace FutureResults in
-arguments).
-Default: ()</li>
-<li>attstoconsume: a sequence of the attribute names in rows that
-should have FutureResults replaced by actual return values. Does
-not have to be given, but may improve performance when given.
-Default: ()</li>
-<li>batchsize: the size of batches (grouped method calls) transferred
-between the processes. NB: Large values do not necessarily give
-good performance
-Default: 500</li>
-<li>queuesize: the maximum amount of waiting batches. Infinite if
-less than or equal to 0. NB: Large values do not necessarily give
-good performance.
-Default: 200</li>
+<li><p>name: the name of the dimension table in the DW</p></li>
+<li><p>key: the name of the primary key in the DW</p></li>
+<li><p>attributes: a sequence of the attribute names in the dimension
+table. Should not include the name of the primary key which is
+given in the key argument.</p></li>
+<li><p>lookupatts: A subset of the attributes that uniquely identify
+a dimension members. These attributes are thus used for looking
+up members.</p></li>
+<li><p>type1atts: A sequence of attributes that should have type1 updates
+applied, it cannot intersect with lookupatts. If not given, it is
+assumed that type1atts = attributes - lookupatts</p></li>
+<li><p>cachesize: the maximum number of rows to cache. If less than or
+equal to 0, unlimited caching is used. Default: 10000</p></li>
+<li><p>prefill: a flag deciding if the cache should be filled when
+initialized. Default: False</p></li>
+<li><p>idfinder: A function(row, namemapping) -&gt; key value that assigns
+a value to the primary key attribute based on the content of the
+row and namemapping. If not given, it is assumed that the primary
+key is an integer, and the assigned key value is then the current
+maximum plus one.</p></li>
+<li><p>usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
+clause is used when prefil is True. Depending on the used DBMS
+and DB driver, this can give significant savings wrt. to time and
+memory. Not all DBMSs support this clause yet. Default: False</p></li>
+<li><p>cachefullrows: a flag deciding if full rows should be cached. If
+not, the cache only holds a mapping from lookupattributes to key
+values, and from key to the type 1 slowly changing attributes.
+Default: False.</p></li>
+<li><p>targetconnection: The ConnectionWrapper to use. If not given, the
+default target connection is used.</p></li>
 </ul>
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledDimension.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.endload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke endload on the decoupled Dimension in the separate process and
-return when all waiting method calls have been executed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledDimension.ensure">
-<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.ensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke ensure on the decoupled Dimension in the separate process</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledDimension.getbykey">
-<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbykey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke getbykey on the decoupled Dimension in the separate
-process</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledDimension.getbyvals">
-<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.getbyvals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke betbycals on the decoupled Dimension in the separate process</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledDimension.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke insert on the decoupled Dimension in the separate process</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledDimension.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke lookup on the decoupled Dimension in the separate process</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledDimension.scdensure">
-<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledDimension.scdensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke scdensure on the decoupled Dimension in the separate process</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.DecoupledFactTable">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">DecoupledFactTable</code><span class="sig-paren">(</span><em>facttbl</em>, <em>returnvalues=True</em>, <em>consumes=()</em>, <em>attstoconsume=()</em>, <em>batchsize=500</em>, <em>queuesize=200</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="parallel.html#pygrametl.parallel.Decoupled" title="pygrametl.parallel.Decoupled"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.parallel.Decoupled</span></code></a></p>
-<p>A FactTable-like class that enables parallelism by executing all
-operations on a given FactTable in a separate, dedicated process
-(that FactTable is said to be “decoupled”).</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>facttbl: the FactTable object to use in a separate process</li>
-<li>returnvalues: decides if return values from method calls on
-facttbl should be kept such that they can be fetched by the caller
-or another Decoupled instance</li>
-<li>consumes: a sequence of Decoupled objects from which to fetch
-returnvalues (that are used to replace FutureResults in
-arguments).
-Default: ()</li>
-<li>attstoconsume: a sequence of the attribute names in rows that
-should have FutureResults replaced by actual return values. Does
-not have to be given, but may improve performance when given.
-Default: ()</li>
-<li>batchsize: the size of batches (grouped method calls) transferred
-between the processes. NB: Large values do not necessarily give
-good performance
-Default: 500</li>
-<li>queuesize: the maximum amount of waiting batches. Infinite if
-less than or equal to 0. NB: Large values do not necessarily give
-good performance.
-Default: 200</li>
-</ul>
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledFactTable.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.endload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke endload on the decoupled FactTable in the separate process and
-return when all waiting method calls have been executed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledFactTable.ensure">
-<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.ensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke ensure on the decoupled FactTable in the separate process</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledFactTable.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke insert on the decoupled FactTable in the separate process</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DecoupledFactTable.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DecoupledFactTable.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke lookup on the decoupled FactTable in the separate process</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.BasePartitioner">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">BasePartitioner</code><span class="sig-paren">(</span><em>parts</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A base class for partitioning between several parts.</p>
-<p>See also DimensionPartitioner and FactTablePartitioner.</p>
-<dl class="method">
-<dt id="pygrametl.tables.BasePartitioner.addpart">
-<code class="descname">addpart</code><span class="sig-paren">(</span><em>part</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.addpart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.BasePartitioner.droppart">
-<code class="descname">droppart</code><span class="sig-paren">(</span><em>part=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.droppart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Drop a part. If an argument is given, it must be a part of the
-patitioner and it will then be removed. If no argument is given,
-the first part is removed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.BasePartitioner.endload">
-<code class="descname">endload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.endload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call endload on all parts</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.BasePartitioner.getpart">
-<code class="descname">getpart</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find  the part that should handle the given row. The provided
-implementation in BasePartitioner does only use round robin
-partitioning, but subclasses apply other methods</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.BasePartitioner.parts">
-<code class="descname">parts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.BasePartitioner.parts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the parts the partitioner works on</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.DimensionPartitioner">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">DimensionPartitioner</code><span class="sig-paren">(</span><em>parts</em>, <em>getbyvalsfromall=False</em>, <em>partitioner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.BasePartitioner</span></code></a></p>
-<p>A Dimension-like class that handles partitioning.</p>
-<p>Partitioning is done between a number of Dimension objects called the
-parts. The class offers the interface of Dimensions (incl. scdensure
-from SlowlyChangingDimension). When a method is called, the
-corresponding method on one of the parts (chosen by a user-definable
-partitioner function) will be invoked. The parts can operate on a
-single physical dimension table or different physical tables.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>parts: a sequence of Dimension objects.</li>
-<li>getbyvalsfromall: determines if getbyvals should be answered by
-means of all parts (when getbyvalsfromall = True) or only the
-first part, i.e., parts[0] (when getbybalsfromall = False).
-Default: False</li>
-<li>partitioner: None or a callable p(dict) -&gt; int where the argument
-is a dict mapping from the names of the lookupatts to the values
-of the lookupatts. The resulting int is used to determine which
-part a given row should be handled by.
-When partitioner is None, a default partitioner is used. This
-partitioner computes the hash value of each value of the
-lookupatts and adds them together.</li>
-</ul>
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.ensure">
-<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.ensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke ensure on the relevant Dimension part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.getbykey">
-<code class="descname">getbykey</code><span class="sig-paren">(</span><em>keyvalue</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbykey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke getbykey on the relevant Dimension part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.getbyvals">
-<code class="descname">getbyvals</code><span class="sig-paren">(</span><em>values</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getbyvals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke getbyvals on the first part or all parts (depending on the
-value of the instance’s getbyvalsfromall)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.getpart">
-<code class="descname">getpart</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.getpart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the part that should handle the given row</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke insert on the relevant Dimension part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke lookup on the relevant Dimension part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.scdensure">
-<code class="descname">scdensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.scdensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke scdensure on the relevant Dimension part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.DimensionPartitioner.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.DimensionPartitioner.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke update on the relevant Dimension part</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pygrametl.tables.FactTablePartitioner">
-<em class="property">class </em><code class="descclassname">pygrametl.tables.</code><code class="descname">FactTablePartitioner</code><span class="sig-paren">(</span><em>parts</em>, <em>partitioner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pygrametl.tables.BasePartitioner" title="pygrametl.tables.BasePartitioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pygrametl.tables.BasePartitioner</span></code></a></p>
-<p>A FactTable-like class that handles partitioning.</p>
-<p>Partitioning is done between a number of FactTable objects called the
-parts. The class offers the interface of FactTable. When a method is
-called, the corresponding method on one of the parts (chosen by a
-user-definable partitioner function) will be invoked. The parts can
-operate on a single physical fact table or different physical
-tables.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li>parts: a sequence of FactTable objects.</li>
-<li>partitioner: None or a callable p(dict) -&gt; int where the argument
-is a dict mapping from the names of the keyrefs to the values of
-the keyrefs. The resulting int is used to determine which part
-a given row should be handled by.
-When partitioner is None, a default partitioner is used. This
-partitioner computes the sum of all the keyrefs values.</li>
-</ul>
-<dl class="method">
-<dt id="pygrametl.tables.FactTablePartitioner.ensure">
-<code class="descname">ensure</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.ensure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke ensure on the relevant part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.FactTablePartitioner.getpart">
-<code class="descname">getpart</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.getpart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the relevant part for the given row</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.FactTablePartitioner.insert">
-<code class="descname">insert</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.insert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke insert on the relevant part</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pygrametl.tables.FactTablePartitioner.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>row</em>, <em>namemapping={}</em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.FactTablePartitioner.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke lookup on the relevant part</p>
-</dd></dl>
-
-</dd></dl>
-
+<dl class="py method">
+<dt class="sig sig-object py" id="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure">
+<span class="sig-name descname"><span class="pre">scdensure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namemapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup or insert a version of a slowly changing dimension member.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Has side-effects on the given row.</p>
 </div>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>row: a dict containing the attributes for the table. It must
+contain all attributes if it is the first version of the row to be
+inserted, updates of existing rows need only contain lookupatts
+and a subset of type1atts as a missing type1atts is ignored and
+the existing value left as is in the database. Key is not required
+to be present but will be added using idfinder if missing.</p></li>
+<li><p>namemapping: an optional namemapping (see module’s documentation)</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pygrametl.tables.definequote">
+<span class="sig-prename descclassname"><span class="pre">pygrametl.tables.</span></span><span class="sig-name descname"><span class="pre">definequote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quotechar</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.tables.definequote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the global quote function, for wrapping identifiers with quotes.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><p>quotechar: If None, do not wrap identifier. If a string, prepend and
+append quotechar to identifier. If a tuple of two strings, prepend with
+first element and append with last.</p></li>
+</ul>
+</dd></dl>
+
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="datasources.html"
-                        title="previous chapter">Datasources</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="parallel.html"
-                        title="next chapter">Parallel</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/api/tables.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<h1 class="logo"><a href="../index.html">pygrametl</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/install.html">Install Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/beginner.html">Beginner Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/database.html">Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/datasources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/dimensions.html">Dimensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/facttables.html">Fact Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/bulkloading.html">Bulk Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/parallel.html">Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/jython.html">Jython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/testing.html">Testing</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pygrametl.html">pygrametl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasources.html">datasources</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel.html">parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jdbcconnectionwrapper.html">JDBCConnectionWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jythonmultiprocessing.html">jythonmultiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aggregators.html">aggregators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="steps.html">steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fifodict.html">FIFODict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drawntabletesting.html">drawntabletesting</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="datasources.html" title="previous chapter">datasources</a></li>
+      <li>Next: <a href="parallel.html" title="next chapter">parallel</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="parallel.html" title="Parallel"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="datasources.html" title="Datasources"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2009 - 2021, Aalborg University.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/api/tables.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2009 - 2016, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
-    </div>
+
+    
+
+    
   </body>
 </html>

@@ -1,4 +1,4 @@
-Aggregators
+aggregators
 ===========
 
 .. automodule:: pygrametl.aggregators

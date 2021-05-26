@@ -1,4 +1,4 @@
-Tables
+tables
 ======
 
 .. automodule:: pygrametl.tables

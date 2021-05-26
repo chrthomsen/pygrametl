@@ -1,228 +1,234 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Jython &#8212; pygrametl 2.6 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Jython &#8212; pygrametl 2.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pygrametl" href="../api/pygrametl.html" />
+    <link rel="next" title="Drawn Table Testing" href="testing.html" />
     <link rel="prev" title="Parallel" href="parallel.html" />
- 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  
-    ga('create', 'UA-30772056-2', 'auto');
-    ga('send', 'pageview');
-  
-  </script>
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+</script>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../api/pygrametl.html" title="pygrametl"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="parallel.html" title="Parallel"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="jython">
+  <section id="jython">
 <span id="id1"></span><h1>Jython<a class="headerlink" href="#jython" title="Permalink to this headline">¶</a></h1>
-<p><em>pygrametl</em> contains additional support for running ETL programs on Jython, the
-Java Virtual Machine implementation of Python. Using Jython compared to CPython
-allows for threads to be used instead of processes for performing operations in
-parallel. This is caused by the lack of global interpreter lock on the JVM,
-which in CPython prevents more then one thread in the same process from running
-at the same time. For more information about the GIL see the Python wiki <a class="reference external" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL</a>.</p>
-<p>To make the switch between CPython and Jython as simple as possible, two
+<p>pygrametl supports running ETL flows on Jython, an implementation of Python that
+run on the JVM. Using Jython instead of CPython allows an ETL flow to be
+parallelized using multiple threads instead of multiple processes. This is
+because Jython does not have a global interpreter lock, which in CPython ensures
+that only a single thread is running per process at a given time. For more
+information about the GIL see the Python wiki <a class="reference external" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL</a>.</p>
+<p>To make switching between CPython and Jython as simple as possible, two
 abstractions are provided by pygrametl. Firstly, <a class="reference internal" href="../api/jdbcconnectionwrapper.html#module-pygrametl.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper"><code class="xref py py-mod docutils literal notranslate"><span class="pre">JDBCConnectionWrapper</span></code></a>
-provides two wrappers for database connections following the Java Database
-Connectivity standard (JDBC), and as pygrametl uses a similar wrapper for
-<span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> database connections, they can be used without any changes to the
-program code. For more information about database accesses in pygrametl see
-<a class="reference internal" href="database.html#database"><span class="std std-ref">Database</span></a>. Secondly, as Jython currently has no support for
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">multiprocessing</span></code> due to threads being more lightweight and capable of
-running in parallel, another abstraction is provided by pygrametl in the form
-of the module <a class="reference internal" href="../api/jythonmultiprocessing.html#module-pygrametl.jythonmultiprocessing" title="pygrametl.jythonmultiprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">jythonmultiprocessing</span></code></a>. This module wraps <code class="xref py py-mod docutils literal notranslate"><span class="pre">threading</span></code>
-to implement a very small part of Python <code class="xref py py-mod docutils literal notranslate"><span class="pre">multiprocessing</span></code> module, so the
-same library interface can used on both Jython and CPython.</p>
-<p>Note, that while both Jython and CPython are capable of executing the same
-language, the two platforms are implemented differently, so optimisations
-suitable for one platform may be less effective for the other.  One aspect to
-be aware of when running high performance pygrametl flows on Jython, is memory
-management.  The JVM, which Jython runs on, uses a generational garbage
-collector with more expensive garbage collection strategies used for the old
-generation part of the heap. Allowing too many objects to be moved to this part
-of memory can reduce the throughput of an ETL flow significantly, something
-which can easily occur if values controlling caching such as
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">Decoupled.batchsize</span></code>, are set too high. Similarly, a too low value
-would in the case of <code class="xref py py-attr docutils literal notranslate"><span class="pre">Decoupled.batchsize</span></code> increase the overhead of
-transferring data between threads, as smaller batches are used.  Multiple tools
-for profiling JVM based programs exist: <a class="reference external" href="http://docs.oracle.com/javase/8/docs/technotes/samples/hprof.html">HPROF</a> and
-<a class="reference external" href="http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html">JConsole</a>
-are bundled with the JDK, while tools such as <a class="reference external" href="http://visualvm.java.net/">VisualVM</a> must be installed separately but often provide
+provides two connection wrappers for <a class="reference external" href="https://jcp.org/en/jsr/detail?id=221">JDBC</a> connections with the same interface as
+the connection wrappers for <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connections. As the connection wrappers,
+all share the same interface the user usually only has to change the connection
+type (<a class="reference external" href="https://jcp.org/en/jsr/detail?id=221">JDBC</a> or <span class="target" id="index-1"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a>) and the
+connection wrapper when switching between CPython and Jython. For more
+information about database access in pygrametl see <a class="reference internal" href="database.html#database"><span class="std std-ref">Database</span></a>. Secondly,
+Jython currently has no support for <code class="xref py py-mod docutils literal notranslate"><span class="pre">multiprocessing</span></code> as threads are more
+lightweight than processes and multiple threads can be run in parallel. So
+pygrametl includes the module <a class="reference internal" href="../api/jythonmultiprocessing.html#module-pygrametl.jythonmultiprocessing" title="pygrametl.jythonmultiprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">jythonmultiprocessing</span></code></a> which wraps Python’s
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">threading</span></code> module and provides a very small part of Python’s
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">multiprocessing</span></code> module. Thus, pygrametl exposes the same interface for
+creating parallel ETL flows no matter if a user is using CPython or Jython.</p>
+<p>While both Jython and CPython are capable of executing the same language, the
+two platforms are implemented differently, so optimizations suitable for one
+platform may be less effective on the other. One aspect to be aware of when
+running high-performance pygrametl-based ETL flows on Jython is memory
+management. For example, Oracle’s HotSpot JVM implements a generational garbage
+collector that uses a much slower garbage collection strategy for the old
+generations than for the young. Thus, allowing too many objects to be promoted
+to the old generations can reduce the throughput of an ETL flow significantly.
+Unfortunately, this can easily occur if the values controlling caching, such as
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">Decoupled.batchsize</span></code>, are set too high. Similarly, if the value for
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">Decoupled.batchsize</span></code> is set too low the overhead of transferring data
+between threads increases as smaller batches are used. Many tools for profiling
+programs running on the JVM exist: <a class="reference external" href="https://docs.oracle.com/javacomponents/jmc-5-4/jfr-runtime-guide/about.htm">JFR</a>
+and <a class="reference external" href="http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html">JConsole</a>
+are bundled with the JDK, while tools such as <a class="reference external" href="https://visualvm.github.io/">VisualVM</a> must be installed separately but often provide
 additional functionality.</p>
-<div class="section" id="setup">
+<section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
-<p>Using pygrametl with Jython requires a few extra steps compared to CPython, as
-Jython is less integrated with Python’s package management system, and the JVM
-needs access to the necessary libraries. First, install pygrametl either
-through <a class="reference external" href="https://pypi.python.org/pypi/pygrametl/">PyPI</a> or by downloading the
-latest development version from <a class="reference external" href="https://github.com/chrthomsen/pygrametl">Github</a>, for more information about
-installation of pygrametl for CPython see <a class="reference internal" href="../quickstart/install.html#install"><span class="std std-ref">Install Guide</span></a>.</p>
-<p>After pygrametl has been installed, the install location must be added to the
-environment variable <code class="docutils literal notranslate"><span class="pre">JYTHONPATH</span></code>, as Jython purposely does not read the
-locations used by CPython as a default. The default pip install directory
-depends on the operating system, and whether packages are installed locally or
-globally, check the output of the pip install command or its log for precise
-information about where the packages are installed.  The method for setting
-this variable depends on your operating system. On most Unix-like systems , the
-variable can be set in <code class="docutils literal notranslate"><span class="pre">~/.profile</span></code>, which will be sourced on login. On
-Windows, environment variables can be changed through the System setting in in
-the Control Panel. The module path can also be set programmatically through
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">sys.path</span></code>.</p>
-</div>
-<div class="section" id="usage">
+<p>Using pygrametl with Jython requires an extra step compared to CPython, as
+Jython is less integrated with Python’s package management system. Firstly,
+install pygrametl from <a class="reference external" href="https://pypi.python.org/pypi/pygrametl/">PyPI</a> or by
+downloading the development version from <a class="reference external" href="https://github.com/chrthomsen/pygrametl">GitHub</a>. For more information about
+installing pygrametl for use with CPython see <a class="reference internal" href="../quickstart/install.html#install"><span class="std std-ref">Install Guide</span></a>.</p>
+<p>After pygrametl has been installed, the location it has been installed to must
+be added to the environment variable <code class="docutils literal notranslate"><span class="pre">JYTHONPATH</span></code>, as Jython purposely does
+not import modules from CPython by default. The default directory used by
+CPython for packages depends on the operating system and whether a package is
+installed locally or globally. Check the output of the <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> command
+or its log for precise information about where the package has being installed.
+The method for setting this variable depends on the operating system. On most
+Unix-like systems, the variable can be set in <code class="docutils literal notranslate"><span class="pre">~/.profile</span></code>, which will be
+sourced on login. On Windows, environment variables can be changed through the
+System setting in the Control Panel. Python’s module search path can also be
+extended on a per program basis by adding a path to <code class="xref py py-attr docutils literal notranslate"><span class="pre">sys.path</span></code> at the
+start of a Python program.</p>
+</section>
+<section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>Jython can in most cases be used as a replacement for Jython, with the
-exception of C-Extensions which Jython replaces with the capability to use
-libraries from languages targeting the JVM such as Java, Scala or Clojure.  To
-accesses JVM libraries, they must be added to the JVM classpath by using the
-<code class="docutils literal notranslate"><span class="pre">-J-cp</span></code> command line option. For more information about Jython’s command line
-flags, see <a class="reference external" href="http://jython.org/docs/using/cmdline.html">Jython CLI</a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygrametl</span>
-<span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span>
+<p>Jython can in most cases be used as a direct replacement for CPython unless its
+C API is being used. While Jython does not implement CPython C API, it can use
+libraries implemented in other JVM-based languages like Java, Scala, Clojure,
+and Kotlin. To use such libraries, they must be added to the JVM classpath by
+using the <code class="docutils literal notranslate"><span class="pre">-J-cp</span></code> command-line option. For more information about Jython’s
+command-line flags run the command <code class="docutils literal notranslate"><span class="pre">jython</span> <span class="pre">-h</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">FactTable</span>
 <span class="kn">from</span> <span class="nn">pygrametl.JDBCConnectionWrapper</span> <span class="kn">import</span> <span class="n">JDBCConnectionWrapper</span>
 
-<span class="c1"># Java classes used must be imported into the program</span>
+<span class="c1"># The Java classes used must be explicitly imported into the program</span>
 <span class="kn">import</span> <span class="nn">java.sql.DriverManager</span>
 
-<span class="c1"># The actual database connection is handled using a JDBC connection</span>
-<span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span> \
-    <span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
+<span class="c1"># The actual database connection is handled by a JDBC connection</span>
+<span class="n">jconn</span> <span class="o">=</span> <span class="n">java</span><span class="o">.</span><span class="n">sql</span><span class="o">.</span><span class="n">DriverManager</span><span class="o">.</span><span class="n">getConnection</span><span class="p">(</span>
+    <span class="s2">&quot;jdbc:postgresql://localhost/dw?user=dwuser&amp;password=dwpass&quot;</span><span class="p">)</span>
 
-<span class="c1"># As PEP 249 and JDBC connections are different must JDBCConnectionWrapper</span>
-<span class="c1"># instead of ConnectionWrapper. The class has the same interface and a</span>
-<span class="c1"># reference to the wrapper is also saved to allow for easy access of it</span>
+<span class="c1"># As PEP 249 and JDBC connections provide different interfaces, is it</span>
+<span class="c1"># necessary to use a JDBCConnectionWrapper instead of a ConnectionWrapper.</span>
+<span class="c1"># Both provides the same interface, thus pygrametl can execute queries</span>
+<span class="c1"># without taking into account how the connection is implemented</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">JDBCConnectionWrapper</span><span class="p">(</span><span class="n">jdbcconn</span><span class="o">=</span><span class="n">jconn</span><span class="p">)</span>
 
-<span class="c1"># The instance of FactTable connects to the table &quot;facttable&quot; in the</span>
-<span class="c1"># database using the default connection wrapper we just created</span>
+<span class="c1"># This instance of FactTable manages the table &quot;facttable&quot; in the</span>
+<span class="c1"># database using the default connection wrapper created above</span>
 <span class="n">factTable</span> <span class="o">=</span> <span class="n">FactTable</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;testresults&#39;</span><span class="p">,</span>
     <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">],</span>
     <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pageid&#39;</span><span class="p">,</span> <span class="s1">&#39;testid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateid&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>The above example demonstrates how few changes are needed to in order to change
-the first example from <a class="reference internal" href="facttable.html#facttables"><span class="std std-ref">Fact Tables</span></a> from using CPython to Jython. The
-database connection is changed to use a JDBC connection, and
+<p>The above example demonstrates how few changes are needed to change the first
+example from <a class="reference internal" href="facttables.html#facttables"><span class="std std-ref">Fact Tables</span></a> from using CPython to Jython. The database
+connection is changed from a <span class="target" id="index-2"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connection to a <a class="reference external" href="https://jcp.org/en/jsr/detail?id=221">JDBC</a> connection, and
 <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> is changed to
-<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.JDBCConnectionWrapper</span></code></a>. The creation of the fact
-table does not need to be changed in any way to run on Jython, as the
-connection wrappers abstract away the differences between JDBC and <span class="target" id="index-1"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a>.
-The other Jython module, <a class="reference internal" href="../api/jythonmultiprocessing.html#module-pygrametl.jythonmultiprocessing" title="pygrametl.jythonmultiprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">jythonmultiprocessing</span></code></a>, is even simpler to use
-as pygrametl’s parallel module <a class="reference internal" href="../api/parallel.html#module-pygrametl.parallel" title="pygrametl.parallel"><code class="xref py py-mod docutils literal notranslate"><span class="pre">parallel</span></code></a> imports either it, or CPythons
-built-in <code class="xref py py-mod docutils literal notranslate"><span class="pre">multiprocessing</span></code> module depending on whether Jython or CPython
-is used.</p>
-</div>
-</div>
+<a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper.JDBCConnectionWrapper</span></code></a>. The creation of the
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.FactTable" title="pygrametl.tables.FactTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FactTable</span></code></a> object does not need to be changed to run on Jython, as the
+connection wrappers abstract away the differences between <a class="reference external" href="https://jcp.org/en/jsr/detail?id=221">JDBC</a> and <span class="target" id="index-3"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a>. The other Jython
+module, <a class="reference internal" href="../api/jythonmultiprocessing.html#module-pygrametl.jythonmultiprocessing" title="pygrametl.jythonmultiprocessing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">jythonmultiprocessing</span></code></a>, is even simpler to use as pygrametl’s
+parallel module <a class="reference internal" href="../api/parallel.html#module-pygrametl.parallel" title="pygrametl.parallel"><code class="xref py py-mod docutils literal notranslate"><span class="pre">parallel</span></code></a> imports either it or CPython’s built-in
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">multiprocessing</span></code> module depending on whether Jython or CPython is used.</p>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Jython</a><ul>
-<li><a class="reference internal" href="#setup">Setup</a></li>
-<li><a class="reference internal" href="#usage">Usage</a></li>
+<h1 class="logo"><a href="../index.html">pygrametl</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/install.html">Install Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/beginner.html">Beginner Guide</a></li>
 </ul>
-</li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasources.html">Data Sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dimensions.html">Dimensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="facttables.html">Fact Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bulkloading.html">Bulk Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel.html">Parallel</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Jython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/pygrametl.html">pygrametl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/datasources.html">datasources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tables.html">tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/parallel.html">parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jdbcconnectionwrapper.html">JDBCConnectionWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jythonmultiprocessing.html">jythonmultiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/aggregators.html">aggregators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/steps.html">steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fifodict.html">FIFODict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/drawntabletesting.html">drawntabletesting</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="parallel.html"
-                        title="previous chapter">Parallel</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../api/pygrametl.html"
-                        title="next chapter">pygrametl</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/examples/jython.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="parallel.html" title="previous chapter">Parallel</a></li>
+      <li>Next: <a href="testing.html" title="next chapter">Drawn Table Testing</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="../api/pygrametl.html" title="pygrametl"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="parallel.html" title="Parallel"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2009 - 2021, Aalborg University.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/examples/jython.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2009 - 2016, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
-    </div>
+
+    
+
+    
   </body>
 </html>

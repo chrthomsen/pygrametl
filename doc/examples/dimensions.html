@@ -1,119 +1,100 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Dimensions &#8212; pygrametl 2.6 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Dimensions &#8212; pygrametl 2.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Fact Tables" href="facttable.html" />
-    <link rel="prev" title="Data sources" href="datasources.html" />
- 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  
-    ga('create', 'UA-30772056-2', 'auto');
-    ga('send', 'pageview');
-  
-  </script>
+    <link rel="next" title="Fact Tables" href="facttables.html" />
+    <link rel="prev" title="Data Sources" href="datasources.html" />
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-30772056-2', 'auto');
+  ga('send', 'pageview');
+</script>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="facttable.html" title="Fact Tables"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="datasources.html" title="Data sources"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="dimensions">
+  <section id="dimensions">
 <span id="id1"></span><h1>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this headline">¶</a></h1>
-<p>Multiple abstractions for representing dimensions in a data warehouse is
-provided by <em>pygrametl</em>, this is to allow for simple modelling of both star and
-snowflake schemas as well as type 2 or a combined type 1 and type 2 slowly
-changing dimension. A slowly changing dimension that is only type 1 is
-currently not supported. The abstractions can be used both for serial and
-parallel loading of data into the dimensions. For more information about the
-parallel capabilities of pygrametl see <a class="reference internal" href="parallel.html#parallel"><span class="std std-ref">Parallel</span></a>. In the following
-examples we use PostgreSQL as a database management system and psycopg2 as the
-database driver.</p>
-<p>All of these classes are currently implemented in the
+<p>Multiple abstractions for representing dimensions in a data warehouse are
+provided by pygrametl. These abstractions allow for simple modeling of both
+star and snowflake schemas as well as type 1, type 2, and combined type 1 and
+type 2 slowly changing dimensions. The abstractions can be used for both
+sequential and parallel loading of data into dimensions. For more information
+about the parallel capabilities of pygrametl see <a class="reference internal" href="parallel.html#parallel"><span class="std std-ref">Parallel</span></a>. The following
+examples use PostgreSQL as the RDBMS and psycopg2 as the database driver.</p>
+<p>All of following classes are currently implemented in the
 <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygrametl.tables</span></code></a> module.</p>
-<div class="section" id="dimension">
+<section id="dimension">
 <h2>Dimension<a class="headerlink" href="#dimension" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> is the simplest abstraction pygrametl provides for
-interaction with dimensions in a data warehouse. For each of the dimensions in
-a data warehouse an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> is created, which provides
-an interface for performing operations on the table, such as insertions or
-looking up keys, while abstracting away the database connection and queries.
-Using <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> is a two-step process. First, an instance of
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> is created with a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> database connection
-which is automatically set as the default connection and used by
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> for interacting with the database. For more information
-about database connections see <a class="reference internal" href="database.html#database"><span class="std std-ref">Database</span></a>. Second, the name of the table
-must be specified, along with the primary key of the table, as well as the
-columns in the table. In addition to these required parameters, a subset of
-columns to be used for looking up keys can also be specified, as well as a
-function for computing the primary key, a default return value if a lookup
+interacting with dimensions in a data warehouse. It provides an interface for
+performing operations on the underlying table, such as insertions or looking up
+keys, while abstracting away the database connection and queries. Using
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> is a two-step process. Firstly, an instance of
+<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> must be created with a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> database
+connection. The first <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> created is automatically set
+as the default and used by <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> for interacting with the
+database. For more information about database connections see <a class="reference internal" href="database.html#database"><span class="std std-ref">Database</span></a>.
+Secondly, an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> must be created for each dimension
+in the data warehouse. To create an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> the name of
+the table must be specified, along with the primary key of the table, as well as
+the non-key columns in the table. In addition to these required parameters, a
+subset of columns to be used for looking up keys can also be specified, as well
+as a function for computing the primary key, a default return value if a lookup
 fails, and a function for expanding a row automatically.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">Dimension</span>
 
-<span class="c1"># Input is a list of &quot;rows&quot; which in pygrametl is modelled as dict</span>
+<span class="c1"># Input is a list of rows which in pygrametl is modeled as dicts</span>
 <span class="n">products</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 1&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 2&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 3&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 1&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 2&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 3&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">}</span>
 <span class="p">]</span>
 
-<span class="c1"># The actual database connection is handled using a PEP 249 connection</span>
+<span class="c1"># The actual database connection is handled by a PEP 249 connection</span>
 <span class="n">pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;host=&#39;localhost&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39;</span>
 <span class="s2">                          password=&#39;dwpass&#39;&quot;&quot;&quot;</span><span class="p">)</span>
 
-<span class="c1"># This ConnectionWrapper will be set as default and is then implicitly used.</span>
-<span class="c1"># A reference to the wrapper is saved to allow for easy access of it later</span>
+<span class="c1"># This ConnectionWrapper will be set as a default and is then implicitly</span>
+<span class="c1"># used, but it is stored in conn so transactions can be committed and the</span>
+<span class="c1"># connection closed</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">pgconn</span><span class="p">)</span>
 
-<span class="c1"># The instance of Dimension connects to the table &quot;product&quot; in the</span>
-<span class="c1"># database using the default connection wrapper we just created, the</span>
-<span class="c1"># argument &quot;lookupatts&quot; specifies the column which needs to match</span>
-<span class="c1"># when doing a lookup of the key from this dimension</span>
+<span class="c1"># The instance of Dimension connects to the table product in the</span>
+<span class="c1"># database using the default connection wrapper created above, the</span>
+<span class="c1"># argument lookupatts specifies the column which needs to match</span>
+<span class="c1"># when doing a lookup for the key from this dimension</span>
 <span class="n">productDimension</span> <span class="o">=</span> <span class="n">Dimension</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
@@ -123,46 +104,47 @@ fails, and a function for expanding a row automatically.</p>
 <span class="c1"># Filling a dimension is simply done by using the insert method</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
     <span class="n">productDimension</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+<span class="c1"># Ensures that the data is committed and the connection is closed correctly</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>In this very simple example, a set of rows with product information is loaded
-into the product dimension, using an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> created
-with information on the table in database. The list of product information can
-then be inserted into the database using the method
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension.insert" title="pygrametl.tables.Dimension.insert"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dimension.insert()</span></code></a>. Afterwards the database must be committed and the
-transaction closed to ensure that the data is correctly written to the
-database.</p>
-</div>
-<div class="section" id="cacheddimension">
+<p>In the above example, a set of rows with product information is loaded into the
+product dimension, using an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> created with
+information about the table in the database. The list of product information can
+then be inserted into the database one element at a time using the method
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension.insert" title="pygrametl.tables.Dimension.insert"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dimension.insert()</span></code></a>. Then the transaction must be committed and the
+connection closed to ensure that the data is written to the database.</p>
+</section>
+<section id="cacheddimension">
 <h2>CachedDimension<a class="headerlink" href="#cacheddimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> expands the standard dimension with a cache, allowing
-for lower latency when when performing lookups as the number of round trips to
-the database can be decreased. To control what is cached, three additional
-parameters have been added to the initialiser method. The parameter
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">prefill</span></code> indicates that the cache should be filled with data from the
-database on initialisation, while <code class="xref py py-attr docutils literal notranslate"><span class="pre">cachefullrows</span></code> determines whether
-only the primary key and columns defined by <code class="xref py py-attr docutils literal notranslate"><span class="pre">lookuparts</span></code>, or entire rows
-should be cached. Lastly the parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">cacheoninsert</span></code> specifies if
-newly inserted rows should be cached. To ensure that the cache is kept
-consistent, no changes or additions should be performed on the rows by the
-database, a default value set by the database is an example of a simple-to-miss
-violation of this.</p>
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> extends <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> with a cache to reduce the
+latency of lookups by reducing the number of round trips to the database. To
+control what is cached, three additional parameters have been added to its
+constructor. The parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">prefill</span></code> indicates that the cache should be
+filled with data from the database when the object is created, while
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">cachefullrows</span></code> determines whether only the primary key and columns
+defined by <code class="xref py py-attr docutils literal notranslate"><span class="pre">lookuparts</span></code>, or entire rows should be cached. Lastly, the
+parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">cacheoninsert</span></code> specifies if newly inserted rows should be
+cached. To ensure that the cache is kept consistent, the RDBMS is not allowed
+to modify the rows in any way, a default value set by the RDBMS is an example of
+a simple-to-miss violation of this.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">CachedDimension</span><span class="p">,</span> <span class="n">FactTable</span>
 
-<span class="c1"># The actual database connection is handled using a PEP 249 connection</span>
+<span class="c1"># The actual database connection is handled by a PEP 249 connection</span>
 <span class="n">pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;host=&#39;localhost&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39;</span>
 <span class="s2">                          password=&#39;dwpass&#39;&quot;&quot;&quot;</span><span class="p">)</span>
 
-<span class="c1"># This ConnectionWrapper will be set as default and is then implicitly used.</span>
-<span class="c1"># A reference to the wrapper is saved to allow for easy access of it later</span>
+<span class="c1"># This ConnectionWrapper will be set as a default and is then implicitly</span>
+<span class="c1"># used, but it is stored in conn so transactions can be committed and the</span>
+<span class="c1"># connection closed</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">pgconn</span><span class="p">)</span>
 
-<span class="c1"># The cached dimension is initialised with data from the product table in</span>
+<span class="c1"># The cached dimension is initialized with data from the product table in</span>
 <span class="c1"># the database, allowing for more efficient lookups of keys for the fact</span>
 <span class="c1"># table, at the cost of requiring it to already contain the necessary data</span>
 <span class="n">productDimension</span> <span class="o">=</span> <span class="n">CachedDimension</span><span class="p">(</span>
@@ -170,82 +152,85 @@ violation of this.</p>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
     <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
     <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
-    <span class="n">prefill</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">prefill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># A similar abstraction is created for the data warehouse fact table</span>
 <span class="n">factTable</span> <span class="o">=</span> <span class="n">FactTable</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;facttable&#39;</span><span class="p">,</span>
     <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sales&#39;</span><span class="p">],</span>
-    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">,</span> <span class="s1">&#39;productid&#39;</span><span class="p">,</span> <span class="s1">&#39;dayid&#39;</span><span class="p">])</span>
+    <span class="n">keyrefs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;storeid&#39;</span><span class="p">,</span> <span class="s1">&#39;productid&#39;</span><span class="p">,</span> <span class="s1">&#39;dateid&#39;</span><span class="p">])</span>
 
-<span class="c1"># The CSV file containing information about products sold in stores</span>
+<span class="c1"># A CSV file contains information about each product sold by a store</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sales.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+
 <span class="c1"># Looking up keys from the product dimension is done using the lookup</span>
 <span class="c1"># method with the information read from the sales.csv file. The second</span>
 <span class="c1"># argument renames the column product_name from the CSV file to name</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sales</span><span class="p">:</span>
 
-    <span class="c1"># Looking up a key in the cached dimension checks if a row containing</span>
-    <span class="c1"># a matching value of the attributes defined as lookupatts is present,</span>
-    <span class="c1"># if a match cannot be found the actual database table is checked for</span>
-    <span class="c1"># a match</span>
-    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productDimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;product_name&quot;</span><span class="p">})</span>
+    <span class="c1"># Using only the attributes defined as lookupatts, lookup() checks if a</span>
+    <span class="c1"># row with matching values are present in the cache. Only if a match</span>
+    <span class="c1"># cannot be found in the cache does lookup() check the database table.</span>
+    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;productid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">productDimension</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;product_name&#39;</span><span class="p">})</span>
     <span class="n">factTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c1"># To ensure that all information is loaded and that the database connection</span>
-<span class="c1"># is terminated correctly the current transaction should be committed</span>
+<span class="c1"># Ensures that the data is committed and the connection is closed correctly</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The example shows how to utilise <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> to improve
-performance of <code class="xref py py-meth docutils literal notranslate"><span class="pre">lookup()</span></code> when finding the value of a key for insertion
-into the fact table. The <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> caches the values from the
-product dimension locally, allowing increased performance when looking up keys
-as fewer, or none if all rows are cached, round trips are made to the database.</p>
-</div>
-<div class="section" id="bulkdimension">
+<p>The example shows how to utilize <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> to automatically
+improve the performance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension.lookup" title="pygrametl.tables.CachedDimension.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedDimension.lookup()</span></code></a>. The
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> caches the values from the product dimension locally,
+allowing increased performance when looking up keys as fewer, or none if all
+rows are cached, round trips are made to the database.</p>
+</section>
+<section id="bulkdimension">
 <h2>BulkDimension<a class="headerlink" href="#bulkdimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> is a dimension specialised for increased throughput
-when performing insertions by inserting rows in bulk from a file, in addition
-to quick lookups through an in-memory cache. To support this the database must
-not perform transformations in order to not create inconsistencies between the
-cache and the database table. Another aspect of <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> is that
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">getbyvals()</span></code> forces a call to <code class="xref py py-meth docutils literal notranslate"><span class="pre">endload()</span></code> which
-inserts all rows stored in the local file into the database using a user
-defined bulk loading function so calling these functions often, will negate the
-benefit of bulk loading. The method <code class="xref py py-meth docutils literal notranslate"><span class="pre">getbykey()</span></code> also forces the dimension
-to bulk load by default, but can use a cache if <code class="xref py py-attr docutils literal notranslate"><span class="pre">cachefullrows</span></code> is
-enabled at the cost of additional memory.  Calls of lookup and ensure will only
-use the cache and does not invoke any database operations, as the class caches
-all rows using an infinite cache.  If the dataset is too large to be cached in
-memory then use the class <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> instead, which supports
-bulk loading using a finite cache. To support bulk loading from a file on disk,
-multiple additional parameters have been added to the class initialiser method
-allowing control of the temporary file used to store rows, such as specific
-delimiters and the number of facts to be bulk loaded. All of these parameters
-provide a default value except for <code class="xref py py-attr docutils literal notranslate"><span class="pre">bulkloader</span></code>. This parameter must be
-passed a function to be called for each batch of rows to be loaded, this is
-necessary as the exact way to perform bulk loading differs from DBMS to DBMS.</p>
-<dl class="function">
-<dt>
-<code class="descname">func(name, attributes, fieldsep, rowsep, nullval, filehandle):</code></dt>
-<dd><p>Expected signature of a bulk loader function passed to
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a>. For more information about bulkloading see
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> is a dimension optimized for high throughput when
+inserting rows and fast lookups. This is done by inserting rows in bulk from a
+file while using an in-memory cache for lookup. To support this the RDBMS is
+not allowed to modify the rows in any way, as this would make the cache and the
+database table inconsistent. Another aspect of <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> is that
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.update()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.getbyvals()</span></code> calls
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.endload()</span></code> which inserts all rows stored in the file into
+the database using a user-defined bulk loading function. Thus, calling these
+functions often will negate the benefit of bulk loading. The method
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension.getbykey" title="pygrametl.tables.BulkDimension.getbykey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.getbykey()</span></code></a> also forces <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> to bulk load
+by default but can use the cache if <code class="xref py py-attr docutils literal notranslate"><span class="pre">cachefullrows</span></code> is enabled at the
+cost of additional memory. <code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.lookup()</span></code> and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.ensure()</span></code> will always use the cache and do not invoke any
+database operations as <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> never evicts rows from its cache.
+If the dimension is too large to be cached in memory, the class
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> should be used instead as it supports bulk loading
+using a finite cache. To support bulk loading from a file on disk, multiple
+additional parameters have been added to <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> constructor.
+These provide control over the temporary file used to store rows, such as
+specific delimiters and the number of rows to be bulk loaded. All of these
+parameters have a default value except for <code class="xref py py-attr docutils literal notranslate"><span class="pre">bulkloader</span></code>. This parameter
+must be passed a function to be called for each set of rows to be bulk loaded,
+this is necessary as the exact way to perform bulk loading differs from RDBMS to
+RDBMS.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">func(name,</span> <span class="pre">attributes,</span> <span class="pre">fieldsep,</span> <span class="pre">rowsep,</span> <span class="pre">nullval,</span> <span class="pre">filehandle):</span></span></dt>
+<dd><p>Required signature of a function bulk loading data from a file into an RDBMS
+in pygrametl. For more information about bulk loading see
 <a class="reference internal" href="bulkloading.html#bulkloading"><span class="std std-ref">Bulk Loading</span></a>.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li>name: the name of the dimension table in the data warehouse.</li>
-<li>attributes: a list containing the sequence of attributes in the dimension
-table.</li>
-<li>fieldsep: the string used to separate fields in the temporary file.</li>
-<li>rowsep: the string used to separate rows in the temporary file.</li>
-<li>nullval: if the <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> was passed a string to substitute
-None values with, then it will be passed, if not then None is passed.</li>
-<li>filehandle: either the name of the file or the file object itself,
+<li><p>name: the name of the dimension table in the data warehouse.</p></li>
+<li><p>attributes: a list containing the sequence of attributes in the dimension
+table.</p></li>
+<li><p>fieldsep: the string used to separate fields in the temporary file.</p></li>
+<li><p>rowsep: the string used to separate rows in the temporary file.</p></li>
+<li><p>nullval: if the <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> was passed a string to substitute
+None values with, then it will be passed, if not then None is passed.</p></li>
+<li><p>filehandle: either the name of the file or the file object itself,
 depending upon on the value of <code class="xref py py-attr docutils literal notranslate"><span class="pre">BulkDimension.usefilename</span></code>. Using
 the filename is necessary if the bulk loading is invoked through SQL
 (instead of directly via a method on the PEP249 driver). It is also
-necessary if the bulkloader runs in another process.</li>
+necessary if the bulkloader runs in another process.</p></li>
 </ul>
 </dd></dl>
 
@@ -255,26 +240,28 @@ necessary if the bulkloader runs in another process.</li>
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">SQLSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">BulkDimension</span>
 
-<span class="c1"># The actual database connection is handled using a PEP 249 connection</span>
+<span class="c1"># The actual database connection is handled by a PEP 249 connection</span>
 <span class="n">pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;host=&#39;localhost&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39;</span>
 <span class="s2">                          password=&#39;dwpass&#39;&quot;&quot;&quot;</span><span class="p">)</span>
 
-<span class="c1"># This ConnectionWrapper will be set as default and is then implicitly used.</span>
-<span class="c1"># A reference to the wrapper is saved to allow for easy access of it later</span>
+<span class="c1"># This ConnectionWrapper will be set as a default and is then implicitly</span>
+<span class="c1"># used, but it is stored in conn so transactions can be committed and the</span>
+<span class="c1"># connection closed</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">pgconn</span><span class="p">)</span>
 
-<span class="c1"># How to perform the bulk loading using psycopg2 is defined as this function</span>
+
+<span class="c1"># This function bulk loads a file into PostgreSQL using psycopg2</span>
 <span class="k">def</span> <span class="nf">pgbulkloader</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">fieldsep</span><span class="p">,</span> <span class="n">rowsep</span><span class="p">,</span> <span class="n">nullval</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">):</span>
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-    <span class="c1"># psycopg2 does not accept the default value used for null substitutes</span>
-    <span class="c1"># bv BulkDimension, which is None, so we just ignore it as we have no</span>
-    <span class="c1"># null values that we wish to substitute for a more descriptive value</span>
-    <span class="n">cursor</span><span class="o">.</span><span class="n">copy_from</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">fieldsep</span><span class="p">,</span>
+    <span class="c1"># psycopg2 does not accept the default value used to represent NULL</span>
+    <span class="c1"># bv BulkDimension, which is None. Here this is ignored as we have no</span>
+    <span class="c1"># NULL values that we wish to substitute for a more descriptive value</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">copy_from</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">fieldsep</span><span class="p">,</span>
                      <span class="n">columns</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span>
 
+
 <span class="c1"># In addition to arguments needed for a Dimension, a reference to the</span>
-<span class="c1"># bulk loader defined above must also be passed, so a BulkDimension</span>
-<span class="c1"># can use it</span>
+<span class="c1"># bulk loader defined above must also be passed to BulkDimension</span>
 <span class="n">productDimension</span> <span class="o">=</span> <span class="n">BulkDimension</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
@@ -284,129 +271,120 @@ necessary if the bulkloader runs in another process.</li>
 
 <span class="c1"># A PEP249 connection is sufficient for an SQLSource so we do not need</span>
 <span class="c1"># to create a new instance of ConnectionWrapper to read from the database</span>
-<span class="n">sqconn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;product_catalog.db&quot;</span><span class="p">)</span>
+<span class="n">sqconn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;product_catalog.db&#39;</span><span class="p">)</span>
 
 <span class="c1"># Encapsulating a database query in an SQLSource allows it to be used as an</span>
 <span class="c1"># normal iterator, making it very simple to load the data into another table</span>
-<span class="n">sqlSource</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">sqconn</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s2">&quot;SELECT * FROM product&quot;</span><span class="p">)</span>
+<span class="n">sqlSource</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">sqconn</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;SELECT * FROM product&#39;</span><span class="p">)</span>
 
 <span class="c1"># Inserting data from a data source into a BulkDimension is performed just</span>
 <span class="c1"># like any other dimension type in pygrametl, as the interface is the same</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sqlSource</span><span class="p">:</span>
     <span class="n">productDimension</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c1"># To ensure all cached data is inserted and the transaction committed</span>
-<span class="c1"># both the commit and close functions should be called when done</span>
+<span class="c1"># Ensures that the data is committed and the connections are closed correctly</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-<span class="c1"># The commit here is strictly not necessary as no writes have been</span>
-<span class="c1"># performed, but it is performed to be sure that the connection is</span>
-<span class="c1"># terminated correctly</span>
-<span class="n">sqconn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">sqconn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This example shows how to use <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> to effectively load the
-contents of a local SQLite database into a data warehouse dimension located on
-the network. This process is a good use case for <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> as no
-calls to <code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">getbykey()</span></code> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">getbyval()</span></code> are needed so the
-caches can be filled before they are loaded into the data warehouse. As the
-data warehouse is located on another machine many round trips to perform single
-insertions to it may become a necessary bottleneck.  The severity of this
-problem is decreased by the use of local cache, as much larger amounts of data
-is loaded for each round trip to the database through the use of the bulk
-loading function, which uses the <code class="xref py py-meth docutils literal notranslate"><span class="pre">copy_from()</span></code> method to load multiple rows
-while performing a insertion for each. A downside, however, of using
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> to cache rows is that some data might not be inserted
-into the database after when the last row is given to the
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> object, as data is only loaded into the database when
-the cache is filled. To load the contents manually, the method
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.endload()</span></code> must be called, this can quickly become
-non-trivial so a simpler solution is to use the method
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionWrapper.commit()</span></code></a>, which calls <code class="xref py py-meth docutils literal notranslate"><span class="pre">endload()</span></code> and
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code> on all tables created anywhere in the program and commits the
-current database transaction on the database which the
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> is associated with.</p>
-</div>
-<div class="section" id="cachedbulkdimension">
+<p>The example above shows how to use <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> to efficiently load
+the contents of a local SQLite database into a data warehouse dimension. This
+process is a good use case for <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> as
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.update()</span></code>, <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension.getbykey" title="pygrametl.tables.BulkDimension.getbykey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.getbykey()</span></code></a> and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.getbyval()</span></code> are not used, so no additional calls to
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.endload()</span></code> are made. By bulk loading the rows from a file
+using <code class="xref py py-meth docutils literal notranslate"><span class="pre">copy_from()</span></code> instead of inserting them one at a time, the time
+required to load the dimension is significantly reduced. However, it is
+important that <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper.commit" title="pygrametl.ConnectionWrapper.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionWrapper.commit()</span></code></a> is executed after all rows
+have been inserted into <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> as it ensures that the last set
+of rows are bulk loaded by calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">BulkDimension.endload()</span></code> on all tables.
+A downside of <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> is that it caches the entire dimension in
+memory. If the dimension can be bulk loaded but is too large to cache in memory
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> should be used instead of <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a>.</p>
+</section>
+<section id="cachedbulkdimension">
 <h2>CachedBulkDimension<a class="headerlink" href="#cachedbulkdimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> is very similar to the class
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> and is also intended for bulk loading a dimension.
-However it is optimised for and uses a finite sized cache, instead of one of
-infinite size. This allows it to be used with a dataset too large to be cached
-entirely in main memory. This comes at the cost of the possibility of
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">lookup()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">ensure()</span></code> having to go to the database instead of using
-the cache. The method <code class="xref py py-meth docutils literal notranslate"><span class="pre">getbykey()</span></code> also no longer needs to force loading of
-the data in the file if <code class="xref py py-attr docutils literal notranslate"><span class="pre">cachefullrows</span></code> is not enabled. This is due to
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> using a local cache for the rows currently in the
-file. All rows in the file are cached as there is no guarantee that the cache
-on <code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code> would not overwrite the cached version of the rows
-in the file due to it’s cache being full, forcing the need of an additional
-cache to ensure <code class="xref py py-meth docutils literal notranslate"><span class="pre">lookup()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">getbykey()</span></code> can locate rows before they
-are loaded into the database. The method <code class="xref py py-meth docutils literal notranslate"><span class="pre">insert()</span></code> first caches rows in
-the local cache, and only when the rows in the file are loaded into the
-database are the data moved to the cache on <code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code>, in
-which <code class="xref py py-meth docutils literal notranslate"><span class="pre">lookup()</span></code> also stores rows if the method had to query the database
-for them.</p>
-<p>Due to the use of two caches, the caching by <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> is
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> is very similar to <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> and is
+also intended for bulk loading a dimension, so only their differences are
+described here. Unlike <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> the size of
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> cache is limited by the parameter
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">cachesize</span></code>. This allows it to be used with a dataset too large to be
+cached entirely in memory. The trade-off is that
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension.lookup" title="pygrametl.tables.CachedBulkDimension.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.lookup()</span></code></a> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.ensure()</span></code>
+sometimes have to lookup keys in the database instead of always using the cache.
+However, the method <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension.getbykey" title="pygrametl.tables.CachedBulkDimension.getbykey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.getbykey()</span></code></a> also no longer needs
+to call <code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.endload()</span></code> if <code class="xref py py-attr docutils literal notranslate"><span class="pre">cachefullrows</span></code> is not
+enabled. This is because <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> caches the rows currently
+in the file in a separate cache. All rows in the file are cached as there is no
+guarantee that the cache storing rows from the database does not evict rows
+currently in the file but not yet in the database when the cache is full, So an
+additional cache is needed to ensure that <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension.lookup" title="pygrametl.tables.CachedBulkDimension.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.lookup()</span></code></a>
+and <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension.getbykey" title="pygrametl.tables.CachedBulkDimension.getbykey"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.getbykey()</span></code></a> can locate rows before they are loaded
+into the database. <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension.insert" title="pygrametl.tables.CachedBulkDimension.insert"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.insert()</span></code></a> caches rows in the file
+cache, and only when the rows in the file are loaded into the database are they
+moved to the database row cache, in which <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension.lookup" title="pygrametl.tables.CachedBulkDimension.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CachedBulkDimension.lookup()</span></code></a>
+also stores rows if the method had to query the database for them.</p>
+<p>Due to the use of two caches, caching in <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> is
 controlled by two parameters. The parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">cachesize</span></code> can be set to
 control the size of the cache for rows loaded into the database, while the
 parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">bulksize</span></code> controls the number of rows stored in the file
 before the dimension bulk loads. As the rows in the file are all cached in a
-separate cache, the memory consumption will change in correspondence to both
+separate cache, the memory consumption will change in correspondence to both of
 these values.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If rows with matching lookupatts are passed to insert() during the same
-bulk, will only the first be inserted. The second call to insert() will
-just return the key for the first row as it is stored in the local cache.</p>
+<p class="admonition-title">Note</p>
+<p>If rows with matching <code class="xref py py-attr docutils literal notranslate"><span class="pre">lookupatts</span></code> are passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">insert()</span></code>
+without bulk loading occurring between the calls, only the first row will be
+loaded into the dimension. All calls to <code class="xref py py-meth docutils literal notranslate"><span class="pre">insert()</span></code> after the first one
+will just return the key of the first row as it is stored in the file cache.</p>
 </div>
-</div>
-<div class="section" id="typeoneslowlychanging-dimension">
+</section>
+<section id="typeoneslowlychanging-dimension">
 <h2>TypeOneSlowlyChanging Dimension<a class="headerlink" href="#typeoneslowlychanging-dimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a> allows the creation of a Type 1 slowly
-changing dimension.  The dimension is based on <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a>,
-albeit with a few differences. The primary difference between the two classes
-besides the additional method, is that <a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a>
-enables caching on insert by default, a setting that cannot be overridden. This
-is done in order to minimize the amount of database communication needed for
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension.scdensure()</span></code></a> in an effort to increase its
-throughput. The class requires a sequence of attributes for lookup
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">lookupatts</span></code>, as well as a sequence of type 1 slowly changing attributes
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">type1atts</span></code>. If not given will <code class="xref py py-attr docutils literal notranslate"><span class="pre">type1atts</span></code> default to all
-attributes minus <code class="xref py py-attr docutils literal notranslate"><span class="pre">lookupatts</span></code>, as these two sequences of attributes need
-to be disjoint.  Caching is used to increase the performance of lookups, which
-assumes that the database does not change or add any attribute values that are
-cached. For example, a DEFAULT value in the database or automatic type coercion
-can break this assumption.</p>
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a> allows the creation of a type 1 slowly
+changing dimension. The dimension is based on <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a>, albeit
+with a few differences. The primary difference between the two classes besides
+the additional method <a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension.scdensure()</span></code></a>, is that
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a> always caches rows when they are
+inserted. This is done to minimize the number of round trips to the database
+needed for <a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure" title="pygrametl.tables.TypeOneSlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension.scdensure()</span></code></a> to increase its
+throughput. The user must also specify the sequence of attributes to use for
+looking up keys as <code class="xref py py-attr docutils literal notranslate"><span class="pre">lookupatts</span></code>, and can optionally specify the sequence
+of type 1 slowly changing attributes <code class="xref py py-attr docutils literal notranslate"><span class="pre">type1atts</span></code>. If <code class="xref py py-attr docutils literal notranslate"><span class="pre">type1atts</span></code>
+is not given it will default to all attributes minus <code class="xref py py-attr docutils literal notranslate"><span class="pre">lookupatts</span></code>. The
+sequences <code class="xref py py-attr docutils literal notranslate"><span class="pre">lookupatts</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">type1atts</span></code> must be disjoint and an
+error will be raised if they are not. As caching is used to increase to speedup
+lookups, it is assumed that the database does not change or add any attribute
+values to the rows. For example, a default value set by RDBMS and automatic type
+coercion can break this assumption.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">TypeOneSlowlyChangingDimension</span>
 
-<span class="c1"># Input is a list of &quot;rows&quot; which in pygrametl is modelled as dict</span>
+<span class="c1"># Input is a list of rows which in pygrametl is modeled as dicts</span>
 <span class="n">products</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">}</span>
 <span class="p">]</span>
 
-<span class="c1"># The actual database connection is handled using a PEP 249 connection</span>
+<span class="c1"># The actual database connection is handled by a PEP 249 connection</span>
 <span class="n">pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;host=&#39;localhost&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39;</span>
 <span class="s2">                          password=&#39;dwpass&#39;&quot;&quot;&quot;</span><span class="p">)</span>
 
-<span class="c1"># This ConnectionWrapper will be set as default and is then implicitly used.</span>
-<span class="c1"># A reference to the wrapper is saved to allow for easy access of it later</span>
+<span class="c1"># This ConnectionWrapper will be set as a default and is then implicitly</span>
+<span class="c1"># used, but it is stored in conn so transactions can be committed and the</span>
+<span class="c1"># connection closed</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">pgconn</span><span class="p">)</span>
 
-<span class="c1"># An instance of a Type 1 slowly changing dimension is created with &#39;price&#39;</span>
-<span class="c1"># as a slowly changing attribute.</span>
-<span class="n">productDimension</span> <span class="o">=</span> <span class="n">TypeOneSlowlyChangingDimension</span> <span class="p">(</span>
+<span class="c1"># TypeOneSlowlyChangingDimension is created with price as a changing attribute</span>
+<span class="n">productDimension</span> <span class="o">=</span> <span class="n">TypeOneSlowlyChangingDimension</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
     <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
@@ -414,91 +392,86 @@ can break this assumption.</p>
     <span class="n">type1atts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">])</span>
 
 <span class="c1"># scdensure determines whether the row already exists in the database</span>
-<span class="c1"># and either inserts a new row, or updates the changed attributes in the</span>
-<span class="c1"># existing row.</span>
+<span class="c1"># and inserts a new row or updates any type1atts that have changed</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
     <span class="n">productDimension</span><span class="o">.</span><span class="n">scdensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c1"># To ensure all cached data is inserted and the transaction committed</span>
-<span class="c1"># both the commit and close function should be called when done</span>
+<span class="c1"># Ensures that the data is committed and the connections are closed correctly</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The values of the product dimension in this case is used to illustrate a
-situation where a product changes its price. Using a
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a>, the rows in the database are updated
-accordingly when a change happens. As opposed to a
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a>, a Type 1 slowly changing dimension does not
-include any history or time stamps, so it is important that the rows are
-introduced in chronological order.</p>
-</div>
-<div class="section" id="slowlychangingdimension">
+<p>The above example shows a scenario where the price of a product changes over
+time. The instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a> automatically
+checks if a product already exists, and if it does, updates the price if the old
+and new values differ. As a type 1 slowly changing dimension does store the
+history of the changes only the value of the last row to be inserted will be
+stored, so the rows most be loaded in chronological order. If the history of the
+changes must be stored a type 2 slowly changing dimension should be created, and
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> should be used instead of
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a>.</p>
+</section>
+<section id="slowlychangingdimension">
 <h2>SlowlyChangingDimension<a class="headerlink" href="#slowlychangingdimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> allows for the creation of either a Type 2
-slowly changing dimension, or a combined Type 1 and Type 2 slowly changing
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> allows for the creation of either a type 2
+slowly changing dimension, or a combined type 1 and type 2 slowly changing
 dimension. To support this functionality, multiple additional attributes have
-been added to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> compared to
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a>, in order to control how the slowly changing dimension
-should operate. However, only the additional parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">versionatt</span></code> is
-required for the creation of a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a>. This
-parameter indicates which of the dimensions attribute holds version number of
-the <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a>. In addition to the methods provided by
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a>, the method <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.scdensure" title="pygrametl.tables.SlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SlowlyChangingDimension.scdensure()</span></code></a> is
-also available.  This method is similar to <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension.ensure" title="pygrametl.tables.Dimension.ensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dimension.ensure()</span></code></a> in that it
-performs a combined lookup and insertion. If the row is already available then
-the primary key is returned, if the row is not available, then it is inserted
-into the dimension. The method <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.lookup" title="pygrametl.tables.SlowlyChangingDimension.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SlowlyChangingDimension.lookup()</span></code></a> is also
-changed slightly as it returns the newest version of a particular row, instead
-of just the single one available, which is the case for a regular dimension. To
-improve the performance of lookups for a slowly changing dimension, caching is
-used, which assumes that the database does not modify any values in the
-inserted rows; an assumption the use of default values can break.</p>
+been added to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> compared to <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a>.
+However, only the additional parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">versionatt</span></code> is required when
+creating a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a>. This parameter indicates which of
+the dimensions attribute stores the row’s version number. The method
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.scdensure" title="pygrametl.tables.SlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SlowlyChangingDimension.scdensure()</span></code></a> updates the table while taking the
+slowly changing aspect of the dimension into account. If the row is already
+available then the primary key is returned, if the row is not available then it
+is inserted into the dimension, and if an attributes have changed a new version
+is created. The method <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.lookup" title="pygrametl.tables.SlowlyChangingDimension.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SlowlyChangingDimension.lookup()</span></code></a> is also changed
+slightly as it returns the latest version of a row. To improve the performance
+of lookups for a slowly changing dimension, caching is used, which assumes that
+the database does not modify any values in the inserted rows; an assumption that
+the use of default values can break.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">SlowlyChangingDimension</span>
 
-<span class="c1"># Input is a list of &quot;rows&quot; which in pygrametl is modelled as dict</span>
+<span class="c1"># Input is a list of rows which in pygrametl is modeled as dicts</span>
 <span class="n">products</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-10-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-12-10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1991-02-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-10-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-12-10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1991-02-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">}</span>
 <span class="p">]</span>
 
-<span class="c1"># The actual database connection is handled using a PEP 249 connection</span>
+<span class="c1"># The actual database connection is handled by a PEP 249 connection</span>
 <span class="n">pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;host=&#39;localhost&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39;</span>
 <span class="s2">                          password=&#39;dwpass&#39;&quot;&quot;&quot;</span><span class="p">)</span>
 
-<span class="c1"># This ConnectionWrapper will be set as default and is then implicitly used.</span>
-<span class="c1"># A reference to the wrapper is saved to allow for easy access of it later</span>
+<span class="c1"># This ConnectionWrapper will be set as a default and is then implicitly</span>
+<span class="c1"># used, but it is stored in conn so transactions can be committed and the</span>
+<span class="c1"># connection closed</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">pgconn</span><span class="p">)</span>
 
-<span class="c1"># The slowly changing dimension is created as type 2 only, as a new row is</span>
-<span class="c1"># inserted with a from and to timestamps for each change in the dataset</span>
-<span class="c1"># without changing any attributes in the existing rows, except validto</span>
-<span class="c1"># which is a time stamp indicating when the row is no longer valid.</span>
-<span class="c1"># As additional parameters, the object is initialised with information</span>
-<span class="c1"># about which attribute holds a time stamp for when the row&#39;s validity</span>
-<span class="c1"># starts and ends. The parameter fromfinder is also given, which is must be</span>
-<span class="c1"># set to the function that should be used to compute the time stamp for</span>
-<span class="c1"># when the row becomes valid and given as input the name of the row which</span>
-<span class="c1"># value it should use. In this example, the function datareader from</span>
-<span class="c1"># pygrametl is used which converts time stamp from a string to a Python</span>
-<span class="c1"># datetime.date object to simplify the conversion to the Postgres Date type.</span>
-<span class="n">productDimension</span> <span class="o">=</span> <span class="n">SlowlyChangingDimension</span> <span class="p">(</span>
+<span class="c1"># This slowly changing dimension is created as type 2 only. Meaning that a</span>
+<span class="c1"># new row only changes the validto attribute in the previous row. validto</span>
+<span class="c1"># is a timestamp indicating when the row is no longer valid. As additional</span>
+<span class="c1"># parameters, the object is initialized with information about which</span>
+<span class="c1"># attribute holds a timestamp for when the row&#39;s validity starts and ends.</span>
+<span class="c1"># The parameter fromfinder is also given, which is set to a function that</span>
+<span class="c1"># computes the timestamp for when the row becomes valid. In this example,</span>
+<span class="c1"># the function datareader from pygrametl is used which converts a timestamp</span>
+<span class="c1"># from a str to a datetime.date which PostgresSQL stores as Date type.</span>
+<span class="n">productDimension</span> <span class="o">=</span> <span class="n">SlowlyChangingDimension</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
     <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;validfrom&#39;</span><span class="p">,</span> <span class="s1">&#39;validto&#39;</span><span class="p">,</span>
@@ -509,103 +482,100 @@ inserted rows; an assumption the use of default values can break.</p>
     <span class="n">toatt</span><span class="o">=</span><span class="s1">&#39;validto&#39;</span><span class="p">,</span>
     <span class="n">versionatt</span><span class="o">=</span><span class="s1">&#39;version&#39;</span><span class="p">)</span>
 
-<span class="c1"># scdensure extends the existing ensure methods to provide support for</span>
-<span class="c1"># updating slowly changing attributes for rows where lookupparts match, but</span>
-<span class="c1"># other differences exist. This is done by increamenting the version</span>
-<span class="c1"># attribute for the new row, and assigning the new rows fromatt to the old</span>
-<span class="c1"># rows toatt, indicating that the validity of the old row has ended.</span>
+<span class="c1"># scdensure extends the ensure methods with support for updating slowly</span>
+<span class="c1"># changing attributes of rows where lookupparts match. This is done by</span>
+<span class="c1"># increamenting the version attribute for the new row, and assigning the new</span>
+<span class="c1"># rows fromatt to the old rows toatt, indicating that the old row is no</span>
+<span class="c1"># longer valid.</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
     <span class="n">productDimension</span><span class="o">.</span><span class="n">scdensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c1"># To ensure all cached data is inserted and the transaction committed</span>
-<span class="c1"># both the commit and close function should be called when done</span>
+<span class="c1"># Ensures that the data is committed and the connections are closed correctly</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>As the values of the product dimension in this case have changing prices, a
+<p>As the values of the product dimension, in this case, have changing prices, a
 <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> is used to automate the changes a new row
 might incur on an existing row. The product information itself is also extended
-with time stamps indicating valid time for the price of that particular
-product.  When creating the instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a>
-information about how these time stamps should be interpreted is provided to
-the instance. In this case is it fairly simple, as the time stamp provided in
-the data is simple enough to be converted directly to <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code>
-object which can be inserted into the Postgres database in a column of type
-Date, to automate this conversion, the parameter
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">SlowlyChangingDimension.fromfinder</span></code> is set to the function
-<code class="xref py py-func docutils literal notranslate"><span class="pre">pygrametl.datareader()</span></code> which constructs the <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code>
-object. However for more complicated ETL flows, a user defined function could
-be created to perform more complicated creations of time stamps based on the
-input data. The function in such a situation should follow the same interface
-as the function generated by <code class="xref py py-func docutils literal notranslate"><span class="pre">pygrametl.datareader()</span></code>. When performing the
-actual insertion of rows the method <code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension.scdensure</span></code>
-is used instead of <code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension.insert</span></code> as it first
-performs a lookup to verify that an existing version of the row is not already
-present. If a row is already present, this row is updated with the from
-timestamp inserted into its to time attribute indicating when this version of
-the row was deemed obsolete, and a incremented version number is added to the
-new row indicating that this is a newer version of an existing row.</p>
-</div>
-<div class="section" id="snowflakeddimension">
+with timestamps indicating at what time a particular product had a certain
+price. When creating the instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a>
+information about how these timestamps should be interpreted is provided to the
+constructor. In this case, is it fairly simple as the timestamp provided in the
+input data is simple enough to be converted directly to <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code>
+object. These can then be inserted into a column of type Date. To automate this
+conversion, the parameter <code class="xref py py-attr docutils literal notranslate"><span class="pre">fromfinder</span></code> is set to the function returned by
+<code class="xref py py-func docutils literal notranslate"><span class="pre">pygrametl.datareader()</span></code> which constructs <code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code> objects
+from the <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> in date. However, a user-defined function with the same
+interface as the function generated by <code class="xref py py-func docutils literal notranslate"><span class="pre">pygrametl.datareader()</span></code> could also
+be used. When inserting the rows the method
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension.scdensure" title="pygrametl.tables.SlowlyChangingDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SlowlyChangingDimension.scdensure()</span></code></a> is used instead of
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">SlowlyChangingDimension.insert()</span></code> as it first performs a lookup to verify
+that an existing version of the row is not already present. If a row is already
+present, this row is updated with the from timestamp inserted into its to time
+attribute indicating when this version of the row was deemed obsolete, and an
+incremented version number is added to the new row indicating that this is a
+newer version of an existing row.</p>
+</section>
+<section id="snowflakeddimension">
 <h2>SnowflakedDimension<a class="headerlink" href="#snowflakeddimension" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> allows for use of a data warehouse represented as
-a snowflake dimension, through the same interface as <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a>.
-Instantiation of a <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> is however different.  Instead
-of requiring all arguments to be passed to the constructor of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> itself, a <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> object should be
-created for each table in the snowflaked dimension. These objects are then
-passed to the initialiser of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> in the sequence of
-the order in which tables have foreign keys to the next table, e.g. (a1, a2)
-should be passed if a1 has a foreign key to a2. To support this, each foreign
-key must have the same name as the primary key it references. The only
-additional configuration supported by <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> is
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">expectboguskeyvalues</span></code> that indicates if a key that is used as lookup
-attribute in a lower level of the hierarch does not have a matching primary
-key. Support for slowly changing dimensions of Type 2 or a combined Type 1 and
-Type 2 is provided by using an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> as
-the root of snowflaked dimension instead of an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a>.
-Currently only the root dimension need to be an instance of
-<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> to support a slowly changing snowflaked
-dimension. This feature should however be considered experimental.</p>
+<p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> represents a snowflaked dimension as a single
+object with the same interface as <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a>. Instantiating a
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> is however different. Instead of requiring all
+arguments to be passed to the constructor of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a>
+itself, dimension objects must be created for each table in the snowflaked
+dimension. These objects are then passed to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a>
+constructor. The dimension objects must be given as pairs that indicate their
+foreign key relationships, e.g. (a1, a2) should be passed if a1 has a foreign
+key to a2. Currently, it is a requirement that a foreign key must have the same
+name as the primary key it references. The only additional configuration
+supported by <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> is <code class="xref py py-attr docutils literal notranslate"><span class="pre">expectboguskeyvalues</span></code>
+which indicates that a key used as a lookup attribute in a lower level of the
+hierarchy might not have a matching primary key. Support for slowly changing
+dimensions of type 2 or a combined of type 1 and type 2 are provided if an
+instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> is at the root of the snowflaked
+dimension. Currently, only the root dimension can be an instance of
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> and the feature should be considered
+experimental.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">CachedDimension</span><span class="p">,</span> <span class="n">SnowflakedDimension</span>
 
-<span class="c1"># Input is a list of &quot;rows&quot; which in pygrametl is modelled as dict</span>
+<span class="c1"># Input is a list of rows which in pygrametl is modeled as dicts</span>
 <span class="n">products</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 1&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 2&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 3&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Non-Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Non-Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Non-Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;type&#39;</span> <span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 1&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 2&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes 3&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Non-Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Non-Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Non-Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Fiction&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">}</span>
 <span class="p">]</span>
 
-<span class="c1"># The actual database connection is handled using a PEP 249 connection</span>
+<span class="c1"># The actual database connection is handled by a PEP 249 connection</span>
 <span class="n">pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;host=&#39;localhost&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39;</span>
 <span class="s2">                          password=&#39;dwpass&#39;&quot;&quot;&quot;</span><span class="p">)</span>
 
-<span class="c1"># This ConnectionWrapper will be set as default and is then implicitly used.</span>
-<span class="c1"># A reference to the wrapper is saved to allow for easy access of it later</span>
+<span class="c1"># This ConnectionWrapper will be set as a default and is then implicitly</span>
+<span class="c1"># used, but it is stored in conn so transactions can be committed and the</span>
+<span class="c1"># connection closed</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">pgconn</span><span class="p">)</span>
 
-<span class="c1"># The product dimension is in the database represented as a Snowflaked</span>
+<span class="c1"># The product dimension is in the database represented as a snowflaked</span>
 <span class="c1"># dimension, so a CachedDimension object is created for each table</span>
 <span class="n">productTable</span> <span class="o">=</span> <span class="n">CachedDimension</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
-    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;categoryid&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">],</span>
+    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;categoryid&#39;</span><span class="p">],</span>
     <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
 
 <span class="n">categoryTable</span> <span class="o">=</span> <span class="n">CachedDimension</span><span class="p">(</span>
@@ -619,90 +589,83 @@ dimension. This feature should however be considered experimental.</p>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;typeid&#39;</span><span class="p">,</span>
     <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
 
-<span class="c1"># An instance of SnowflakedDimension is initialised with the created dimensions</span>
-<span class="c1"># as input, creating a simple interface matching a single dimension, allowing a</span>
-<span class="c1"># Snowflaked dimension to be used in the same manner as a dimension represented</span>
-<span class="c1"># in the database by a Star schema. The dimensions representing tables are</span>
-<span class="c1"># passed in pairs based on their foreign key relations. Meaning the arguments</span>
-<span class="c1"># indicate that the productTable has a foreign key relation with the</span>
-<span class="c1"># categoryTable, and the categoryTable has a foreign key relation with the</span>
-<span class="c1"># typeTable. If a table has multiple foreign key relations to tables in the</span>
-<span class="c1"># Snowflaked dimension, a list must be passed as the second part of the tuple</span>
-<span class="c1"># with a Dimension object for each table the first argument references through</span>
-<span class="c1"># its foreign keys.</span>
-<span class="n">productDimension</span> <span class="o">=</span> <span class="n">SnowflakedDimension</span><span class="p">(</span><span class="n">references</span><span class="o">=</span><span class="p">[(</span><span class="n">productTable</span><span class="p">,</span> <span class="n">categoryTable</span><span class="p">),</span>
-                                        <span class="p">(</span><span class="n">categoryTable</span><span class="p">,</span> <span class="n">typeTable</span><span class="p">)])</span>
+<span class="c1"># An instance of SnowflakedDimension is initialized with the created</span>
+<span class="c1"># dimensions as input. Thus allowing a snowflaked dimension to be used in</span>
+<span class="c1"># the same manner as a dimension consisting of a single table. The dimension&#39;s</span>
+<span class="c1"># tables are passed as pairs based on their foreign key relationships.</span>
+<span class="c1"># Meaning the arguments indicate that the productTable has a foreign key</span>
+<span class="c1"># relationship with the categoryTable, and the categoryTable has a foreign</span>
+<span class="c1"># key relationship with the typeTable. If a table has multiple foreign key</span>
+<span class="c1"># relationships to tables in the snowflaked dimension, a list must be passed</span>
+<span class="c1"># as the second part of the tuple with a dimension object for each table the</span>
+<span class="c1"># first argument references through its foreign keys.</span>
+<span class="n">productDimension</span> <span class="o">=</span> <span class="n">SnowflakedDimension</span><span class="p">(</span><span class="n">references</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">productTable</span><span class="p">,</span> <span class="n">categoryTable</span><span class="p">),</span> <span class="p">(</span><span class="n">categoryTable</span><span class="p">,</span> <span class="n">typeTable</span><span class="p">)])</span>
 
-<span class="c1"># Using a SnowflakedDimension is done through the same interface as the</span>
-<span class="c1"># Dimension class. Some methods of the SnowflakedDimension have</span>
-<span class="c1"># side effects on the rows passed to the SnowflakedDimension as the foreign</span>
-<span class="c1"># keys are computed based on interconnection of the Snowflaked dimension</span>
+<span class="c1"># SnowflakedDimension provides the same interface as the dimensions classes,</span>
+<span class="c1"># however, some of its methods stores keys in the row when they are computed</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
     <span class="n">productDimension</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c1"># To ensure that all cached data is inserted and the transaction committed</span>
-<span class="c1"># both the commit and close function should be called when done</span>
+<span class="c1"># Ensures that the data is committed and the connections are closed correctly</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>In the above example the product dimension is not represented as a star schema
-like in the examples shown for the other type of dimensions provided by
-pygrametl. It is instead represented as a snowflake schema where the dimension
-is split into multiple tables to achieve more normalisation and reduce
-redundancy in the dimension. To support this, a combination of
+<p>In the above example, the product dimension is not represented by a single table
+like in the examples shown for the other dimensions classes provided by
+pygrametl. It is instead represented as a snowflake consisting of multiple
+tables. To represent this in the ETL flow, a combination of
 <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> and <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> is used. As multiple
 tables need to be represented, an instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> is
 created for each. An instance of <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> is then created
-to aggregate the created instances of <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> and represent
-the Snowflaked dimension through one interface instead of manually interacting
-with each table on its own. Interacting with a Snowflaked dimension is then done
-through the same interface as presented by the other dimensions provided by
-pygrametl, with the caveat that some methods have side effects on the rows
-provided to <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> object, as foreign key relations needs
-to be computed based on the contents of the rows the object operates on.</p>
+to represent the many instances of <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> as a single object.
+Interacting with a snowflaked dimension is done through the same interface
+provided by the other dimension classes in pygrametl. However, some of
+<a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> methods modify the provided rows as foreign key
+relationship needs to be computed based on the contents of the rows the object
+operates on.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
 <span class="kn">import</span> <span class="nn">pygrametl</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">CachedDimension</span><span class="p">,</span> <span class="n">SnowflakedDimension</span><span class="p">,</span> \
     <span class="n">SlowlyChangingDimension</span>
 
-<span class="c1"># Input is a list of &quot;rows&quot; which in pygrametl is modelled as dict</span>
+<span class="c1"># Input is a list of rows which in pygrametl is modeled as dicts</span>
 <span class="n">products</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-10-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-12-10&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1991-02-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span> <span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span> <span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-10-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-12-10&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calvin and Hobbes&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Comic&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1991-02-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cake and Me&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;French Cooking&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;50&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sushi&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Cookbook&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;30&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Nineteen Eighty-Four&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;15&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;The Lord of the Rings&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span> <span class="s1">&#39;Novel&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="s1">&#39;60&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;1990-05-01&#39;</span><span class="p">}</span>
 <span class="p">]</span>
 
-<span class="c1"># The actual database connection is handled using a PEP 249 connection</span>
+<span class="c1"># The actual database connection is handled by a PEP 249 connection</span>
 <span class="n">pgconn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;host=&#39;localhost&#39; dbname=&#39;dw&#39; user=&#39;dwuser&#39;</span>
 <span class="s2">                          password=&#39;dwpass&#39;&quot;&quot;&quot;</span><span class="p">)</span>
 
-<span class="c1"># This ConnectionWrapper will be set as default and is then implicitly used,</span>
-<span class="c1"># a reference to the wrapper is saved to allow for easy access of it later</span>
+<span class="c1"># This ConnectionWrapper will be set as a default and is then implicitly</span>
+<span class="c1"># used, but it is stored in conn so transactions can be committed and the</span>
+<span class="c1"># connection closed</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">pgconn</span><span class="p">)</span>
 
 <span class="c1"># The dimension is snowflaked into two tables, one with categories, and the</span>
-<span class="c1"># other with name and price. As the price is the slowly changing attribute,</span>
-<span class="c1"># and pygrametl currently only supports a slowly changing dimension as the</span>
-<span class="c1"># root table in a snow flaked dimension</span>
+<span class="c1"># other at the root with name and the slowly changing attribute price</span>
 <span class="n">productTable</span> <span class="o">=</span> <span class="n">SlowlyChangingDimension</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">,</span>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;productid&#39;</span><span class="p">,</span>
     <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;validfrom&#39;</span><span class="p">,</span> <span class="s1">&#39;validto&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;categoryid&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;categoryid&#39;</span><span class="p">],</span>
     <span class="n">lookupatts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
     <span class="n">fromatt</span><span class="o">=</span><span class="s1">&#39;validfrom&#39;</span><span class="p">,</span>
     <span class="n">fromfinder</span><span class="o">=</span><span class="n">pygrametl</span><span class="o">.</span><span class="n">datereader</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">),</span>
@@ -714,15 +677,15 @@ to be computed based on the contents of the rows the object operates on.</p>
     <span class="n">key</span><span class="o">=</span><span class="s1">&#39;categoryid&#39;</span><span class="p">,</span>
     <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">])</span>
 
-<span class="n">productDimension</span> <span class="o">=</span> <span class="n">SnowflakedDimension</span><span class="p">(</span><span class="n">references</span><span class="o">=</span><span class="p">[(</span><span class="n">productTable</span><span class="p">,</span> <span class="n">categoryTable</span><span class="p">)])</span>
+<span class="n">productDimension</span> <span class="o">=</span> <span class="n">SnowflakedDimension</span><span class="p">(</span><span class="n">references</span><span class="o">=</span><span class="p">[(</span><span class="n">productTable</span><span class="p">,</span>
+                                                    <span class="n">categoryTable</span><span class="p">)])</span>
 
 <span class="c1"># Using a SlowlyChangingDimension with a SnowflakedDimension is done in the</span>
 <span class="c1"># same manner as a normal SlowlyChangingDimension using scdensure</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
     <span class="n">productDimension</span><span class="o">.</span><span class="n">scdensure</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-<span class="c1"># To ensure that all cached data is inserted and the transaction committed</span>
-<span class="c1"># both the commit and close function should be called when done</span>
+<span class="c1"># Ensures that the data is committed and the connections are closed correctly</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
@@ -732,82 +695,101 @@ combined if necessary, with the restriction that all slowly changing attributes
 must be placed in the root table. To do this, the <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a>
 instance connecting to the root table has to be changed to an instance of
 <a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> and the necessary attributes added to the
-database table. Afterwards <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension.scdensure" title="pygrametl.tables.SnowflakedDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SnowflakedDimension.scdensure()</span></code></a> can be used to
+database table. Afterward, <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension.scdensure" title="pygrametl.tables.SnowflakedDimension.scdensure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SnowflakedDimension.scdensure()</span></code></a> can be used to
 insert and lookup rows while ensuring that the slowly changing attributes are
 updated correctly.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Dimensions</a><ul>
-<li><a class="reference internal" href="#dimension">Dimension</a></li>
-<li><a class="reference internal" href="#cacheddimension">CachedDimension</a></li>
-<li><a class="reference internal" href="#bulkdimension">BulkDimension</a></li>
-<li><a class="reference internal" href="#cachedbulkdimension">CachedBulkDimension</a></li>
-<li><a class="reference internal" href="#typeoneslowlychanging-dimension">TypeOneSlowlyChanging Dimension</a></li>
-<li><a class="reference internal" href="#slowlychangingdimension">SlowlyChangingDimension</a></li>
-<li><a class="reference internal" href="#snowflakeddimension">SnowflakedDimension</a></li>
+<h1 class="logo"><a href="../index.html">pygrametl</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/install.html">Install Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart/beginner.html">Beginner Guide</a></li>
 </ul>
-</li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasources.html">Data Sources</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dimensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="facttables.html">Fact Tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bulkloading.html">Bulk Loading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel.html">Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jython.html">Jython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/pygrametl.html">pygrametl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/datasources.html">datasources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/tables.html">tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/parallel.html">parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jdbcconnectionwrapper.html">JDBCConnectionWrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/jythonmultiprocessing.html">jythonmultiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/aggregators.html">aggregators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/steps.html">steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/fifodict.html">FIFODict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/drawntabletesting.html">drawntabletesting</a></li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="datasources.html"
-                        title="previous chapter">Data sources</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="facttable.html"
-                        title="next chapter">Fact Tables</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/examples/dimensions.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="datasources.html" title="previous chapter">Data Sources</a></li>
+      <li>Next: <a href="facttables.html" title="next chapter">Fact Tables</a></li>
+  </ul></li>
+</ul>
+</div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="facttable.html" title="Fact Tables"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="datasources.html" title="Data sources"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">pygrametl 2.6 documentation</a> &#187;</li> 
-      </ul>
+    <div class="footer">
+      &copy;2009 - 2021, Aalborg University.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/examples/dimensions.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2009 - 2016, Aalborg University.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
-    </div>
+
+    
+
+    
   </body>
 </html>
