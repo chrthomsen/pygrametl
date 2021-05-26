@@ -1,5 +1,9 @@
-Version 2.7 (unreleased)
-------------------------
+Version 2.7
+-----------
+**Note**
+  This is the last version to actively support Python 2. Support for it will
+  slowly be reduced as we continue to develop pygrametl.
+
 **Added**
   ``drawntabletesting`` a new module for testing ETL flows. The module makes it
   easy to define the preconditions and postconditions for the database as part
@@ -38,7 +42,6 @@ Version 2.7 (unreleased)
   The version of pygrametl is thus now available as ``pygrametl.__version__``
   and will be updated for every release.
 
-
 **Fixed**
   Outdated information stating that type 1 slowly changing dimensions are not
   supported has been removed from the documentation. In addition, minor errors
@@ -48,11 +51,12 @@ Version 2.7 (unreleased)
   Wrong use of paramstyle in ``ConnectionWrapper.executemany`` fixed.
 
   A call to an incorrect method in ``aggregators.Avg.finish()``.
-  
-  The ``datepan()`` function now checks whether ``fromdate`` and ``todate`` are 
-  strings before calling ``.split()``. In addition, the function now uses ``dict.items()``
-  instead of ``dict.iteritems()`` which is not supported in Python 3.
-  
+
+  The ``datespan()`` function now checks whether ``fromdate`` and ``todate`` are
+  strings before calling ``.split()``. In addition, the function now uses
+  ``dict.items()`` instead of ``dict.iteritems()`` which is not supported in
+  Python 3.
+
 Version 2.6
 -----------
 **Added**
