@@ -8,7 +8,7 @@ Concretely, the developer creates an object for each dimension and fact table. (
 
 pygrametl also supports slowly changing dimensions. Again, the programmer only has to invoke a single method: :code:`scdim.scdensure(row)`. This will perform the needed updates of both type 1 (i.e., overwrites) and type 2 (i.e., adding new versions).
 
-pygrametl was first made publicly available in 2009. Since then, we have made multiple improvements and added new features. Version 2.6 was released in December 2018. Today, pygrametl is used in production systems in different sectors such as healthcare, finance, and transport.
+pygrametl was first made publicly available in 2009. Since then, we have made multiple improvements and added new features. Version 2.7 was released in May 2021. Today, pygrametl is used in production systems in different sectors such as healthcare, finance, and transport.
 
 Installation
 ------------
