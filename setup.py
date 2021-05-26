@@ -19,6 +19,7 @@ setup(
     license='BSD',
     description='ETL programming in Python',
     long_description=open('README.rst').read(),
+    long_description_content_type="text/x-rst",
     classifiers=[
                 'Development Status :: 5 - Production/Stable',
                 'Intended Audience :: Developers',

@@ -24,7 +24,7 @@ For more information about installation see the `Install Guide <http://pygrametl
 
 Documentation
 -------------
-The documentation is available `here <http://pygrametl.com/doc/index.html>`_. There are also `installation <http://pygrametl.com/doc/quickstart/install.html>`_ and `beginner <http://pygrametl.com/doc/quickstart/beginner.html>`_ guides available.
+The documentation is available in `HTML <http://pygrametl.com/doc/index.html>`_ and as a `PDF <http://pygrametl.com/doc/pygrametl.pdf>`_. There are also `installation <http://pygrametl.com/doc/quickstart/install.html>`_ and `beginner <http://pygrametl.com/doc/quickstart/beginner.html>`_ guides available.
 
 In addition to the documentation, multiple papers have been published about pygrametl. The papers are listed `here <http://pygrametl.com/#documentation>`_ and provide a more detailed description of the foundational ideas behind pygrametl but is obviously not keep up to date with changes and improvements implemented in the framework, for such see the documentation. If you use pygrametl in academia, please cite the relevant paper(s).
 
