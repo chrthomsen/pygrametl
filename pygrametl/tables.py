@@ -980,9 +980,9 @@ class SlowlyChangingDimension(Dimension):
             lookupattlist = ', '.join(self.lookupatts)
             newestversions = ('SELECT %s, MAX(%s) AS %s FROM %s GROUP BY %s' %
                               (self.quote(lookupattlist),
-                               self.quotelist(self.orderingatt),
-                               self.quotelist(self.orderingatt), self.name,
-                               self.quotelist(lookupattlist)))
+                               self.quote(self.orderingatt),
+                               self.quote(self.orderingatt), self.name,
+                               self.quote(lookupattlist)))
             joincond = ' AND '.join(['A.%s = B.%s' % (self.quote(att), att)
                                      for att in [l for l in self.lookupatts] +
                                      [self.orderingatt]
@@ -1407,7 +1407,7 @@ class SnowflakedDimension(object):
 
         self.keylookupsql = self.root.keylookupsql
 
-        self.allnames = []
+        self.allnames = [self.root.key]
         for dim in dims:
             for att in dim.attributes:
                 self.allnames.append(att)
