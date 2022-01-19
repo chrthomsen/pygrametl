@@ -41,7 +41,7 @@ rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'autoformat']
+extensions = ['sphinx.ext.autodoc', 'autoformat', 'formatref']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -57,7 +57,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pygrametl'
-copyright = u'2009 - 2021, Aalborg University'
+copyright = u'2009 - 2022, Aalborg University'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
