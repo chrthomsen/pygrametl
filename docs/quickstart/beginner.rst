@@ -195,7 +195,7 @@ information about the more advanced dimension and fact table classes, see
     # table's primary key, and the table's non-key columns (attributes) are
     # given. In addition, for the location dimension the subset of the
     # attributes that should be used to lookup the primary key are given. As
-    # mentioned in the beginning of this guide, using named parameters are
+    # mentioned in the beginning of this guide, using named parameters is
     # strongly encouraged
     book_dimension = Dimension(
             name='book',
