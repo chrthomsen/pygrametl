@@ -38,18 +38,21 @@ on external files for the input and the expected results (see :ref:`testing`).
 Input Data
 ----------
 Most pygrametl abstractions either produce, consume, or operate on data in
-rows. A row is a Python :class:`.dict` where the row's column names are the
-keys and the values are the data the row contains. For more information about
-the data source provided by pygrametl see :ref:`datasources`.
+rows. A row is a Python :class:`.dict` where the names of the row's columns are
+the keys and the values are the data the row contains. For more information
+about the data sources provided by pygrametl see :ref:`datasources`.
+
+.. note::
+   The data and Python source code in this guide can be downloaded using the
+   following :formatref:`link <../_static/beginner_guide_data.zip>`.
 
 The most important data for the warehouse are which books have been sold. This
 information can be extracted from the book stores' sales records which are
-stored in the SQLite database :formatref:`sale.sqlite
-<../_static/sale.sqlite>`. Of course, storing sales records from multiple book
-stores is not a common use-case for SQLite. However, SQLite is used in this
-beginner guide as it makes sharing the input data simple and demonstrates
-pygrametl's ability to read and write from any RDBMS that provides a :pep:`249`
-connection. The data is stored in the table sale as shown below:
+stored in the SQLite database sale.sqlite. Of course, storing sales records
+from multiple book stores is not a common use-case for SQLite. However, SQLite
+is used in this beginner guide as it makes sharing the input data simple and
+demonstrates pygrametl's ability to read and write from any RDBMS that provides
+a :pep:`249` connection. The data is stored in the table sale as shown below:
 
 .. code-block:: none
 
@@ -65,9 +68,8 @@ connection. The data is stored in the table sale as shown below:
 The book titles and genres are extracted from the `CMU Book Summary Dataset
 <https://www.cs.cmu.edu/~dbamman/booksummaries.html>`_. As the geographical
 information stored in the sales records is limited, the location dimension must
-be pre-filled with data from the CSV file :formatref:`region.csv
-<../_static/region.csv>`. This file contains data about cities and regions as
-shown below (tabs are added for readability):
+be pre-filled with data from the CSV file region.csv. This file contains data
+about cities and regions as shown below (the tabs are added for readability):
 
 .. code-block:: none
 
@@ -88,20 +90,20 @@ equivalents and :class:`.ConnectionWrapper` with
 on Jython see :ref:`jython`.
 
 We start by creating the database and tables for the data warehouse in
-PostgreSQL using psql. The SQL script :formatref:`example.sql
-<../_static/example.sql>` creates the dw database, the dwuser role with all
-privileges, and the four tables::
+PostgreSQL using psql. The SQL script example.sql creates the dw database, the
+dwuser role with all privileges, and the four tables::
 
     psql -f example.sql
 
 For the ETL flow we start by importing the various functions and classes needed
-in this beginner guide. The psycopg2 and slite3 database driver must be
-imported so a connection to PostgreSQL and sqlite3 can be established. The main
+in this beginner guide. The psycopg2 and sqlite3 database drivers must be
+imported so a connection to PostgreSQL and SQLite can be established. The main
 pygrametl module is also imported so a :class:`.ConnectionWrapper` can be
 created. pyggrametl's :mod:`.datasources` module is imported so the sales
 records (:class:`.SQLSource`) and CSV file (:class:`.CSVSource`) can be read.
 Finally, classes for interacting with the fact table (:class:`.FactTable`) and
-the various dimensions (:class:`.Dimension`) are imported from :mod:`.tables`.
+the various dimensions (:class:`.CachedDimension`) are imported from
+:mod:`.tables`.
 
 .. code-block:: python
 
@@ -120,7 +122,7 @@ the various dimensions (:class:`.Dimension`) are imported from :mod:`.tables`.
 
     # Interacting with the dimensions and the fact table is done through a set
     # of classes. A suitable object must be created for each table
-    from pygrametl.tables import Dimension, FactTable
+    from pygrametl.tables import CachedDimension, FactTable
 
 Then a connection to the database containing the sales records and the data
 warehouses is needed. For CPython, these must be :pep:`249` connections. As the
@@ -190,24 +192,26 @@ information about the more advanced dimension and fact table classes, see
 
 .. code-block:: python
 
-    # An instance of Dimension is created for each dimension in the data
-    # warehouse. For each dimension, the name of the database table, the
-    # table's primary key, and the table's non-key columns (attributes) are
-    # given. In addition, for the location dimension the subset of the
-    # attributes that should be used to lookup the primary key are given. As
-    # mentioned in the beginning of this guide, using named parameters is
-    # strongly encouraged
-    book_dimension = Dimension(
+    # An instance of CachedDimension is created for each dimension in the data
+    # warehouse. CachedDimension uses a local cache to significantly reduce the
+    # number of requests issued to the RDBMS. CachedDimension should generally
+    # be used instead of Dimension unless the higher memory consumption causes
+    # problems. For each dimension, the name of the database table, the table's
+    # primary key, and the table's non-key columns (attributes) are given. In
+    # addition, for the location dimension the subset of the attributes that
+    # should be used to lookup the primary key are given. As mentioned in the
+    # beginning of this guide, using named parameters is strongly encouraged
+    book_dimension = CachedDimension(
             name='book',
             key='bookid',
             attributes=['book', 'genre'])
     
-    time_dimension = Dimension(
+    time_dimension = CachedDimension(
             name='time',
             key='timeid',
             attributes=['day', 'month', 'year'])
     
-    location_dimension = Dimension(
+    location_dimension = CachedDimension(
             name='location',
             key='locationid',
             attributes=['city', 'region'],
@@ -215,7 +219,7 @@ information about the more advanced dimension and fact table classes, see
     
     # A single instance of FactTable is created for the data warehouse's single
     # fact table. It is created with the name of the table, a list of columns
-    # constituting the primary key of the fact table, and the list of measures
+    # constituting the primary key of the fact table, and a list of measures
     fact_table = FactTable(
             name='facttable',
             keyrefs=['bookid', 'locationid', 'timeid'],
@@ -259,7 +263,7 @@ are executed at the end.
     # contains all the information required for both columns in the table. If
     # the dimension was filled using data from the sales database, it would be
     # necessary to update the region attribute with data from the CSV file
-    # later. To insert the rows the method Dimension.insert() is used 
+    # later. To insert the rows the method CachedDimension.insert() is used 
     [location_dimension.insert(row) for row in region_source]
     
     # The file handle to the CSV file can then be closed
@@ -282,19 +286,20 @@ are executed at the end.
         row['bookid'] = book_dimension.ensure(row)
         row['timeid'] = time_dimension.ensure(row)
         
-        # Dimension.ensure() is not used for the location dimension as it has
-        # already been filled. Instead the method Dimension.lookup() is used.
-        # Dimension.lookup() does not insert any data and returns None if a row
-        # with the correct lookupatts is not available. This makes error
-        # handling very simple to implement. In this case an error is raised if
-        # a location is missing from the CSV file as recovery is not possible
+        # CachedDimension.ensure() is not used for the location dimension as it
+        # has already been filled. Instead the method CachedDimension.lookup()
+        # is used. CachedDimension.lookup() does not insert any data and
+        # returns None if a row with the correct lookupatts is not available.
+        # This makes error handling very simple to implement. In this case an
+        # error is raised if a location is missing from the CSV file as
+        # recovery is not possible
         row['locationid'] = location_dimension.lookup(row)
         if not row['locationid']:
             raise ValueError("city was not present in the location dimension")
         
         # As the number of sales is already aggregated in the sales records, the
         # row can now be inserted into the data warehouse. If aggregation, or
-        # other more advanced transformations are required, the full power
+        # other more advanced transformations are required, the full power of
         # Python is available as shown with the call to split_date()
         fact_table.insert(row)
     
@@ -309,14 +314,14 @@ are executed at the end.
 
 This small example shows how to quickly create a very simple ETL flow with
 pygrametl. A combined version with fewer comments can be seen below. However,
-as stated since this is a very small and simple example, the caching and bulk
-loading built into some of the more advanced dimension and fact table classes
-has not been used. In anything but very small ETL flows, these should be used
-to significantly increase the throughput of an ETL flow. See :ref:`dimensions`
-and :ref:`facttables` for more information. The simple parallel capabilities of
-pygrametl can also be used to further increase the throughput of an ETL program
-(see :ref:`parallel`), and the correctness of an ETL flow should be checked
-using a set of automated repeatable tests (see :ref:`testing`).
+since this is a very small and simple example, the batching and bulk loading
+built into some of the more advanced dimension and fact table classes has not
+been used. For larger ETL flows, these can be used to significantly increase
+the throughput of an ETL flow. See :ref:`dimensions` and :ref:`facttables` for
+more information. The simple parallel capabilities of pygrametl can also be
+used to further increase the throughput of an ETL flow (see :ref:`parallel`),
+and the correctness of an ETL flow should also be checked using a set of
+automated repeatable tests (see :ref:`testing`).
 
 
 .. code-block:: python
@@ -325,7 +330,7 @@ using a set of automated repeatable tests (see :ref:`testing`).
     import sqlite3
     import pygrametl
     from pygrametl.datasources import SQLSource, CSVSource
-    from pygrametl.tables import Dimension, FactTable
+    from pygrametl.tables import CachedDimension, FactTable
     
     # Opening of connections and creation of a ConnectionWrapper.
     sale_conn = sqlite3.connect("sale.sqlite",
@@ -346,17 +351,17 @@ using a set of automated repeatable tests (see :ref:`testing`).
     region_source = CSVSource(f=region_file_handle, delimiter=',')
     
     # Creation of dimension and fact table abstractions for use in the ETL flow
-    book_dimension = Dimension(
+    book_dimension = CachedDimension(
             name='book',
             key='bookid',
             attributes=['book', 'genre'])
     
-    time_dimension = Dimension(
+    time_dimension = CachedDimension(
             name='time',
             key='timeid',
             attributes=['day', 'month', 'year'])
     
-    location_dimension = Dimension(
+    location_dimension = CachedDimension(
             name='location',
             key='locationid',
             attributes=['city', 'region'],
