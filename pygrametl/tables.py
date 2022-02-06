@@ -977,12 +977,12 @@ class SlowlyChangingDimension(Dimension):
         else:
             # We have to find max(versionatt) for each group of lookupatts and
             # do a join to get the right rows.
-            lookupattlist = ', '.join(self.lookupatts)
+            lookupattlist = ', '.join(self.quotelist(self.lookupatts))
             newestversions = ('SELECT %s, MAX(%s) AS %s FROM %s GROUP BY %s' %
-                              (self.quote(lookupattlist),
+                              (lookupattlist,
                                self.quote(self.orderingatt),
                                self.quote(self.orderingatt), self.name,
-                               self.quote(lookupattlist)))
+                               lookupattlist))
             joincond = ' AND '.join(['A.%s = B.%s' % (self.quote(att), att)
                                      for att in [l for l in self.lookupatts] +
                                      [self.orderingatt]
