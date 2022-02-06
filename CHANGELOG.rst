@@ -57,7 +57,7 @@ Version 2.7
   ``dict.items()`` instead of ``dict.iteritems()`` which is not supported in
   Python 3.
   
-  Wrong use of ``quotelist()`` changed to ``quote()`` in ``SlowlyChangingDimension``.
+  Incorrect quotation of identifiers in ``SlowlyChangingDimension`` fixed.
   
   Missing key value of root when calling ``getbykey`` of ``SnowflakedDimension`` fixed.
 
