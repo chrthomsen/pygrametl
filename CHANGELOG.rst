@@ -56,6 +56,10 @@ Version 2.7
   strings before calling ``.split()``. In addition, the function now uses
   ``dict.items()`` instead of ``dict.iteritems()`` which is not supported in
   Python 3.
+  
+  Wrong use of ``quotelist()`` changed to ``quote()`` in ``SlowlyChangingDimension``.
+  
+  Missing key value of root when calling ``getbykey`` of ``SnowflakedDimension`` fixed.
 
 Version 2.6
 -----------
