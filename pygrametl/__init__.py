@@ -437,6 +437,10 @@ def ymdparser(ymdstr):
     """
     if ymdstr is None:
         return None
+    if isinstance(ymdstr, date):
+        return ymdstr
+    if isinstance(ymdstr, datetime):
+        return ymdstr.date()
     (year, month, day) = ymdstr.split('-')
     return date(int(year), int(month), int(day))
 
@@ -448,6 +452,8 @@ def ymdhmsparser(ymdhmsstr):
     """
     if ymdhmsstr is None:
         return None
+    if isinstance(ymdstr, datetime):
+        return ymdstr.date()
     (datepart, timepart) = ymdhmsstr.strip().split(' ')
     (year, month, day) = datepart.split('-')
     (hour, minute, second) = timepart.split(':')
