@@ -692,6 +692,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         # only contains "lookupatts" which "scdensure" is prohibited from
         # changing
 
+        row = row.copy()
         keyval = self.lookup(row, namemapping)
         key = (namemapping.get(self.key) or self.key)
         if keyval is None:
@@ -1076,6 +1077,7 @@ class SlowlyChangingDimension(Dimension):
              present but will be added (if defined).
            - namemapping: an optional namemapping (see module's documentation)
         """
+        row = row.copy()
         key = (namemapping.get(self.key) or self.key)
         if self.versionatt:
             versionatt = (namemapping.get(self.versionatt) or self.versionatt)
