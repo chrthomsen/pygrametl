@@ -793,9 +793,9 @@ class SlowlyChangingDimension(Dimension):
                  versionatt=None, fromatt=None, fromfinder=None, toatt=None,
                  tofinder=None, minfrom=None, maxto=None, srcdateatt=None,
                  srcdateparser=pygrametl.ymdparser, type1atts=(),
-                 allowsideeffectsonrows=True, cachesize=10000, prefill=False,
-                 idfinder=None, usefetchfirst=False, useorderby=True,
-                 targetconnection=None):
+                 cachesize=10000, prefill=False, idfinder=None,
+                 usefetchfirst=False, useorderby=True,
+                 allowsideeffectsonrows=True, targetconnection=None):
         """Arguments:
 
            - name: the name of the dimension table in the DW
