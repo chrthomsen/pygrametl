@@ -861,8 +861,6 @@ class SlowlyChangingDimension(Dimension):
              function that parses a string of the form 'yyyy-MM-dd')
            - type1atts: a sequence of attributes that should have type1 updates
              applied. Default: ()
-             allowsideeffectsonrows: decides if scdensure should add key,
-             versionatt, fromatt, and toatt to its argument row. Default: True
            - cachesize: the maximum size of the cache. 0 disables caching
              and values smaller than 0 allows unlimited caching
            - prefill: decides if the cache should be prefilled with the newest
@@ -876,13 +874,15 @@ class SlowlyChangingDimension(Dimension):
              clause is used when prefil is True. Depending on the used DBMS
              and DB driver, this can give significant savings wrt. to time and
              memory. Not all DBMSs support this clause yet. Default: False
-           - targetconnection: The ConnectionWrapper to use. If not given,
-             the default target connection is used.
            - useorderby: a flag deciding if ORDER BY is used in the SQL to
              select the newest version. If True, the DBMS thus does the
              sorting. If False, all versions are fetched and the highest
              version is found in Python. For some systems, this can lead to
              significant performance improvements. Default: True
+           - allowsideeffectsonrows: decides if scdensure should add key,
+             versionatt, fromatt, and toatt to its argument row. Default: True
+           - targetconnection: The ConnectionWrapper to use. If not given,
+             the default target connection is used.
         """
         # TODO: Should scdensure just override ensure instead of being a new
         #       method?
