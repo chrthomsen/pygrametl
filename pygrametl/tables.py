@@ -790,12 +790,12 @@ class SlowlyChangingDimension(Dimension):
     """
 
     def __init__(self, name, key, attributes, lookupatts, orderingatt=None,
-                 versionatt=None,
-                 fromatt=None, fromfinder=None,
-                 toatt=None, tofinder=None, minfrom=None, maxto=None,
-                 srcdateatt=None, srcdateparser=pygrametl.ymdparser,
-                 type1atts=(), cachesize=10000, prefill=False, idfinder=None,
-                 usefetchfirst=False, useorderby=True, targetconnection=None):
+                 versionatt=None, fromatt=None, fromfinder=None, toatt=None,
+                 tofinder=None, minfrom=None, maxto=None, srcdateatt=None,
+                 srcdateparser=pygrametl.ymdparser, type1atts=(),
+                 allowsideeffectsonrows=True, cachesize=10000, prefill=False,
+                 idfinder=None, usefetchfirst=False, useorderby=True,
+                 targetconnection=None):
         """Arguments:
 
            - name: the name of the dimension table in the DW
@@ -861,6 +861,8 @@ class SlowlyChangingDimension(Dimension):
              function that parses a string of the form 'yyyy-MM-dd')
            - type1atts: a sequence of attributes that should have type1 updates
              applied. Default: ()
+             allowsideeffectsonrows: decides if scdensure should add key,
+             versionatt, fromatt, and toatt to its argument row. Default: True
            - cachesize: the maximum size of the cache. 0 disables caching
              and values smaller than 0 allows unlimited caching
            - prefill: decides if the cache should be prefilled with the newest
@@ -923,6 +925,7 @@ class SlowlyChangingDimension(Dimension):
         self.srcdateatt = srcdateatt
         self.srcdateparser = srcdateparser
         self.type1atts = type1atts
+        self.allowsideeffectsonrows = allowsideeffectsonrows
         self.useorderby = useorderby
         if cachesize > 0:
             self.rowcache = FIFODict(cachesize)
@@ -1067,7 +1070,8 @@ class SlowlyChangingDimension(Dimension):
     def scdensure(self, row, namemapping={}):
         """Lookup or insert a version of a slowly changing dimension member.
 
-           .. Note:: Has side-effects on the given row.
+           .. Note:: Has side-effects on the given row if allowsideeffectsonrows
+           was True when the instance was instantiated (this is the default).
 
            Arguments:
 
@@ -1076,6 +1080,8 @@ class SlowlyChangingDimension(Dimension):
              present but will be added (if defined).
            - namemapping: an optional namemapping (see module's documentation)
         """
+        if not self.allowsideeffectsonrows:
+            row = row.copy()
         key = (namemapping.get(self.key) or self.key)
         if self.versionatt:
             versionatt = (namemapping.get(self.versionatt) or self.versionatt)
