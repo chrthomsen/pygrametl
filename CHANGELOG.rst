@@ -1,3 +1,12 @@
+Unreleased
+----------
+**Added**
+  ``SlowlyChangingDimension`` can now optionally be given the argument
+  ``allowsideeffectsonrows`` when instantiated. If ``True`` (the default),
+  ``SlowlyChangingDimension.scdensure`` will add ``key``, ``versionatt``,
+  ``fromatt``, and ``toatt`` to its argument ``row``. If ``False``
+  ``SlowlyChangingDimension.scdensure`` will copy its argument ``row``.
+
 Version 2.7
 -----------
 **Note**
@@ -233,7 +242,7 @@ Version 2.3.1
   ``ConnectionWrapper``.
 
 Version 2.3
--------------
+-----------
 **Added**
   A new quick start guide was added to the documentation.
 
