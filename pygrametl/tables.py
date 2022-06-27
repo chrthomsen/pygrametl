@@ -2250,6 +2250,10 @@ class BulkFactTable(_BaseBulkloadable):
              the fact table has foreign keys to some bulk-loaded dimension
              table). Default: ()
         """
+        self.keyrefs = keyrefs
+        self.measures = measures
+        self.all = [k for k in keyrefs] + [m for m in measures]
+        
         # This class does not do much in itself, but looks like a FactTable with
         # keyrefs and measures.
         _BaseBulkloadable.__init__(self,
