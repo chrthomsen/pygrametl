@@ -1,3 +1,9 @@
+Version 2.7.1
+-----------
+**Fixed**
+``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``, and ``all``.
+These attributes are required by the ``FactTablePartitioner``.
+
 Version 2.7
 -----------
 **Note**
