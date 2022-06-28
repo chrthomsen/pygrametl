@@ -1,4 +1,4 @@
-Version 2.7.1
+Version 2.7.1 (unreleased)
 -----------
 **Fixed**
 ``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``, and ``all``.
