@@ -1868,8 +1868,7 @@ class BatchFactTable(FactTable):
             self.__insertnow = self.__insertmultirow
             self.__basesql = self.insertsql[:self.insertsql.find(' (') + 1]
             self.__rowtovalue = lambda row: '(' + ','.join(map(
-                lambda c: "'" + row[c].replace("'", "''") + "'"
-                if type(row[c]) is str else str(row[c]), self.all)) + ')'
+                lambda c: pygrametl.getsqlfriendlystr(row[c]), self.all)) + ')'
         else:
             self.__insertnow = self.__insertexecutemany
 
