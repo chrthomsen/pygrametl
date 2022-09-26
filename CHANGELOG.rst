@@ -4,6 +4,9 @@ Unreleased
 ``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``, and ``all``.
 These attributes are required by the ``FactTablePartitioner``.
 
+``BulkFactTable`` constructed with ``usemultirow=True`` (the default is
+``False``) can now load rows containing ``NULL`` values. (GitHub issue #50)
+
 Version 2.7
 -----------
 **Note**

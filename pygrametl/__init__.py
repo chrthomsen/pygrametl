@@ -222,6 +222,19 @@ def getdbfriendlystr(value, nullvalue='None'):
     else:
         return str(value)
 
+def getsqlfriendlystr(value):
+    """Covert a value into a string that can be used in a SQL expression.
+
+       None values are converted to 'NULL'. Strings are surrounded by single
+       quotes and all single quotes in the string are escaped by doubling them.
+       Other values are currently just converted by means of str.
+    """
+    if value is None:
+        return 'NULL'
+    elif type(value) is str:
+        return "'" + value.replace("'", "''") + "'"
+    else:
+        return str(value)
 
 def getstrornullvalue(value, nullvalue='None'):
     """Convert a given value different from None to a string.
