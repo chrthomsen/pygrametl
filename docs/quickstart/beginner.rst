@@ -138,13 +138,13 @@ information about database connections in pygrametl see :ref:`database`.
 .. code-block:: python
 
     # Creates a PEP 249 connection to the sales database. PARSE_DECLTYPES makes
-    # sqlite3 return values with the types specified in the database's schema.
+    # sqlite3 return values with the types specified in the database's schema
     sale_conn = sqlite3.connect("sale.sqlite",
             detect_types=sqlite3.PARSE_DECLTYPES)
 
     # While SQLite is used in this guide, any RDBMS that provides a PEP 249
     # driver can be used with pygrametl. For example, SQLite can be replaced
-    # with PostgreSQL by simply replacing sale_conn with following two lines.
+    # with PostgreSQL by simply replacing sale_conn with following two lines
     # sale_string = "host='localhost' dbname='sale' user='user' password='pass'"
     # sale_conn = psycopg2.connect(sale_string)
 
@@ -180,8 +180,11 @@ provided by pygrametl see :ref:`datasources`.
     # just an open file handler. pygrametl uses Python's DictReader for CSV
     # files and assumes the header of the CSV file contains the name of each
     # column. When using CSVSource it is very important to convert the values
-    # to the correct type before inserting them into a table through pygrametl
-    region_file_handle = open('region.csv', 'r', 16384)
+    # to the correct type before inserting them into a table through pygrametl.
+    # As region.csv is encoded as UTF-8 and contains the non-ASCII characters æ
+    # and ø, the encoding open() will use is explicitly set to UTF-8. Of course,
+    # if a file uses a different encoding than UTF-8 it should be used instead
+    region_file_handle = open('region.csv', 'r', 16384, "utf-8")
     region_source = CSVSource(f=region_file_handle, delimiter=',')
 
 An object must then be created for each dimension and fact table in the data
@@ -198,25 +201,25 @@ information about the more advanced dimension and fact table classes, see
     # be used instead of Dimension unless the higher memory consumption causes
     # problems. For each dimension, the name of the database table, the table's
     # primary key, and the table's non-key columns (attributes) are given. In
-    # addition, for the location dimension the subset of the attributes that
-    # should be used to lookup the primary key are given. As mentioned in the
+    # addition, for the location dimension, the subset of the attributes that
+    # should be used to lookup the primary key is given. As mentioned in the
     # beginning of this guide, using named parameters is strongly encouraged
     book_dimension = CachedDimension(
             name='book',
             key='bookid',
             attributes=['book', 'genre'])
-    
+
     time_dimension = CachedDimension(
             name='time',
             key='timeid',
             attributes=['day', 'month', 'year'])
-    
+
     location_dimension = CachedDimension(
             name='location',
             key='locationid',
             attributes=['city', 'region'],
             lookupatts=['city'])
-    
+
     # A single instance of FactTable is created for the data warehouse's single
     # fact table. It is created with the name of the table, a list of columns
     # constituting the primary key of the fact table, and a list of measures
@@ -238,16 +241,16 @@ of an ETL flow.
     # A normal Python function is used to split the date into its parts
     def split_date(row):
         """Splits a date represented by a datetime into its three parts"""
-    
+
         # First the datetime object is extracted from the row dictionary
         date = row['date']
-        
+
         # Then each part is reassigned to the row dictionary. It can then be
         # accessed by the caller as the row is a reference to the dict object
         row['year'] = date.year
         row['month'] = date.month
         row['day'] = date.day
-    
+
 Finally, the data can be inserted into the data warehouse. All rows from the
 CSV file are inserted into the location dimension first. This is necessary for
 foreign keys to the location dimension to be computed while filling the fact
@@ -263,29 +266,29 @@ are executed at the end.
     # contains all the information required for both columns in the table. If
     # the dimension was filled using data from the sales database, it would be
     # necessary to update the region attribute with data from the CSV file
-    # later. To insert the rows the method CachedDimension.insert() is used 
+    # later. To insert the rows the method CachedDimension.insert() is used
     [location_dimension.insert(row) for row in region_source]
-    
+
     # The file handle to the CSV file can then be closed
     region_file_handle.close()
-    
+
     # All the information needed for the other dimensions are stored in the
     # sales database. So with only a single iteration over the sales records
     # the ETL flow can split the date and lookup the three dimension keys
     # needed for the fact table. While retrieving the dimension keys, pygrametl
     # can automatically update the dimensions with new data if ensure() is
-    # used. This method combines a lookup with a insertion so a new row is only
-    # inserted into the dimension or fact table if it does not yet exist
+    # used. This method combines a lookup with an insertion so a new row is
+    # only inserted into the dimension or fact table if it does not yet exist
     for row in sale_source:
-    
+
         # The date is split into its three parts
         split_date(row)
-        
+
         # The row is updated with the correct primary keys for each dimension, and
         # any new data are inserted into each of the dimensions at the same time
         row['bookid'] = book_dimension.ensure(row)
         row['timeid'] = time_dimension.ensure(row)
-        
+
         # CachedDimension.ensure() is not used for the location dimension as it
         # has already been filled. Instead the method CachedDimension.lookup()
         # is used. CachedDimension.lookup() does not insert any data and
@@ -296,19 +299,19 @@ are executed at the end.
         row['locationid'] = location_dimension.lookup(row)
         if not row['locationid']:
             raise ValueError("city was not present in the location dimension")
-        
+
         # As the number of sales is already aggregated in the sales records, the
         # row can now be inserted into the data warehouse. If aggregation, or
         # other more advanced transformations are required, the full power of
         # Python is available as shown with the call to split_date()
         fact_table.insert(row)
-    
+
     # After all the data have been inserted, the connection is ordered to
     # commit and is then closed. This ensures that the data is committed to the
     # database and that the resources used by the connection are released
     dw_conn_wrapper.commit()
     dw_conn_wrapper.close()
-    
+
     # Finally, the connection to the sales database is closed
     sale_conn.close()
 
@@ -331,85 +334,85 @@ automated repeatable tests (see :ref:`testing`).
     import pygrametl
     from pygrametl.datasources import SQLSource, CSVSource
     from pygrametl.tables import CachedDimension, FactTable
-    
-    # Opening of connections and creation of a ConnectionWrapper.
+
+    # Opening of connections and creation of a ConnectionWrapper
     sale_conn = sqlite3.connect("sale.sqlite",
             detect_types=sqlite3.PARSE_DECLTYPES)
-    
+
     dw_string = "host='localhost' dbname='dw' user='dwuser' password='dwpass'"
     dw_conn = psycopg2.connect(dw_string)
     dw_conn_wrapper = pygrametl.ConnectionWrapper(connection=dw_conn)
-    
-    # Creation of data sources for the sales database and the CSV file,
+
+    # Creation of data sources for the sales database and the CSV file
     # containing extra information about cities and regions in Denmark
     name_mapping = 'book', 'genre', 'city', 'date', 'sale'
     query = "SELECT book, genre, store, date, sale FROM sale"
     sale_source = SQLSource(connection=sale_conn, query=query,
             names=name_mapping)
-    
-    region_file_handle = open('region.csv', 'r', 16384)
+
+    region_file_handle = open('region.csv', 'r', 16384, "utf-8")
     region_source = CSVSource(f=region_file_handle, delimiter=',')
-    
+
     # Creation of dimension and fact table abstractions for use in the ETL flow
     book_dimension = CachedDimension(
             name='book',
             key='bookid',
             attributes=['book', 'genre'])
-    
+
     time_dimension = CachedDimension(
             name='time',
             key='timeid',
             attributes=['day', 'month', 'year'])
-    
+
     location_dimension = CachedDimension(
             name='location',
             key='locationid',
             attributes=['city', 'region'],
             lookupatts=['city'])
-    
+
     fact_table = FactTable(
             name='facttable',
             keyrefs=['bookid', 'locationid', 'timeid'],
             measures=['sale'])
-    
+
     # Python function needed to split the date into its three parts
     def split_date(row):
         """Splits a date represented by a datetime into its three parts"""
-    
+
         # Splitting of the date into parts
         date = row['date']
         row['year'] = date.year
         row['month'] = date.month
         row['day'] = date.day
-    
+
     # The location dimension is loaded from the CSV file
     [location_dimension.insert(row) for row in region_source]
-    
+
     # The file handle for the CSV file can then be closed
     region_file_handle.close()
-    
+
     # Each row in the sales database is iterated through and inserted
     for row in sale_source:
-    
+
         # Each row is passed to the date split function for splitting
         split_date(row)
-    
+
         # Lookups are performed to find the key in each dimension for the fact
         # and if the data is not there, it is inserted from the sales row
         row['bookid'] = book_dimension.ensure(row)
         row['timeid'] = time_dimension.ensure(row)
-    
+
         # The location dimension is pre-filled, so a missing row is an error
         row['locationid'] = location_dimension.lookup(row)
         if not row['locationid']:
             raise ValueError("city was not present in the location dimension")
-    
+
         # The row can then be inserted into the fact table
         fact_table.insert(row)
-    
+
     # The data warehouse connection is then ordered to commit and close
     dw_conn_wrapper.commit()
     dw_conn_wrapper.close()
-    
+
     # Finally, the connection to the sales database is closed
     sale_conn.close()
