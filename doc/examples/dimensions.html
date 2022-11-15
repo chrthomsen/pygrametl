@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Dimensions &#8212; pygrametl 2.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,20 +12,18 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Fact Tables" href="facttables.html" />
     <link rel="prev" title="Data Sources" href="datasources.html" />
-<script type="text/javascript">
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
-</script>
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -38,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="dimensions">
-<span id="id1"></span><h1>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this heading">¶</a></h1>
 <p>Multiple abstractions for representing dimensions in a data warehouse are
 provided by pygrametl. These abstractions allow for simple modeling of both
 star and snowflake schemas as well as type 1, type 2, and combined type 1 and
@@ -49,13 +47,13 @@ examples use PostgreSQL as the RDBMS and psycopg2 as the database driver.</p>
 <p>All of following classes are currently implemented in the
 <a class="reference internal" href="../api/tables.html#module-pygrametl.tables" title="pygrametl.tables"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygrametl.tables</span></code></a> module.</p>
 <section id="dimension">
-<h2>Dimension<a class="headerlink" href="#dimension" title="Permalink to this headline">¶</a></h2>
+<h2>Dimension<a class="headerlink" href="#dimension" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> is the simplest abstraction pygrametl provides for
 interacting with dimensions in a data warehouse. It provides an interface for
 performing operations on the underlying table, such as insertions or looking up
 keys, while abstracting away the database connection and queries. Using
 <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> is a two-step process. Firstly, an instance of
-<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> must be created with a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> database
+<a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> must be created with a <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0249/"><strong>PEP 249</strong></a> database
 connection. The first <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> created is automatically set
 as the default and used by <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> for interacting with the
 database. For more information about database connections see <a class="reference internal" href="database.html#database"><span class="std std-ref">Database</span></a>.
@@ -118,7 +116,7 @@ then be inserted into the database one element at a time using the method
 connection closed to ensure that the data is written to the database.</p>
 </section>
 <section id="cacheddimension">
-<h2>CachedDimension<a class="headerlink" href="#cacheddimension" title="Permalink to this headline">¶</a></h2>
+<h2>CachedDimension<a class="headerlink" href="#cacheddimension" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a> extends <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a> with a cache to reduce the
 latency of lookups by reducing the number of round trips to the database. To
 control what is cached, three additional parameters have been added to its
@@ -186,7 +184,7 @@ allowing increased performance when looking up keys as fewer, or none if all
 rows are cached, round trips are made to the database.</p>
 </section>
 <section id="bulkdimension">
-<h2>BulkDimension<a class="headerlink" href="#bulkdimension" title="Permalink to this headline">¶</a></h2>
+<h2>BulkDimension<a class="headerlink" href="#bulkdimension" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> is a dimension optimized for high throughput when
 inserting rows and fast lookups. This is done by inserting rows in bulk from a
 file while using an in-memory cache for lookup. To support this the RDBMS is
@@ -304,7 +302,7 @@ memory. If the dimension can be bulk loaded but is too large to cache in memory
 <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> should be used instead of <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a>.</p>
 </section>
 <section id="cachedbulkdimension">
-<h2>CachedBulkDimension<a class="headerlink" href="#cachedbulkdimension" title="Permalink to this headline">¶</a></h2>
+<h2>CachedBulkDimension<a class="headerlink" href="#cachedbulkdimension" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedBulkDimension" title="pygrametl.tables.CachedBulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedBulkDimension</span></code></a> is very similar to <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> and is
 also intended for bulk loading a dimension, so only their differences are
 described here. Unlike <a class="reference internal" href="../api/tables.html#pygrametl.tables.BulkDimension" title="pygrametl.tables.BulkDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">BulkDimension</span></code></a> the size of
@@ -341,7 +339,7 @@ will just return the key of the first row as it is stored in the file cache.</p>
 </div>
 </section>
 <section id="typeoneslowlychanging-dimension">
-<h2>TypeOneSlowlyChanging Dimension<a class="headerlink" href="#typeoneslowlychanging-dimension" title="Permalink to this headline">¶</a></h2>
+<h2>TypeOneSlowlyChanging Dimension<a class="headerlink" href="#typeoneslowlychanging-dimension" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a> allows the creation of a type 1 slowly
 changing dimension. The dimension is based on <a class="reference internal" href="../api/tables.html#pygrametl.tables.CachedDimension" title="pygrametl.tables.CachedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDimension</span></code></a>, albeit
 with a few differences. The primary difference between the two classes besides
@@ -412,7 +410,7 @@ changes must be stored a type 2 slowly changing dimension should be created, and
 <a class="reference internal" href="../api/tables.html#pygrametl.tables.TypeOneSlowlyChangingDimension" title="pygrametl.tables.TypeOneSlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeOneSlowlyChangingDimension</span></code></a>.</p>
 </section>
 <section id="slowlychangingdimension">
-<h2>SlowlyChangingDimension<a class="headerlink" href="#slowlychangingdimension" title="Permalink to this headline">¶</a></h2>
+<h2>SlowlyChangingDimension<a class="headerlink" href="#slowlychangingdimension" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SlowlyChangingDimension" title="pygrametl.tables.SlowlyChangingDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlowlyChangingDimension</span></code></a> allows for the creation of either a type 2
 slowly changing dimension, or a combined type 1 and type 2 slowly changing
 dimension. To support this functionality, multiple additional attributes have
@@ -518,7 +516,7 @@ incremented version number is added to the new row indicating that this is a
 newer version of an existing row.</p>
 </section>
 <section id="snowflakeddimension">
-<h2>SnowflakedDimension<a class="headerlink" href="#snowflakeddimension" title="Permalink to this headline">¶</a></h2>
+<h2>SnowflakedDimension<a class="headerlink" href="#snowflakeddimension" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> represents a snowflaked dimension as a single
 object with the same interface as <a class="reference internal" href="../api/tables.html#pygrametl.tables.Dimension" title="pygrametl.tables.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dimension</span></code></a>. Instantiating a
 <a class="reference internal" href="../api/tables.html#pygrametl.tables.SnowflakedDimension" title="pygrametl.tables.SnowflakedDimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnowflakedDimension</span></code></a> is however different. Instead of requiring all
@@ -763,7 +761,7 @@ updated correctly.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -777,10 +775,10 @@ updated correctly.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2009 - 2021, Aalborg University.
+      &copy;2009 - 2022, Aalborg University.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

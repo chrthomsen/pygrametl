@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Data Sources &#8212; pygrametl 2.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,20 +12,18 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Dimensions" href="dimensions.html" />
     <link rel="prev" title="Database" href="database.html" />
-<script type="text/javascript">
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
-</script>
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -38,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="data-sources">
-<span id="datasources"></span><h1>Data Sources<a class="headerlink" href="#data-sources" title="Permalink to this headline">¶</a></h1>
+<span id="datasources"></span><h1>Data Sources<a class="headerlink" href="#data-sources" title="Permalink to this heading">¶</a></h1>
 <p>pygrametl supports numerous data sources, which are iterable classes that
 produce rows. A row is a Python <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> where the keys are the names of
 the columns in the table where the row is from, and the values are the data
@@ -52,9 +50,9 @@ source are iterable, they can, e.g., be used in a loop as shown below:</p>
 <p>While users can define their own data sources, pygrametl includes a number of
 commonly used data sources:</p>
 <section id="sqlsource">
-<h2>SQLSource<a class="headerlink" href="#sqlsource" title="Permalink to this headline">¶</a></h2>
+<h2>SQLSource<a class="headerlink" href="#sqlsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.SQLSource" title="pygrametl.datasources.SQLSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLSource</span></code></a> is a data source used to iterate over the results of a
-single SQL query. The data source’s constructor must be passed a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a>
+single SQL query. The data source’s constructor must be passed a <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0249/"><strong>PEP 249</strong></a>
 connection and not a <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a>. As an example, a PostgreSQL
 connection created using the psycopg2 package is used below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">psycopg2</span>
@@ -91,7 +89,7 @@ created and then used in the query:</p>
 </div>
 </section>
 <section id="csvsource">
-<h2>CSVSource<a class="headerlink" href="#csvsource" title="Permalink to this headline">¶</a></h2>
+<h2>CSVSource<a class="headerlink" href="#csvsource" title="Permalink to this heading">¶</a></h2>
 <p><code class="xref py py-class docutils literal notranslate"><span class="pre">CSVSource</span></code> is a data source that returns a row for each line in a
 character-separated file. It is an alias for Python’s <a class="reference external" href="http://docs.python.org/3/library/csv.html#csv.DictReader">csv.DictReader</a> as it already is
 iterable and returns <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>. An example of how to use
@@ -108,7 +106,7 @@ that uses a buffer size of 16384, This particular buffer size is used as it
 performed better than the alternatives we evaluated it against.</p>
 </section>
 <section id="typedcsvsource">
-<h2>TypedCSVSource<a class="headerlink" href="#typedcsvsource" title="Permalink to this headline">¶</a></h2>
+<h2>TypedCSVSource<a class="headerlink" href="#typedcsvsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TypedCSVSource" title="pygrametl.datasources.TypedCSVSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypedCSVSource</span></code></a> extends <code class="xref py py-class docutils literal notranslate"><span class="pre">CSVSource</span></code> with typecasting by
 wrapping <a class="reference external" href="http://docs.python.org/3/library/csv.html#csv.DictReader">csv.DictReader</a> instead of simply
 being an alias.</p>
@@ -128,7 +126,7 @@ cast to. A cast is not performed for the name column as <a class="reference inte
 uses <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> as the default.</p>
 </section>
 <section id="pandassource">
-<h2>PandasSource<a class="headerlink" href="#pandassource" title="Permalink to this headline">¶</a></h2>
+<h2>PandasSource<a class="headerlink" href="#pandassource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.PandasSource" title="pygrametl.datasources.PandasSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">PandasSource</span></code></a> wraps a Pandas DataFrame so it can be used as a data
 source. The class reuses existing functionality provided by <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/frame.html">DataFrame</a>. An
 example of how to use this class can be seen below. In this example data is
@@ -150,7 +148,7 @@ pygrametl, a <a class="reference internal" href="../api/datasources.html#pygrame
 argument, making the rows of the DataFrame accessible through a data source.</p>
 </section>
 <section id="mergejoiningsource">
-<h2>MergeJoiningSource<a class="headerlink" href="#mergejoiningsource" title="Permalink to this headline">¶</a></h2>
+<h2>MergeJoiningSource<a class="headerlink" href="#mergejoiningsource" title="Permalink to this heading">¶</a></h2>
 <p>In addition to the above data sources which reads data from external sources,
 pygrametl also includes a number of data sources that take other data sources as
 input to transform and/or combine them.</p>
@@ -169,7 +167,7 @@ shared attributes on which the rows are to be joined must also be given.</p>
 sources on their shared attribute productid.</p>
 </section>
 <section id="hashjoiningsource">
-<h2>HashJoiningSource<a class="headerlink" href="#hashjoiningsource" title="Permalink to this headline">¶</a></h2>
+<h2>HashJoiningSource<a class="headerlink" href="#hashjoiningsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.HashJoiningSource" title="pygrametl.datasources.HashJoiningSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">HashJoiningSource</span></code></a> functions similarly to <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.MergeJoiningSource" title="pygrametl.datasources.MergeJoiningSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">MergeJoiningSource</span></code></a>,
 but it performs the join using a hash map. Thus the two input data sources need
 not produce their rows in sorted order.</p>
@@ -183,7 +181,7 @@ not produce their rows in sorted order.</p>
 </div>
 </section>
 <section id="unionsource">
-<h2>UnionSource<a class="headerlink" href="#unionsource" title="Permalink to this headline">¶</a></h2>
+<h2>UnionSource<a class="headerlink" href="#unionsource" title="Permalink to this heading">¶</a></h2>
 <p>The class <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.UnionSource" title="pygrametl.datasources.UnionSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnionSource</span></code></a> creates a union of a number of the supplied data
 sources. <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.UnionSource" title="pygrametl.datasources.UnionSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnionSource</span></code></a> does not require that the input data sources all
 produce rows containing the same attributes, which also means that an
@@ -203,7 +201,7 @@ that all rows are read from the first data source before any rows are read from
 the second data source, and so on.</p>
 </section>
 <section id="roundrobinsource">
-<h2>RoundRobinSource<a class="headerlink" href="#roundrobinsource" title="Permalink to this headline">¶</a></h2>
+<h2>RoundRobinSource<a class="headerlink" href="#roundrobinsource" title="Permalink to this heading">¶</a></h2>
 <p>It can also be beneficial to interleave rows, and for this purpose,
 <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.RoundRobinSource" title="pygrametl.datasources.RoundRobinSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">RoundRobinSource</span></code></a> can be used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">CSVSource</span><span class="p">,</span> <span class="n">RoundRobinSource</span>
@@ -221,7 +219,7 @@ sources, and the argument <code class="xref py py-attr docutils literal notransl
 read from one data source before reading from the next in a round-robin fashion.</p>
 </section>
 <section id="processsource">
-<h2>ProcessSource<a class="headerlink" href="#processsource" title="Permalink to this headline">¶</a></h2>
+<h2>ProcessSource<a class="headerlink" href="#processsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.ProcessSource" title="pygrametl.datasources.ProcessSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessSource</span></code></a> is used for iterating over a data source using a
 separate worker process or thread. The worker reads data from the input data
 source and creates batches of rows. When a batch is complete, it is added to a
@@ -238,7 +236,7 @@ throughput. For more examples of the parallel features provided by pygrametl see
 </div>
 </section>
 <section id="filteringsource">
-<h2>FilteringSource<a class="headerlink" href="#filteringsource" title="Permalink to this headline">¶</a></h2>
+<h2>FilteringSource<a class="headerlink" href="#filteringsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.FilteringSource" title="pygrametl.datasources.FilteringSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">FilteringSource</span></code></a> is used to apply a filter to a data source. By
 default, the built-in Python function <a class="reference external" href="http://docs.python.org/3/library/functions.html#bool">bool</a> is used, which can be
 used to remove empty rows. Alternatively, the user can supply a custom filter
@@ -258,7 +256,7 @@ removed if the value of their location attribute is not Aalborg.</p>
 </div>
 </section>
 <section id="mappingsource">
-<h2>MappingSource<a class="headerlink" href="#mappingsource" title="Permalink to this headline">¶</a></h2>
+<h2>MappingSource<a class="headerlink" href="#mappingsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.MappingSource" title="pygrametl.datasources.MappingSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingSource</span></code></a> can be used to apply functions to the columns of a data
 source. It can be given a dictionary that where the keys are the columns and the
 values are callable functions of the form <code class="xref py py-attr docutils literal notranslate"><span class="pre">f(val)</span></code>. The functions will be
@@ -273,7 +271,7 @@ rows are being read from a CSV file.</p>
 </div>
 </section>
 <section id="transformingsource">
-<h2>TransformingSource<a class="headerlink" href="#transformingsource" title="Permalink to this headline">¶</a></h2>
+<h2>TransformingSource<a class="headerlink" href="#transformingsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TransformingSource" title="pygrametl.datasources.TransformingSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformingSource</span></code></a> can be used to apply functions to the rows of a
 data source. The class can be supplied with a number of callable functions of
 the form <code class="xref py py-attr docutils literal notranslate"><span class="pre">f(row)</span></code>, which will be applied to the source in the given order.</p>
@@ -295,7 +293,7 @@ the form <code class="xref py py-attr docutils literal notranslate"><span class=
 stored in the row as two currencies.</p>
 </section>
 <section id="crosstabbingsource">
-<h2>CrossTabbingSource<a class="headerlink" href="#crosstabbingsource" title="Permalink to this headline">¶</a></h2>
+<h2>CrossTabbingSource<a class="headerlink" href="#crosstabbingsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.CrossTabbingSource" title="pygrametl.datasources.CrossTabbingSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossTabbingSource</span></code></a> can be used to compute the cross tab of a data
 source. The class takes as parameters the names of the attributes that are to
 appear as rows and columns in the crosstab, as well as the name of the attribute
@@ -326,7 +324,7 @@ order to view the average price of products across different locations.
 <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.TransformingSource" title="pygrametl.datasources.TransformingSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformingSource</span></code></a> is used to parse and convert the price from DKK to EUR.</p>
 </section>
 <section id="dynamicforeachsource">
-<h2>DynamicForEachSource<a class="headerlink" href="#dynamicforeachsource" title="Permalink to this headline">¶</a></h2>
+<h2>DynamicForEachSource<a class="headerlink" href="#dynamicforeachsource" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="../api/datasources.html#pygrametl.datasources.DynamicForEachSource" title="pygrametl.datasources.DynamicForEachSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicForEachSource</span></code></a> is a data source that for each data source
 provided as input, creates a new data source that will be iterated by the
 <a class="reference internal" href="../api/datasources.html#pygrametl.datasources.DynamicForEachSource" title="pygrametl.datasources.DynamicForEachSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicForEachSource</span></code></a> data source. To create the new data sources the
@@ -414,7 +412,7 @@ features see <a class="reference internal" href="parallel.html"><span class="doc
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -428,10 +426,10 @@ features see <a class="reference internal" href="parallel.html"><span class="doc
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2009 - 2021, Aalborg University.
+      &copy;2009 - 2022, Aalborg University.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

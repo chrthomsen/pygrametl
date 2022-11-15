@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Beginner Guide &#8212; pygrametl 2.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,20 +12,18 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Database" href="../examples/database.html" />
     <link rel="prev" title="Install Guide" href="install.html" />
-<script type="text/javascript">
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-30772056-2', 'auto');
-  ga('send', 'pageview');
-</script>
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -38,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="beginner-guide">
-<span id="beginner"></span><h1>Beginner Guide<a class="headerlink" href="#beginner-guide" title="Permalink to this headline">¶</a></h1>
+<span id="beginner"></span><h1>Beginner Guide<a class="headerlink" href="#beginner-guide" title="Permalink to this heading">¶</a></h1>
 <p>The following is a small guide for users new to pygrametl. It shows the main
 constructs provided by pygrametl and how to use them to create a simple ETL
 flow for a made-up example. The example is a toy data warehouse for a chain of
@@ -69,7 +67,7 @@ the future if the API changes.</p>
 </figcaption>
 </figure>
 <section id="input-data">
-<h2>Input Data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h2>
+<h2>Input Data<a class="headerlink" href="#input-data" title="Permalink to this heading">¶</a></h2>
 <p>Most pygrametl abstractions either produce, consume, or operate on data in
 rows. A row is a Python <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> where the names of the row’s columns are
 the keys and the values are the data the row contains. For more information
@@ -85,7 +83,7 @@ stored in the SQLite database sale.sqlite. Of course, storing sales records
 from multiple book stores is not a common use-case for SQLite. However, SQLite
 is used in this beginner guide as it makes sharing the input data simple and
 demonstrates pygrametl’s ability to read and write from any RDBMS that provides
-a <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connection. The data is stored in the table sale as shown below:</p>
+a <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0249/"><strong>PEP 249</strong></a> connection. The data is stored in the table sale as shown below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>| book:text             | genre:text | store:text | date:date      | sale:int |
 | --------------------- | ---------- | ---------- | -------------- | -------- |
 | Nineteen Eighty-Four  | Novel      | Aalborg    | 2005/08/05     | 50       |
@@ -107,11 +105,11 @@ Odense,     Region of Southern Denmark
 </div>
 </section>
 <section id="etl-flow">
-<h2>ETL Flow<a class="headerlink" href="#etl-flow" title="Permalink to this headline">¶</a></h2>
+<h2>ETL Flow<a class="headerlink" href="#etl-flow" title="Permalink to this heading">¶</a></h2>
 <p>The ETL flow is designed to run on CPython and use PostgreSQL as the RDBMS for
 the data warehouse. The guide assumes PostgreSQL is already installed and
 running. The ETL flow can easily be run on other Python implementations like
-Jython. For example, to use Jython the <span class="target" id="index-1"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> database drivers must simply
+Jython. For example, to use Jython the <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0249/"><strong>PEP 249</strong></a> database drivers must simply
 be replaced with their <a class="reference external" href="https://jcp.org/en/jsr/detail?id=221">JDBC</a>
 equivalents and <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> with
 <a class="reference internal" href="../api/jdbcconnectionwrapper.html#pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper" title="pygrametl.JDBCConnectionWrapper.JDBCConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">JDBCConnectionWrapper</span></code></a>. For more information about running pygrametl
@@ -150,23 +148,23 @@ the various dimensions (<a class="reference internal" href="../api/tables.html#p
 </pre></div>
 </div>
 <p>Then a connection to the database containing the sales records and the data
-warehouses is needed. For CPython, these must be <span class="target" id="index-2"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connections. As the
+warehouses is needed. For CPython, these must be <span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0249/"><strong>PEP 249</strong></a> connections. As the
 data warehouse connection will be shared by multiple pygrametl abstractions, an
 instance of <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> is created. The first instance created
 of this class is set as the default connection for pygrametl’s abstractions.
 This allows pygrametl to be used without having to pass a connection to each
 abstraction that needs it. A <a class="reference internal" href="../api/pygrametl.html#pygrametl.ConnectionWrapper" title="pygrametl.ConnectionWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectionWrapper</span></code></a> is not needed for the
 connection to the sales database as it is only used by the <code class="xref py py-class docutils literal notranslate"><span class="pre">CSVSource</span></code>,
-so in that case, the <span class="target" id="index-3"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0249"><strong>PEP 249</strong></a> connection is used directly. For more
+so in that case, the <span class="target" id="index-3"></span><a class="pep reference external" href="https://peps.python.org/pep-0249/"><strong>PEP 249</strong></a> connection is used directly. For more
 information about database connections in pygrametl see <a class="reference internal" href="../examples/database.html#database"><span class="std std-ref">Database</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creates a PEP 249 connection to the sales database. PARSE_DECLTYPES makes</span>
-<span class="c1"># sqlite3 return values with the types specified in the database&#39;s schema.</span>
+<span class="c1"># sqlite3 return values with the types specified in the database&#39;s schema</span>
 <span class="n">sale_conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;sale.sqlite&quot;</span><span class="p">,</span>
         <span class="n">detect_types</span><span class="o">=</span><span class="n">sqlite3</span><span class="o">.</span><span class="n">PARSE_DECLTYPES</span><span class="p">)</span>
 
 <span class="c1"># While SQLite is used in this guide, any RDBMS that provides a PEP 249</span>
 <span class="c1"># driver can be used with pygrametl. For example, SQLite can be replaced</span>
-<span class="c1"># with PostgreSQL by simply replacing sale_conn with following two lines.</span>
+<span class="c1"># with PostgreSQL by simply replacing sale_conn with following two lines</span>
 <span class="c1"># sale_string = &quot;host=&#39;localhost&#39; dbname=&#39;sale&#39; user=&#39;user&#39; password=&#39;pass&#39;&quot;</span>
 <span class="c1"># sale_conn = psycopg2.connect(sale_string)</span>
 
@@ -200,8 +198,11 @@ provided by pygrametl see <a class="reference internal" href="../examples/dataso
 <span class="c1"># just an open file handler. pygrametl uses Python&#39;s DictReader for CSV</span>
 <span class="c1"># files and assumes the header of the CSV file contains the name of each</span>
 <span class="c1"># column. When using CSVSource it is very important to convert the values</span>
-<span class="c1"># to the correct type before inserting them into a table through pygrametl</span>
-<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">)</span>
+<span class="c1"># to the correct type before inserting them into a table through pygrametl.</span>
+<span class="c1"># As region.csv is encoded as UTF-8 and contains the non-ASCII characters æ</span>
+<span class="c1"># and ø, the encoding open() will use is explicitly set to UTF-8. Of course,</span>
+<span class="c1"># if a file uses a different encoding than UTF-8 it should be used instead</span>
+<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 <span class="n">region_source</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">region_file_handle</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -216,8 +217,8 @@ information about the more advanced dimension and fact table classes, see
 <span class="c1"># be used instead of Dimension unless the higher memory consumption causes</span>
 <span class="c1"># problems. For each dimension, the name of the database table, the table&#39;s</span>
 <span class="c1"># primary key, and the table&#39;s non-key columns (attributes) are given. In</span>
-<span class="c1"># addition, for the location dimension the subset of the attributes that</span>
-<span class="c1"># should be used to lookup the primary key are given. As mentioned in the</span>
+<span class="c1"># addition, for the location dimension, the subset of the attributes that</span>
+<span class="c1"># should be used to lookup the primary key is given. As mentioned in the</span>
 <span class="c1"># beginning of this guide, using named parameters is strongly encouraged</span>
 <span class="n">book_dimension</span> <span class="o">=</span> <span class="n">CachedDimension</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;book&#39;</span><span class="p">,</span>
@@ -288,8 +289,8 @@ are executed at the end.</p>
 <span class="c1"># the ETL flow can split the date and lookup the three dimension keys</span>
 <span class="c1"># needed for the fact table. While retrieving the dimension keys, pygrametl</span>
 <span class="c1"># can automatically update the dimensions with new data if ensure() is</span>
-<span class="c1"># used. This method combines a lookup with a insertion so a new row is only</span>
-<span class="c1"># inserted into the dimension or fact table if it does not yet exist</span>
+<span class="c1"># used. This method combines a lookup with an insertion so a new row is</span>
+<span class="c1"># only inserted into the dimension or fact table if it does not yet exist</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sale_source</span><span class="p">:</span>
 
     <span class="c1"># The date is split into its three parts</span>
@@ -343,7 +344,7 @@ automated repeatable tests (see <a class="reference internal" href="../examples/
 <span class="kn">from</span> <span class="nn">pygrametl.datasources</span> <span class="kn">import</span> <span class="n">SQLSource</span><span class="p">,</span> <span class="n">CSVSource</span>
 <span class="kn">from</span> <span class="nn">pygrametl.tables</span> <span class="kn">import</span> <span class="n">CachedDimension</span><span class="p">,</span> <span class="n">FactTable</span>
 
-<span class="c1"># Opening of connections and creation of a ConnectionWrapper.</span>
+<span class="c1"># Opening of connections and creation of a ConnectionWrapper</span>
 <span class="n">sale_conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;sale.sqlite&quot;</span><span class="p">,</span>
         <span class="n">detect_types</span><span class="o">=</span><span class="n">sqlite3</span><span class="o">.</span><span class="n">PARSE_DECLTYPES</span><span class="p">)</span>
 
@@ -351,14 +352,14 @@ automated repeatable tests (see <a class="reference internal" href="../examples/
 <span class="n">dw_conn</span> <span class="o">=</span> <span class="n">psycopg2</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dw_string</span><span class="p">)</span>
 <span class="n">dw_conn_wrapper</span> <span class="o">=</span> <span class="n">pygrametl</span><span class="o">.</span><span class="n">ConnectionWrapper</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">dw_conn</span><span class="p">)</span>
 
-<span class="c1"># Creation of data sources for the sales database and the CSV file,</span>
+<span class="c1"># Creation of data sources for the sales database and the CSV file</span>
 <span class="c1"># containing extra information about cities and regions in Denmark</span>
 <span class="n">name_mapping</span> <span class="o">=</span> <span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="s1">&#39;genre&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;sale&#39;</span>
 <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;SELECT book, genre, store, date, sale FROM sale&quot;</span>
 <span class="n">sale_source</span> <span class="o">=</span> <span class="n">SQLSource</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">sale_conn</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
         <span class="n">names</span><span class="o">=</span><span class="n">name_mapping</span><span class="p">)</span>
 
-<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">)</span>
+<span class="n">region_file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;region.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="mi">16384</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 <span class="n">region_source</span> <span class="o">=</span> <span class="n">CSVSource</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">region_file_handle</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 
 <span class="c1"># Creation of dimension and fact table abstractions for use in the ETL flow</span>
@@ -491,7 +492,7 @@ automated repeatable tests (see <a class="reference internal" href="../examples/
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -505,10 +506,10 @@ automated repeatable tests (see <a class="reference internal" href="../examples/
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2009 - 2021, Aalborg University.
+      &copy;2009 - 2022, Aalborg University.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
