@@ -1,8 +1,13 @@
 Unreleased
 ----------
+**Changed**
+If a ``rowexpander`` does not return a row in the form of a ``dict``,
+``Dimension.ensure`` now explicitly raises a ``TypeError`` with the name of the
+function set as the ``rowexpander``.
+
 **Fixed**
-``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``, and ``all``.
-These attributes are required by the ``FactTablePartitioner``.
+``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``,
+and ``all``. These attributes are required by the ``FactTablePartitioner``.
 
 ``BulkFactTable`` constructed with ``usemultirow=True`` (the default is
 ``False``) can now load rows containing ``NULL`` values. (GitHub issue #50)
@@ -65,9 +70,9 @@ Version 2.7
   strings before calling ``.split()``. In addition, the function now uses
   ``dict.items()`` instead of ``dict.iteritems()`` which is not supported in
   Python 3.
-  
+
   Incorrect quotation of identifiers in ``SlowlyChangingDimension`` fixed.
-  
+
   Missing key value of root when calling ``getbykey`` of ``SnowflakedDimension`` fixed.
 
 Version 2.6

@@ -333,6 +333,9 @@ class Dimension(object):
         else:
             if self.rowexpander:
                 row = self.rowexpander(row, namemapping)
+                if not isinstance(row, dict):
+                    raise TypeError("The rowexpander %s did not return a row"
+                                    % self.rowexpander.__qualname__)
             return self.insert(row, namemapping)
 
     def insert(self, row, namemapping={}):
