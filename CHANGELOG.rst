@@ -5,6 +5,12 @@ If a ``rowexpander`` does not return a row in the form of a ``dict``,
 ``Dimension.ensure`` now explicitly raises a ``TypeError`` with the name of the
 function set as the ``rowexpander``.
 
+``ymdhmsparser`` can now handle datetime.datetime as input. Any other input is
+cast to a str. (GitHub issue #40)
+
+``ymdparser`` can now handle datetime.datetime and datetime.date as input. Any
+other input is cast to a str.
+
 **Fixed**
 ``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``,
 and ``all``. These attributes are required by the ``FactTablePartitioner``.
