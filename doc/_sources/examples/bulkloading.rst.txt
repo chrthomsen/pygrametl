@@ -137,9 +137,9 @@ provided by Transact-SQL can be used.
 
 There are a number of things to be aware of when using pygrametl with SQL
 Server. If the file used for bulk loading is located on a machine running
-Windows, the file must be copied before bulk loading, as the locks placed on the
-file by the OS and pygrametl, prevents SQL Server from opening it directly.
-Copying the file can be done e.g. using `shutil.copyfile
+Microsoft Windows, the file must be copied before bulk loading, as the locks
+placed on the file by the OS and pygrametl, prevent SQL Server from opening it
+directly. Copying the file can be done e.g. using `shutil.copyfile
 <https://docs.python.org/3/library/shutil.html#shutil.copyfile>`__.
 
 By default, BULK INSERT ignores column names, so the number and order of columns

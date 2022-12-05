@@ -25,6 +25,18 @@ sequence of functions that run in separate processes. In a flow a row is first
 given to the first function, then the second, and so forth. This also means the
 passed row must be modified as the functions return values are ignored.
 
+.. note::
+   pygrametl supports executing parallel ETL flows using CPython (only on
+   platforms that start new processes using `fork
+   <https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods>`__)
+   or `Jython <http://www.jython.org/>`__. The method used by CPython to start a
+   process can be determined using :func:`.multiprocessing.get_start_method`.
+   Unix-like operating systems generally use `fork` by default, but some must be
+   configured to use `fork` through :func:`.multiprocessing.set_start_method`.
+   Microsoft Windows does not support `fork`, thus a Unix-like environment must
+   be installed, e.g., using `Windows Subsystem for Linux
+   <https://learn.microsoft.com/en-us/windows/wsl/>`__.
+
 Due to CPython's `GIL <https://wiki.python.org/moin/GlobalInterpreterLock>`__,
 Jython should be used to run ETL flows that use pygrametl parallel constructs.
 This is because Jython allows threads to be used for parallel processing, while

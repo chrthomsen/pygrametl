@@ -58,6 +58,17 @@ database table. Splitpoints can be synchronized using the function
 sequence of functions that run in separate processes. In a flow a row is first
 given to the first function, then the second, and so forth. This also means the
 passed row must be modified as the functions return values are ignored.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>pygrametl supports executing parallel ETL flows using CPython (only on
+platforms that start new processes using <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods">fork</a>)
+or <a class="reference external" href="http://www.jython.org/">Jython</a>. The method used by CPython to start a
+process can be determined using <code class="xref py py-func docutils literal notranslate"><span class="pre">multiprocessing.get_start_method()</span></code>.
+Unix-like operating systems generally use <cite>fork</cite> by default, but some must be
+configured to use <cite>fork</cite> through <code class="xref py py-func docutils literal notranslate"><span class="pre">multiprocessing.set_start_method()</span></code>.
+Microsoft Windows does not support <cite>fork</cite>, thus a Unix-like environment must
+be installed, e.g., using <a class="reference external" href="https://learn.microsoft.com/en-us/windows/wsl/">Windows Subsystem for Linux</a>.</p>
+</div>
 <p>Due to CPython’s <a class="reference external" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL</a>,
 Jython should be used to run ETL flows that use pygrametl parallel constructs.
 This is because Jython allows threads to be used for parallel processing, while

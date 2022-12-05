@@ -274,7 +274,7 @@ to a datetime.datetime</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pygrametl.getbool">
-<span class="sig-prename descclassname"><span class="pre">pygrametl.</span></span><span class="sig-name descname"><span class="pre">getbool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truevalues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{True,</span> <span class="pre">'true',</span> <span class="pre">'t',</span> <span class="pre">'True',</span> <span class="pre">'1'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">falsevalues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{False,</span> <span class="pre">'0',</span> <span class="pre">'False',</span> <span class="pre">'false',</span> <span class="pre">'f'}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getbool" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pygrametl.</span></span><span class="sig-name descname"><span class="pre">getbool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truevalues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{True,</span> <span class="pre">'t',</span> <span class="pre">'true',</span> <span class="pre">'1',</span> <span class="pre">'True'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">falsevalues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{False,</span> <span class="pre">'0',</span> <span class="pre">'False',</span> <span class="pre">'false',</span> <span class="pre">'f'}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.getbool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a given value to True, False, or a default value.</p>
 <p>If the given value is in the given truevalues, True is returned.
 If the given value is in the given falsevalues, False is returned.
@@ -481,15 +481,24 @@ which case the defaults argument should be None</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="pygrametl.ymdhmsparser">
 <span class="sig-prename descclassname"><span class="pre">pygrametl.</span></span><span class="sig-name descname"><span class="pre">ymdhmsparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ymdhmsstr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ymdhmsparser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a string ‘yyyy-MM-dd HH:mm:ss’ to a datetime.datetime.</p>
-<p>If the input is None, the return value is also None.</p>
+<dd><p>Convert an input with a string representation of the form
+‘yyyy-MM-dd HH:mm:ss’ or a datetime.datetime to a datetime.datetime.</p>
+<p>If the input is None, the return value is also None.
+If the input is a datetime.datetime, it is returned.
+Else the input is cast to str and quotes are stripped before it is
+split into the different parts needed to create a datetime.datetime.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pygrametl.ymdparser">
 <span class="sig-prename descclassname"><span class="pre">pygrametl.</span></span><span class="sig-name descname"><span class="pre">ymdparser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ymdstr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pygrametl.ymdparser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a string of the form ‘yyyy-MM-dd’ to a datetime.date.</p>
-<p>If the input is None, the return value is also None.</p>
+<dd><p>Convert an input with a string representation of the form ‘yyyy-MM-dd’
+or a datetime.date or a datetime.datetime to a datetime.date.</p>
+<p>If the input is None, the return value is also None.
+If the input is a datetime.date, it is returned.
+If the input is a datetime.datetime, its date is returned.
+Else the input is cast to str and quotes are stripped before it is
+split into the different parts needed to create a datetime.date.</p>
 </dd></dl>
 
 </section>
