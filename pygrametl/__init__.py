@@ -444,13 +444,15 @@ def now(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
 
 
 def ymdparser(ymdstr):
-    """Convert input of the form 'yyyy-MM-dd' to a datetime.date.
+    """Convert an input with a string representation of the form 'yyyy-MM-dd'
+       or a datetime.date or a datetime.datetime to a datetime.date.
 
        If the input is None, the return value is also None.
        If the input is a datetime.date, it is returned.
        If the input is a datetime.datetime, its date is returned.
        Else the input is cast to str and quotes are stripped before it is
        split into the different parts needed to create a datetime.date.
+
     """
     if ymdstr is None:
         return None
@@ -464,7 +466,8 @@ def ymdparser(ymdstr):
 
 
 def ymdhmsparser(ymdhmsstr):
-    """Convert input of the form 'yyyy-MM-dd HH:mm:ss' to a datetime.datetime.
+    """Convert an input with a string representation of the form
+       'yyyy-MM-dd HH:mm:ss' or a datetime.datetime to a datetime.datetime.
 
        If the input is None, the return value is also None.
        If the input is a datetime.datetime, it is returned.

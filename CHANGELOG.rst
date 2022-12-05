@@ -6,7 +6,7 @@ Unreleased
   the function set as the ``rowexpander``.
 
   ``ymdhmsparser`` can now handle ``datetime.datetime`` as input. Any other
-  input is cast to a str. (GitHub issue #40)
+  input is cast to a string. (GitHub issue #40)
 
   ``ymdparser`` can now handle ``datetime.datetime`` and ``datetime.date`` as
   input. Any other input is cast to a str.
