@@ -444,23 +444,41 @@ def now(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
 
 
 def ymdparser(ymdstr):
-    """Convert a string of the form 'yyyy-MM-dd' to a datetime.date.
+    """Convert an input with a string representation of the form 'yyyy-MM-dd'
+       or a datetime.date or a datetime.datetime to a datetime.date.
 
        If the input is None, the return value is also None.
+       If the input is a datetime.date, it is returned.
+       If the input is a datetime.datetime, its date is returned.
+       Else the input is cast to str and quotes are stripped before it is
+       split into the different parts needed to create a datetime.date.
+
     """
     if ymdstr is None:
         return None
+    elif isinstance(ymdstr, date):
+        return ymdstr
+    elif isinstance(ymdstr, datetime):
+        return ymdstr.date()
+    ymdstr = str(ymdstr).strip("'\"")
     (year, month, day) = ymdstr.split('-')
     return date(int(year), int(month), int(day))
 
 
 def ymdhmsparser(ymdhmsstr):
-    """Convert a string 'yyyy-MM-dd HH:mm:ss' to a datetime.datetime.
+    """Convert an input with a string representation of the form
+       'yyyy-MM-dd HH:mm:ss' or a datetime.datetime to a datetime.datetime.
 
        If the input is None, the return value is also None.
+       If the input is a datetime.datetime, it is returned.
+       Else the input is cast to str and quotes are stripped before it is
+       split into the different parts needed to create a datetime.datetime.
     """
     if ymdhmsstr is None:
         return None
+    elif isinstance(ymdhmsstr, datetime):
+        return ymdhmsstr
+    ymdhmsstr = str(ymdhmsstr).strip("'\"")
     (datepart, timepart) = ymdhmsstr.strip().split(' ')
     (year, month, day) = datepart.split('-')
     (hour, minute, second) = timepart.split(':')

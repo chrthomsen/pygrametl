@@ -1,16 +1,22 @@
 Unreleased
 ----------
 **Changed**
-If a ``rowexpander`` does not return a row in the form of a ``dict``,
-``Dimension.ensure`` now explicitly raises a ``TypeError`` with the name of the
-function set as the ``rowexpander``.
+  If a ``rowexpander`` does not return a row in the form of a ``dict``,
+  ``Dimension.ensure`` now explicitly raises a ``TypeError`` with the name of
+  the function set as the ``rowexpander``.
+
+  ``ymdhmsparser`` can now handle ``datetime.datetime`` as input. Any other
+  input is cast to a string. (GitHub issue #40)
+
+  ``ymdparser`` can now handle ``datetime.datetime`` and ``datetime.date`` as
+  input. Any other input is cast to a string.  (GitHub issue #40)
 
 **Fixed**
-``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``,
-and ``all``. These attributes are required by the ``FactTablePartitioner``.
+  ``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``,
+  and ``all``. These attributes are required by the ``FactTablePartitioner``.
 
-``BulkFactTable`` constructed with ``usemultirow=True`` (the default is
-``False``) can now load rows containing ``NULL`` values. (GitHub issue #50)
+  ``BulkFactTable`` constructed with ``usemultirow=True`` (the default is
+  ``False``) can now load rows containing ``NULL`` values. (GitHub issue #50)
 
 Version 2.7
 -----------
