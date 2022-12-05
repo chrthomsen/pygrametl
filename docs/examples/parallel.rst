@@ -29,7 +29,7 @@ passed row must be modified as the functions return values are ignored.
    pygrametl supports executing parallel ETL flows using CPython (only on
    platforms that start new processes using `fork
    <https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods>`__)
-   or `Jython <http://www.jython.org/>`__. The method used by CPython to start
+   or `Jython <http://www.jython.org/>`__. The method used by CPython to start a
    process can be determined using :func:`.multiprocessing.get_start_method`.
    Unix-like operating systems generally use `fork` by default, but some must be
    configured to use `fork` through :func:`.multiprocessing.set_start_method`.
