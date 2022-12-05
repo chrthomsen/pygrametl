@@ -9,7 +9,7 @@ Unreleased
   input is cast to a string. (GitHub issue #40)
 
   ``ymdparser`` can now handle ``datetime.datetime`` and ``datetime.date`` as
-  input. Any other input is cast to a string.
+  input. Any other input is cast to a string.  (GitHub issue #40)
 
 **Fixed**
   ``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``,
