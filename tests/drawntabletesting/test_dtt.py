@@ -18,7 +18,8 @@ class TheTableClassTest(unittest.TestCase):
         | 2            | Nineteen Eighty-Four  | Novel      |
         | 3            | Calvin and Hobbes One | Comic      |
         | 4            | Calvin and Hobbes Two | Comic      |
-        | 5            | The Silver Spoon      | Cookbook   |""")
+        | 5            | The Silver Spoon      | Cookbook   |
+        """)
 
     def test_ensure_and_foreign_key(self):
         dtt.Table("genre", """
@@ -27,7 +28,8 @@ class TheTableClassTest(unittest.TestCase):
         | 1            | Unknown    |
         | 2            | Novel      |
         | 3            | Comic      |
-        | 4            | Cookbook   |""").ensure()
+        | 4            | Cookbook   |
+        """).ensure()
 
         dtt.Table("book", """
         | bid:int (pk) | title:text             | gid:int (fk genre(bid)) |
@@ -36,8 +38,8 @@ class TheTableClassTest(unittest.TestCase):
         | 2            | Nineteen Eighty-Four   | 2                        |
         | 3            | Calvin and Hobbes One  | 3                        |
         | 4            | Calvin and Hobbes Two  | 3                        |
-        | 5            | The Silver Spoon       | 4                        |"""
-                  ).ensure()
+        | 5            | The Silver Spoon       | 4                        |
+        """).ensure()
 
     def test_additions(self):
         book = self.test_init()
@@ -67,8 +69,8 @@ class TheTableClassTest(unittest.TestCase):
         dtt.Table("book", """
         | bid:int (pk) | title:text            | genre:text |
         | ------------ | --------------------- | ---------- |
-        | 1            | Unknown               | Unknown    |"""
-                  ).assertSubset()
+        | 1            | Unknown               | Unknown    |
+        """).assertSubset()
 
     def test_assert_not_subset(self):
         book = self.test_init()
@@ -81,8 +83,8 @@ class TheTableClassTest(unittest.TestCase):
         dtt.Table("book", """
         | bid:int (pk) | title:text            | genre:text |
         | ------------ | --------------------- | ---------- |
-        | 1            | None                  | None       |"""
-                  ).assertDisjoint()
+        | 1            | None                  | None       |
+        """).assertDisjoint()
 
     def test_assert_not_disjoint(self):
         book = self.test_init()
@@ -95,57 +97,63 @@ class TheTableClassTest(unittest.TestCase):
         | gid:int (pk) | genre:text |
         | ------------ | ---------- |
         | 1            | Novel      |
-        | 2            | Comic      |""").ensure()
+        | 2            | Comic      |
+        """).ensure()
 
         dtt.Table("book", """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid))  |
         | ------------ | ---------------------- | ------------------------ |
         | 1            | Nineteen Eighty-Four   | 1                        |
         | 2            | Calvin and Hobbes One  | 2                        |
-        | 3            | Calvin and Hobbes Two  | 2                        |"""
-                  ).ensure()
+        | 3            | Calvin and Hobbes Two  | 2                        |
+        """).ensure()
 
         dtt.Table("genre", """
         | gid:int (pk)  | genre:text |
         | ------------- | ---------- |
         | $1            | Novel      |
-        | $2            | Comic      |""").assertEqual()
+        | $2            | Comic      |
+        """).assertEqual()
 
         dtt.Table("book", """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid)) |
         | ------------ | ---------------------- | ----------------------- |
         | 1            | Nineteen Eighty-Four   | $1                      |
         | 2            | Calvin and Hobbes One  | $2                      |
-        | 3            | Calvin and Hobbes Two  | $2                      |"""
-                  ).assertEqual()
+        | 3            | Calvin and Hobbes Two  | $2                      |
+        """).assertEqual()
 
     def test_variables_foreign_key_wrong(self):
         dtt.Table("genre", """
         | gid:int (pk) | genre:text |
         | ------------ | ---------- |
         | 1            | Novel      |
-        | 2            | Comic      |""").ensure()
+        | 2            | Comic      |
+        """).ensure()
 
         dtt.Table("book", """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid))  |
         | ------------ | ---------------------- | ------------------------ |
         | 1            | Nineteen Eighty-Four   | 2                        |
         | 2            | Calvin and Hobbes One  | 1                        |
-        | 3            | Calvin and Hobbes Two  | 1                        |"""
-                  ).ensure()
+        | 3            | Calvin and Hobbes Two  | 1                        |
+        """).ensure()
 
         dtt.Table("genre", """
         | gid:int (pk)  | genre:text |
         | ------------- | ---------- |
         | $1            | Novel      |
-        | $2            | Comic      |""").assertEqual()
+        | $2            | Comic      |
+        """).assertEqual()
 
         book = dtt.Table("book", """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid)) |
         | ------------ | ---------------------- | ----------------------- |
         | 1            | Nineteen Eighty-Four   | $1                      |
         | 2            | Calvin and Hobbes One  | $2                      |
-        | 3            | Calvin and Hobbes Two  | $2                      |""")
+        | 3            | Calvin and Hobbes Two  | $2                      |
+        """)
+
         with self.assertRaises(AssertionError):
             book.assertEqual()
 
@@ -154,26 +162,31 @@ class TheTableClassTest(unittest.TestCase):
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date |
         | ------------ | --------- | ----------------------- | -------------- | ------------ |
         | NULL         | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | 2000-01-01   |
-        | NULL         | CS        | Selma Lagerløfs Vej 300 | 2000-01-01     | NULL         |""").ensure()
+        | NULL         | CS        | Selma Lagerløfs Vej 300 | 2000-01-01     | NULL         |
+        """).ensure()
 
         dtt.Table("address", """
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date  |
         | ------------ | --------- | ----------------------- | -------------- | ------------- |
         | $_           | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | $3            |
-        | $_           | CS        | Selma Lagerløfs Vej 300 | $3             | NULL          |""").assertEqual()
+        | $_           | CS        | Selma Lagerløfs Vej 300 | $3             | NULL          |
+        """).assertEqual()
 
     def test_variables_underscore_not_null(self):
         dtt.Table("address", """
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date |
         | ------------ | --------- | ----------------------- | -------------- | ------------ |
         | NULL         | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | 2000-01-01   |
-        | NULL         | CS        | Selma Lagerløfs Vej 300 | 2000-01-01     | NULL         |""").ensure()
+        | NULL         | CS        | Selma Lagerløfs Vej 300 | 2000-01-01     | NULL         |
+        """).ensure()
 
         address = dtt.Table("address", """
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date  |
         | ------------ | --------- | ----------------------- | -------------- | ------------- |
         | $_!          | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | $4            |
-        | $_!          | CS        | Selma Lagerløfs Vej 300 | $4             | NULL          |""")
+        | $_!          | CS        | Selma Lagerløfs Vej 300 | $4             | NULL          |
+        """)
+
         with self.assertRaises(AssertionError):
             address.assertEqual()
 
@@ -196,7 +209,8 @@ class BookStateTest(unittest.TestCase):
         | 1            | Unknown               | Unknown    |
         | 2            | Nineteen Eighty-Four  | Novel      |
         | 3            | Calvin and Hobbes One | Comic      |
-        | 4            | The Silver Spoon      | Cookbook   |""")
+        | 4            | The Silver Spoon      | Cookbook   |
+        """)
 
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
