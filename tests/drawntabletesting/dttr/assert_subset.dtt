@@ -1,0 +1,11 @@
+dog
+| id:int (pk) | name:varchar | city:varchar | age:int |
+| ----------- | ------------ | ------------ | ------- |
+| 1           | Rufus        | Hundeby      | 2       |
+| 2           | Rex          | Vuffestad    | 5       |
+| 3           | King         | Bjæfstrup    | 2       |
+
+dog, subset
+| id:int (pk) | name:varchar | city:varchar | age:int |
+| ----------- | ------------ | ------------ | ------- |
+| 1           | Rufus        | Hundeby      | 2       |
