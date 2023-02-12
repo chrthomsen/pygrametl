@@ -3,7 +3,6 @@ from tests import utilities
 import pygrametl
 import pygrametl.drawntabletesting as dtt
 import tempfile
-from pygrametl.tables import Dimension
 from pygrametl.tables import FactTable
 from pygrametl.tables import BatchFactTable
 from pygrametl.tables import BulkFactTable
@@ -434,7 +433,6 @@ class BulkFactTableTest(unittest.TestCase):
         postcondition.assertEqual()
 
         # Check that the passed tempfile contains no facts
-        encoding = utilities.get_os_encoding()
         filehandle.seek(0)
         content = filehandle.read()
         self.assertEqual(0, len(content))
@@ -532,7 +530,6 @@ class BulkFactTableTest(unittest.TestCase):
         postcondition.assertEqual()
 
         # Check that the passed tempfile contains no facts
-        encoding = utilities.get_os_encoding()
         filehandle.seek(0)
         content = filehandle.read()
         self.assertEqual(0, len(content))
@@ -596,7 +593,6 @@ class BulkFactTableTest(unittest.TestCase):
         postcondition.assertEqual()
 
         # Check that the passed tempfile contains no facts
-        encoding = utilities.get_os_encoding()
         filehandle.seek(0)
         content = filehandle.read()
         self.assertEqual(0, len(content))
@@ -664,7 +660,6 @@ class BulkFactTableTest(unittest.TestCase):
         postcondition.assertEqual()
 
         # Check that the passed tempfile contains no facts
-        encoding = utilities.get_os_encoding()
         filehandle.seek(0)
         content = filehandle.read()
         self.assertEqual(0, len(content))
