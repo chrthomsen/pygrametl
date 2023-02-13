@@ -1,13 +1,17 @@
-dog
-| id:int (pk) | name:varchar | city:varchar | age:int |
-| ----------- | ------------ | ------------ | ------- |
-| 1           | Rufus        | Hundeby      | 2       |
-| 2           | Rex          | Vuffestad    | 5       |
-| 3           | King         | Bjæfstrup    | 2       |
+book
+| bid:int (pk) | title:text            | genre:text |
+| ------------ | --------------------- | ---------- |
+| 1            | Unknown               | Unknown    |
+| 2            | Nineteen Eighty-Four  | Novel      |
+| 3            | Calvin and Hobbes One | Comic      |
+| 4            | Calvin and Hobbes Two | Comic      |
+| 5            | The Silver Spoon      | Cookbook   |
 
-dog, disjoint
-| id:int (pk) | name:varchar | city:varchar | age:int |
-| ----------- | ------------ | ------------ | ------- |
-| 1           | Dog          | Hundeby      | 2       |
-| 2           | Rex          | Dogville     | 5       |
-| 3           | King         | Bjæfstrup    | 9       |
+book, disjoint
+| bid:int (pk) | title:text            | genre:text |
+| ------------ | --------------------- | ---------- |
+| 1            | The Silver Spoon      | Cookbook   |
+| 2            | Calvin and Hobbes One | Comic      |
+| 3            | Calvin and Hobbes Two | Comic      |
+| 4            | Nineteen Eighty-Four  | Novel      |
+| 5            | Unknown               | Unknown    |

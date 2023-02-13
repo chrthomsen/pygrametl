@@ -1,13 +1,17 @@
-dog@oltp
-| id:int (pk) | name:varchar | city:varchar | age:int |
-| ----------- | ------------ | ------------ | ------- |
-| 1           | Rufus        | Hundeby      | 2       |
-| 2           | Rex          | Vuffestad    | 5       |
-| 3           | King         | Bjæfstrup    | 2       |
+book@oltp
+| bid:int (pk) | title:text            | genre:text |
+| ------------ | --------------------- | ---------- |
+| 1            | Unknown               | Unknown    |
+| 2            | Nineteen Eighty-Four  | Novel      |
+| 3            | Calvin and Hobbes One | Comic      |
+| 4            | Calvin and Hobbes Two | Comic      |
+| 5            | The Silver Spoon      | Cookbook   |
 
-dog@oltp, equal
-| id:int (pk) | name:varchar | city:varchar | age:int |
-| ----------- | ------------ | ------------ | ------- |
-| 1           | Rufus        | Hundeby      | 2       |
-| 2           | Rex          | Vuffestad    | 5       |
-| 3           | King         | Bjæfstrup    | 2       |
+book@oltp, equal
+| bid:int (pk) | title:text            | genre:text |
+| ------------ | --------------------- | ---------- |
+| 1            | Unknown               | Unknown    |
+| 2            | Nineteen Eighty-Four  | Novel      |
+| 3            | Calvin and Hobbes One | Comic      |
+| 4            | Calvin and Hobbes Two | Comic      |
+| 5            | The Silver Spoon      | Cookbook   |

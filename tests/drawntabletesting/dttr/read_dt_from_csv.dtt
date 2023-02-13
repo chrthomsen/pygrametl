@@ -1,4 +1,4 @@
-cat
-| id:int (pk) | name:varchar | city:varchar | age:int |
-| ----------- | ------------ | ------------ | ------- |
+book
+| bid:int (pk) | title:text            | genre:text |
+| ------------ | --------------------- | ---------- |
 csv rows.csv ,

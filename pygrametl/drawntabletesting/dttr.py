@@ -100,6 +100,7 @@ def read_dt(path, dt, lastlinenumber, pre_dtts, post_dtts, config, nullsubst,
     # If the last line does not start with a pipe it cannot be a DT column and
     # must instead be a data source with the column names defined by the DT
     loadFrom = None
+    reader_name = "UNKNOWN"
     if '|' != dt[-1].strip()[0]:
         columns = [c.split(':')[0].strip() for c in dt[1].split('|') if c]
         (reader_name, *arguments) = shlex.split(dt[-1])  # Splits as POSIX SH
@@ -196,9 +197,10 @@ def assert_post_condition(post_condition):
 
 def usage(parser, verbose):
     print("usage: " + Path(sys.argv[0]).stem + " [-" + "".join(map(
-        lambda a: a.option_strings[0][1:], parser._actions)) + "]", end="\n\n")
+        lambda a: a.option_strings[0][1:], parser._actions)) + "]", end="\n")
 
     if verbose:
+        print()
         print("Run tests specified in .dtt files.\n")
         for action in parser._actions:
             print(", ".join(action.option_strings), end="\t\t")
@@ -249,6 +251,10 @@ def parse_arguments():
 # Main
 def main():
     args = parse_arguments()
+
+    # If -f is given conditions and config.py should be read from that folder
+    if args.files:
+        os.chdir(args.files[0])
 
     # Ensures that the expected config.py file is loaded
     try:

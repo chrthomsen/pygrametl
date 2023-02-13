@@ -23,19 +23,16 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
-
-from tests import utilities
 import pygrametl
 import pygrametl.drawntabletesting as dtt
+from tests import utilities
 
-
-# The Table Class, Assertions, and Variables
-class TheTableClassTest(unittest.TestCase):
-    def setUp(self):
+# Examples are from docs/examples/testing.rst
+class TableTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
         utilities.ensure_default_connection_wrapper()
-
-    def test_init(self):
-        return dtt.Table("book", """
+        cls.initial = dtt.Table("book", """
         | bid:int (pk) | title:text            | genre:text |
         | ------------ | --------------------- | ---------- |
         | 1            | Unknown               | Unknown    |
@@ -44,6 +41,45 @@ class TheTableClassTest(unittest.TestCase):
         | 4            | Calvin and Hobbes Two | Comic      |
         | 5            | The Silver Spoon      | Cookbook   |
         """)
+
+    def setUp(self):
+        utilities.ensure_default_connection_wrapper()
+
+    def test_init_correct(self):
+        dtt.Table("book", """
+        | bid:int (pk) | title:text (unique)   | genre:text (not null) |
+        | ------------ | --------------------- | --------------------- |
+        | 1            | Unknown               | Unknown               |
+        | 2            | Nineteen Eighty-Four  | Novel                 |
+        | 3            | Calvin and Hobbes One | Comic                 |
+        | 4            | Calvin and Hobbes Two | Comic                 |
+        | 5            | The Silver Spoon      | Cookbook              |
+        """)
+
+    def test_init_unknown_incorrect(self):
+        # Unknown constraints
+        with self.assertRaises(ValueError):
+            dtt.Table("book", """
+            | bid:int (pk) | title:text (unique)   | genre:text (notnull) |
+            | ------------ | --------------------- | -------------------- |
+            | 1            | Unknown               | Unknown              |
+            | 2            | Nineteen Eighty-Four  | Novel                |
+            | 3            | Calvin and Hobbes One | Comic                |
+            | 4            | Calvin and Hobbes Two | Comic                |
+            | 5            | The Silver Spoon      | Cookbook             |
+            """)
+
+        # Missing : between name and type
+        with self.assertRaises(ValueError):
+            dtt.Table("book", """
+            | bid int (pk) | title text (unique)   | genre text (not null) |
+            | ------------ | --------------------- | --------------------- |
+            | 1            | Unknown               | Unknown               |
+            | 2            | Nineteen Eighty-Four  | Novel                 |
+            | 3            | Calvin and Hobbes One | Comic                 |
+            | 4            | Calvin and Hobbes Two | Comic                 |
+            | 5            | The Silver Spoon      | Cookbook              |
+            """)
 
     def test_ensure_and_foreign_key(self):
         dtt.Table("genre", """
@@ -65,8 +101,93 @@ class TheTableClassTest(unittest.TestCase):
         | 5            | The Silver Spoon       | 4                        |
         """).ensure()
 
-    def test_additions(self):
-        book = self.test_init()
+    def test_key(self):
+        self.assertEqual(self.initial.key(), "bid")
+
+    def test_getsqltocreate(self):
+        self.assertEqual(
+            self.initial.getSQLToCreate(),
+            "CREATE TABLE book(bid int, title text, genre text, PRIMARY KEY (bid))")
+
+    def test_getsqltoinsert(self):
+        self.assertEqual(self.initial.getSQLToInsert(), (
+            "INSERT INTO book(bid, title, genre) VALUES"
+            "(1, 'Unknown', 'Unknown'), "
+            "(2, 'Nineteen Eighty-Four', 'Novel'), "
+            "(3, 'Calvin and Hobbes One', 'Comic'), "
+            "(4, 'Calvin and Hobbes Two', 'Comic'), "
+            "(5, 'The Silver Spoon', 'Cookbook')"))
+
+    def test_assert_equal(self):
+        book = self.initial
+        book.ensure()
+        book.assertEqual()
+
+    def test_assert_not_equal(self):
+        book = self.initial
+        book.ensure()
+        with self.assertRaises(AssertionError):
+            (book + "| 6 | Metro 2033 | Novel |").assertEqual()
+
+    def test_assert_disjoint(self):
+        self.initial.ensure()
+        dtt.Table("book", """
+        | bid:int (pk) | title:text            | genre:text |
+        | ------------ | --------------------- | ---------- |
+        | 1            | None                  | None       |
+        """).assertDisjoint()
+
+    def test_assert_not_disjoint(self):
+        book = self.initial
+        book.ensure()
+        with self.assertRaises(AssertionError):
+            book.assertDisjoint()
+
+    def test_assert_subset(self):
+        self.initial.ensure()
+        dtt.Table("book", """
+        | bid:int (pk) | title:text            | genre:text |
+        | ------------ | --------------------- | ---------- |
+        | 1            | Unknown               | Unknown    |
+        """).assertSubset()
+
+    def test_assert_not_subset(self):
+        book = self.initial
+        book.ensure()
+        with self.assertRaises(AssertionError):
+            (book + "| 6 | Metro 2033 | Novel |").assertSubset()
+
+    def test_create_reset_ensure_clear_drop(self):
+        connection_wrapper = pygrametl.getdefaulttargetconnection()
+        with self.assertRaises(Exception):
+            connection_wrapper.execute("SELECT * FROM " + self.initial.name)
+
+        self.initial.create()
+        connection_wrapper.execute("SELECT * FROM " + self.initial.name)
+        self.assertEqual(len(list(connection_wrapper.fetchalltuples())), 0)
+
+        self.initial.reset()
+        connection_wrapper.execute("SELECT * FROM " + self.initial.name)
+        self.assertEqual(len(list(connection_wrapper.fetchalltuples())), 5)
+
+        self.initial.ensure()
+        connection_wrapper.execute("SELECT * FROM " + self.initial.name)
+        self.assertEqual(len(list(connection_wrapper.fetchalltuples())), 5)
+
+        self.initial.clear()
+        with self.assertRaises(Exception):
+            connection_wrapper.execute("SELECT * FROM " + self.initial.name)
+
+        self.initial.create()
+        with self.assertRaises(Exception):
+            self.initial.ensure()
+
+        self.initial.drop()
+        with self.assertRaises(Exception):
+            connection_wrapper.execute("SELECT * FROM " + self.initial.name)
+
+    def test_add_update_and_additions(self):
+        book = self.initial
         book_added = book + "| 6 | Metro 2033 | Novel |" \
             + "| 7 | Metro 2034 | Novel |"
         book_updated = book_added.update(0, "| -1 | Unknown | Unknown |")
@@ -77,46 +198,7 @@ class TheTableClassTest(unittest.TestCase):
         ]
         self.assertEqual(book_expected, book_updated.additions(withKey=True))
 
-    def test_assert_equal(self):
-        book = self.test_init()
-        book.ensure()
-        book.assertEqual()
-
-    def test_assert_not_equal(self):
-        book = self.test_init()
-        book.ensure()
-        with self.assertRaises(AssertionError):
-            (book + "| 6 | Metro 2033 | Novel |").assertEqual()
-
-    def test_assert_subset(self):
-        self.test_init().ensure()
-        dtt.Table("book", """
-        | bid:int (pk) | title:text            | genre:text |
-        | ------------ | --------------------- | ---------- |
-        | 1            | Unknown               | Unknown    |
-        """).assertSubset()
-
-    def test_assert_not_subset(self):
-        book = self.test_init()
-        book.ensure()
-        with self.assertRaises(AssertionError):
-            (book + "| 6 | Metro 2033 | Novel |").assertSubset()
-
-    def test_assert_disjoint(self):
-        self.test_init().ensure()
-        dtt.Table("book", """
-        | bid:int (pk) | title:text            | genre:text |
-        | ------------ | --------------------- | ---------- |
-        | 1            | None                  | None       |
-        """).assertDisjoint()
-
-    def test_assert_not_disjoint(self):
-        book = self.test_init()
-        book.ensure()
-        with self.assertRaises(AssertionError):
-            book.assertDisjoint()
-
-    def test_variables_foreign_key_correct(self):
+    def test_variables_and_foreign_keys_correct(self):
         dtt.Table("genre", """
         | gid:int (pk) | genre:text |
         | ------------ | ---------- |
@@ -147,7 +229,7 @@ class TheTableClassTest(unittest.TestCase):
         | 3            | Calvin and Hobbes Two  | $2                      |
         """).assertEqual()
 
-    def test_variables_foreign_key_wrong(self):
+    def test_variables_and_foreign_keys_wrong(self):
         dtt.Table("genre", """
         | gid:int (pk) | genre:text |
         | ------------ | ---------- |
@@ -215,7 +297,7 @@ class TheTableClassTest(unittest.TestCase):
             address.assertEqual()
 
 
-# Drawn Table Testing as a Python Library
+# The tests are from docs/examples/testing.rst
 def executeETLFlow(cw, row):
     if row['bid'] == 5:
         cw.execute("INSERT INTO book (bid, title, genre) VALUES(" +
