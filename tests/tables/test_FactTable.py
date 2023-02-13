@@ -794,8 +794,6 @@ class AccumulatingSnapshotFactTableTest(unittest.TestCase):
                                                     'ref1', 'ref2', 'ref3'],
                                                 measures=['meas', 'lag21'],
                                                 factexpander=self.__complag)
-        self.rowGen = utilities.get_str_row_generator(self.ft,
-                                                      7 * ['INTEGER'])
 
     def __complag(self, row, namemapping, updated):
         if 'ref2' in updated:
