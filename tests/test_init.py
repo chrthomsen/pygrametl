@@ -22,11 +22,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import sqlite3
 import sys
 import unittest
 import pygrametl
 import pygrametl.drawntabletesting as dtt
+from tests import utilities
 from sqlite3.dbapi2 import Timestamp, Date
 from datetime import date, datetime
 from unittest.mock import patch
@@ -598,16 +598,15 @@ class InitTest(unittest.TestCase):
         # _defaulttargetconnection may contain a connectionwrapper set by other
         pygrametl._defaulttargetconnection = None
 
-        # Create a default sqlite3 connection and ConnectionWrapper. This should
-        # then be the default target connection wrapper
-        connection_first = sqlite3.connect(':memory:')
-        connectionwrapper_first = pygrametl.ConnectionWrapper(connection_first)
+        # Create a default connection and ConnectionWrapper. This should then be
+        # the default target connection wrapper
+        connectionwrapper_first = utilities.ensure_default_connection_wrapper()
         self.assertEqual(connectionwrapper_first,
                          pygrametl.getdefaulttargetconnection())
 
         # Create a new connection. The returned default target connection
         # wrapper should still be the previous connection wrapper
-        connection_second = sqlite3.connect(':memory:')
+        connection_second = utilities.get_connection()
         connectionwrapper_second = pygrametl.ConnectionWrapper(connection_second)
         self.assertNotEqual(connectionwrapper_second,
                             pygrametl.getdefaulttargetconnection())
