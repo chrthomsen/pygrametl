@@ -26,14 +26,7 @@
 
 import os
 import locale
-from enum import Enum
-
 import pygrametl
-
-
-class ConnectionType(Enum):
-    SQLITE = 1
-    PSYCOPG2 = 2
 
 
 def get_os_encoding():
@@ -41,22 +34,24 @@ def get_os_encoding():
     # https://docs.python.org/3/library/functions.html#open
     return locale.getpreferredencoding(False)
 
-
-def set_connection(connection_type):
-    """Set connection creation function to use in unit tests."""
-    global get_connection
-    if connection_type == ConnectionType.SQLITE:
-        get_connection = __sqlite3_connection
-    elif connection_type == ConnectionType.PSYCOPG2:
-        get_connection = __psycopg2_connection
-    else:
-        ValueError("connection_type must be an instance of ConnectionType")
-
-
 def get_connection():
-    """Returns a new connection to the currently selected type."""
+    """Returns a new connection to the selected test database."""
+
     # The unit tests defaults to SQLite as it has no dependencies
-    return __sqlite3_connection()
+    connection_type_and_string = \
+        os.environ.get('PYGRAMETL_TEST_CONNECTIONSTRING', 'sqlite://:memory:')
+
+    # Select the
+    connection_type, connection_string = \
+        connection_type_and_string.split('://')
+
+    if connection_type == 'sqlite':
+        return __sqlite3_connection(connection_string)
+    elif connection_type == 'psycopg2':
+        return __psycopg2_connection(connection_string)
+    else:
+        raise ValueError(
+            'Expected sqlite:// or psycopg2:// and a connection string')
 
 
 def ensure_default_connection_wrapper():
@@ -75,17 +70,15 @@ def ensure_default_connection_wrapper():
     return connection_wrapper
 
 
-def __sqlite3_connection():
+def __sqlite3_connection(connection_string):
     """Create a new sqlite3 connection for use with unit tests."""
     import sqlite3
-    connection = sqlite3.connect(":memory:")
-    connection.execute("PRAGMA foreign_keys = ON;")
+    connection = sqlite3.connect(connection_string)
+    connection.execute('PRAGMA foreign_keys = ON;')
     return connection
 
 
-def __psycopg2_connection():
+def __psycopg2_connection(connection_string):
     """Create a new psycopg2 connection for use with unit tests."""
     import psycopg2
-    connection_string = os.environ['PYGRAMETL_TEST_DATABASE_CONNECTIONSTRING']
-    connection = psycopg2.connect(connection_string)
-    return connection
+    return psycopg2.connect(connection_string)
