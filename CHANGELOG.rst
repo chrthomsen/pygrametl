@@ -1,5 +1,10 @@
 Unreleased
 ----------
+**Added**
+  pygrametl's existing set of unit tests to the repository. By default, the unit
+  tests are executed against an in-memory SQLite database so no configuration is
+  needed.
+
 **Changed**
   If a ``rowexpander`` does not return a row in the form of a ``dict``,
   ``Dimension.ensure`` now explicitly raises a ``TypeError`` with the name of
