@@ -39,13 +39,13 @@ class FactTableTest(unittest.TestCase):
     def setUpClass(cls):
         utilities.ensure_default_connection_wrapper()
         cls.initial = dtt.Table("sales", """
-        | bib:int (pk)  | cid:int (pk) | did:int (pk) | count:int | profit:int |
-        | ------------- | ------------ | ------------ | --------- | ---------- |
-        | 2             | 2            | 60           | 20        | 1000       |
-        | 1             | 2            | 60           | 5         | 2000       |
-        | 1             | 1            | 72           | 2         | 3000       |
-        | 2             | 1            | 72           | 11        | 4000       |
-        | 2             | 1            | 60           | 18        | 5000       |
+        | bib:int (pk) | cid:int (pk) | did:int (pk) | count:int | profit:int |
+        | ------------ | ------------ | ------------ | --------- | ---------- |
+        | 2            | 2            | 60           | 20        | 1000       |
+        | 1            | 2            | 60           | 5         | 2000       |
+        | 1            | 1            | 72           | 2         | 3000       |
+        | 2            | 1            | 72           | 11        | 4000       |
+        | 2            | 1            | 60           | 18        | 5000       |
         """)
 
     def setUp(self):
@@ -341,13 +341,13 @@ class BulkFactTableTest(unittest.TestCase):
     def setUpClass(cls):
         utilities.ensure_default_connection_wrapper()
         cls.initial = dtt.Table("sales", """
-        | bib:int (pk)  | cid:int (pk) | did:int (pk) | count:int | profit:int |
-        | ------------- | ------------ | ------------ | --------- | ---------- |
-        | 2             | 2            | 60           | 20        | 1000       |
-        | 1             | 2            | 60           | 5         | 2000       |
-        | 1             | 1            | 72           | 2         | 3000       |
-        | 2             | 1            | 72           | 11        | 4000       |
-        | 2             | 1            | 60           | 18        | 5000       |
+        | bib:int (pk) | cid:int (pk) | did:int (pk) | count:int | profit:int |
+        | ------------ | ------------ | ------------ | --------- | ---------- |
+        | 2            | 2            | 60           | 20        | 1000       |
+        | 1            | 2            | 60           | 5         | 2000       |
+        | 1            | 1            | 72           | 2         | 3000       |
+        | 2            | 1            | 72           | 11        | 4000       |
+        | 2            | 1            | 60           | 18        | 5000       |
         """)
         cls.bulksize = 100
 
