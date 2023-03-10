@@ -24,16 +24,22 @@
 
 import unittest
 import subprocess
+import os
 
 class DTTRTest(unittest.TestCase):
 
     def test_dttr(self):
+        # A copy of the existing environment is needed on Windows
+        # See https://stackoverflow.com/questions/58997105/fatal-python-error-failed-to-get-random-numbers-to-initialize-python
+        newenv = os.environ.copy()
+        newenv['PYTHONPATH'] = '.'
+
         process = subprocess.run([
             'python3',
             'pygrametl/drawntabletesting/dttr.py',
             '-f',
             'tests/drawntabletesting/dttr/'
-        ], env={'PYTHONPATH': '.'}, capture_output=True)
+        ], env=newenv, capture_output=True)
 
         process.check_returncode()
         self.assertEqual(b'', process.stdout)
