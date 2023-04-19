@@ -1,0 +1,4 @@
+book
+| bid:int (pk) | title:text | genre:text |
+| ------------ | ---------- | ---------- |
+csv_two rows.csv ,

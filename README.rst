@@ -1,5 +1,7 @@
 pygrametl
 =========
+.. image:: https://github.com/chrthomsen/pygrametl/actions/workflows/python-unittest-on-pr-and-push.yml/badge.svg
+
 `pygrametl <http://pygrametl.com>`_ (pronounced py-gram-e-t-l) is a Python framework that provides commonly used functionality for the development of Extract-Transform-Load (ETL) processes. It is open-source and released under a 2-clause BSD license.
 
 When using pygrametl, the developer codes the ETL process in Python code. This turns out to be very efficient, also when compared to drawing the process in a graphical user interface (GUI) like Pentaho Data Integration. It supports both CPython and Jython so existing Java code and JDBC drivers can be used in the ETL program.

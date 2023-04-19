@@ -1,0 +1,17 @@
+book
+| bid:int (pk) | title:text            | genre:text |
+| ------------ | --------------------- | ---------- |
+| 1            | Unknown               | Unknown    |
+| 2            | Nineteen Eighty-Four  | Novel      |
+| 3            | Calvin and Hobbes One | Comic      |
+| 4            | Calvin and Hobbes Two | Comic      |
+| 5            | The Silver Spoon      | Cookbook   |
+
+book, disjoint
+| bid:int (pk) | title:text            | genre:text |
+| ------------ | --------------------- | ---------- |
+| 1            | The Silver Spoon      | Cookbook   |
+| 2            | Calvin and Hobbes One | Comic      |
+| 3            | Calvin and Hobbes Two | Comic      |
+| 4            | Nineteen Eighty-Four  | Novel      |
+| 5            | Unknown               | Unknown    |
