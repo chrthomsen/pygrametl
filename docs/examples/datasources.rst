@@ -289,6 +289,41 @@ the form :attr:`f(row)`, which will be applied to the source in the given order.
 In the above example, the price is converted from a string to an integer and
 stored in the row as two currencies.
 
+SQLTransformingSource
+---------------------
+:class:`.SQLTransformingSource` can be used to transform the rows of a data
+source using SQL. :class:`.SQLTransformingSource` loads the rows into a
+temporary table in an RDBMS and then retrieves them using an SQL query. By
+default each :class:`.SQLTransformingSource` uses a separate in-memory SQLite
+database but another database can be used by passing a :PEP:`249` connection or
+one of the :class:`.ConnectionWrapper` types as the parameter
+:attr:`.targetconnection`. By using an on-disk database
+:class:`.SQLTransformingSource` can be used with datasets that does not fit in
+memory. If an existing database is used the rows from the data source can also
+be enriched using data from other tables in the database, e.g., by joining the
+rows with an existing table in the database. Be aware that
+:class:`.SQLTransformingSource` creates, truncates, and drops the temporary
+table.
+
+.. code-block:: python
+
+    import pygrametl
+    from pygrametl.datasources import TypedCSVSource, SQLTransformingSource
+
+    sales = TypedCSVSource(f=open('sales.csv', 'r', 16384),
+                           casts={'price': int}, delimiter=',')
+    salesTransformed = SQLTransformingSource(sales,
+        "sales", "SELECT product, SUM(price) FROM sales GROUP BY product")
+
+In the above example, the total revenue is computed for each product. In
+addition, to the required parameters shown above,
+:class:`.SQLTransformingSource` also has multiple optional parameters, e.g.,
+:attr:`.extendedcasts` accepts a :class:`.dict` that specifies how Python types
+should be mapped to SQL types, :attr:`.perbatch` specifies if the transformation
+should be applied for each batch of rows or for all rows in the input data
+source, and :attr:`.columnnames` allows the columns in the output rows to be
+renamed.
+
 CrossTabbingSource
 ------------------
 :class:`.CrossTabbingSource` can be used to compute the cross tab of a data
