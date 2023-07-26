@@ -250,14 +250,26 @@ of an ETL flow.
         row['month'] = date.month
         row['day'] = date.day
 
-Finally, the data can be inserted into the data warehouse. All rows from the CSV
-file are inserted into the location dimension first. This is necessary for
-foreign keys to the location dimension to be computed while filling the fact
-table. The other two dimensions are filled while inserting the facts as the data
-needed is included in the sales records. To ensure that the data is committed to
-the database and that the connection is closed correctly, the methods
-:meth:`.ConnectionWrapper.commit` and :meth:`.ConnectionWrapper.close` are
-executed at the end.
+Finally, the data can be inserted into the data warehouse. With a few
+exceptions, the dimension classes in pygrametl provide the same interface,
+likewise for the fact table classes. When adding members to dimensions or facts
+to fact tables in pygrametl, the methods :meth:`lookup`, :meth:`insert`,
+:meth:`ensure` are generally used. :meth:`lookup` returns the key for the member
+or fact that matches a given row if it exists, :meth:`insert` adds a member to a
+dimension or a fact to a fact table, and :meth:`ensure` performs a
+:meth:`lookup` followed by an :meth:`insert` if the member or fact does not
+exist. Another commonly used method is :meth:`scdensure`. It is implemented on
+dimension classes that support slowly changing dimensions and operates like
+:meth:`ensure` but takes versioning into account. For the full API of
+pygrametl's dimension and fact table classes, see :mod:`.tables`
+
+All rows from the CSV file are inserted into the location dimension first. This
+is necessary for foreign keys to the location dimension to be computed while
+filling the fact table. The other two dimensions are filled while inserting the
+facts as the data needed is included in the sales records. To ensure that the
+data is committed to the database and that the connection is closed correctly,
+the methods :meth:`.ConnectionWrapper.commit` and
+:meth:`.ConnectionWrapper.close` are executed at the end.
 
 .. code-block:: python
 
