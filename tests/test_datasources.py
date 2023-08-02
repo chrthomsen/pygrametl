@@ -43,10 +43,10 @@ class SQLTransformationSourceTest(unittest.TestCase):
         ]
 
         cls.expected_group_by_genre = [
-            {'genre': 'Comic', 'COUNT(title)': 2},
-            {'genre': 'Cookbook', 'COUNT(title)': 1},
-            {'genre': 'Novel', 'COUNT(title)': 1},
-            {'genre': 'Unknown', 'COUNT(title)': 1}
+            {"genre": "Comic", "COUNT(title)": 2},
+            {"genre": "Cookbook", "COUNT(title)": 1},
+            {"genre": "Novel", "COUNT(title)": 1},
+            {"genre": "Unknown", "COUNT(title)": 1}
         ]
 
         # Ensure other tests does not affect these tests
@@ -71,11 +71,11 @@ class SQLTransformationSourceTest(unittest.TestCase):
 
     def test_transform_with_batch_size_of_one_and_perbatch(self):
         expected_group_by_genre_per_batch = [
-            {'genre': 'Unknown', 'COUNT(title)': 1},
-            {'genre': 'Novel', 'COUNT(title)': 1},
-            {'genre': 'Comic', 'COUNT(title)': 1},
-            {'genre': 'Comic', 'COUNT(title)': 1},
-            {'genre': 'Cookbook', 'COUNT(title)': 1}
+            {"genre": "Unknown", "COUNT(title)": 1},
+            {"genre": "Novel", "COUNT(title)": 1},
+            {"genre": "Comic", "COUNT(title)": 1},
+            {"genre": "Comic", "COUNT(title)": 1},
+            {"genre": "Cookbook", "COUNT(title)": 1}
         ]
 
         source = SQLTransformingSource(
@@ -100,10 +100,10 @@ class SQLTransformationSourceTest(unittest.TestCase):
 
     def test_transform_with_renamed_columns(self):
         expected_group_by_genre_renamed = [
-            {'genre': 'Comic', 'count': 2},
-            {'genre': 'Cookbook', 'count': 1},
-            {'genre': 'Novel', 'count': 1},
-            {'genre': 'Unknown', 'count': 1}
+            {"genre": "Comic", "count": 2},
+            {"genre": "Cookbook", "count": 1},
+            {"genre": "Novel", "count": 1},
+            {"genre": "Unknown", "count": 1}
         ]
 
         source = SQLTransformingSource(
