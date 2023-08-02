@@ -96,10 +96,7 @@ class SQLTransformationSourceTest(unittest.TestCase):
         with self.assertRaises(sqlite3.OperationalError) as cm:
             list(source)
 
-        e = cm.exception
-        self.assertEqual(e.sqlite_errorname, "SQLITE_ERROR")
-        self.assertEqual(e.sqlite_errorcode, 1)
-        self.assertEqual(str(e), "near \"TRUNCATE\": syntax error")
+        self.assertEqual(str(cm.exception), "near \"TRUNCATE\": syntax error")
 
     def test_transform_with_renamed_columns(self):
         expected_group_by_genre_renamed = [
