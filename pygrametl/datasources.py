@@ -404,30 +404,42 @@ class TransformingSource(object):
 class SQLTransformingSource(object):
 
     """A source that transforms rows from another source by loading them into a
-       temporary table in an RDBMS and then retrieve them using an SQL query.
+       temporary table in an RDBMS and then retrieving them using an SQL query.
 
        .. Warning::
-          Creates, truncates, and drops the temporary table.
+          Creates, empties, and drops the temporary table.
     """
 
-    def __init__(self, source, tablename, query, extendedcasts=None,
+    def __init__(self, source, temptablename, query, additionalcasts=None,
                  batchsize=10000, perbatch=False, columnnames=None,
-                 targetconnection=None):
+                 usetruncate=False, targetconnection=None):
         """Arguments:
 
-        - source: a data source that yields rows with an equivalent schema
-        - tablename: a string with the name of the temporary table to use
-        - query: the query that transforms the rows from source
-        - extendedcasts: a dictionary that maps from Python types to SQL types
-          in the form of strings. Default: {}
+        - source: a data source that yields rows with the same schema, i.e.,
+          they contain the same columns and the columns' types does not change
+        - tablename: a string with the name of the temporary table to use. This
+          table must use the same schema as the rows from source
+        - query: the query that is executed on temptablename in targetconnection
+          or an in-memory SQLite database to transforms the rows from source
+        - additionalcasts: a dict with additional casts from Python types to SQL
+          types in the form of strings that takes precedences over the default.
+          Default: None, i.e., only int, float, and str is mapped to simple SQL
+          types that should be supported by most RDBMSs
         - batchsize: an int deciding how many insert operations should be done
           in one batch. Default: 10000
         - perbatch: a boolean deciding if the transformation should be applied
-          for each batch or for all rows in source. Default: False
-        - columnnames: a sequence of column names to use for transformed rows
+          for each batch or for all rows in source.
+          Default: False, i.e., the transformation is applied once for all rows
+          in source
+        - columnnames: a sequence of column names to use for transformed rows.
+          Default: None, i.e., the column names from query is used
+        - usetruncate: a boolean deciding if TRUNCATE should be used instead of
+          DELETE FROM when emptying temptablename in targetconnection or an
+          in-memory SQLite database
+          Default: False, i.e., DELETE FROM is used instead of TRUNCATE
         - targetconnection: the PEP 249 connection to use, the ConnectionWrapper
           to use, or None. If None, a new temporary in-memory SQLite database is
-          created.
+          created
         """
         self.__source = source
         self.__query = query
@@ -442,8 +454,8 @@ class SQLTransformingSource(object):
             str: "VARCHAR(4000)",  # Maximum size for Oracle 11g R2
         }
 
-        if extendedcasts:
-            self.__casts |= extendedcasts
+        if additionalcasts:
+            self.__casts |= additionalcasts
 
         # Only close the connection if it is created by SQLTransformingSource
         if targetconnection is None:
@@ -455,8 +467,7 @@ class SQLTransformingSource(object):
         # Check if targetconnection is a ConnectioNWrapper without importing
         # modules that require Jython when running under CPython and vice versa.
         # A ConnectionWrapper is always used to support multiple paramstyles
-        if hasattr(targetconnection, "getunderlyingmodule") and \
-           callable(targetconnection.getunderlyingmodule):
+        if "ConnectionWrapper" in type(targetconnection).__name__:
             self.__targetconnection = targetconnection
         else:
             self.__targetconnection = ConnectionWrapper(targetconnection)
@@ -471,7 +482,7 @@ class SQLTransformingSource(object):
         row = next(source)
         self.__batch.append(row)
 
-        createsql = "CREATE TABLE {}({})".format(tablename, ', '.join(
+        createsql = "CREATE TABLE {}({})".format(temptablename, ', '.join(
             [name + " " + self.__casts[type(value)]
              for name, value in row.items()]))
         self.__targetconnection.execute(createsql)
@@ -482,13 +493,17 @@ class SQLTransformingSource(object):
         #             VALUES (%(att1)s, %(att2)s, %(att3)s, ...)"
         quote = tables._quote
         quotelist = lambda x: [quote(xn) for xn in x]
-        self.__insertsql = "INSERT INTO " + tablename \
+        self.__insertsql = "INSERT INTO " + temptablename \
             + "(" + ", ".join(quotelist(row.keys())) + ") VALUES (" + \
             ", ".join(["%%(%s)s" % (att,) for att in row.keys()]) + ")"
 
         # Create drop and truncate SQL
-        self.__dropsql = "DROP TABLE " + tablename
-        self.__deletefrom = "DELETE FROM " + tablename  # No TRUNCATE in SQLite
+        self.__dropsql = "DROP TABLE " + temptablename
+        if usetruncate:
+            self.__deletefrom = "TRUNCATE TABLE " + temptablename
+        else:
+            # TRUNCATE is not supported in SQLite
+            self.__deletefrom = "DELETE FROM " + temptablename
 
     def __iter__(self):
         for row in self.__source:

@@ -298,12 +298,11 @@ default each :class:`.SQLTransformingSource` uses a separate in-memory SQLite
 database but another database can be used by passing a :PEP:`249` connection or
 one of the :class:`.ConnectionWrapper` types as the parameter
 :attr:`.targetconnection`. By using an on-disk database
-:class:`.SQLTransformingSource` can be used with datasets that does not fit in
+:class:`.SQLTransformingSource` can be used with datasets that do not fit in
 memory. If an existing database is used the rows from the data source can also
 be enriched using data from other tables in the database, e.g., by joining the
 rows with an existing table in the database. Be aware that
-:class:`.SQLTransformingSource` creates, truncates, and drops the temporary
-table.
+:class:`.SQLTransformingSource` creates, empties, and drops the temporary table.
 
 .. code-block:: python
 
@@ -312,17 +311,21 @@ table.
 
     sales = TypedCSVSource(f=open('sales.csv', 'r', 16384),
                            casts={'price': int}, delimiter=',')
+
     salesTransformed = SQLTransformingSource(sales,
         "sales", "SELECT product, SUM(price) FROM sales GROUP BY product")
 
-In the above example, the total revenue is computed for each product. In
-addition, to the required parameters shown above,
-:class:`.SQLTransformingSource` also has multiple optional parameters, e.g.,
-:attr:`.extendedcasts` accepts a :class:`.dict` that specifies how Python types
-should be mapped to SQL types, :attr:`.perbatch` specifies if the transformation
-should be applied for each batch of rows or for all rows in the input data
-source, and :attr:`.columnnames` allows the columns in the output rows to be
-renamed.
+In the above example, the total revenue is computed for each product. First, a
+temporary in-memory SQLite database is created. Then a temporary table named
+sales with the same schema as the rows in :attr:`sales` is created. Finally, the
+rows in :attr:`sales` is loaded into the temporary table in batches and then the
+final result is produced by executing the provided SQL query. In addition, to
+the required parameters shown above, :class:`.SQLTransformingSource` also has
+multiple optional parameters, e.g., :attr:`.extendedcasts` accepts a
+:class:`.dict` that specifies how Python types should be mapped to SQL types,
+:attr:`.perbatch` specifies if the transformation should be applied for each
+batch of rows or for all rows in the input data source, and :attr:`.columnnames`
+allows the columns in the output rows to be renamed.
 
 CrossTabbingSource
 ------------------

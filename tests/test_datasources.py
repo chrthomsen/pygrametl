@@ -86,6 +86,21 @@ class SQLTransformationSourceTest(unittest.TestCase):
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(expected_group_by_genre_per_batch, list(source))
 
+    def test_transform_with_batch_size_of_one_perbatch_and_truncate(self):
+        source = SQLTransformingSource(
+            iter(self.input_list), "book",
+            "SELECT genre, COUNT(title) FROM book GROUP BY genre",
+            batchsize=1, perbatch=True, usetruncate=True)
+
+        self.assertIsNone(pygrametl.getdefaulttargetconnection())
+        with self.assertRaises(sqlite3.OperationalError) as cm:
+            list(source)
+
+        e = cm.exception
+        self.assertEqual(e.sqlite_errorname, "SQLITE_ERROR")
+        self.assertEqual(e.sqlite_errorcode, 1)
+        self.assertEqual(str(e), "near \"TRUNCATE\": syntax error")
+
     def test_transform_with_renamed_columns(self):
         expected_group_by_genre_renamed = [
             {'genre': 'Comic', 'count': 2},
