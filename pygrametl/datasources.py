@@ -29,6 +29,11 @@
 
 from csv import DictReader
 import sys
+import sqlite3
+
+import pygrametl
+from pygrametl import tables
+from pygrametl import ConnectionWrapper
 
 
 if sys.platform.startswith('java'):
@@ -46,8 +51,9 @@ except ImportError:
 __all__ = ['CSVSource', 'TypedCSVSource', 'SQLSource', 'PandasSource',
            'JoiningSource', 'HashJoiningSource', 'MergeJoiningSource',
            'BackgroundSource', 'ProcessSource', 'MappingSource',
-           'TransformingSource', 'UnionSource', 'CrossTabbingSource',
-           'FilteringSource', 'DynamicForEachSource', 'RoundRobinSource']
+           'TransformingSource', 'SQLTransformingSource', 'UnionSource',
+           'CrossTabbingSource', 'FilteringSource', 'DynamicForEachSource',
+           'RoundRobinSource']
 
 
 CSVSource = DictReader
@@ -393,6 +399,150 @@ class TransformingSource(object):
             for func in self.__transformations:
                 func(row)
             yield row
+
+
+class SQLTransformingSource(object):
+
+    """A source that transforms rows from another source by loading them into a
+       temporary table in an RDBMS and then retrieving them using an SQL query.
+
+       .. Warning::
+          Creates, empties, and drops the temporary table.
+    """
+
+    def __init__(self, source, temptablename, query, additionalcasts=None,
+                 batchsize=10000, perbatch=False, columnnames=None,
+                 usetruncate=True, targetconnection=None):
+        """Arguments:
+
+        - source: a data source that yields rows with the same schema, i.e.,
+          they contain the same columns and the columns' types do not change
+        - temptablename: a string with the name of the temporary table to use.
+          This table must use the same schema as the rows from source
+        - query: the query that is executed on temptablename in targetconnection
+          or an in-memory SQLite database to transforms the rows from source
+        - additionalcasts: a dict with additional casts from Python types to SQL
+          types in the form of strings that takes precedences over the default.
+          Default: None, i.e., only int, float, and str is mapped to simple SQL
+          types that should be supported by most RDBMSs
+        - batchsize: an int deciding how many insert operations should be done
+          in one batch. Default: 10000
+        - perbatch: a boolean deciding if the transformation should be applied
+          for each batch or for all rows in source.
+          Default: False, i.e., the transformation is applied once for all rows
+          in source
+        - columnnames: a sequence of column names to use for transformed rows.
+          Default: None, i.e., the column names from query are used
+        - usetruncate: a boolean deciding if TRUNCATE should be used instead of
+          DELETE FROM when emptying temptablename in targetconnection.
+          Default: True, i.e.,  TRUNCATE is used instead of DELETE FROM
+        - targetconnection: the PEP 249 connection to use, the ConnectionWrapper
+          to use, or None. If None, a new temporary in-memory SQLite database is
+          created
+        """
+        self.__source = source
+        self.__query = query
+        self.__batchsize = batchsize
+        self.__perbatch = perbatch
+        self.__columnnames = columnnames
+
+        # Extensible mapping of Python types to SQL types
+        self.__casts = {
+            int: "INTEGER",
+            float: "DOUBLE PRECISION",
+            str: "VARCHAR(4000)",  # Maximum size for Oracle 11g R2
+        }
+
+        if additionalcasts:
+            self.__casts |= additionalcasts
+
+        # Only close the connection if it is created by SQLTransformingSource
+        if targetconnection is None:
+            self.__close = True
+            targetconnection = sqlite3.connect(":memory:")
+
+            # TRUNCATE is not supported in SQLite
+            usetruncate=False
+        else:
+            self.__close = False
+
+        # Check if targetconnection is a ConnectioNWrapper without importing
+        # modules that require Jython when running under CPython and vice versa.
+        # A ConnectionWrapper is always used to support multiple paramstyles
+        if "ConnectionWrapper" in type(targetconnection).__name__:
+            self.__targetconnection = targetconnection
+        else:
+            self.__targetconnection = ConnectionWrapper(targetconnection)
+
+            # Ensure the implicitly created ConnectionWrapper is not default
+            if self.__targetconnection == \
+               pygrametl.getdefaulttargetconnection():
+                pygrametl._defaulttargetconnection = None
+
+        # Create table SQL
+        self.__batch = []
+        row = next(source)
+        self.__batch.append(row)
+
+        createsql = "CREATE TABLE {}({})".format(temptablename, ', '.join(
+            [name + " " + self.__casts[type(value)]
+             for name, value in row.items()]))
+        self.__targetconnection.execute(createsql)
+        self.__targetconnection.commit()
+
+        # Create insert SQL
+        # This gives "INSERT INTO tablename(att1, att2, att3, ...)
+        #             VALUES (%(att1)s, %(att2)s, %(att3)s, ...)"
+        quote = tables._quote
+        quotelist = lambda x: [quote(xn) for xn in x]
+        self.__insertsql = "INSERT INTO " + temptablename \
+            + "(" + ", ".join(quotelist(row.keys())) + ") VALUES (" + \
+            ", ".join(["%%(%s)s" % (att,) for att in row.keys()]) + ")"
+
+        # Create drop and truncate SQL
+        self.__dropsql = "DROP TABLE " + temptablename
+        if usetruncate:
+            self.__deletefrom = "TRUNCATE TABLE " + temptablename
+        else:
+            self.__deletefrom = "DELETE FROM " + temptablename
+
+    def __iter__(self):
+        for row in self.__source:
+            # Insert and maybe transform current batch
+            if len(self.__batch) == self.__batchsize:
+                self.__insertnow()
+                if self.__perbatch:
+                    for transformed_row in self.__transform():
+                        yield transformed_row
+                    self.__targetconnection.execute(self.__deletefrom)
+
+            # The first row is read and added in __init__
+            self.__batch.append(row)
+
+        # Insert last batch and transform last or entire batch
+        self.__insertnow()
+        for transformed_row in self.__transform():
+            yield transformed_row
+
+        # Cleanup
+        self.__targetconnection.execute(self.__dropsql)
+        self.__targetconnection.commit()
+        if self.__close:
+            self.__targetconnection.close()
+
+    def __insertnow(self):
+        if self.__batch:
+            self.__targetconnection.executemany(self.__insertsql, self.__batch)
+            self.__targetconnection.commit()
+            self.__batch.clear()
+
+    def __transform(self):
+        self.__targetconnection.execute(self.__query)
+
+        if self.__columnnames:
+            return self.__targetconnection.rowfactory(self.__columnnames)
+        else:
+            return self.__targetconnection.rowfactory()
 
 
 class CrossTabbingSource(object):
