@@ -432,7 +432,7 @@ class SQLTransformingSource(object):
           Default: False, i.e., the transformation is applied once for all rows
           in source
         - columnnames: a sequence of column names to use for transformed rows.
-          Default: None, i.e., the column names from query is used
+          Default: None, i.e., the column names from query are used
         - usetruncate: a boolean deciding if TRUNCATE should be used instead of
           DELETE FROM when emptying temptablename in targetconnection.
           Default: True, i.e.,  TRUNCATE is used instead of DELETE FROM
