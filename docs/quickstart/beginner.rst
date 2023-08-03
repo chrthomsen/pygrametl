@@ -3,23 +3,22 @@
 Beginner Guide
 ==============
 The following is a small guide for users new to pygrametl. It shows the main
-constructs provided by pygrametl and how to use them to create a simple ETL
-flow for a made-up example. The example is a toy data warehouse for a chain of
+constructs provided by pygrametl and how to use them to create a simple ETL flow
+for a simple made-up example. The example is a toy data warehouse for a chain of
 book stores and is shown below as :ref:`dwexample`. The warehouse has one fact
 table and three dimensions organized in a star schema. The fact table stores
 facts about how many of each book is sold each day. The book dimension stores
-the name and genre of each book sold, the location dimension stores the city
-and region of the stores, and the time dimension stores the date of each sale.
-To keep the example simple, none of the dimensions are snowflaked, nor do they
-contain any slowly changing attributes. These are however supported by
-pygrametl through :class:`.SnowflakedDimension`,
-:class:`.TypeOneSlowlyChangingDimension`, and
-:class:`.SlowlyChangingDimension`, respectively. In addition, pygrametl
+the name and genre of each book sold, the location dimension stores the city and
+region of the stores, and the time dimension stores the date of each sale. To
+keep the example simple, none of the dimensions are snowflaked, nor do they
+contain any slowly changing attributes. These are however supported by pygrametl
+through :class:`.SnowflakedDimension`, :class:`.TypeOneSlowlyChangingDimension`,
+and :class:`.SlowlyChangingDimension`, respectively. In addition, pygrametl
 provides high-level constructs for creating efficient multiprocess or
 multithreaded ETL flow, depending on the implementation of Python used (see
 :ref:`parallel`). pygrametl also simplifies testing by making it easy to define
-preconditions and postconditions for each part of an ETL flow without relying
-on external files for the input and the expected results (see :ref:`testing`).
+preconditions and postconditions for each part of an ETL flow without relying on
+external files for the input and the expected results (see :ref:`testing`).
 
 .. note::
    When using pygrametl, we strongly recommend using named parameters when
@@ -90,8 +89,8 @@ equivalents and :class:`.ConnectionWrapper` with
 on Jython see :ref:`jython`.
 
 We start by creating the database and tables for the data warehouse in
-PostgreSQL using psql. The SQL script example.sql creates the dw database, the
-dwuser role with all privileges, and the four tables::
+PostgreSQL using :attr:`psql`. The SQL script example.sql creates the :attr:`dw`
+database, the :attr:`dwuser` role with all privileges, and the four tables::
 
     psql -f example.sql
 
@@ -224,7 +223,7 @@ information about the more advanced dimension and fact table classes, see
     # fact table. It is created with the name of the table, a list of columns
     # constituting the primary key of the fact table, and a list of measures
     fact_table = FactTable(
-            name='facttable',
+            name='sale',
             keyrefs=['bookid', 'locationid', 'timeid'],
             measures=['sale'])
 
@@ -251,14 +250,27 @@ of an ETL flow.
         row['month'] = date.month
         row['day'] = date.day
 
-Finally, the data can be inserted into the data warehouse. All rows from the
-CSV file are inserted into the location dimension first. This is necessary for
-foreign keys to the location dimension to be computed while filling the fact
-table. The other two dimensions are filled while inserting the facts as the
-data needed is included in the sales records. To ensure that the data is
-committed to the database and that the connection is closed correctly, the
-methods :meth:`.ConnectionWrapper.commit` and :meth:`.ConnectionWrapper.close`
-are executed at the end.
+Finally, the data can be inserted into the data warehouse. With a few
+exceptions, the dimension classes in pygrametl provide the same interface,
+likewise for the fact table classes. When adding members to dimensions or facts
+to fact tables in pygrametl, the methods :meth:`lookup`, :meth:`insert`,
+:meth:`ensure` are generally used. :meth:`lookup` returns the key for the member
+or the key and measure values for the fact that matches a given row if it
+exists, :meth:`insert` adds a member to a dimension or a fact to a fact table,
+and :meth:`ensure` performs a :meth:`lookup` followed by an :meth:`insert` if
+:meth:`lookup` did not find an existing member or fact. Another commonly used
+method is :meth:`scdensure`. It is implemented on dimension classes that support
+slowly changing dimensions and operates like :meth:`ensure` but takes versioning
+into account. For the full API of pygrametl's dimension and fact table classes,
+see :mod:`.tables`
+
+All rows from the CSV file are inserted into the location dimension first. This
+is necessary for foreign keys to the location dimension to be computed while
+filling the fact table. The other two dimensions are filled while inserting the
+facts as the data needed is included in the sales records. To ensure that the
+data is committed to the database and that the connection is closed correctly,
+the methods :meth:`.ConnectionWrapper.commit` and
+:meth:`.ConnectionWrapper.close` are executed at the end.
 
 .. code-block:: python
 
@@ -371,7 +383,7 @@ automated repeatable tests (see :ref:`testing`).
             lookupatts=['city'])
 
     fact_table = FactTable(
-            name='facttable',
+            name='sale',
             keyrefs=['bookid', 'locationid', 'timeid'],
             measures=['sale'])
 
