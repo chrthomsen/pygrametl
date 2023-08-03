@@ -412,13 +412,13 @@ class SQLTransformingSource(object):
 
     def __init__(self, source, temptablename, query, additionalcasts=None,
                  batchsize=10000, perbatch=False, columnnames=None,
-                 usetruncate=False, targetconnection=None):
+                 usetruncate=True, targetconnection=None):
         """Arguments:
 
         - source: a data source that yields rows with the same schema, i.e.,
-          they contain the same columns and the columns' types does not change
-        - tablename: a string with the name of the temporary table to use. This
-          table must use the same schema as the rows from source
+          they contain the same columns and the columns' types do not change
+        - temptablename: a string with the name of the temporary table to use.
+          This table must use the same schema as the rows from source
         - query: the query that is executed on temptablename in targetconnection
           or an in-memory SQLite database to transforms the rows from source
         - additionalcasts: a dict with additional casts from Python types to SQL
@@ -434,9 +434,8 @@ class SQLTransformingSource(object):
         - columnnames: a sequence of column names to use for transformed rows.
           Default: None, i.e., the column names from query is used
         - usetruncate: a boolean deciding if TRUNCATE should be used instead of
-          DELETE FROM when emptying temptablename in targetconnection or an
-          in-memory SQLite database
-          Default: False, i.e., DELETE FROM is used instead of TRUNCATE
+          DELETE FROM when emptying temptablename in targetconnection.
+          Default: True, i.e.,  TRUNCATE is used instead of DELETE FROM
         - targetconnection: the PEP 249 connection to use, the ConnectionWrapper
           to use, or None. If None, a new temporary in-memory SQLite database is
           created
@@ -461,6 +460,9 @@ class SQLTransformingSource(object):
         if targetconnection is None:
             self.__close = True
             targetconnection = sqlite3.connect(":memory:")
+
+            # TRUNCATE is not supported in SQLite
+            usetruncate=False
         else:
             self.__close = False
 
@@ -502,7 +504,6 @@ class SQLTransformingSource(object):
         if usetruncate:
             self.__deletefrom = "TRUNCATE TABLE " + temptablename
         else:
-            # TRUNCATE is not supported in SQLite
             self.__deletefrom = "DELETE FROM " + temptablename
 
     def __iter__(self):
