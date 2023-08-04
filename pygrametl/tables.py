@@ -972,10 +972,8 @@ class SlowlyChangingDimension(Dimension):
                 "UPDATE %s SET %s = %%(%s)s WHERE %s = %%(%s)s" % \
                 (name, self.quote(toatt), toatt, self.quote(key), key)
 
-        # Set up SQL and functions for lookupasof
-        if not (self.toatt or self.fromatt):
-            self.lookupasof = self._lookupasofnotpossible
-        else:
+        if self.toatt or self.fromatt:
+            # Set up SQL and functions for lookupasof
             keyvalidityatts = [self.key]
             if self.toatt: keyvalidityatts.append(self.toatt)
             if self.fromatt: keyvalidityatts.append(self.fromatt)
@@ -994,14 +992,6 @@ class SlowlyChangingDimension(Dimension):
                 self.keyvaliditylookupsql += " NULLS LAST" 
             elif self.orderingatt == self.fromatt:
                 self.keyvaliditylookupsql += " NULLS FIRST"
-
-            if self.fromatt and self.toatt:
-                self.lookupasof = self._lookupasofusingfromattandtoatt
-            elif self.fromatt:
-                self.lookupasof = self._lookupasofusingfromatt
-            else: # toatt is defined
-                self.lookupasof = self._lookupasofusingtoatt
-
 
         if self.__prefill:
             self.__prefillcaches(usefetchfirst)
@@ -1361,7 +1351,6 @@ class SlowlyChangingDimension(Dimension):
         existing = self.getbykey(keyval)
         if existing[self.toatt] == self.maxto:
             self.update({self.key: keyval, self.toatt: end})
-    
 
     def _getversions(self, row, namemapping):
         """Return an ordered list of all versions of a given member"""
@@ -1371,36 +1360,79 @@ class SlowlyChangingDimension(Dimension):
                                       namemapping)
         return [kv for kv in self.fetchalltuples()]
         
-    def lookasof(self, row, when, inclusive, namemapping={}):
-        pass # __init__ will set lookasof to one of the methods below
+    def lookupasof(self, row, when, inclusive, namemapping={}):
+        """Find the key of the version that was valid at a given time.
 
-    def _lookupasofusingtoatt(self, row, when, inclusive, namemapping={}):
+           If both fromatt and toatt have been set, the method returns the key
+           of the version where the given time is between them. If only toatt
+           has been defined, the method returns the key of the first version
+           where toatt is after the given time. If only fromatt is defined,
+           the method returns the key of the most recent version where fromatt
+           is before the given time. See also the description of the argument
+           inclusive.  For this to be possible, fromatt and/or toatt must have
+           been set. If this is not the case, a RuntimeError is raised. If no
+           valid version is found for the given time, None is returned.
+
+           Note that this function cannot exploit the cache and always results
+           in the execution of a SQL query.
+
+           Arguments:
+
+           - row: a dict which must contain at least the lookup attributes.
+           - when: the time when the version should be valid. This argument
+             must be of a type that can be compared (using <, <=, ==, =>, >)
+             to values in fromatt and/or toatt.
+           - inclusive: decides if the values of fromatt and/or toatt are
+             allowed to be equal to the value of when in the version to find.
+             If only one of fromatt and toatt has been set, the argument
+             should be a single Boolean. If both fromatt and toatt have been
+             set, the argument should be a pair of Booleans where the first
+             element decides if the fromatt value can be equal to the the
+             value of when and the second element decides the same for
+             toatt. This pair must not be (False, False).
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+        if self.fromatt and self.toatt:
+            func = self._lookupasofusingfromattandtoatt
+        elif self.fromatt:
+            func = self._lookupasofusingfromatt
+        elif self.toatt:
+            func = self._lookupasofusingtoatt
+        else:
+            raise RuntimeError(
+                "fromatt and/or toatt must be set if lookupasof should be used"
+            )
+        return func(row, when, inclusive, namemapping)
+
+    def _lookupasofusingtoatt(self, row, when, inclusive, namemapping):
+        """Helper function for lookupasof"""
         op = ge if inclusive else gt
         versions = self._getversions(row, namemapping)
         # _getversions gives back all versions [1st, 2nd, ...] sorted on
         # fromatt and with NULLS LAST in this case (see how
-        # self.keyvaliditylookupsql is made in __init__).  We iterate over
-        # the list and when we find a version where toatt > when (or >= if
-        # inclusive is True), it is the first version that became valid before
-        # "when", i.e., the one we are looking for. If toatt is None, we're
-        # looking at the last version and, since it doesn't have an explicit
-        # timestamp, we must assume that it was/will be valid at time "when".
+        # self.keyvaliditylookupsql is made in __init__).  We iterate over the
+        # list and when we find a version where toatt > when (or >= if
+        # inclusive is True), it is the version that was valid at "when",
+        # i.e., the one we are looking for. If toatt is None, we're looking at
+        # the last version and, since it doesn't have an explicit timestamp,
+        # we must assume that it was/will be valid at time "when".
         for ver in versions:
             toattval = ver[self.toatt]
             if toattval == None or op(toattval, when):
                 return ver[self.key]
         return None
         
-    def _lookupasofusingfromatt(self, row, when, inclusive, namemapping={}):
+    def _lookupasofusingfromatt(self, row, when, inclusive, namemapping):
+        """Helper function for lookupasof"""
         op = le if inclusive else lt
         versions = self._getversions(row, namemapping)
         # _getversions gives back all versions [1st, 2nd, ...] sorted on
         # fromatt and with NULLS FIRST in this case (see how
         # self.keyvaliditylookupsql is made in __init__).  We revert the list
         # and iterate over it. When we find a version where fromatt < when (or
-        # <= if inclusive is True), it is the last version that became valid
-        # before "when", i.e., the one we are looking for. If fromatt is None,
-        # we're looking at the 1st version and, since it doesn't have an
+        # <= if inclusive is True), it is the most recent version that became
+        # valid before "when", i.e., the one we are looking for. If fromatt is
+        # None, we're looking at the 1st version and, since it doesn't have an
         # explicit timestamp, we must assume that it was valid at time "when".
         versions.reverse() 
         for ver in versions:
@@ -1409,8 +1441,14 @@ class SlowlyChangingDimension(Dimension):
                 return ver[self.key]
         return None
 
-    def _lookupasofusingfromattandtoatt(self, row, when, inclusive, namemapping={}):
-        """ """
+    def _lookupasofusingfromattandtoatt(self, row, when, inclusive, namemapping):
+        """Helper function for lookupasof"""
+        # [from, to), (from, to], and [from, to] all make sense,
+        # but (from, to) does not
+        if not inclusive[0] and not inclusive[1]:
+            raise ValueError(
+                "At least one of inclusive[0] and inclusive[1] must be True"
+            )
         # We do as in _lookupasofusingtoatt, but also have to check that the
         # version had become valid (i.e., fromatt < when (or <=))
         fromop = le if inclusive[0] else lt
@@ -1423,13 +1461,9 @@ class SlowlyChangingDimension(Dimension):
                 fromattval = ver[self.fromatt]
                 if fromattval == None or op(fromattval, when):
                     return ver[self.key]
+                else:
+                    break # versions don't overlap, no need to look further
         return None
-         
-    def _lookupasofnotpossible(self, row, when, inclusive, namemapping={}):
-        raise RuntimeError(
-            "fromatt and/or toatt must be set if lookupasof should be used"
-        )
-
 
 SCDimension = SlowlyChangingDimension
 
