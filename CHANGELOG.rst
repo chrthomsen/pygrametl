@@ -5,6 +5,9 @@ Unreleased
   tests are executed against an in-memory SQLite database so no configuration is
   needed.
 
+  ``SlowlyChangingDimension.lookupasof`` allows to lookup the version that was
+  valid at a given time.
+
 **Changed**
   If a ``rowexpander`` does not return a row in the form of a ``dict``,
   ``Dimension.ensure`` now explicitly raises a ``TypeError`` with the name of
@@ -15,6 +18,12 @@ Unreleased
 
   ``ymdparser`` can now handle ``datetime.datetime`` and ``datetime.date`` as
   input. Any other input is cast to a string.  (GitHub issue #40)
+
+  If ``orderingatt`` is not specified for a ``SlowlyChangingDimension``,
+  ``fromatt`` will now be used if ``versionatt`` are ``toatt`` not specified.
+
+  When using ``fromatt`` or ``toatt`` as ``orderingatt``, the generated SQL
+  will specify NULLS FIRST or NULLS LAST.
 
 **Fixed**
   ``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``,
