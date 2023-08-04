@@ -5,6 +5,10 @@ Unreleased
   tests are executed against an in-memory SQLite database so no configuration is
   needed.
 
+  ``SQLTransformingSource`` a new class supporting transforming rows by loading
+  them into a temporary table in an RDBMS and then retrieving them using an SQL
+  query.
+
   ``SlowlyChangingDimension.lookupasof`` allows to lookup the version that was
   valid at a given time.
 

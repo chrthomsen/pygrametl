@@ -57,6 +57,7 @@ def get_connection():
 def ensure_default_connection_wrapper():
     """Ensure the default connection wrapper is ready for the next test."""
     connection_wrapper = pygrametl.getdefaulttargetconnection()
+
     try:
         connection_wrapper.rollback()
     except Exception:
@@ -68,6 +69,11 @@ def ensure_default_connection_wrapper():
     # The database must be in a known good state before each test
     pygrametl.drawntabletesting.Table.clear()
     return connection_wrapper
+
+
+def remove_default_connection_wrapper():
+    """Ensure there is no default connection wrapper set."""
+    pygrametl._defaulttargetconnection = None
 
 
 def __sqlite3_connection(connection_string):

@@ -1993,8 +1993,8 @@ class BatchFactTable(FactTable):
            - keyrefs: a sequence of attribute names that constitute the
              primary key of the fact tables (i.e., the dimension references)
            - measures: a possibly empty sequence of measure names. Default: ()
-           - batchsize: an int deciding many insert operations should be done
-             in one batch. Default: 10000
+           - batchsize: an int deciding how many insert operations should be
+             done in one batch. Default: 10000
            - usemultirow: load batches with an INSERT INTO name VALUES statement
              instead of executemany(). WARNING: single quotes are automatically
              escaped. Other forms of sanitization must be manually performed.
