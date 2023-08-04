@@ -1286,12 +1286,11 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         self.assertEqual(3, self.test_dimension.lookup({"name": "Ann"}))
 
-    def test_orderingatt_versionatt_toatt_are_all_none(self):
+    def test_orderingatt_versionatt_fromatt_toatt_are_all_none(self):
         self.assertRaises(ValueError, SlowlyChangingDimension, name=self.initial.name,
                           key=self.initial.key(),
                           attributes=self.initial.attributes,
                           lookupatts=['name'],
-                          fromatt='fromdate',
                           cachesize=100,
                           prefill=True)
 
