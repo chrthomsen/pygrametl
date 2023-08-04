@@ -1358,7 +1358,7 @@ class SlowlyChangingDimension(Dimension):
         # passed to __init__. 
         self.targetconnection.execute(self.keyvaliditylookupsql, row,
                                       namemapping)
-        return [kv for kv in self.fetchalltuples()]
+        return [kv for kv in self.targetconnection.rowfactory()]
         
     def lookupasof(self, row, when, inclusive, namemapping={}):
         """Find the key of the version that was valid at a given time.
