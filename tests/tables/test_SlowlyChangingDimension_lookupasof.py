@@ -54,6 +54,8 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
     
 
     def test_lookupasof_usingfrom(self):
+        self.initial += "| 0 | Ann | Arden | NULL | NULL | 0 |" # from ignored;
+        self.initial.reset()
         test_dimension = SlowlyChangingDimension(
             name=self.initial.name,
             key=self.initial.key(),
@@ -63,8 +65,16 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
             fromatt='fromdate',
             cachesize=100,
             prefill=False)
-        # TODO
-
+        key = test_dimension.lookupasof(self.ann, "2001-05-05", True)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof(self.ann, "2002-01-01", True)
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof(self.ann, "2002-01-01", False)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof(self.ann, "1999-12-31", True)
+        self.assertEqual(key, 0)
+        key = test_dimension.lookupasof(self.bob, "1999-05-05", True)
+        self.assertEqual(key, None)
 
     def test_lookupasof_usingfromto(self):
         test_dimension = SlowlyChangingDimension(
@@ -77,6 +87,18 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
             toatt='todate',
             cachesize=100,
             prefill=False)
-        # TODO
+        key = test_dimension.lookupasof(self.ann, "2001-05-05", (True, False))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof(self.ann, "2001-05-05", (False, True))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof(self.ann, "2001-12-31", (False, True))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof(self.ann, "2002-12-31", (True, True))
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof(self.ann, "2222-12-31", (True, True))
+        self.assertEqual(key, 5)
+        key = test_dimension.lookupasof(self.bob, "2222-12-31", (True, True))
+        self.assertEqual(key, None)
+
 
 

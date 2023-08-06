@@ -1457,9 +1457,9 @@ class SlowlyChangingDimension(Dimension):
 
         for ver in versions:
             toattval = ver[self.toatt]
-            if toattval == None or op(toattval, when):
+            if toattval == None or toop(toattval, when):
                 fromattval = ver[self.fromatt]
-                if fromattval == None or op(fromattval, when):
+                if fromattval == None or fromop(fromattval, when):
                     return ver[self.key]
                 else:
                     break # versions don't overlap, no need to look further
