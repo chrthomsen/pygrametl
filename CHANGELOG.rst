@@ -9,8 +9,8 @@ Unreleased
   them into a temporary table in an RDBMS and then retrieving them using an SQL
   query.
 
-  ``SlowlyChangingDimension.lookupasof`` allows to lookup the version that was
-  valid at a given time.
+  ``SlowlyChangingDimension.lookupasof`` allows to lookup the version of a
+  member that was valid at a given time.
 
 **Changed**
   If a ``rowexpander`` does not return a row in the form of a ``dict``,
@@ -27,7 +27,10 @@ Unreleased
   ``fromatt`` will now be used if ``versionatt`` are ``toatt`` not specified.
 
   When using ``fromatt`` or ``toatt`` as ``orderingatt``, the generated SQL
-  will specify NULLS FIRST or NULLS LAST.
+  will specify NULLS FIRST or NULLS LAST. Before this change, NULLS FIRST was
+  assumed for ORDER BY DESC, but this is not guaranteed to hold for all
+  DBMSs. The change thus requires the used DBMS to support that NULLS FIRST or
+  NULLS LAST is specified in the generated SQL.
 
 **Fixed**
   ``BulkFactTable.__init__`` now sets the attributes ``keyrefs``, ``measures``,

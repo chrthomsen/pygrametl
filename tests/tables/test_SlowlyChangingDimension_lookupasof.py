@@ -29,7 +29,6 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.ann = {'name':'Ann'}
         self.bob = {'name':'Bob'}
 
-
     def test_lookupasof_usingto(self):
         test_dimension = SlowlyChangingDimension(
             name=self.initial.name,
@@ -50,8 +49,6 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, 5)
         key = test_dimension.lookupasof(self.bob, "2222-12-31", True)
         self.assertEqual(key, None)
-
-    
 
     def test_lookupasof_usingfrom(self):
         self.initial += "| 0 | Ann | Arden | NULL | NULL | 0 |" # from ignored;
@@ -99,6 +96,3 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, 5)
         key = test_dimension.lookupasof(self.bob, "2222-12-31", (True, True))
         self.assertEqual(key, None)
-
-
-

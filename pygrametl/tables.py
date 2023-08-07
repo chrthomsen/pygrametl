@@ -816,7 +816,7 @@ class SlowlyChangingDimension(Dimension):
              considered to be the newest. If orderingatt is None, versionatt
              is used. If versionatt is also None, toatt is used and NULL is
              considered as the greatest value. If toatt is also None, fromatt
-             is used and NULL is considered at the smallest values. If
+             is used and NULL is considered as the smallest values. If
              orderingatt, versionatt, toatt, and fromatt are all None, an
              error is raised.
            - versionatt: the name of the attribute holding the version number
@@ -952,7 +952,7 @@ class SlowlyChangingDimension(Dimension):
         # Now extend the SQL from Dimension such that we use the versioning
         self.keylookupsql += " ORDER BY %s DESC" % \
                              (self.quote(self.orderingatt),)
-        # There could be NULLs from toatt and fromatt. 
+        # There could be NULLs in toatt and fromatt
         if self.orderingatt == self.toatt:
             self.keylookupsql += " NULLS FIRST" 
         elif self.orderingatt == self.fromatt:
@@ -975,19 +975,21 @@ class SlowlyChangingDimension(Dimension):
         if self.toatt or self.fromatt:
             # Set up SQL and functions for lookupasof
             keyvalidityatts = [self.key]
-            if self.toatt: keyvalidityatts.append(self.toatt)
-            if self.fromatt: keyvalidityatts.append(self.fromatt)
+            if self.toatt:
+                keyvalidityatts.append(self.toatt)
+            if self.fromatt:
+                keyvalidityatts.append(self.fromatt)
             # This gives "SELECT key, {fromatt and/or toatt} FROM name
             #             WHERE lookupval1 = %(lookupval1) AND
             #             lookupval2 = %(lookupval2)s AND ..."
-            #             ORDER BY orderingatt ASC NULLS {LAST or FIRST}
+            #             ORDER BY orderingatt ASC NULLS {LAST or FIRST}"
             self.keyvaliditylookupsql = "SELECT " +  \
                 ", ".join(self.quotelist(keyvalidityatts)) + " FROM " + name +\
                 " WHERE " + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv)
                                       for lv in lookupatts]) +\
                 " ORDER BY %s ASC" % (self.quote(self.orderingatt),)
             # There could be NULLs in toatt and fromatt. See the explanation for
-            # the orderingatt argument above.
+            # the orderingatt argument above
             if self.orderingatt == self.toatt:
                 self.keyvaliditylookupsql += " NULLS LAST" 
             elif self.orderingatt == self.fromatt:
@@ -1352,14 +1354,6 @@ class SlowlyChangingDimension(Dimension):
         if existing[self.toatt] == self.maxto:
             self.update({self.key: keyval, self.toatt: end})
 
-    def _getversions(self, row, namemapping):
-        """Return an ordered list of all versions of a given member"""
-        # The constructed SQL depends on what arguments the user
-        # passed to __init__. 
-        self.targetconnection.execute(self.keyvaliditylookupsql, row,
-                                      namemapping)
-        return [kv for kv in self.targetconnection.rowfactory()]
-        
     def lookupasof(self, row, when, inclusive, namemapping={}):
         """Find the key of the version that was valid at a given time.
 
@@ -1369,7 +1363,7 @@ class SlowlyChangingDimension(Dimension):
            where toatt is after the given time. If only fromatt is defined,
            the method returns the key of the most recent version where fromatt
            is before the given time. See also the description of the argument
-           inclusive.  For this to be possible, fromatt and/or toatt must have
+           inclusive. For this to be possible, fromatt and/or toatt must have
            been set. If this is not the case, a RuntimeError is raised. If no
            valid version is found for the given time, None is returned.
 
@@ -1386,11 +1380,12 @@ class SlowlyChangingDimension(Dimension):
              allowed to be equal to the value of when in the version to find.
              If only one of fromatt and toatt has been set, the argument
              should be a single Boolean. If both fromatt and toatt have been
-             set, the argument should be a pair of Booleans where the first
-             element decides if the fromatt value can be equal to the the
-             value of when and the second element decides the same for
-             toatt. This pair must not be (False, False).
+             set, the argument should be a tuple of two Booleans where the
+             first element decides if the fromatt value can be equal to the
+             the value of when and the second element decides the same for
+             toatt. This tuple must not be (False, False).
            - namemapping: an optional namemapping (see module's documentation)
+
         """
         if self.fromatt and self.toatt:
             func = self._lookupasofusingfromattandtoatt
@@ -1404,10 +1399,16 @@ class SlowlyChangingDimension(Dimension):
             )
         return func(row, when, inclusive, namemapping)
 
+    def _getversions(self, row, namemapping):
+        """Return an ordered list of all versions of a given member"""
+        # The constructed SQL depends on what arguments the user
+        # passed to __init__. 
+        self.targetconnection.execute(self.keyvaliditylookupsql, row,
+                                      namemapping)
+        return [kv for kv in self.targetconnection.rowfactory()]
+        
     def _lookupasofusingtoatt(self, row, when, inclusive, namemapping):
         """Helper function for lookupasof"""
-        op = ge if inclusive else gt
-        versions = self._getversions(row, namemapping)
         # _getversions gives back all versions [1st, 2nd, ...] sorted on
         # fromatt and with NULLS LAST in this case (see how
         # self.keyvaliditylookupsql is made in __init__).  We iterate over the
@@ -1416,6 +1417,8 @@ class SlowlyChangingDimension(Dimension):
         # i.e., the one we are looking for. If toatt is None, we're looking at
         # the last version and, since it doesn't have an explicit timestamp,
         # we must assume that it was/will be valid at time "when".
+        op = ge if inclusive else gt
+        versions = self._getversions(row, namemapping)
         for ver in versions:
             toattval = ver[self.toatt]
             if toattval == None or op(toattval, when):
@@ -1424,8 +1427,6 @@ class SlowlyChangingDimension(Dimension):
         
     def _lookupasofusingfromatt(self, row, when, inclusive, namemapping):
         """Helper function for lookupasof"""
-        op = le if inclusive else lt
-        versions = self._getversions(row, namemapping)
         # _getversions gives back all versions [1st, 2nd, ...] sorted on
         # fromatt and with NULLS FIRST in this case (see how
         # self.keyvaliditylookupsql is made in __init__).  We revert the list
@@ -1434,6 +1435,8 @@ class SlowlyChangingDimension(Dimension):
         # valid before "when", i.e., the one we are looking for. If fromatt is
         # None, we're looking at the 1st version and, since it doesn't have an
         # explicit timestamp, we must assume that it was valid at time "when".
+        op = le if inclusive else lt
+        versions = self._getversions(row, namemapping)
         versions.reverse() 
         for ver in versions:
             fromattval = ver[self.fromatt]
@@ -1443,9 +1446,10 @@ class SlowlyChangingDimension(Dimension):
 
     def _lookupasofusingfromattandtoatt(self, row, when, inclusive, namemapping):
         """Helper function for lookupasof"""
-        # [from, to), (from, to], and [from, to] all make sense,
-        # but (from, to) does not
-        if not inclusive[0] and not inclusive[1]:
+        # At least one of the timestamps must be included as there otherwise
+        # would be gaps between versions. In other words, [from, to), (from,
+        # to], and [from, to] are possible, but (from, to) is not
+        if not any(inclusive):
             raise ValueError(
                 "At least one of inclusive[0] and inclusive[1] must be True"
             )
@@ -1462,7 +1466,9 @@ class SlowlyChangingDimension(Dimension):
                 if fromattval == None or fromop(fromattval, when):
                     return ver[self.key]
                 else:
-                    break # versions don't overlap, no need to look further
+                    # different versions don't overlap in the dimension, so no
+                    # need to look further
+                    break
         return None
 
 SCDimension = SlowlyChangingDimension
