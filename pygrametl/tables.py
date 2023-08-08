@@ -1388,16 +1388,18 @@ class SlowlyChangingDimension(Dimension):
 
         """
         if self.fromatt and self.toatt:
-            func = self._lookupasofusingfromattandtoatt
+            return self._lookupasofusingfromattandtoatt(row, when, inclusive,
+                                                        namemapping)
         elif self.fromatt:
-            func = self._lookupasofusingfromatt
+            return self._lookupasofusingfromatt(row, when, inclusive,
+                                                namemapping)
         elif self.toatt:
-            func = self._lookupasofusingtoatt
+            return self._lookupasofusingtoatt(row, when, inclusive,
+                                              namemapping)
         else:
             raise RuntimeError(
                 "fromatt and/or toatt must be set if lookupasof should be used"
             )
-        return func(row, when, inclusive, namemapping)
 
     def _getversions(self, row, namemapping):
         """Return an ordered list of all versions of a given member"""
@@ -1466,7 +1468,7 @@ class SlowlyChangingDimension(Dimension):
                 if fromattval == None or fromop(fromattval, when):
                     return ver[self.key]
                 else:
-                    # different versions don't overlap in the dimension, so no
+                    # Different versions don't overlap in the dimension, so no
                     # need to look further
                     break
         return None
