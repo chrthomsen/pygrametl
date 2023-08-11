@@ -1983,3 +1983,224 @@ class SnowflakedDimensionTest(unittest.TestCase):
         postcondition_day.assertEqual()
         postcondition_month.assertEqual()
         postcondition_year.assertEqual()
+
+
+class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
+
+    def setUp(self):
+        utilities.ensure_default_connection_wrapper()
+        self.connection_wrapper = pygrametl.getdefaulttargetconnection()
+
+    def test_lookupasof_usingto(self):
+        table = dtt.Table("customers", """
+        | id:int (pk) | name:varchar | city:varchar | todate:timestamp | version:int |
+        | ----------- | ------------ | ------------ | ---------------- | ----------- |
+        | 1           | Ann          | Aalborg      | 2001-12-31       | 1           |
+        | 2           | Bob          | Boston       | 2001-12-31       | 1           |
+        | 3           | Ann          | Aarhus       | 2002-12-31       | 2           |
+        | 4           | Charlie      | Copenhagen   | NULL             | 1           |
+        | 5           | Ann          | Aabenraa     | NULL             | 3           |
+        | 6           | Bob          | Birkelse     | 2002-12-31       | 2           |
+        """)
+        table.reset()
+        test_dimension = SlowlyChangingDimension(
+            name=table.name,
+            key=table.key(),
+            attributes=table.attributes,
+            lookupatts=['name'],
+            versionatt='version',
+            toatt='todate',
+            cachesize=100,
+            prefill=True)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-12-31", True)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-12-31", False)
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2222-12-31", True)
+        self.assertEqual(key, 5)
+        key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", True)
+        self.assertEqual(key, None)
+
+    def test_lookupasof_usingto_noversion(self):
+        table = dtt.Table("customers", """
+        | id:int (pk) | name:varchar | city:varchar | todate:timestamp |
+        | ----------- | ------------ | ------------ | ---------------- |
+        | 1           | Ann          | Aalborg      | 2001-12-31       |
+        | 2           | Bob          | Boston       | 2001-12-31       |
+        | 3           | Ann          | Aarhus       | 2002-12-31       |
+        | 4           | Charlie      | Copenhagen   | NULL             |
+        | 5           | Ann          | Aabenraa     | NULL             |
+        | 6           | Bob          | Birkelse     | 2002-12-31       |
+        """)
+        table.reset()
+        test_dimension = SlowlyChangingDimension(
+            name=table.name,
+            key=table.key(),
+            attributes=table.attributes,
+            lookupatts=['name'],
+            toatt='todate',
+            cachesize=100,
+            prefill=True)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-12-31", True)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-12-31", False)
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2222-12-31", True)
+        self.assertEqual(key, 5)
+        key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", True)
+        self.assertEqual(key, None)
+        
+    def test_lookupasof_usingfrom(self):
+        table = dtt.Table("customers", """
+        | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | version:int |
+        | ----------- | ------------ | ------------ | ------------------ | ----------- |
+        | 0           | Ann          | Arden        | NULL               | 1           |
+        | 1           | Ann          | Aalborg      | 2001-01-01         | 2           |
+        | 2           | Bob          | Boston       | 2001-01-01         | 1           |
+        | 3           | Ann          | Aarhus       | 2002-01-01         | 3           |
+        | 4           | Charlie      | Copenhagen   | 2001-01-01         | 1           |
+        | 5           | Ann          | Aabenraa     | 2003-01-01         | 4           |
+        | 6           | Bob          | Birkelse     | 2002-01-01         | 2           |
+        """)
+        table.reset()
+        test_dimension = SlowlyChangingDimension(
+            name=table.name,
+            key=table.key(),
+            attributes=table.attributes,
+            lookupatts=['name'],
+            versionatt='version',
+            fromatt='fromdate',
+            cachesize=100,
+            prefill=True)
+        key = test_dimension.lookupasof({'name':'Bob'}, "1999-05-05", True)
+        self.assertEqual(key, None)
+        key = test_dimension.lookupasof({'name':'Ann'}, "1999-12-31", True)
+        self.assertEqual(key, 0)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", True)
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", False)
+        self.assertEqual(key, 1)
+
+    def test_lookupasof_usingfrom_noversion(self):
+        table = dtt.Table("customers", """
+        | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp |
+        | ----------- | ------------ | ------------ | ------------------ |
+        | 0           | Ann          | Arden        | NULL               |
+        | 1           | Ann          | Aalborg      | 2001-01-01         |
+        | 2           | Bob          | Boston       | 2001-01-01         |
+        | 3           | Ann          | Aarhus       | 2002-01-01         |
+        | 4           | Charlie      | Copenhagen   | 2001-01-01         |
+        | 5           | Ann          | Aabenraa     | 2003-01-01         |
+        | 6           | Bob          | Birkelse     | 2002-01-01         |
+        """)
+        table.reset()
+        test_dimension = SlowlyChangingDimension(
+            name=table.name,
+            key=table.key(),
+            attributes=table.attributes,
+            lookupatts=['name'],
+            fromatt='fromdate',
+            cachesize=100,
+            prefill=True)
+        key = test_dimension.lookupasof({'name':'Bob'}, "1999-05-05", True)
+        self.assertEqual(key, None)
+        key = test_dimension.lookupasof({'name':'Ann'}, "1999-12-31", True)
+        self.assertEqual(key, 0)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", True)
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", False)
+        self.assertEqual(key, 1)
+        
+    def test_lookupasof_usingfromto(self):
+        table = dtt.Table("customers", """
+        | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | todate:timestamp | version:int |
+        | ----------- | ------------ | ------------ | ------------------ | ---------------- | ----------- |
+        | 0           | Aida         | Astrup       | NULL               | NULL             | 1           |
+        | 1           | Ann          | Aalborg      | 2001-01-01         | 2001-12-31       | 1           |
+        | 2           | Bob          | Boston       | 2001-01-01         | 2001-12-31       | 1           |
+        | 3           | Ann          | Aarhus       | 2002-01-01         | 2002-12-31       | 2           |
+        | 4           | Charlie      | Copenhagen   | 2001-01-01         | NULL             | 1           |
+        | 5           | Ann          | Aabenraa     | 2003-01-01         | NULL             | 3           |
+        | 6           | Bob          | Birkelse     | 2002-01-01         | 2002-12-31       | 2           |
+        """)
+        table.reset()
+        test_dimension = SlowlyChangingDimension(
+            name=table.name,
+            key=table.key(),
+            attributes=table.attributes,
+            lookupatts=['name'],
+            versionatt='version',
+            fromatt='fromdate',
+            toatt='todate',
+            cachesize=100,
+            prefill=True)
+        key = test_dimension.lookupasof({'name':'Aida'}, "2001-05-05", (True, True))
+        self.assertEqual(key, 0)
+        key = test_dimension.lookupasof({'name':'Ann'}, "1999-09-09", (True, False))
+        self.assertEqual(key, None)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", (True, False))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", (False, True))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-12-31", (False, True))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2002-12-31", (True, True))
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof({'name':'Charlie'}, "2002-12-31", (True, True))
+        self.assertEqual(key, 4)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2222-12-31", (True, True))
+        self.assertEqual(key, 5)
+        key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", (True, True))
+        self.assertEqual(key, None)
+        self.assertRaises(ValueError, test_dimension.lookupasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
+
+    def test_lookupasof_usingfromto_noversion(self):
+        table = dtt.Table("customers", """
+        | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | todate:timestamp |
+        | ----------- | ------------ | ------------ | ------------------ | ---------------- |
+        | 0           | Aida         | Astrup       | NULL               | NULL             |
+        | 1           | Ann          | Aalborg      | 2001-01-01         | 2001-12-31       |
+        | 2           | Bob          | Boston       | 2001-01-01         | 2001-12-31       |
+        | 3           | Ann          | Aarhus       | 2002-01-01         | 2002-12-31       |
+        | 4           | Charlie      | Copenhagen   | 2001-01-01         | NULL             |
+        | 5           | Ann          | Aabenraa     | 2003-01-01         | NULL             |
+        | 6           | Bob          | Birkelse     | 2002-01-01         | 2002-12-31       |
+        """)
+        table.reset()
+        test_dimension = SlowlyChangingDimension(
+            name=table.name,
+            key=table.key(),
+            attributes=table.attributes,
+            lookupatts=['name'],
+            fromatt='fromdate',
+            toatt='todate',
+            cachesize=100,
+            prefill=True)
+        key = test_dimension.lookupasof({'name':'Aida'}, "2001-05-05", (True, True))
+        self.assertEqual(key, 0)
+        key = test_dimension.lookupasof({'name':'Ann'}, "1999-09-09", (True, False))
+        self.assertEqual(key, None)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", (True, False))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-05-05", (False, True))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2001-12-31", (False, True))
+        self.assertEqual(key, 1)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2002-12-31", (True, True))
+        self.assertEqual(key, 3)
+        key = test_dimension.lookupasof({'name':'Charlie'}, "2002-12-31", (True, True))
+        self.assertEqual(key, 4)
+        key = test_dimension.lookupasof({'name':'Ann'}, "2222-12-31", (True, True))
+        self.assertEqual(key, 5)
+        key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", (True, True))
+        self.assertEqual(key, None)
+        self.assertRaises(ValueError, test_dimension.lookupasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
+        
