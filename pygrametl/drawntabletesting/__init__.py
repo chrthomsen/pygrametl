@@ -269,9 +269,11 @@ class Table:
             try:
                 # A table might not use the default connection wrapper
                 table.__testconnection.execute('DROP TABLE ' + name)
+                table.__testconnection.commit()
             except Exception:
                 # The exception raised for a missing table is driver dependent
                 pass
+
         cls.__createdTables.clear()
         Variable.clear()
 
@@ -298,6 +300,7 @@ class Table:
             self.__testconnection.execute('SELECT 1 FROM ' + self.name)
         except Exception:
             # The exception raised for a missing table depends on the driver
+            self.__testconnection.rollback()
             self.create()
 
             # If the table was drawn without any rows there are none to add
@@ -308,7 +311,7 @@ class Table:
 
         # If the table exists and contain the correct rows we just use it as is
         if not self.assertEqual(verbose=False):
-            raise ValueError(self.name + " contain other rows")
+            raise ValueError(self.name + " contains other rows")
 
     def update(self, index, line):
         """Create a new instance with the row specified by the index
@@ -349,6 +352,7 @@ class Table:
         """Drop the table in the database without checking the contents."""
         if self.name in type(self).__createdTables:
             self.__testconnection.execute('DROP TABLE ' + self.name)
+            self.__testconnection.commit()
             del type(self).__createdTables[self.name]
         else:
             raise ValueError(self.name + " is not created by a Table instance")

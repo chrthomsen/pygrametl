@@ -384,8 +384,8 @@ When using :mod:`.unittest`, a class must be defined for each set of tests. It
 is natural to group tests for a dimension into a class such that they can share a
 Drawn Table defining the precondition. A class using DTT to test the ETL flow for the
 ``book`` dimension is defined on Line 1. It inherits from :class:`.unittest.TestCase`
-as required by :mod:`.unittest`. Two methods are then overridden :meth:`.setUpClass()`
-and :meth:`.setUp()`.
+as required by :mod:`.unittest`. Three methods are then overridden :meth:`.setUpClass()`,
+:meth:`.setUp()`, and :meth:`tearDown()`.
 
 .. code-block:: python
 
@@ -397,7 +397,7 @@ and :meth:`.setUp()`.
 	@classmethod
 	def setUpClass(cls):
 	    cls.cw = dtt.connectionwrapper()
-	    cls.initial = dtt.Table("book", """
+   	    cls.initial = dtt.Table("book", """
 	    | bid:int (pk) | title:text            | genre:text |
 	    | ------------ | --------------------- | ---------- |
 	    | 1            | Unknown               | Unknown    |
@@ -405,8 +405,12 @@ and :meth:`.setUp()`.
 	    | 3            | Calvin and Hobbes One | Comic      |
 	    | 4            | The Silver Spoon      | Cookbook   |""")
 
+
 	def setUp(self):
-	    self.initial.reset()
+	    self.initial.ensure()
+
+	def tearDown(self):
+	    dtt.Table.clear()
 
 	def test_insertNew(self):
 	    expected = self.initial + "| 5 | Calvin and Hobbes Two | Comic |"
@@ -425,8 +429,9 @@ connection from DTT on Line 4 and defines a Drawn Table with the initial state
 of the dimension in Line 5. By creating them in :meth:`.setUpClass()`, they are
 only initialized once and can be reused for each test. To ensure the tests do
 not affect each other, which would make the result depend on the execution
-order of the tests, the ``book`` table in the database is reset before each
-test by :meth:`.setUp()`. Then on Line 15 and Line 21, the tests are implemented
+order of the tests, the ``book`` table in the database is created and filled before each
+test by :meth:`.setUp()` and subsequently dropped after the test by :meth:`tearDown()`.
+Then on Line 15 and Line 21, the tests are implemented
 as separate methods. :meth:`.test_insertNew()` tests that a row that currently
 does not exist in ``book`` is inserted correctly, while :meth:`.test_insertExisting()`
 ensures that an already existing row does not become duplicated. In this example,
