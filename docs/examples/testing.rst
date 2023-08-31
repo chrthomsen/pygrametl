@@ -405,7 +405,6 @@ as required by :mod:`.unittest`. Three methods are then overridden :meth:`.setUp
 	    | 3            | Calvin and Hobbes One | Comic      |
 	    | 4            | The Silver Spoon      | Cookbook   |""")
 
-
 	def setUp(self):
 	    self.initial.ensure()
 
@@ -431,7 +430,7 @@ only initialized once and can be reused for each test. To ensure the tests do
 not affect each other, which would make the result depend on the execution
 order of the tests, the ``book`` table in the database is created and filled before each
 test by :meth:`.setUp()` and subsequently dropped after the test by :meth:`tearDown()`.
-Then on Line 15 and Line 21, the tests are implemented
+Then on Line 16 and Line 22, the tests are implemented
 as separate methods. :meth:`.test_insertNew()` tests that a row that currently
 does not exist in ``book`` is inserted correctly, while :meth:`.test_insertExisting()`
 ensures that an already existing row does not become duplicated. In this example,
