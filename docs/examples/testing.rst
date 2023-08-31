@@ -423,14 +423,14 @@ as required by :mod:`.unittest`. Three methods are then overridden :meth:`.setUp
 	    self.initial.assertEqual()
 
 The method :meth:`.setUpClass()` is executed before the tests (methods starting
-with :attr:`test_`) in the class are executed. The method requests a database
-connection from DTT on Line 4 and defines a Drawn Table with the initial state
-of the dimension in Line 5. By creating them in :meth:`.setUpClass()`, they are
+with :attr:`test_`) in the class are executed. The method first requests a database
+connection from DTT and then defines a Drawn Table with the initial state
+of the dimension. By creating them in :meth:`.setUpClass()`, they are
 only initialized once and can be reused for each test. To ensure the tests do
 not affect each other, which would make the result depend on the execution
 order of the tests, the ``book`` table in the database is created and filled before each
 test by :meth:`.setUp()` and subsequently dropped after the test by :meth:`tearDown()`.
-Then on Line 16 and Line 22, the tests are implemented
+Finally, the tests are implemented
 as separate methods. :meth:`.test_insertNew()` tests that a row that currently
 does not exist in ``book`` is inserted correctly, while :meth:`.test_insertExisting()`
 ensures that an already existing row does not become duplicated. In this example,
