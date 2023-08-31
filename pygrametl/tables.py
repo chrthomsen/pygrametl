@@ -19,7 +19,7 @@
    dim.insert(row=..., namemapping={'order_date':'date'})
 """
 
-# Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2023, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -44,6 +44,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import locale
+from operator import ge, gt, le, lt
 from os import path
 from subprocess import Popen, PIPE
 from sys import version_info
@@ -810,12 +811,14 @@ class SlowlyChangingDimension(Dimension):
            - lookupatts: a sequence with a subset of the attributes that
              uniquely identify a dimension members. These attributes are thus
              used for looking up members.
-           - orderingatt: the name of the attribute used to identify the newest
-             version. The version holding the greatest value is considered to
-             be the newest. If orderingatt is None, versionatt is used. If
-             versionatt is also None, toatt is used and NULL is  considered as
-             the greatest value. If orderingatt, versionatt,toatt are all None,
-             an error is raised.
+           - orderingatt: the name of the attribute used to identify the
+             newest version. The version holding the greatest value is
+             considered to be the newest. If orderingatt is None, versionatt
+             is used. If versionatt is also None, toatt is used and NULL is
+             considered as the greatest value. If toatt is also None, fromatt
+             is used and NULL is considered as the smallest values. If
+             orderingatt, versionatt, toatt, and fromatt are all None, an
+             error is raised.
            - versionatt: the name of the attribute holding the version number
            - fromatt: the name of the attribute telling from when the version
              becomes valid. Not used if None. Default: None
@@ -884,6 +887,7 @@ class SlowlyChangingDimension(Dimension):
              sorting. If False, all versions are fetched and the highest
              version is found in Python. For some systems, this can lead to
              significant performance improvements. Default: True
+
         """
         # TODO: Should scdensure just override ensure instead of being a new
         #       method?
@@ -904,10 +908,11 @@ class SlowlyChangingDimension(Dimension):
             self.orderingatt = versionatt
         elif toatt is not None:
             self.orderingatt = toatt
+        elif fromatt is not None:
+            self.orderingatt = fromatt
         else:
-            raise ValueError(
-                "If orderingatt is None, either versionatt or toatt must not be None"
-                )
+            raise ValueError("If orderingatt is None, either versionatt, " +
+                             "toatt, or fromatt must not be None")
 
         self.versionatt = versionatt
         self.fromatt = fromatt
@@ -947,6 +952,11 @@ class SlowlyChangingDimension(Dimension):
         # Now extend the SQL from Dimension such that we use the versioning
         self.keylookupsql += " ORDER BY %s DESC" % \
                              (self.quote(self.orderingatt),)
+        # There could be NULLs in toatt and fromatt
+        if self.orderingatt == self.toatt:
+            self.keylookupsql += " NULLS FIRST" 
+        elif self.orderingatt == self.fromatt:
+            self.keylookupsql += " NULLS LAST"
 
         # Now create SQL for looking up the key with a local sort
         # This gives "SELECT key, version FROM name WHERE
@@ -961,6 +971,29 @@ class SlowlyChangingDimension(Dimension):
             self.updatetodatesql = \
                 "UPDATE %s SET %s = %%(%s)s WHERE %s = %%(%s)s" % \
                 (name, self.quote(toatt), toatt, self.quote(key), key)
+
+        if self.toatt or self.fromatt:
+            # Set up SQL and functions for lookupasof
+            keyvalidityatts = [self.key]
+            if self.toatt:
+                keyvalidityatts.append(self.toatt)
+            if self.fromatt:
+                keyvalidityatts.append(self.fromatt)
+            # This gives "SELECT key, {fromatt and/or toatt} FROM name
+            #             WHERE lookupval1 = %(lookupval1) AND
+            #             lookupval2 = %(lookupval2)s AND ..."
+            #             ORDER BY orderingatt ASC NULLS {LAST or FIRST}"
+            self.keyvaliditylookupsql = "SELECT " +  \
+                ", ".join(self.quotelist(keyvalidityatts)) + " FROM " + name +\
+                " WHERE " + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv)
+                                      for lv in lookupatts]) +\
+                " ORDER BY %s ASC" % (self.quote(self.orderingatt),)
+            # There could be NULLs in toatt and fromatt. See the explanation for
+            # the orderingatt argument above
+            if self.orderingatt == self.toatt:
+                self.keyvaliditylookupsql += " NULLS LAST" 
+            elif self.orderingatt == self.fromatt:
+                self.keyvaliditylookupsql += " NULLS FIRST"
 
         if self.__prefill:
             self.__prefillcaches(usefetchfirst)
@@ -1301,7 +1334,7 @@ class SlowlyChangingDimension(Dimension):
 
            The newest version will have its toatt set to the given end
            argument (default pygrametl.today(), i.e., the current date) only
-           if, the value for the newest row's toatt currently is maxto.
+           if the value for the newest row's toatt currently is maxto.
            Otherwise no update will be done.
            If toatt is not defined an exception is raised.
 
@@ -1321,6 +1354,124 @@ class SlowlyChangingDimension(Dimension):
         if existing[self.toatt] == self.maxto:
             self.update({self.key: keyval, self.toatt: end})
 
+    def lookupasof(self, row, when, inclusive, namemapping={}):
+        """Find the key of the version that was valid at a given time.
+
+           If both fromatt and toatt have been set, the method returns the key
+           of the version where the given time is between them. If only toatt
+           has been defined, the method returns the key of the first version
+           where toatt is after the given time. If only fromatt is defined,
+           the method returns the key of the most recent version where fromatt
+           is before the given time. See also the description of the argument
+           inclusive. For this to be possible, fromatt and/or toatt must have
+           been set. If this is not the case, a RuntimeError is raised. If no
+           valid version is found for the given time, None is returned.
+
+           Note that this function cannot exploit the cache and always results
+           in the execution of a SQL query.
+
+           Arguments:
+
+           - row: a dict which must contain at least the lookup attributes.
+           - when: the time when the version should be valid. This argument
+             must be of a type that can be compared (using <, <=, ==, =>, >)
+             to values in fromatt and/or toatt.
+           - inclusive: decides if the values of fromatt and/or toatt are
+             allowed to be equal to the value of when in the version to find.
+             If only one of fromatt and toatt has been set, the argument
+             should be a single Boolean. If both fromatt and toatt have been
+             set, the argument should be a tuple of two Booleans where the
+             first element decides if the fromatt value can be equal to the
+             the value of when and the second element decides the same for
+             toatt. This tuple must not be (False, False).
+           - namemapping: an optional namemapping (see module's documentation)
+
+        """
+        if self.fromatt and self.toatt:
+            return self._lookupasofusingfromattandtoatt(row, when, inclusive,
+                                                        namemapping)
+        elif self.fromatt:
+            return self._lookupasofusingfromatt(row, when, inclusive,
+                                                namemapping)
+        elif self.toatt:
+            return self._lookupasofusingtoatt(row, when, inclusive,
+                                              namemapping)
+        else:
+            raise RuntimeError(
+                "fromatt and/or toatt must be set if lookupasof should be used"
+            )
+
+    def _getversions(self, row, namemapping):
+        """Return an ordered list of all versions of a given member"""
+        # The constructed SQL depends on what arguments the user
+        # passed to __init__. 
+        self.targetconnection.execute(self.keyvaliditylookupsql, row,
+                                      namemapping)
+        return [kv for kv in self.targetconnection.rowfactory()]
+        
+    def _lookupasofusingtoatt(self, row, when, inclusive, namemapping):
+        """Helper function for lookupasof"""
+        # _getversions gives back all versions [1st, 2nd, ...] sorted on
+        # fromatt and with NULLS LAST in this case (see how
+        # self.keyvaliditylookupsql is made in __init__).  We iterate over the
+        # list and when we find a version where toatt > when (or >= if
+        # inclusive is True), it is the version that was valid at "when",
+        # i.e., the one we are looking for. If toatt is None, we're looking at
+        # the last version and, since it doesn't have an explicit timestamp,
+        # we must assume that it was/will be valid at time "when".
+        op = ge if inclusive else gt
+        versions = self._getversions(row, namemapping)
+        for ver in versions:
+            toattval = ver[self.toatt]
+            if toattval == None or op(toattval, when):
+                return ver[self.key]
+        return None
+        
+    def _lookupasofusingfromatt(self, row, when, inclusive, namemapping):
+        """Helper function for lookupasof"""
+        # _getversions gives back all versions [1st, 2nd, ...] sorted on
+        # fromatt and with NULLS FIRST in this case (see how
+        # self.keyvaliditylookupsql is made in __init__).  We revert the list
+        # and iterate over it. When we find a version where fromatt < when (or
+        # <= if inclusive is True), it is the most recent version that became
+        # valid before "when", i.e., the one we are looking for. If fromatt is
+        # None, we're looking at the 1st version and, since it doesn't have an
+        # explicit timestamp, we must assume that it was valid at time "when".
+        op = le if inclusive else lt
+        versions = self._getversions(row, namemapping)
+        versions.reverse() 
+        for ver in versions:
+            fromattval = ver[self.fromatt]
+            if fromattval == None or op(fromattval, when):
+                return ver[self.key]
+        return None
+
+    def _lookupasofusingfromattandtoatt(self, row, when, inclusive, namemapping):
+        """Helper function for lookupasof"""
+        # At least one of the timestamps must be included as there otherwise
+        # would be gaps between versions. In other words, [from, to), (from,
+        # to], and [from, to] are possible, but (from, to) is not
+        if not any(inclusive):
+            raise ValueError(
+                "At least one of inclusive[0] and inclusive[1] must be True"
+            )
+        # We do as in _lookupasofusingtoatt, but also have to check that the
+        # version had become valid (i.e., fromatt < when (or <=))
+        fromop = le if inclusive[0] else lt
+        toop = ge if inclusive[1] else gt
+        versions = self._getversions(row, namemapping)
+
+        for ver in versions:
+            toattval = ver[self.toatt]
+            if toattval == None or toop(toattval, when):
+                fromattval = ver[self.fromatt]
+                if fromattval == None or fromop(fromattval, when):
+                    return ver[self.key]
+                else:
+                    # Different versions don't overlap in the dimension, so no
+                    # need to look further
+                    break
+        return None
 
 SCDimension = SlowlyChangingDimension
 

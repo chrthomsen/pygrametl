@@ -404,7 +404,11 @@ is created. The method :meth:`.SlowlyChangingDimension.lookup` is also changed
 slightly as it returns the latest version of a row. To improve the performance
 of lookups for a slowly changing dimension, caching is used, which assumes that
 the database does not modify any values in the inserted rows; an assumption that
-the use of default values can break.
+the use of default values can break. It is also possible to lookup the version
+of a member that was valid at given time by using
+:meth:`.SlowlyChangingDimension.lookupasof`. This method, however, requires
+:attr:`.toatt` and/or :attr:`.fromatt` to be given when the
+:class:`.SlowlyChangingDimension` is created.
 
 .. code-block:: python
 
@@ -464,10 +468,17 @@ the use of default values can break.
     # scdensure extends the ensure methods with support for updating slowly
     # changing attributes of rows where lookupparts match. This is done by
     # increamenting the version attribute for the new row, and assigning the new
-    # rows fromatt to the old rows toatt, indicating that the old row is no
+    # rows' fromatt to the old rows' toatt, indicating that the old row is no
     # longer valid.
     for row in products:
 	productDimension.scdensure(row)
+
+    # This finds the key value of the newest version
+    newest = productDimension.lookup({'name': 'Calvin and Hobbes')
+
+    # This finds the key value of the version that was valid 1990-12-31
+    older = productDimension.lookupasof({'name': 'Calvin and Hobbes',
+                                        '1990-12-31', True)
 
     # Ensures that the data is committed and the connections are closed correctly
     conn.commit()
