@@ -1,18 +1,22 @@
 Unreleased
 ----------
-**Added**
-  pygrametl's existing set of unit tests to the repository. By default, the unit
-  tests are executed against an in-memory SQLite database so no configuration is
-  needed.
 
-  ``SQLTransformingSource`` a new class supporting transforming rows by loading
+Version 2.8
+-----------
+**Added**
+  pygrametl's existing set of unit tests. By default, the unit tests are executed
+  against an in-memory SQLite database so no configuration is needed.
+
+  ``SQLTransformingSource`` a new class supporting transformation of rows by loading
   them into a temporary table in an RDBMS and then retrieving them using an SQL
   query.
 
-  ``SlowlyChangingDimension.lookupasof`` allows to lookup the version of a
+  ``SlowlyChangingDimension.lookupasof`` which can be used to lookup the version of a
   member that was valid at a given time.
 
 **Changed**
+  Beginner guide updated and dataset added to it.
+
   If a ``rowexpander`` does not return a row in the form of a ``dict``,
   ``Dimension.ensure`` now explicitly raises a ``TypeError`` with the name of
   the function set as the ``rowexpander``.
@@ -38,6 +42,12 @@ Unreleased
 
   ``BulkFactTable`` constructed with ``usemultirow=True`` (the default is
   ``False``) can now load rows containing ``NULL`` values. (GitHub issue #50)
+
+  Incorrect quotation of identifiers in ``SlowlyChangingDimension`` fixed.
+
+  Missing key value of root when calling ``getbykey`` of ``SnowflakedDimension`` fixed.
+
+  Added explicit commit and rollback to fix problems with hanging DTT.
 
 Version 2.7
 -----------
@@ -97,10 +107,6 @@ Version 2.7
   strings before calling ``.split()``. In addition, the function now uses
   ``dict.items()`` instead of ``dict.iteritems()`` which is not supported in
   Python 3.
-
-  Incorrect quotation of identifiers in ``SlowlyChangingDimension`` fixed.
-
-  Missing key value of root when calling ``getbykey`` of ``SnowflakedDimension`` fixed.
 
 Version 2.6
 -----------
