@@ -3,7 +3,7 @@
    provide dicts that map from attribute names to attribute values.
 """
 
-# Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2023, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without

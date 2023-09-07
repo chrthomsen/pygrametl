@@ -18,7 +18,7 @@
      removed in first-in first-out order
 """
 
-# Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
+# Copyright (c) 2009-2023, Aalborg University (pygrametl@cs.aau.dk)
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ else:  # For Python 3
     _DBBaseException = Exception
 
 
-__version__ = '2.7'
+__version__ = '2.8'
 __all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom',
            'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr',
            'getstrornullvalue', 'getdbfriendlystr', 'getbool', 'getdate',
