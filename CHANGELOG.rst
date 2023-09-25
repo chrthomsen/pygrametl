@@ -1,5 +1,8 @@
 Unreleased
 ----------
+**Fixed**
+  All uses of ``open()`` in the beginner guide now include "utf-8" to minimize
+  the change of errors due to different encodings.
 
 Version 2.8
 -----------
