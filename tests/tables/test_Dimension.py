@@ -1006,6 +1006,21 @@ class SlowlyChangingDimensionTest(DimensionTest):
                 cachesize=100,
                 prefill=True)
 
+    def test_type1atts_cannot_be_lookupatts(self):
+        with self.assertRaises(ValueError):
+            SlowlyChangingDimension(
+                name=self.initial.name,
+                key=self.initial.key(),
+                attributes=self.initial.attributes,
+                lookupatts=['name', "age"],
+                versionatt='version',
+                fromatt='fromdate',
+                toatt='todate',
+                type1atts=['age'],
+                srcdateatt='from',
+                cachesize=100,
+                prefill=True)
+
     # The lookup method in Dimension is overridden in SlowlyChangingDimension
     def test_lookup(self):
         postcondition = self.initial

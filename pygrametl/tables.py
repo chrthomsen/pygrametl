@@ -935,6 +935,10 @@ class SlowlyChangingDimension(Dimension):
         self.srcdateparser = srcdateparser
         self.type1atts = \
             [att if type(att) is str else att[0] for att in type1atts]
+        type1lookupatts = set(self.type1atts) & set(self.lookupatts)
+        if type1lookupatts:
+            raise ValueError(", ".join(type1lookupatts) +
+                             " in both type1atts and lookupatts argument")
         self.type1attsupdateall = dict(
             [(att, True) if type(att) is str else att for att in type1atts])
         self.useorderby = useorderby
@@ -997,7 +1001,7 @@ class SlowlyChangingDimension(Dimension):
             # There could be NULLs in toatt and fromatt. See the explanation for
             # the orderingatt argument above
             if self.orderingatt == self.toatt:
-                self.keyvaliditylookupsql += " NULLS LAST" 
+                self.keyvaliditylookupsql += " NULLS LAST"
             elif self.orderingatt == self.fromatt:
                 self.keyvaliditylookupsql += " NULLS FIRST"
 
