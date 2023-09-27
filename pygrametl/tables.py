@@ -866,7 +866,10 @@ class SlowlyChangingDimension(Dimension):
              Default: pygrametl.ymdparser (i.e., the default value is a
              function that parses a string of the form 'yyyy-MM-dd')
            - type1atts: a sequence of attributes that should have type1 updates
-             applied. Default: ()
+             applied. Each attribute can be its name as a string meaning all
+             versions of it will be updated or a tuple with the its name as a
+             string and a boolean flag specifying if all version of it should be
+             updated (True) or only the latest one (False). Default: ()
            - cachesize: the maximum size of the cache. 0 disables caching
              and values smaller than 0 allows unlimited caching
            - prefill: decides if the cache should be prefilled with the newest
@@ -930,7 +933,10 @@ class SlowlyChangingDimension(Dimension):
         self.maxto = maxto
         self.srcdateatt = srcdateatt
         self.srcdateparser = srcdateparser
-        self.type1atts = type1atts
+        self.type1atts = set(
+            [att if type(att) is str else att[0] for att in type1atts])
+        self.type1attsupdateall = dict(
+            [(att, True) if type(att) is str else att for att in type1atts])
         self.useorderby = useorderby
         if cachesize > 0:
             self.rowcache = FIFODict(cachesize)
@@ -954,7 +960,7 @@ class SlowlyChangingDimension(Dimension):
                              (self.quote(self.orderingatt),)
         # There could be NULLs in toatt and fromatt
         if self.orderingatt == self.toatt:
-            self.keylookupsql += " NULLS FIRST" 
+            self.keylookupsql += " NULLS FIRST"
         elif self.orderingatt == self.fromatt:
             self.keylookupsql += " NULLS LAST"
 
@@ -1312,18 +1318,34 @@ class SlowlyChangingDimension(Dimension):
 
     def __performtype1updates(self, updates, lookupvalues, namemapping={}):
         """ """
-        # find the keys in the rows that should be updated
-        self.targetconnection.execute(self.keylookupsql, lookupvalues,
-                                      namemapping)
-        updatekeys = [e[0] for e in self.targetconnection.fetchalltuples()]
-        updatekeys.reverse()
+        # Perform type 1 updates for the latest version
+        updateslatest = { att:value for (att, value) in updates.items()
+                          if not self.type1attsupdateall[att] }
+        if updateslatest:
+            self.__executetype1updates([lookupvalues[self.key]], updateslatest)
+
+        # Perform type 1 updates for all version
+        updatesall = { att:value for (att, value) in updates.items()
+                       if self.type1attsupdateall[att] }
+        if updatesall:
+            self.targetconnection.execute(self.keylookupsql, lookupvalues,
+                                          namemapping)
+            updatekeys = [e[0] for e in self.targetconnection.fetchalltuples()]
+            updatekeys.reverse()
+            self.__executetype1updates(updatekeys, updatesall)
+
+    def __executetype1updates(self, updatekeys, updates):
+        """ """
         # Generate SQL for the update
         valparts = ", ".join(
             ["%s = %%(%s)s" % (self.quote(k), k) for k in updates])
         keyparts = ", ".join([str(k) for k in updatekeys])
         sql = "UPDATE %s SET %s WHERE %s IN (%s)" % \
             (self.name, valparts, self.quote(self.key), keyparts)
+
+        # Execute SQL to perform the update
         self.targetconnection.execute(sql, updates)
+
         # Remove from our own cache
         for key in updatekeys:
             if key in self.rowcache:
@@ -1408,7 +1430,7 @@ class SlowlyChangingDimension(Dimension):
         self.targetconnection.execute(self.keyvaliditylookupsql, row,
                                       namemapping)
         return [kv for kv in self.targetconnection.rowfactory()]
-        
+
     def _lookupasofusingtoatt(self, row, when, inclusive, namemapping):
         """Helper function for lookupasof"""
         # _getversions gives back all versions [1st, 2nd, ...] sorted on
@@ -1426,7 +1448,7 @@ class SlowlyChangingDimension(Dimension):
             if toattval == None or op(toattval, when):
                 return ver[self.key]
         return None
-        
+
     def _lookupasofusingfromatt(self, row, when, inclusive, namemapping):
         """Helper function for lookupasof"""
         # _getversions gives back all versions [1st, 2nd, ...] sorted on
@@ -1439,7 +1461,7 @@ class SlowlyChangingDimension(Dimension):
         # explicit timestamp, we must assume that it was valid at time "when".
         op = le if inclusive else lt
         versions = self._getversions(row, namemapping)
-        versions.reverse() 
+        versions.reverse()
         for ver in versions:
             fromattval = ver[self.fromatt]
             if fromattval == None or op(fromattval, when):
