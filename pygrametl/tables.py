@@ -933,8 +933,8 @@ class SlowlyChangingDimension(Dimension):
         self.maxto = maxto
         self.srcdateatt = srcdateatt
         self.srcdateparser = srcdateparser
-        self.type1atts = set(
-            [att if type(att) is str else att[0] for att in type1atts])
+        self.type1atts = \
+            [att if type(att) is str else att[0] for att in type1atts]
         self.type1attsupdateall = dict(
             [(att, True) if type(att) is str else att for att in type1atts])
         self.useorderby = useorderby
@@ -950,7 +950,7 @@ class SlowlyChangingDimension(Dimension):
 
         # Check that versionatt, fromatt and toatt are also declared as
         # attributes
-        for var in (orderingatt, versionatt, fromatt, toatt):
+        for var in [orderingatt, versionatt, fromatt, toatt] + self.type1atts:
             if var and var not in attributes:
                 raise ValueError("%s not present in attributes argument" %
                                  (var,))
