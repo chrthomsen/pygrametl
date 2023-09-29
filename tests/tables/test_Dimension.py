@@ -901,7 +901,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
             versionatt='version',
             fromatt='fromdate',
             toatt='todate',
-            type1atts='age',
+            type1atts=['age'],
             srcdateatt='from',
             cachesize=100,
             prefill=True)
@@ -990,6 +990,36 @@ class SlowlyChangingDimensionTest(DimensionTest):
                 {"id": 6, "name": "Eric", "age": 50, "city": "Ebeltoft",
                  "fromdate": "2010-02-02", "todate": "2010-02-02",
                  "version": 1}]
+
+    def test_type1atts_must_be_attributes(self):
+        with self.assertRaises(ValueError):
+            SlowlyChangingDimension(
+                name=self.initial.name,
+                key=self.initial.key(),
+                attributes=self.initial.attributes,
+                lookupatts=['name'],
+                versionatt='version',
+                fromatt='fromdate',
+                toatt='todate',
+                type1atts=['surname'],
+                srcdateatt='from',
+                cachesize=100,
+                prefill=True)
+
+    def test_type1atts_cannot_be_lookupatts(self):
+        with self.assertRaises(ValueError):
+            SlowlyChangingDimension(
+                name=self.initial.name,
+                key=self.initial.key(),
+                attributes=self.initial.attributes,
+                lookupatts=['name', "age"],
+                versionatt='version',
+                fromatt='fromdate',
+                toatt='todate',
+                type1atts=['age'],
+                srcdateatt='from',
+                cachesize=100,
+                prefill=True)
 
     # The lookup method in Dimension is overridden in SlowlyChangingDimension
     def test_lookup(self):
@@ -1142,7 +1172,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
             {'name': 'Ann', 'age': 21, 'city': 'Aarhus', 'from': '2010-03-03'})
         postcondition.assertEqual()
 
-    def test_scdensure_type1_change_new_row(self):
+    def test_scdensure_type1_change_all_rows(self):
         # A new row should be inserted for Ann and age should be 21 in all rows
         postcondition = self.initial.update(0, "| 1 | Ann | 21 | Aalborg | 2010-01-01 | 2010-03-03 | 1 |") \
                                     .update(2, "| 3 | Ann | 21 | Aarhus  | 2010-03-03 | 2010-04-04 | 2 |") \
@@ -1150,6 +1180,27 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         self.test_dimension.scdensure(
             {'name': 'Ann', 'age': 21, 'city': 'Aabenraa', 'from': '2010-04-04'})
+
+        postcondition.assertEqual()
+
+    def test_scdensure_type1_change_only_latest_rows(self):
+        # No new rows should be inserted for Ann and age should be 21 in the latest row
+        postcondition = self.initial.update(2, "| 3 | Ann | 21 | Aarhus | 2010-03-03 | NULL | 2 |")
+        self.test_dimension.type1attsupdateall['age'] = False  # Only update the latest version
+
+        self.test_dimension.scdensure(
+            {'name': 'Ann', 'age': 21, 'city': 'Aarhus', 'from': '2010-03-03'})
+
+        postcondition.assertEqual()
+
+    def test_scdensure_type1_and_type2_change_only_latest_rows(self):
+        # No new rows should be inserted for Ann and age should be 21 in the latest row
+        postcondition = self.initial.update(2, "| 3 | Ann | 20 | Aarhus  | 2010-03-03 | 2010-04-05 | 2 |") \
+                                    + "| 5 | Ann | 21 | Aalborg | 2010-04-05 | NULL | 3 |"
+        self.test_dimension.type1attsupdateall['age'] = False  # Only update the latest version
+
+        self.test_dimension.scdensure(
+            {'name': 'Ann', 'age': 21, 'city': 'Aalborg', 'from': '2010-04-05'})
 
         postcondition.assertEqual()
 
