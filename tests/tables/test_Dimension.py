@@ -1193,6 +1193,17 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         postcondition.assertEqual()
 
+    def test_scdensure_type1_and_type2_change_only_latest_rows(self):
+        # No new rows should be inserted for Ann and age should be 21 in the latest row
+        postcondition = self.initial.update(2, "| 3 | Ann | 20 | Aarhus  | 2010-03-03 | 2010-04-05 | 2 |") \
+                                    + "| 5 | Ann | 21 | Aalborg | 2010-04-05 | NULL | 3 |"
+        self.test_dimension.type1attsupdateall['age'] = False  # Only update the latest version
+
+        self.test_dimension.scdensure(
+            {'name': 'Ann', 'age': 21, 'city': 'Aalborg', 'from': '2010-04-05'})
+
+        postcondition.assertEqual()
+
     def test_scdensure_two_newversions(self):
         postcondition = self.initial.update(
             2, "| 3 | Ann | 20 | Aarhus | 2010-03-03 | 2010-04-04 | 2 |") \

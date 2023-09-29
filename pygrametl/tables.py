@@ -1220,7 +1220,7 @@ class SlowlyChangingDimension(Dimension):
 
             if len(type1updates) > 0:
                 # Some type 1 updates were found
-                self.__preparetype1updates(type1updates, other)
+                self.__preparetype1updates(type1updates, other, addnewversion)
 
             if addnewversion:  # type 2
                 # Make a new row version and insert it
@@ -1320,20 +1320,19 @@ class SlowlyChangingDimension(Dimension):
             tmp[self.key] = newkeyvalue
             self._after_getbykey(newkeyvalue, tmp)
 
-    def __preparetype1updates(self, updates, lookupvalues, namemapping={}):
+    def __preparetype1updates(self, updates, lookupvalues, type2changes):
         """ """
         # Perform type 1 updates for the latest version
         updateslatest = { att:value for (att, value) in updates.items()
                           if not self.type1attsupdateall[att] }
-        if updateslatest:
+        if updateslatest and not type2changes:
             self.__performtype1updates([lookupvalues[self.key]], updateslatest)
 
         # Perform type 1 updates for all version
         updatesall = { att:value for (att, value) in updates.items()
                        if self.type1attsupdateall[att] }
         if updatesall:
-            self.targetconnection.execute(self.keylookupsql, lookupvalues,
-                                          namemapping)
+            self.targetconnection.execute(self.keylookupsql, lookupvalues)
             updatekeys = [e[0] for e in self.targetconnection.fetchalltuples()]
             updatekeys.reverse()
             self.__performtype1updates(updatekeys, updatesall)
