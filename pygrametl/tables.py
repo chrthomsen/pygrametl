@@ -1322,7 +1322,8 @@ class SlowlyChangingDimension(Dimension):
 
     def __preparetype1updates(self, updates, lookupvalues, type2changes):
         """ """
-        # Perform type 1 updates for the latest version
+        # Perform type 1 updates for the latest version unless type2changes is
+        # True as the latest version then is a new version about to be inserted
         updateslatest = { att:value for (att, value) in updates.items()
                           if not self.type1attsupdateall[att] }
         if updateslatest and not type2changes:
