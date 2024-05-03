@@ -1,6 +1,12 @@
 pygrametl
 =========
-.. image:: https://github.com/chrthomsen/pygrametl/actions/workflows/python-unittest-on-pr-and-push.yml/badge.svg
+|badge1| |badge2|
+
+.. |badge1| image:: https://github.com/chrthomsen/pygrametl/actions/workflows/python-unittest-on-pr-and-push.yml/badge.svg
+   :target: https://github.com/chrthomsen/pygrametl/actions
+
+.. |badge2| image:: https://img.shields.io/pypi/dm/pygrametl?style=flat&label=Downloads
+   :target: https://pypi.org/project/pygrametl/
 
 `pygrametl <http://pygrametl.com>`_ (pronounced py-gram-e-t-l) is a Python framework that provides functionality commonly used when developing Extract-Transform-Load (ETL) programs. It is fully open-source and released under a 2-clause BSD license. As shown in the figure below, an ETL program that uses pygrametl is a standard Python program that imports pygrametl and uses the abstractions it provides. To provide developers with complete control over the data warehouse's schema, pygrametl assumes that all of the dimension tables and fact tables used in the ETL program have already been created using SQL.
 
