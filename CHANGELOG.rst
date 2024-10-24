@@ -8,6 +8,9 @@ Unreleased
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize
   the chance of errors due to different encodings.
 
+  ``dependson`` is now a list instead of a filter iterator. This fixes the issue 
+  where dependencies only loaded on the furst bulk load.
+
 Version 2.8
 -----------
 **Added**
