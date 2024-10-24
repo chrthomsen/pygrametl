@@ -9,7 +9,7 @@ Unreleased
   the chance of errors due to different encodings.
 
   ``dependson`` is now a list instead of a filter iterator. This fixes the issue 
-  where dependencies only loaded on the furst bulk load.
+  where dependencies only loaded on the first bulk load.
 
 Version 2.8
 -----------
