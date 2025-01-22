@@ -33,8 +33,8 @@ must have the following signature:
 
 PostgreSQL
 ----------
-For PostgreSQL the `copy_from
-<http://initd.org/psycopg/docs/cursor.html#cursor.copy_from>`__ method from
+For PostgreSQL the `copy_expert
+<https://www.psycopg.org/docs/cursor.html#cursor.copy_expert>`__ method from
 psycopg2 can be used:
 
 .. code-block:: python
@@ -43,8 +43,10 @@ psycopg2 can be used:
     def pgbulkloader(name, attributes, fieldsep, rowsep, nullval, filehandle):
 	global connection
 	cursor = connection.cursor()
-	cursor.copy_from(file=filehandle, table=name, sep=fieldsep, null=nullval,
-			     columns=attributes)
+	cursor.copy_expert(
+		f"COPY {name} ({','.join(attributes)}) FROM STDIN WITH (FORMAT csv, DELIMITER '{fieldsep}', NULL '{nullval}');",
+		filehandle
+	)
 
 If Jython is used the `copyIn
 <https://jdbc.postgresql.org/documentation/publicapi/org/postgresql/copy/CopyManager.html#copyIn-java.lang.String->`__
