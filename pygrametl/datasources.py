@@ -120,7 +120,7 @@ class SQLSource(object):
              the connection's cursor method is called. Default: None.
            - parameters: if not None, this sequence or mapping of parameters
              will be sent when the query is executed.
-           - fetch_size: The amount of rows to fetch into memory for each roundtrip to the source.
+           - fetch_size: The amount of rows to fetch into memory for each round trip to the source.
              All rows will be fetched at once if fetch_size is set to 0 or less.
         """
         self.connection = connection
@@ -167,7 +167,7 @@ class SQLSource(object):
                 for row in data:
                     yield dict(zip(names, row))
 
-                # It is not well defined in pep249 what fetchall will do if called twice
+                # It is not well defined in PEP 249 what fetchall will do if called twice
                 # Therefore it is safest to break the loop if fetchall is used
                 if fetch_size <= 0:
                     break

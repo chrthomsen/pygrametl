@@ -11,9 +11,9 @@ Unreleased
   ``dependson`` is now a list instead of a filter iterator. This fixes issue #72 
   where dependencies were only loaded in the first bulk load.
 
-  **Changed**
-  SQLSource now has a ``fetch_size`` constructor parameter such the end-user can
-  control how much data should be held in main memory for each round trip to the SQLSource.
+**Changed**
+  ``SQLSource`` now has a ``fetch_size`` constructor parameter so the end-user can
+  control how much data should be held in main memory for each round trip to the RDBMS.
 
 Version 2.8
 -----------
