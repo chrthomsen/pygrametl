@@ -12,9 +12,9 @@ Unreleased
   where dependencies were only loaded in the first bulk load.
 
 **Changed**
-  Changed psycopg2 bulkloader documentation to use copy_expert instead of copy_from.
-  This solves issue #74, where newer psycopg2 versions escape table names to avoid
-  sql injection.
+  Changed psycopg2 bulkloader documentation to use ``copy_expert`` instead of 
+  ``copy_from``. This solves issue #74, where newer psycopg2 versions escape 
+  table names to avoid sql injection.
 
 Version 2.8
 -----------
