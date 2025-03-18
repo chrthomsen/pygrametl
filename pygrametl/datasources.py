@@ -106,7 +106,7 @@ class SQLSource(object):
     """A class for iterating the result set of a single SQL query."""
 
     def __init__(self, connection, query, names=(), initsql=None,
-                 cursorarg=None, parameters=None):
+                 cursorarg=None, parameters=None, fetchsize=500):
         """Arguments:
 
            - connection: the PEP 249 connection to use. NOT a
@@ -120,6 +120,8 @@ class SQLSource(object):
              the connection's cursor method is called. Default: None.
            - parameters: if not None, this sequence or mapping of parameters
              will be sent when the query is executed.
+           - fetchsize: The amount of rows to fetch into memory for each round trip to the source.
+             All rows will be fetched at once if fetchsize is set to 0 or less.
         """
         self.connection = connection
         if cursorarg is not None:
@@ -145,7 +147,11 @@ class SQLSource(object):
                     names = self.names or \
                         [t[0] for t in self.cursor.description]
             while True:
-                data = self.cursor.fetchmany(500)
+                if fetchsize <= 0:
+                    data = self.cursor.fetchall()
+                else:
+                    data = self.cursor.fetchmany(fetchsize)
+
                 if not data:
                     break
                 if not names:
@@ -160,6 +166,11 @@ class SQLSource(object):
                         "%d given, %d needed." % (len(names), len(data[0])))
                 for row in data:
                     yield dict(zip(names, row))
+
+                # It is not well defined in PEP 249 what fetchall will do if called twice
+                # Therefore it is safest to break the loop if fetchall is used
+                if fetchsize <= 0:
+                    break
         finally:
             try:
                 self.cursor.close()
