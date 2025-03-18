@@ -12,7 +12,7 @@ Unreleased
   where dependencies were only loaded in the first bulk load.
 
 **Changed**
-  ``SQLSource`` now has a ``fetch_size`` constructor parameter so the end-user can
+  ``SQLSource`` now has a ``fetchsize`` constructor parameter so the end-user can
   control how much data should be held in main memory for each round trip to the RDBMS.
 
 Version 2.8
