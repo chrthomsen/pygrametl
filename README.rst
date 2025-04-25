@@ -8,9 +8,9 @@ pygrametl
 .. |badge2| image:: https://img.shields.io/pypi/dm/pygrametl?style=flat&label=Downloads
    :target: https://pypi.org/project/pygrametl/
 
-`pygrametl <http://pygrametl.com>`_ (pronounced py-gram-e-t-l) is a Python framework that provides functionality commonly used when developing Extract-Transform-Load (ETL) programs. It is fully open-source and released under a 2-clause BSD license. As shown in the figure below, an ETL program that uses pygrametl is a standard Python program that imports pygrametl and uses the abstractions it provides. To provide developers with complete control over the data warehouse's schema, pygrametl assumes that all of the dimension tables and fact tables used in the ETL program have already been created using SQL.
+`pygrametl <http://pygrametl.org>`_ (pronounced py-gram-e-t-l) is a Python framework that provides functionality commonly used when developing Extract-Transform-Load (ETL) programs. It is fully open-source and released under a 2-clause BSD license. As shown in the figure below, an ETL program that uses pygrametl is a standard Python program that imports pygrametl and uses the abstractions it provides. To provide developers with complete control over the data warehouse's schema, pygrametl assumes that all of the dimension tables and fact tables used in the ETL program have already been created using SQL.
 
-.. image:: http://chrthomsen.github.io/pygrametl/assets/etl-with-pygrametl.svg
+.. image:: https://pygrametl.org/assets/etl-with-pygrametl.svg
 
 Defining the data warehouse's schema using SQL and implementing the ETL program itself using standard Python turns out to be very efficient and effective, even when compared to drawing the program in a graphical user interface like Apache Hop or Pentaho Data Integration. pygrametl supports CPython and Jython so both existing Python code that uses native extensions models and PEP 249 connectors and JVM-based code that uses JDBC drivers can be used in the ETL program.
 
@@ -28,13 +28,13 @@ The current development version of pygrametl is available on `GitHub <https://gi
 
 :code:`$ git clone https://github.com/chrthomsen/pygrametl.git`
 
-For more information about installation see the `Install Guide <http://pygrametl.com/doc/quickstart/install.html>`_.
+For more information about installation see the `Install Guide <http://pygrametl.org/doc/quickstart/install.html>`_.
 
 Documentation
 -------------
-The documentation is available in `HTML <http://pygrametl.com/doc/index.html>`_ and as a `PDF <http://pygrametl.com/doc/pygrametl.pdf>`_. There are also `installation <http://pygrametl.com/doc/quickstart/install.html>`_ and `beginner <http://pygrametl.com/doc/quickstart/beginner.html>`_ guides available.
+The documentation is available in `HTML <http://pygrametl.org/doc/index.html>`_ and as a `PDF <http://pygrametl.org/doc/pygrametl.pdf>`_. There are also `installation <http://pygrametl.org/doc/quickstart/install.html>`_ and `beginner <http://pygrametl.org/doc/quickstart/beginner.html>`_ guides available.
 
-In addition to the documentation, multiple papers have been published about pygrametl. The papers are listed `here <http://pygrametl.com/#documentation>`_ and provide a more detailed description of the foundational ideas behind pygrametl but is obviously not keep up to date with changes and improvements implemented in the framework, for such see the documentation. If you use pygrametl in academia, please cite the relevant paper(s).
+In addition to the documentation, multiple papers have been published about pygrametl. The papers are listed `here <http://pygrametl.org/#documentation>`_ and provide a more detailed description of the foundational ideas behind pygrametl but is obviously not keep up to date with changes and improvements implemented in the framework, for such see the documentation. If you use pygrametl in academia, please cite the relevant paper(s).
 
 Community
 ---------
