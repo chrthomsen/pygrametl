@@ -10,7 +10,7 @@ pygrametl
 
 `pygrametl <http://pygrametl.org>`_ (pronounced py-gram-e-t-l) is a Python framework that provides functionality commonly used when developing Extract-Transform-Load (ETL) programs. It is fully open-source and released under a 2-clause BSD license. As shown in the figure below, an ETL program that uses pygrametl is a standard Python program that imports pygrametl and uses the abstractions it provides. To provide developers with complete control over the data warehouse's schema, pygrametl assumes that all of the dimension tables and fact tables used in the ETL program have already been created using SQL.
 
-.. image:: http://chrthomsen.github.io/pygrametl/assets/etl-with-pygrametl.svg
+.. image:: https://pygrametl.org/assets/etl-with-pygrametl.svg
 
 Defining the data warehouse's schema using SQL and implementing the ETL program itself using standard Python turns out to be very efficient and effective, even when compared to drawing the program in a graphical user interface like Apache Hop or Pentaho Data Integration. pygrametl supports CPython and Jython so both existing Python code that uses native extensions models and PEP 249 connectors and JVM-based code that uses JDBC drivers can be used in the ETL program.
 
