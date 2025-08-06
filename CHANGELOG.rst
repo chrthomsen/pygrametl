@@ -4,6 +4,9 @@ Unreleased
   Support for specifying if all or only the latest version of a member should be
   updated when type 1 updates are applied to ``SlowlyChangingDimension``.
 
+  ``lookuprow`` doing ``lookup`` followed by ``getbykey`` added to ``Dimension``
+  classes and ``Dimension``-like classes.
+
 **Fixed**
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize
   the chance of errors due to different encodings.

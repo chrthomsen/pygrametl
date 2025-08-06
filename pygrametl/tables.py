@@ -111,7 +111,7 @@ class Dimension(object):
              table. Should not include the name of the primary key which is
              given in the key argument.
            - lookupatts: A subset of the attributes that uniquely identify
-             a dimension members. These attributes are thus used for looking
+             a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
              lookupatts = attributes
            - idfinder: A function(row, namemapping) -> key value that assigns
@@ -372,6 +372,31 @@ class Dimension(object):
     def _after_insert(self, row, namemapping, newkeyvalue):
         pass
 
+    def lookuprow(self, row, namemapping={}):
+        """Perform a lookup followed by a getbykey. Given a row with
+           the lookupatts, a row with all attributes is thus returned
+           if it exists in the dimension table. Otherwise, a row where
+           all values (including the key) are None is returned.
+
+           Arguments:
+
+           - row: A dict which must contain at least the lookupatts. All other
+             items are ignored. The dict is not modified.
+           - namemapping: an optional namemapping (see module's documentation)
+        """
+        res = self._before_lookuprow(row, namemapping)
+        if res is not None:
+            return res
+        res = self.getbykey(self.lookup(row, namemapping))
+        self._after_lookuprow(row, namemapping, res)
+        return res
+
+    def _before_lookuprow(self, row, namemapping):
+        return None
+
+    def _after_lookuprow(self, row, namemapping, resultrow):
+        pass
+
     def _getnextid(self, ignoredrow, ignoredmapping):
         self.__maxid += 1
         return self.__maxid
@@ -404,7 +429,7 @@ class CachedDimension(Dimension):
              table. Should not include the name of the primary key which is
              given in the key argument.
            - lookupatts: A subset of the attributes that uniquely identify
-             a dimension members. These attributes are thus used for looking
+             a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
              lookupatts = attributes
            - idfinder: A function(row, namemapping) -> key value that assigns
@@ -604,7 +629,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
              table. Should not include the name of the primary key which is
              given in the key argument.
            - lookupatts: A subset of the attributes that uniquely identify
-             a dimension members. These attributes are thus used for looking
+             a dimension member. These attributes are thus used for looking
              up members.
            - type1atts: A sequence of attributes that should have type1 updates
              applied, it cannot intersect with lookupatts. If not given, it is
@@ -809,7 +834,7 @@ class SlowlyChangingDimension(Dimension):
              given in the key argument, but should include versionatt,
              fromatt, and toatt.
            - lookupatts: a sequence with a subset of the attributes that
-             uniquely identify a dimension members. These attributes are thus
+             uniquely identify a dimension member. These attributes are thus
              used for looking up members.
            - orderingatt: the name of the attribute used to identify the
              newest version. The version holding the greatest value is
@@ -1806,6 +1831,37 @@ class SnowflakedDimension(object):
     def _after_insert(self, row, namemapping, newkeyvalue):
         pass
 
+    def lookuprow(self, row, namemapping={}, fullrow=False):
+        """Perform a lookup followed by a getbykey. Given a row with
+           the lookupatts, a row with all attributes is thus returned
+           if it exists in the dimension table. Otherwise, a row where
+           all values (including the key) are None is returned. In both cases,
+           the fullrow argument decides if the returned dict should have keys
+           for only the lowest level or for all levels.
+
+           Arguments:
+
+           - row: A dict which must contain at least the lookupatts. All other
+             items are ignored. The dict is not modified.
+           - namemapping: an optional namemapping (see module's documentation)
+           - fullrow: a flag deciding if the full row (with data from
+             all tables in the snowflake) should be returned. If False,
+             only data from the lowest level in the hierarchy (i.e., the table
+             the closest to the fact table) is returned. Default: False
+        """
+        res = self._before_lookuprow(row, namemapping, fullrow)
+        if res is not None:
+            return res
+        res = self.getbykey(self.lookup(row, namemapping, fullrow))
+        self._after_lookuprow(row, namemapping, fullrow, res)
+        return res
+
+    def _before_lookuprow(self, row, namemapping, fullrow):
+        return None
+
+    def _after_lookuprow(self, row, namemapping, fullrow, resultrow):
+        pass
+
     def endload(self):
         """Finalize the load."""
         pass
@@ -2504,7 +2560,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
              1) a string with a filename or 2) a file object. This is
              determined by the usefilename argument (see below).
            - lookupatts: A subset of the attributes that uniquely identify
-             a dimension members. These attributes are thus used for looking
+             a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
              lookupatts = attributes
            - idfinder: A function(row, namemapping) -> key value that assigns
@@ -2696,7 +2752,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              1) a string with a filename or 2) a file object. This is
              determined by the usefilename argument (see below).
            - lookupatts: A subset of the attributes that uniquely identify
-             a dimension members. These attributes are thus used for looking
+             a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
              lookupatts = attributes
            - idfinder: A function(row, namemapping) -> key value that assigns
@@ -3008,7 +3064,7 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
            process"""
         return self._enqueue('getbykey', keyvalue)
 
-    def getbyvals(self, row, namemapping={}):
+    def getbyvals(self, row, namemapping={}, **rest):
         "Invoke betbycals on the decoupled Dimension in the separate process"
         return self._enqueue('getbyvals', row, namemapping)
 
@@ -3019,6 +3075,10 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
     def ensure(self, row, namemapping={}):
         """Invoke ensure on the decoupled Dimension in the separate process"""
         return self._enqueue('ensure', row, namemapping)
+
+    def lookuprow(self, row, namemapping={}):
+        """Invoke lookuprow on the decoupled Dimension in the separate process"""
+        return self._enqueue('lookuprow', row, namemapping)
 
     def endload(self):
         """Invoke endload on the decoupled Dimension in the separate process and
@@ -3229,6 +3289,11 @@ class DimensionPartitioner(BasePartitioner):
     def getbykey(self, keyvalue):
         """Invoke getbykey on the relevant Dimension part"""
         return self.__getbykeyhelper(keyvalue)[0]
+
+    def lookuprow(self, row, namemapping={}):
+        """Invoke lookup followed by getbykey on the relevant Dimension part"""
+        part = self.getpart(row, namemapping)
+        return part.getbykey(part.lookup(row, namemapping))
 
     def getbyvals(self, values, namemapping={}):
         """Invoke getbyvals on the first part or all parts (depending on the

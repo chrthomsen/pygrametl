@@ -206,6 +206,55 @@ class DimensionTest(unittest.TestCase):
 
         postcondition.assertEqual()
 
+    def test_lookuprow(self):
+        postcondition = self.initial
+        expected_row = self.get_existing_row(withkey=True)
+        actual_row = self.test_dimension.lookuprow(expected_row)
+        self.connection_wrapper.commit()
+
+        self.assertDictEqual(expected_row, actual_row)
+        postcondition.assertEqual()
+
+    def test_lookuprow_nonexisting_row(self):
+        postcondition = self.initial
+        nonexisting = self.generate_nonexisting_row(withkey=False)
+        result = self.test_dimension.lookuprow(nonexisting)
+        self.connection_wrapper.commit()
+
+        for att in result:
+            self.assertIsNone(result[att])
+
+        postcondition.assertEqual()
+
+    def test_lookuprow_with_lookupatts(self):
+        dimension = Dimension(name=self.initial.name,
+                              key=self.initial.key(),
+                              attributes=self.initial.attributes,
+                              lookupatts={"title"})
+        postcondition = self.initial
+        expected_row = self.get_existing_row(withkey=True)
+        actual_row = dimension.lookuprow(expected_row)
+        self.connection_wrapper.commit()
+
+        self.assertDictEqual(expected_row, actual_row)
+        postcondition.assertEqual()
+
+
+    def test_lookuprow_with_lookupatts_nonexisting_row(self):
+        dimension = Dimension(name=self.initial.name,
+                              key=self.initial.key(),
+                              attributes=self.initial.attributes,
+                              lookupatts={"title"})
+        postcondition = self.initial
+        nonexisting = self.generate_nonexisting_row(withkey=False)
+        result = dimension.lookuprow(nonexisting)
+        self.connection_wrapper.commit()
+
+        for att in result:
+            self.assertIsNone(result[att])
+
+        postcondition.assertEqual()
+
     def test_getbyvals(self):
         postcondition = self.initial
         vals, expected_num_of_rows = \
