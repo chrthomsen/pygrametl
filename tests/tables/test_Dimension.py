@@ -84,7 +84,7 @@ class DimensionTest(unittest.TestCase):
             row["id"] = 6
         return row
 
-    # Return a row that is exists in the test dimension but with missing values
+    # Return a row that exists in the test dimension but with missing values
     def generate_row_with_missing_name_attribute(self):
         return { "title": "Nineteen Eighty-Four" }
 
@@ -98,7 +98,7 @@ class DimensionTest(unittest.TestCase):
         }
         return row_index, updated_row
 
-    # Return two rows that does not exist in the test dimension
+    # Return two rows that do not exist in the test dimension
     def generate_multiple_nonexisting_rows(self):
         return [{"id": 6, "title": "Calvin and Hobbes Three", "genre": "Comic"},
                 {"id": 7, "title": "Calvin and Hobbes Four", "genre": "Comic"}]
