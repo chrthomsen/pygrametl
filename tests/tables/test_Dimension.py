@@ -1123,18 +1123,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         postcondition.assertEqual()
 
-    def test_lookup_with_lookupatts_toatt_is_none(self):
-        postcondition = self.initial
-
-        key = self.scdimension.lookup({'name': 'Ann', 'age': 20})
-        self.assertEqual(3, key)
-
-        # The row is missing a lookup attribute
-        self.assertRaises(KeyError, self.scdimension.lookup, {'name': 'Ann'})
-
-        postcondition.assertEqual()
-
-    def test_lookup_with_lookupatts_tooatt_is_none_and_with_custom_quotechar(self):
+    def test_lookup_with_lookupatts_with_custom_quotechar(self):
         # The identifiers are now wrapped with ""
         pygrametl.tables.definequote('\"')
 
@@ -1165,6 +1154,27 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         self.assertRaises(KeyError, self.test_dimension.lookup, row)
         self.connection_wrapper.commit()
+
+        postcondition.assertEqual()
+
+    def test_lookuprow_with_lookupatts(self):
+        postcondition = self.initial
+        actual_row = self.scdimension.lookuprow({'name':'Ann', 'age':20})
+        self.connection_wrapper.commit()
+
+        expected_row = {'id':3, 'name':'Ann', 'age':20, 'city':'Aarhus', \
+                        'fromdate':'2010-03-03', 'todate':None, 'version':2}
+        self.assertDictEqual(expected_row, actual_row)
+        postcondition.assertEqual()
+
+    def test_lookuprow_with_lookupatts_nonexisting_row(self):
+        postcondition = self.initial
+        nonexisting = self.generate_nonexisting_row(withkey=False)
+        result = self.test_dimension.lookuprow(nonexisting)
+        self.connection_wrapper.commit()
+
+        for att in result:
+            self.assertIsNone(result[att])
 
         postcondition.assertEqual()
 
