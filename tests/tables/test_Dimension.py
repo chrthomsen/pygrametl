@@ -123,9 +123,14 @@ class DimensionTest(unittest.TestCase):
         utilities.ensure_default_connection_wrapper()
         self.initial.reset()
         self.connection_wrapper = pygrametl.getdefaulttargetconnection()
-        self.test_dimension = Dimension(name=self.initial.name,
-                                        key=self.initial.key(),
-                                        attributes=self.initial.attributes)
+        self.test_dimension = self.get_test_subject()
+
+    # Get an instance of the class being tested by this TestCase
+    def get_test_subject(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes}
+        args.update(specifics)
+        return Dimension(**args)
 
     def test_lookup(self):
         postcondition = self.initial
@@ -152,10 +157,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_lookup_with_lookupatts(self):
-        dimension = Dimension(name=self.initial.name,
-                              key=self.initial.key(),
-                              attributes=self.initial.attributes,
-                              lookupatts={"title"})
+        dimension = self.get_test_subject(lookupatts={"title"})
         postcondition = self.initial
         row = { "title": "Calvin and Hobbes One" }
 
@@ -227,10 +229,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_lookuprow_with_lookupatts(self):
-        dimension = Dimension(name=self.initial.name,
-                              key=self.initial.key(),
-                              attributes=self.initial.attributes,
-                              lookupatts={"title"})
+        dimension = self.get_test_subject(lookupatts={"title"})
         postcondition = self.initial
         expected_row = self.get_existing_row(withkey=True)
         actual_row = dimension.lookuprow(expected_row)
@@ -241,10 +240,7 @@ class DimensionTest(unittest.TestCase):
 
 
     def test_lookuprow_with_lookupatts_nonexisting_row(self):
-        dimension = Dimension(name=self.initial.name,
-                              key=self.initial.key(),
-                              attributes=self.initial.attributes,
-                              lookupatts={"title"})
+        dimension = self.get_test_subject(lookupatts={"title"})
         postcondition = self.initial
         nonexisting = self.generate_nonexisting_row(withkey=False)
         result = dimension.lookuprow(nonexisting)
@@ -539,6 +535,14 @@ class CachedDimensionTest(DimensionTest):
                                               attributes=self.initial.attributes,
                                               prefill=True)
 
+    # Get an instance of the class being tested by this TestCase
+    def get_test_subject(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes, 'prefill':True} #FIXME: prefill?
+        args.update(specifics)
+        return CachedDimension(**args)
+
+
     def test_prefill_true(self):
         # Ensure that only cached rows can be retrieved
         self.connection_wrapper.close()
@@ -596,7 +600,6 @@ class CachedDimensionTest(DimensionTest):
                                               attributes=self.initial.attributes,
                                               prefill=True,
                                               cachefullrows=False)
-
         self.connection_wrapper.close()
 
         # The following three rows should not have been cached, and an exception
@@ -880,6 +883,13 @@ class BulkDimensionTest(DimensionTest):
                                             attributes=self.initial.attributes,
                                             bulkloader=self.loader)
 
+    # Get an instance of the class being tested by this TestCase
+    def get_test_subject(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes, 'bulkloader':self.loader}
+        args.update(specifics)
+        return BulkDimension(**args)
+
     def loader(self, name, attributes, fieldsep, rowsep, nullval, filehandle):
         sql = "INSERT INTO book(id, title, genre) VALUES({}, '{}', '{}')"
         encoding = utilities.get_os_encoding()
@@ -921,6 +931,14 @@ class CachedBulkDimensionTest(BulkDimensionTest):
                                                   key=self.initial.key(),
                                                   attributes=self.initial.attributes,
                                                   bulkloader=self.loader)
+
+    # Get an instance of the class being tested by this TestCase
+    def get_test_subject(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes, 'bulkloader':self.loader}
+        args.update(specifics)
+        return CachedBulkDimension(**args)
+
 
 
 class SlowlyChangingDimensionTest(DimensionTest):
