@@ -373,16 +373,18 @@ class Dimension(object):
         pass
 
     def lookuprow(self, row, namemapping={}):
-        """Perform a lookup followed by a getbykey. Given a row with
-           the lookupatts, a row with all attributes is thus returned
-           if it exists in the dimension table. Otherwise, a row where
-           all values (including the key) are None is returned.
+        """Perform a lookup followed by a getbykey.
+
+           Given a row with the lookupatts, a row with all attributes
+           is returned if it exists in the dimension table. Otherwise,
+           a row where all values (including the key) are None is returned.
 
            Arguments:
 
            - row: A dict which must contain at least the lookupatts. All other
              items are ignored. The dict is not modified.
            - namemapping: an optional namemapping (see module's documentation)
+
         """
         res = self._before_lookuprow(row, namemapping)
         if res is not None:
@@ -1404,6 +1406,47 @@ class SlowlyChangingDimension(Dimension):
         existing = self.getbykey(keyval)
         if existing[self.toatt] == self.maxto:
             self.update({self.key: keyval, self.toatt: end})
+
+    def lookuprowasof(self, row, when, inclusive, namemapping={}):
+        """Find the entire row version that was valid at a given time.
+
+           If both fromatt and toatt have been set, the method returns the row
+           version where the given time is between them. If only toatt
+           has been defined, the method returns the first row version
+           where toatt is after the given time. If only fromatt is defined,
+           the method returns the most recent row version where fromatt
+           is before the given time. See also the description of the argument
+           inclusive. For this to be possible, fromatt and/or toatt must have
+           been set. If this is not the case, a RuntimeError is raised. If no
+           valid version is found for the given time, a row where each
+           attribute is None is returned
+
+           Note that this function cannot exploit the cache and always results
+           in the execution of a SQL query.
+
+           Arguments:
+
+           - row: a dict which must contain at least the lookup attributes.
+           - when: the time when the version should be valid. This argument
+             must be of a type that can be compared (using <, <=, ==, =>, >)
+             to values in fromatt and/or toatt.
+           - inclusive: decides if the values of fromatt and/or toatt are
+             allowed to be equal to the value of when in the version to find.
+             If only one of fromatt and toatt has been set, the argument
+             should be a single Boolean. If both fromatt and toatt have been
+             set, the argument should be a tuple of two Booleans where the
+             first element decides if the fromatt value can be equal to the
+             the value of when and the second element decides the same for
+             toatt. This tuple must not be (False, False).
+           - namemapping: an optional namemapping (see module's documentation)
+
+        """
+        key = self.lookupasof(row, when, inclusive, namemapping)
+        if key is None:
+            # No need to try to find this row in the DB
+            return {a:None for a in self.all}
+        else:
+            return self.getbykey(key)
 
     def lookupasof(self, row, when, inclusive, namemapping={}):
         """Find the key of the version that was valid at a given time.

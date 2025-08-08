@@ -5,7 +5,13 @@ Unreleased
   updated when type 1 updates are applied to ``SlowlyChangingDimension``.
 
   ``lookuprow`` doing ``lookup`` followed by ``getbykey`` added to ``Dimension``
-  classes and ``Dimension``-like classes.
+  classes and ``Dimension``-like classes. Given a row with the ``lookupatts``,
+  this method thus returns the full row.
+
+  ``SlowlyChangingDimension.lookuprowasof`` doing ``lookupasof`` followed by
+  ``getbykey`` added to ``SlowlyChangingDimension``. Given a row with the
+  ``lookupatts`` and a timestamp, this method thus returns the full row version
+  that was valid at the timestamp.
 
 **Fixed**
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize
