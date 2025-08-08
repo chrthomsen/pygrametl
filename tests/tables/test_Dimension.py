@@ -2119,7 +2119,7 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         utilities.ensure_default_connection_wrapper()
         self.connection_wrapper = pygrametl.getdefaulttargetconnection()
 
-    def test_lookupasof_usingto(self):
+    def test_lookupasof_and_lookuprowasof_usingto(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | todate:timestamp | version:int |
         | ----------- | ------------ | ------------ | ---------------- | ----------- |
@@ -2151,7 +2151,19 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", True)
         self.assertEqual(key, None)
 
-    def test_lookupasof_usingto_noversion(self):
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", False)
+        self.assertDictEqual(row, table[2])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", True)
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+
+    def test_lookupasof_and_lookuprowasof_usingto_noversion(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | todate:timestamp |
         | ----------- | ------------ | ------------ | ---------------- |
@@ -2181,8 +2193,20 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, 5)
         key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", True)
         self.assertEqual(key, None)
+
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", False)
+        self.assertDictEqual(row, table[2])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", True)
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
         
-    def test_lookupasof_usingfrom(self):
+    def test_lookupasof_and_lookuprowasof_usingfrom(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | version:int |
         | ----------- | ------------ | ------------ | ------------------ | ----------- |
@@ -2215,7 +2239,20 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", False)
         self.assertEqual(key, 1)
 
-    def test_lookupasof_usingfrom_noversion(self):
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "1999-05-05", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", True)
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", False)
+        self.assertDictEqual(row, table[1])
+
+
+    def test_lookupasof_and_lookuprowasof_usingfrom_noversion(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp |
         | ----------- | ------------ | ------------ | ------------------ |
@@ -2246,8 +2283,21 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, 3)
         key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", False)
         self.assertEqual(key, 1)
+
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "1999-05-05", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", True)
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", False)
+        self.assertDictEqual(row, table[1])
+
         
-    def test_lookupasof_usingfromto(self):
+    def test_lookupasof_and_lookuprowasof_usingfromto(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | todate:timestamp | version:int |
         | ----------- | ------------ | ------------ | ------------------ | ---------------- | ----------- |
@@ -2290,7 +2340,29 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, None)
         self.assertRaises(ValueError, test_dimension.lookupasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
 
-    def test_lookupasof_usingfromto_noversion(self):
+        row = test_dimension.lookuprowasof({'name':'Aida'}, "2001-05-05", (True, True))
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-09-09", (True, False))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (True, False))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Charlie'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", (True, True))
+        self.assertDictEqual(row, table[5])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", (True, True))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        self.assertRaises(ValueError, test_dimension.lookuprowasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
+
+    def test_lookupasof_and_lookuprowasof_usingfromto_noversion(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | todate:timestamp |
         | ----------- | ------------ | ------------ | ------------------ | ---------------- |
@@ -2331,4 +2403,25 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", (True, True))
         self.assertEqual(key, None)
         self.assertRaises(ValueError, test_dimension.lookupasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
-        
+
+        row = test_dimension.lookuprowasof({'name':'Aida'}, "2001-05-05", (True, True))
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-09-09", (True, False))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (True, False))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Charlie'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", (True, True))
+        self.assertDictEqual(row, table[5])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", (True, True))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        self.assertRaises(ValueError, test_dimension.lookuprowasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
