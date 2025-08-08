@@ -78,7 +78,7 @@ class DimensionTest(unittest.TestCase):
 
     # Return a row that does not exist in the test dimension. The row is
     # returned with or without the key depending on the withkey argument
-    def generate_nonexisting_row(self, withkey=False):
+    def get_nonexisting_row(self, withkey=False):
         row = {"title": "Calvin and Hobbes Three", "genre": "Comic"}
         if withkey:
             row["id"] = 6
@@ -123,10 +123,10 @@ class DimensionTest(unittest.TestCase):
         utilities.ensure_default_connection_wrapper()
         self.initial.reset()
         self.connection_wrapper = pygrametl.getdefaulttargetconnection()
-        self.test_dimension = self.get_test_subject()
+        self.test_dimension = self.get_test_dimension_instance()
 
     # Get an instance of the class being tested by this TestCase
-    def get_test_subject(self, **specifics):
+    def get_test_dimension_instance(self, **specifics):
         args = {'name':self.initial.name, 'key':self.initial.key(),
                 'attributes':self.initial.attributes}
         args.update(specifics)
@@ -157,7 +157,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_lookup_with_lookupatts(self):
-        dimension = self.get_test_subject(lookupatts={"title"})
+        dimension = self.get_test_dimension_instance(lookupatts={"title"})
         postcondition = self.initial
         row = { "title": "Calvin and Hobbes One" }
 
@@ -168,7 +168,7 @@ class DimensionTest(unittest.TestCase):
 
     def test_lookup_nonexisting_row(self):
         postcondition = self.initial
-        row = self.generate_nonexisting_row()
+        row = self.get_nonexisting_row()
 
         self.assertIsNone(self.test_dimension.lookup(row))
         self.connection_wrapper.commit()
@@ -197,7 +197,7 @@ class DimensionTest(unittest.TestCase):
         postcondition = self.initial
 
         # No row exists with this key
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         nonexisting_key = nonexisting_row["id"]
 
         actual_row = self.test_dimension.getbykey(nonexisting_key)
@@ -219,7 +219,7 @@ class DimensionTest(unittest.TestCase):
 
     def test_lookuprow_nonexisting_row(self):
         postcondition = self.initial
-        nonexisting = self.generate_nonexisting_row(withkey=False)
+        nonexisting = self.get_nonexisting_row(withkey=False)
         result = self.test_dimension.lookuprow(nonexisting)
         self.connection_wrapper.commit()
 
@@ -229,7 +229,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_lookuprow_with_lookupatts(self):
-        dimension = self.get_test_subject(lookupatts={"title"})
+        dimension = self.get_test_dimension_instance(lookupatts={"title"})
         postcondition = self.initial
         expected_row = self.get_existing_row(withkey=True)
         actual_row = dimension.lookuprow(expected_row)
@@ -240,9 +240,9 @@ class DimensionTest(unittest.TestCase):
 
 
     def test_lookuprow_with_lookupatts_nonexisting_row(self):
-        dimension = self.get_test_subject(lookupatts={"title"})
+        dimension = self.get_test_dimension_instance(lookupatts={"title"})
         postcondition = self.initial
-        nonexisting = self.generate_nonexisting_row(withkey=False)
+        nonexisting = self.get_nonexisting_row(withkey=False)
         result = dimension.lookuprow(nonexisting)
         self.connection_wrapper.commit()
 
@@ -334,7 +334,7 @@ class DimensionTest(unittest.TestCase):
     def test_update_nonexisting_row(self):
         postcondition = self.initial
 
-        updated_row = self.generate_nonexisting_row(withkey=True)
+        updated_row = self.get_nonexisting_row(withkey=True)
 
         self.test_dimension.update(updated_row)
         self.connection_wrapper.commit()
@@ -344,7 +344,7 @@ class DimensionTest(unittest.TestCase):
         postcondition = self.initial
 
         # Key is missing in the row
-        updated_row = self.generate_nonexisting_row(withkey=False)
+        updated_row = self.get_nonexisting_row(withkey=False)
 
         self.assertRaises(KeyError, self.test_dimension.update, updated_row)
 
@@ -362,7 +362,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_ensure_once(self):
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         dtt_str = self.convert_row_to_dtt_str(nonexisting_row)
 
         postcondition = self.initial + dtt_str
@@ -374,7 +374,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_ensure_twice(self):
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         dtt_str = self.convert_row_to_dtt_str(nonexisting_row)
 
         postcondition = self.initial + dtt_str
@@ -413,7 +413,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_ensure_with_namemapping(self):
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         dtt_str = self.convert_row_to_dtt_str(nonexisting_row)
         namemapped_row = self.apply_namemapping(nonexisting_row)
 
@@ -442,7 +442,7 @@ class DimensionTest(unittest.TestCase):
     def test_insert_once(self):
         postcondition = self.initial + \
             self.convert_row_to_dtt_str(
-                self.generate_nonexisting_row(withkey=True))
+                self.get_nonexisting_row(withkey=True))
 
         for row in postcondition.additions(withKey=True):
             actual_key = self.test_dimension.insert(row)
@@ -467,7 +467,7 @@ class DimensionTest(unittest.TestCase):
     def test_insert_with_an_extra_attribute(self):
         postcondition = self.initial + \
             self.convert_row_to_dtt_str(
-                self.generate_nonexisting_row(withkey=True))
+                self.get_nonexisting_row(withkey=True))
 
         for row in postcondition.additions(withKey=True):
             row["extra_attribute"] = 100
@@ -478,7 +478,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_insert_with_namemapping(self):
-        new_row = self.generate_nonexisting_row(withkey=True)
+        new_row = self.get_nonexisting_row(withkey=True)
 
         postcondition = self.initial + self.convert_row_to_dtt_str(new_row)
 
@@ -492,8 +492,8 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_idfinder(self):
-        row_without_key = self.generate_nonexisting_row(withkey=False)
-        row_with_mock_key = self.generate_nonexisting_row(withkey=True)
+        row_without_key = self.get_nonexisting_row(withkey=False)
+        row_with_mock_key = self.get_nonexisting_row(withkey=True)
         row_with_mock_key["id"] = 99  # Must matchmock_idfinder()
 
         postcondition = self.initial + \
@@ -536,7 +536,7 @@ class CachedDimensionTest(DimensionTest):
                                               prefill=True)
 
     # Get an instance of the class being tested by this TestCase
-    def get_test_subject(self, **specifics):
+    def get_test_dimension_instance(self, **specifics):
         args = {'name':self.initial.name, 'key':self.initial.key(),
                 'attributes':self.initial.attributes, 'prefill':True} #FIXME: prefill?
         args.update(specifics)
@@ -884,7 +884,7 @@ class BulkDimensionTest(DimensionTest):
                                             bulkloader=self.loader)
 
     # Get an instance of the class being tested by this TestCase
-    def get_test_subject(self, **specifics):
+    def get_test_dimension_instance(self, **specifics):
         args = {'name':self.initial.name, 'key':self.initial.key(),
                 'attributes':self.initial.attributes, 'bulkloader':self.loader}
         args.update(specifics)
@@ -933,7 +933,7 @@ class CachedBulkDimensionTest(BulkDimensionTest):
                                                   bulkloader=self.loader)
 
     # Get an instance of the class being tested by this TestCase
-    def get_test_subject(self, **specifics):
+    def get_test_dimension_instance(self, **specifics):
         args = {'name':self.initial.name, 'key':self.initial.key(),
                 'attributes':self.initial.attributes, 'bulkloader':self.loader}
         args.update(specifics)
@@ -1021,7 +1021,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
     # Return a row that does not exist in the test dimension. The row is
     # returned with or without the key depending on the withkey argument
-    def generate_nonexisting_row(self, withkey=False):
+    def get_nonexisting_row(self, withkey=False):
         row = {}
 
         if withkey:
@@ -1169,7 +1169,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
     def test_lookuprow_with_lookupatts_nonexisting_row(self):
         postcondition = self.initial
-        nonexisting = self.generate_nonexisting_row(withkey=False)
+        nonexisting = self.get_nonexisting_row(withkey=False)
         result = self.test_dimension.lookuprow(nonexisting)
         self.connection_wrapper.commit()
 
@@ -2152,7 +2152,7 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, None)
 
         row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
-        self.assertEqual(row, table[0])
+        self.assertDictEqual(row, table[0])
         row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", True)
         self.assertDictEqual(row, table[0])
         row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", False)

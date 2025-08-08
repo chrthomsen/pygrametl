@@ -6,14 +6,15 @@ Unreleased
 
   ``lookuprow`` doing ``lookup`` followed by ``getbykey`` added to ``Dimension``
   classes and ``Dimension``-like classes. Given a row with the ``lookupatts``,
-  this method thus returns the full row.
+  this method returns the full row.
 
   ``SlowlyChangingDimension.lookuprowasof`` doing ``lookupasof`` followed by
   ``getbykey`` added to ``SlowlyChangingDimension``. Given a row with the
-  ``lookupatts`` and a timestamp, this method thus returns the full row version
+  ``lookupatts`` and a timestamp, this method returns the full row version
   that was valid at the timestamp.
 
-  ``__getitem__`` added to ``drawntabletesting.Table``.
+  ``__getitem__`` added to ``drawntabletesting.Table``. For a Table t, this makes
+  it possible to use t[n] to get the nth row in t.
 
 **Fixed**
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize

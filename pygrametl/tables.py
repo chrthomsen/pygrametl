@@ -105,15 +105,15 @@ class Dimension(object):
                  targetconnection=None):
         """Arguments:
 
-           - name: the name of the dimension table in the DW
-           - key: the name of the primary key in the DW
+           - name: the name of the dimension table in the DW.
+           - key: the name of the primary key in the DW.
            - attributes: a sequence of the attribute names in the dimension
              table. Should not include the name of the primary key which is
              given in the key argument.
            - lookupatts: A subset of the attributes that uniquely identify
              a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
-             lookupatts = attributes
+             lookupatts = attributes.
            - idfinder: A function(row, namemapping) -> key value that assigns
              a value to the primary key attribute based on the content of the
              row and namemapping. If not given, it is assumed that the primary
@@ -197,8 +197,8 @@ class Dimension(object):
 
            Arguments:
 
-           - row: a dict which must contain at least the lookup attributes
-           - namemapping: an optional namemapping (see module's documentation)
+           - row: a dict which must contain at least the lookup attributes.
+           - namemapping: an optional namemapping (see module's documentation).
         """
         key = self._before_lookup(row, namemapping)
         if key is not None:
@@ -250,7 +250,7 @@ class Dimension(object):
            - values: a dict which must hold a subset of the tables attributes.
              All rows that have identical values for all attributes in this
              dict are returned.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         res = self._before_getbyvals(values, namemapping)
         if res is not None:
@@ -286,7 +286,7 @@ class Dimension(object):
              The row with this key value is updated such that it takes
              the value of row[att] for each attribute att which is also in
              row.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         res = self._before_update(row, namemapping)
         if res:
@@ -326,7 +326,7 @@ class Dimension(object):
            - row: the row to lookup or insert. Must contain the lookup
              attributes. Key is not required to be present but will be added
              using idfinder if missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         res = self.lookup(row, namemapping)
         if res is not None and res != self.defaultidvalue:
@@ -348,7 +348,7 @@ class Dimension(object):
              all attributes, and is allowed to contain more attributes than
              that. Key is not required to be present but will be added using
              idfinder if missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         res = self._before_insert(row, namemapping)
         if res is not None:
@@ -383,7 +383,7 @@ class Dimension(object):
 
            - row: A dict which must contain at least the lookupatts. All other
              items are ignored. The dict is not modified.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
 
         """
         res = self._before_lookuprow(row, namemapping)
@@ -425,15 +425,15 @@ class CachedDimension(Dimension):
                  targetconnection=None):
         """Arguments:
 
-           - name: the name of the dimension table in the DW
-           - key: the name of the primary key in the DW
+           - name: the name of the dimension table in the DW.
+           - key: the name of the primary key in the DW.
            - attributes: a sequence of the attribute names in the dimension
              table. Should not include the name of the primary key which is
              given in the key argument.
            - lookupatts: A subset of the attributes that uniquely identify
              a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
-             lookupatts = attributes
+             lookupatts = attributes.
            - idfinder: A function(row, namemapping) -> key value that assigns
              a value to the primary key attribute based on the content of the
              row and namemapping. If not given, it is assumed that the primary
@@ -456,7 +456,7 @@ class CachedDimension(Dimension):
              initialized. Default: False
            - cachefullrows: a flag deciding if full rows should be
              cached. If not, the cache only holds a mapping from
-             lookupattributes to key values. Default: False.
+             lookupattributes to key values. Default: False
            - cacheoninsert: a flag deciding if the cache should be updated
              when insertions are done. Default: True
            - usefetchfirst: a flag deciding if the SQL:2008 FETCH FIRST
@@ -625,8 +625,8 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                  targetconnection=None):
         """Arguments:
 
-           - name: the name of the dimension table in the DW
-           - key: the name of the primary key in the DW
+           - name: the name of the dimension table in the DW.
+           - key: the name of the primary key in the DW.
            - attributes: a sequence of the attribute names in the dimension
              table. Should not include the name of the primary key which is
              given in the key argument.
@@ -652,7 +652,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
            - cachefullrows: a flag deciding if full rows should be cached. If
              not, the cache only holds a mapping from lookupattributes to key
              values, and from key to the type 1 slowly changing attributes.
-             Default: False.
+             Default: False
            - targetconnection: The ConnectionWrapper to use. If not given, the
              default target connection is used.
         """
@@ -717,7 +717,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
              and a subset of type1atts as a missing type1atts is ignored and
              the existing value left as is in the database. Key is not required
              to be present but will be added using idfinder if missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         # NOTE: the "vals2key" cache is kept coherent by "scdensure", as it
         # only contains "lookupatts" which "scdensure" is prohibited from
@@ -829,8 +829,8 @@ class SlowlyChangingDimension(Dimension):
                  usefetchfirst=False, useorderby=True, targetconnection=None):
         """Arguments:
 
-           - name: the name of the dimension table in the DW
-           - key: the name of the primary key in the DW
+           - name: the name of the dimension table in the DW.
+           - key: the name of the primary key in the DW.
            - attributes: a sequence of the attribute names in the dimension
              table. Should not include the name of the primary key which is
              given in the key argument, but should include versionatt,
@@ -879,7 +879,7 @@ class SlowlyChangingDimension(Dimension):
              version, not any following versions. Note also that if the member
              to insert already contains a value for fromatt, minfrom is
              ignored.
-             Default: None.
+             Default: None
            - maxto: the value to use for toatt for new members. Default: None
            - srcdateatt: the name of the attribute in the source data that
              holds a date showing when a version is valid from. The data is
@@ -898,9 +898,9 @@ class SlowlyChangingDimension(Dimension):
              string and a boolean flag specifying if all version of it should be
              updated (True) or only the latest one (False). Default: ()
            - cachesize: the maximum size of the cache. 0 disables caching
-             and values smaller than 0 allows unlimited caching
+             and values smaller than 0 allows unlimited caching.
            - prefill: decides if the cache should be prefilled with the newest
-             versions. Default: False.
+             versions. Default: False
            - idfinder: a function(row, namemapping) -> key value that assigns
              a value to the primary key attribute based on the content of the
              row and namemapping. If not given, it is assumed that the primary
@@ -1089,8 +1089,8 @@ class SlowlyChangingDimension(Dimension):
 
            Arguments:
 
-           - row: a dict which must contain at least the lookup attributes
-           - namemapping: an optional namemapping (see module's documentation)
+           - row: a dict which must contain at least the lookup attributes.
+           - namemapping: an optional namemapping (see module's documentation).
         """
         if self.__prefill and (self.__cachesize < 0 or
                                len(self.keycache) < self.__cachesize):
@@ -1109,8 +1109,8 @@ class SlowlyChangingDimension(Dimension):
 
            Arguments:
 
-           - row: a dict which must contain at least the lookup attributes
-           - namemapping: an optional namemapping (see module's documentation)
+           - row: a dict which must contain at least the lookup attributes.
+           - namemapping: an optional namemapping (see module's documentation).
         """
         # Based on Dimension.lookup, but uses keyversionlookupsql and
         # finds the newest version locally (no sorting on the DBMS)
@@ -1147,7 +1147,7 @@ class SlowlyChangingDimension(Dimension):
            - row: a dict containing the attributes for the member.
              key, versionatt, fromatt, and toatt are not required to be
              present but will be added (if defined).
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         key = (namemapping.get(self.key) or self.key)
         if self.versionatt:
@@ -1393,7 +1393,7 @@ class SlowlyChangingDimension(Dimension):
 
            Arguments:
 
-           - row: a dict which must contain at least the lookup attributes
+           - row: a dict which must contain at least the lookup attributes.
            - namemapping: an optional namemapping (see module's documentation)
            - end: the value to set for the newest version. Default: The current
              date as given by pygrametl.today()
@@ -1438,7 +1438,7 @@ class SlowlyChangingDimension(Dimension):
              first element decides if the fromatt value can be equal to the
              the value of when and the second element decides the same for
              toatt. This tuple must not be (False, False).
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
 
         """
         key = self.lookupasof(row, when, inclusive, namemapping)
@@ -1478,7 +1478,7 @@ class SlowlyChangingDimension(Dimension):
              first element decides if the fromatt value can be equal to the
              the value of when and the second element decides the same for
              toatt. This tuple must not be (False, False).
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
 
         """
         if self.fromatt and self.toatt:
@@ -1692,7 +1692,7 @@ class SnowflakedDimension(object):
            - row: a dict which must contain at least the lookup attributes
              which all must come from the root (the table closest to the
              fact table).
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         res = self._before_lookup(row, namemapping)
         if res:
@@ -1715,7 +1715,7 @@ class SnowflakedDimension(object):
 
            Arguments:
 
-           - keyvalue: the key value of the row to lookup
+           - keyvalue: the key value of the row to lookup.
            - fullrow: a flag deciding if the full row (with data from
              all tables in the snowflake) should be returned. If False,
              only data from the lowest level in the hierarchy (i.e., the table
@@ -1747,7 +1747,7 @@ class SnowflakedDimension(object):
            - values: a dict which must hold a subset of the tables attributes.
              All rows that have identical values for all attributes in this
              dict are returned.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
            - fullrow: a flag deciding if the full row (with data from
              all tables in the snowflake) should be returned. If False,
              only data from the lowest level in the hierarchy (i.e., the table
@@ -1799,7 +1799,7 @@ class SnowflakedDimension(object):
 
            - row: a dict. If the key of a participating dimension D is in the
              dict, D.update(...) is invoked.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         res = self._before_update(row, namemapping)
         if res is not None:
@@ -1835,7 +1835,7 @@ class SnowflakedDimension(object):
            - row: the row to lookup or insert. Must contain the lookup
              attributes. Key is not required to be present but will be added
              using idfinder if missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         (key, _) = self.__ensure_helper(self.root, row, namemapping, False)
         return key
@@ -1856,7 +1856,7 @@ class SnowflakedDimension(object):
            - row: the row to lookup or insert. Must contain the lookup
              attributes. Key is not required to be present but will be added
              using idfinder if missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         key = self._before_insert(row, namemapping)
         if key is not None:
@@ -1886,7 +1886,7 @@ class SnowflakedDimension(object):
 
            - row: A dict which must contain at least the lookupatts. All other
              items are ignored. The dict is not modified.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
            - fullrow: a flag deciding if the full row (with data from
              all tables in the snowflake) should be returned. If False,
              only data from the lowest level in the hierarchy (i.e., the table
@@ -1966,7 +1966,7 @@ class SnowflakedDimension(object):
            - row: a dict containing the attributes for the member. Key is not
              required to be present but will be added using idfinder if
              missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         # Still experimental!!! For now we require that only the
         # root is a SlowlyChangingDimension.
@@ -1989,9 +1989,9 @@ class FactTable(object):
 
     def __init__(self, name, keyrefs, measures=(), targetconnection=None):
         """Arguments:
-           - name: the name of the fact table in the DW
+           - name: the name of the fact table in the DW.
            - keyrefs: a sequence of attribute names that constitute the
-             primary key of the fact tables (i.e., the dimension references)
+             primary key of the fact tables (i.e., the dimension references).
            - measures: a possibly empty sequence of measure names. Default: ()
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
@@ -2029,7 +2029,7 @@ class FactTable(object):
 
            - row: a dict at least containing values for all the fact table's
              attributes (both keys/references and measures).
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         tmp = self._before_insert(row, namemapping)
         if tmp:
@@ -2084,11 +2084,11 @@ class FactTable(object):
 
            Arguments:
 
-           - row: a dict at least containing the attributes of the fact table
+           - row: a dict at least containing the attributes of the fact table.
            - compare: a flag deciding if measure vales from a fact that was
              looked up are compared to those in the given row. If True and
              differences are found, a ValueError is raised. Default: False
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
 
         """
         res = self.lookup(row, namemapping)
@@ -2122,9 +2122,9 @@ class BatchFactTable(FactTable):
                  usemultirow=False, targetconnection=None):
         """Arguments:
 
-           - name: the name of the fact table in the DW
+           - name: the name of the fact table in the DW.
            - keyrefs: a sequence of attribute names that constitute the
-             primary key of the fact tables (i.e., the dimension references)
+             primary key of the fact tables (i.e., the dimension references).
            - measures: a possibly empty sequence of measure names. Default: ()
            - batchsize: an int deciding how many insert operations should be
              done in one batch. Default: 10000
@@ -2195,7 +2195,7 @@ class AccumulatingSnapshotFactTable(FactTable):
                  factexpander=None, targetconnection=None):
         """Arguments:
 
-           - name: the name of the fact table in the DW
+           - name: the name of the fact table in the DW.
            - keyrefs: a sequence of attribute names that constitute the
              primary key of the fact tables. This is a subset of the dimension
              references and these references are not allowed to be updated.
@@ -2247,7 +2247,7 @@ class AccumulatingSnapshotFactTable(FactTable):
              keyrefs attributes. For missing attributes from otherrefs and
              measures, the value is set to None if the row has to be
              inserted.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         oldrow = self.lookup(row, namemapping)
         if not oldrow:
@@ -2319,8 +2319,8 @@ class _BaseBulkloadable(object):
                  dependson=()):
         r"""Arguments:
 
-           - name: the name of the table in the DW
-           - atts: a sequence of the bulkloadable tables' attribute names
+           - name: the name of the table in the DW.
+           - atts: a sequence of the bulkloadable tables' attribute names.
            - bulkloader: A method
              m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
              is called to load data from a temporary file into the DW. The
@@ -2417,7 +2417,7 @@ class _BaseBulkloadable(object):
 
            - row: a dict at least containing values for each of the tables'
              attributes.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
 
         if not self.__ready:
@@ -2482,9 +2482,9 @@ class BulkFactTable(_BaseBulkloadable):
                  encoding=None, dependson=()):
         r"""Arguments:
 
-           - name: the name of the fact table in the DW
+           - name: the name of the fact table in the DW.
            - keyrefs: a sequence of attribute names that constitute the
-             primary key of the fact tables (i.e., the dimension references)
+             primary key of the fact tables (i.e., the dimension references).
            - measures: a possibly empty sequence of measure names.
            - bulkloader: A method
              m(name, attributes, fieldsep, rowsep, nullsubst, tempdest) that
@@ -2587,8 +2587,8 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
                  encoding=None, dependson=(), targetconnection=None):
         r"""Arguments:
 
-           - name: the name of the dimension table in the DW
-           - key: the name of the primary key in the DW
+           - name: the name of the dimension table in the DW.
+           - key: the name of the primary key in the DW.
            - attributes: a sequence of the attribute names in the dimension
              table. Should not include the name of the primary key which is
              given in the key argument.
@@ -2605,7 +2605,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
            - lookupatts: A subset of the attributes that uniquely identify
              a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
-             lookupatts = attributes
+             lookupatts = attributes.
            - idfinder: A function(row, namemapping) -> key value that assigns
              a value to the primary key attribute based on the content of the
              row and namemapping. If not given, it is assumed that the primary
@@ -2624,7 +2624,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
              done.
            - cachefullrows: a flag deciding if full rows should be
              cached. If not, the cache only holds a mapping from
-             lookupattributes to key values. Default: False.
+             lookupattributes to key values. Default: False
            - fieldsep: a string used to separate fields in the temporary
              file. Default: '\t'
            - rowsep: a string used to separate rows in the temporary file.
@@ -2722,7 +2722,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
              all attributes, and is allowed to contain more attributes than
              that. Key is not required to be present but will be added using
              idfinder if missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         res = self._before_insert(row, namemapping)
         if res is not None:
@@ -2779,8 +2779,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
                  encoding=None, dependson=(), targetconnection=None):
         r"""Arguments:
 
-           - name: the name of the dimension table in the DW
-           - key: the name of the primary key in the DW
+           - name: the name of the dimension table in the DW.
+           - key: the name of the primary key in the DW.
            - attributes: a sequence of the attribute names in the dimension
              table. Should not include the name of the primary key which is
              given in the key argument.
@@ -2797,7 +2797,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
            - lookupatts: A subset of the attributes that uniquely identify
              a dimension member. These attributes are thus used for looking
              up members. If not given, it is assumed that
-             lookupatts = attributes
+             lookupatts = attributes.
            - idfinder: A function(row, namemapping) -> key value that assigns
              a value to the primary key attribute based on the content of the
              row and namemapping. If not given, it is assumed that the primary
@@ -2934,7 +2934,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
              all attributes, and is allowed to contain more attributes than
              that. Key is not required to be present but will be added using
              idfinder if missing.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         row = pygrametl.copy(row, **namemapping)
         searchtuple = tuple([row[n] for n in self.lookupatts])
@@ -2976,7 +2976,7 @@ class SubprocessFactTable(object):
         r"""Arguments:
 
            - keyrefs: a sequence of attribute names that constitute the
-             primary key of the fact table (i.e., the dimension references)
+             primary key of the fact table (i.e., the dimension references).
            - measures: a possibly empty sequence of measure names. Default: ()
            - executable: The subprocess to start.
            - initcommand: If not None, this command is written to the
@@ -3022,7 +3022,7 @@ class SubprocessFactTable(object):
            Arguments:
 
            - row: a dict at least containing values for the keys and measures.
-           - namemapping: an optional namemapping (see module's documentation)
+           - namemapping: an optional namemapping (see module's documentation).
         """
         rawdata = [row[namemapping.get(att) or att] for att in self.all]
         data = [self.strconverter(val, self.nullsubst) for val in rawdata]
@@ -3055,17 +3055,18 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
 
     """A Dimension-like class that enables parallelism by executing all
        operations on a given Dimension in a separate, dedicated process
-       (that Dimension is said to be "decoupled").
+       (that Dimension is said to be "decoupled"). Methods take the same
+       arguments as the those on the decoupled Dimension.
     """
 
     def __init__(self, dim, returnvalues=True, consumes=(), attstoconsume=(),
                  batchsize=500, queuesize=200):
         """Arguments:
 
-           - dim: the Dimension object to use in a separate process
+           - dim: the Dimension object to use in a separate process.
            - returnvalues: decides if return values from method calls on dim
              should be kept such that they can be fetched by the caller or
-             another Decoupled instance
+             another Decoupled instance.
            - consumes: a sequence of Decoupled objects from which to fetch
              returnvalues (that are used to replace FutureResults in
              arguments).
@@ -3076,7 +3077,7 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
              Default: ()
            - batchsize: the size of batches (grouped method calls) transferred
              between the processes. NB: Large values do not necessarily give
-             good performance
+             good performance.
              Default: 500
            - queuesize: the maximum amount of waiting batches. Infinite if
              less than or equal to 0. NB: Large values do not necessarily give
@@ -3102,14 +3103,14 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
         """Invoke lookup on the decoupled Dimension in the separate process"""
         return self._enqueue('lookup', row, namemapping)
 
-    def getbykey(self, keyvalue):
+    def getbykey(self, keyvalue, *rest):
         """Invoke getbykey on the decoupled Dimension in the separate
            process"""
-        return self._enqueue('getbykey', keyvalue)
+        return self._enqueue('getbykey', keyvalue, *rest)
 
-    def getbyvals(self, row, namemapping={}, **rest):
-        "Invoke betbycals on the decoupled Dimension in the separate process"
-        return self._enqueue('getbyvals', row, namemapping)
+    def getbyvals(self, row, namemapping={}, *rest):
+        "Invoke getbyvals on the decoupled Dimension in the separate process"
+        return self._enqueue('getbyvals', row, namemapping, *rest)
 
     def insert(self, row, namemapping={}):
         """Invoke insert on the decoupled Dimension in the separate process"""
@@ -3152,10 +3153,10 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
                  attstoconsume=(), batchsize=500, queuesize=200):
         """Arguments:
 
-           - facttbl: the FactTable object to use in a separate process
+           - facttbl: the FactTable object to use in a separate process.
            - returnvalues: decides if return values from method calls on
              facttbl should be kept such that they can be fetched by the caller
-             or another Decoupled instance
+             or another Decoupled instance.
            - consumes: a sequence of Decoupled objects from which to fetch
              returnvalues (that are used to replace FutureResults in
              arguments).
@@ -3166,7 +3167,7 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
              Default: ()
            - batchsize: the size of batches (grouped method calls) transferred
              between the processes. NB: Large values do not necessarily give
-             good performance
+             good performance.
              Default: 500
            - queuesize: the maximum amount of waiting batches. Infinite if
              less than or equal to 0. NB: Large values do not necessarily give
