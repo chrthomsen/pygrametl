@@ -13,6 +13,8 @@ Unreleased
   ``lookupatts`` and a timestamp, this method thus returns the full row version
   that was valid at the timestamp.
 
+  ``__getitem__`` added to ``drawntabletesting.Table``.
+
 **Fixed**
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize
   the chance of errors due to different encodings.
