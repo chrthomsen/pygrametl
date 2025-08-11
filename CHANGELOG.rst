@@ -13,8 +13,9 @@ Unreleased
   ``lookupatts`` and a timestamp, this method returns the full row version
   that was valid at the timestamp.
 
-  ``__getitem__`` added to ``drawntabletesting.Table``. For a Table t, this makes
-  it possible to use t[n] to get the nth row in t.
+  ``__getitem__`` added to ``drawntabletesting.Table``. For a Table
+  ``t``, this makes it possible to use ``t[n]`` to get the ``n``th row
+  in ``t``.
 
 **Fixed**
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize

@@ -156,8 +156,7 @@ class Table:
 
            Arguments:
 
-           - index: an integer telling which row to get. Rows are numbered
-             from 0 and in the order they appear in the drawn table.
+           - index: the index of the row to be updated.
         """
         return dict(zip(self.__columns, self.__rows[index]))
 
