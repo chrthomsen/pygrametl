@@ -78,13 +78,13 @@ class DimensionTest(unittest.TestCase):
 
     # Return a row that does not exist in the test dimension. The row is
     # returned with or without the key depending on the withkey argument
-    def generate_nonexisting_row(self, withkey=False):
+    def get_nonexisting_row(self, withkey=False):
         row = {"title": "Calvin and Hobbes Three", "genre": "Comic"}
         if withkey:
             row["id"] = 6
         return row
 
-    # Return a row that is exists in the test dimension but with missing values
+    # Return a row that exists in the test dimension but with missing values
     def generate_row_with_missing_name_attribute(self):
         return { "title": "Nineteen Eighty-Four" }
 
@@ -98,7 +98,7 @@ class DimensionTest(unittest.TestCase):
         }
         return row_index, updated_row
 
-    # Return two rows that does not exist in the test dimension
+    # Return two rows that do not exist in the test dimension
     def generate_multiple_nonexisting_rows(self):
         return [{"id": 6, "title": "Calvin and Hobbes Three", "genre": "Comic"},
                 {"id": 7, "title": "Calvin and Hobbes Four", "genre": "Comic"}]
@@ -123,9 +123,14 @@ class DimensionTest(unittest.TestCase):
         utilities.ensure_default_connection_wrapper()
         self.initial.reset()
         self.connection_wrapper = pygrametl.getdefaulttargetconnection()
-        self.test_dimension = Dimension(name=self.initial.name,
-                                        key=self.initial.key(),
-                                        attributes=self.initial.attributes)
+        self.test_dimension = self.get_test_dimension_instance()
+
+    # Get an instance of the class being tested by this TestCase
+    def get_test_dimension_instance(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes}
+        args.update(specifics)
+        return Dimension(**args)
 
     def test_lookup(self):
         postcondition = self.initial
@@ -152,10 +157,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_lookup_with_lookupatts(self):
-        dimension = Dimension(name=self.initial.name,
-                              key=self.initial.key(),
-                              attributes=self.initial.attributes,
-                              lookupatts={"title"})
+        dimension = self.get_test_dimension_instance(lookupatts={"title"})
         postcondition = self.initial
         row = { "title": "Calvin and Hobbes One" }
 
@@ -166,7 +168,7 @@ class DimensionTest(unittest.TestCase):
 
     def test_lookup_nonexisting_row(self):
         postcondition = self.initial
-        row = self.generate_nonexisting_row()
+        row = self.get_nonexisting_row()
 
         self.assertIsNone(self.test_dimension.lookup(row))
         self.connection_wrapper.commit()
@@ -195,7 +197,7 @@ class DimensionTest(unittest.TestCase):
         postcondition = self.initial
 
         # No row exists with this key
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         nonexisting_key = nonexisting_row["id"]
 
         actual_row = self.test_dimension.getbykey(nonexisting_key)
@@ -203,6 +205,49 @@ class DimensionTest(unittest.TestCase):
 
         for att in actual_row:
             self.assertIsNone(actual_row[att])
+
+        postcondition.assertEqual()
+
+    def test_lookuprow(self):
+        postcondition = self.initial
+        expected_row = self.get_existing_row(withkey=True)
+        actual_row = self.test_dimension.lookuprow(expected_row)
+        self.connection_wrapper.commit()
+
+        self.assertDictEqual(expected_row, actual_row)
+        postcondition.assertEqual()
+
+    def test_lookuprow_nonexisting_row(self):
+        postcondition = self.initial
+        nonexisting = self.get_nonexisting_row(withkey=False)
+        result = self.test_dimension.lookuprow(nonexisting)
+        self.connection_wrapper.commit()
+
+        for att in result:
+            self.assertIsNone(result[att])
+
+        postcondition.assertEqual()
+
+    def test_lookuprow_with_lookupatts(self):
+        dimension = self.get_test_dimension_instance(lookupatts={"title"})
+        postcondition = self.initial
+        expected_row = self.get_existing_row(withkey=True)
+        actual_row = dimension.lookuprow(expected_row)
+        self.connection_wrapper.commit()
+
+        self.assertDictEqual(expected_row, actual_row)
+        postcondition.assertEqual()
+
+
+    def test_lookuprow_with_lookupatts_nonexisting_row(self):
+        dimension = self.get_test_dimension_instance(lookupatts={"title"})
+        postcondition = self.initial
+        nonexisting = self.get_nonexisting_row(withkey=False)
+        result = dimension.lookuprow(nonexisting)
+        self.connection_wrapper.commit()
+
+        for att in result:
+            self.assertIsNone(result[att])
 
         postcondition.assertEqual()
 
@@ -289,7 +334,7 @@ class DimensionTest(unittest.TestCase):
     def test_update_nonexisting_row(self):
         postcondition = self.initial
 
-        updated_row = self.generate_nonexisting_row(withkey=True)
+        updated_row = self.get_nonexisting_row(withkey=True)
 
         self.test_dimension.update(updated_row)
         self.connection_wrapper.commit()
@@ -299,7 +344,7 @@ class DimensionTest(unittest.TestCase):
         postcondition = self.initial
 
         # Key is missing in the row
-        updated_row = self.generate_nonexisting_row(withkey=False)
+        updated_row = self.get_nonexisting_row(withkey=False)
 
         self.assertRaises(KeyError, self.test_dimension.update, updated_row)
 
@@ -317,7 +362,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_ensure_once(self):
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         dtt_str = self.convert_row_to_dtt_str(nonexisting_row)
 
         postcondition = self.initial + dtt_str
@@ -329,7 +374,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_ensure_twice(self):
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         dtt_str = self.convert_row_to_dtt_str(nonexisting_row)
 
         postcondition = self.initial + dtt_str
@@ -368,7 +413,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_ensure_with_namemapping(self):
-        nonexisting_row = self.generate_nonexisting_row(withkey=True)
+        nonexisting_row = self.get_nonexisting_row(withkey=True)
         dtt_str = self.convert_row_to_dtt_str(nonexisting_row)
         namemapped_row = self.apply_namemapping(nonexisting_row)
 
@@ -397,7 +442,7 @@ class DimensionTest(unittest.TestCase):
     def test_insert_once(self):
         postcondition = self.initial + \
             self.convert_row_to_dtt_str(
-                self.generate_nonexisting_row(withkey=True))
+                self.get_nonexisting_row(withkey=True))
 
         for row in postcondition.additions(withKey=True):
             actual_key = self.test_dimension.insert(row)
@@ -422,7 +467,7 @@ class DimensionTest(unittest.TestCase):
     def test_insert_with_an_extra_attribute(self):
         postcondition = self.initial + \
             self.convert_row_to_dtt_str(
-                self.generate_nonexisting_row(withkey=True))
+                self.get_nonexisting_row(withkey=True))
 
         for row in postcondition.additions(withKey=True):
             row["extra_attribute"] = 100
@@ -433,7 +478,7 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_insert_with_namemapping(self):
-        new_row = self.generate_nonexisting_row(withkey=True)
+        new_row = self.get_nonexisting_row(withkey=True)
 
         postcondition = self.initial + self.convert_row_to_dtt_str(new_row)
 
@@ -447,8 +492,8 @@ class DimensionTest(unittest.TestCase):
         postcondition.assertEqual()
 
     def test_idfinder(self):
-        row_without_key = self.generate_nonexisting_row(withkey=False)
-        row_with_mock_key = self.generate_nonexisting_row(withkey=True)
+        row_without_key = self.get_nonexisting_row(withkey=False)
+        row_with_mock_key = self.get_nonexisting_row(withkey=True)
         row_with_mock_key["id"] = 99  # Must matchmock_idfinder()
 
         postcondition = self.initial + \
@@ -489,6 +534,14 @@ class CachedDimensionTest(DimensionTest):
                                               key=self.initial.key(),
                                               attributes=self.initial.attributes,
                                               prefill=True)
+
+    # Get an instance of the class being tested by this TestCase
+    def get_test_dimension_instance(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes, 'prefill':True} #FIXME: prefill?
+        args.update(specifics)
+        return CachedDimension(**args)
+
 
     def test_prefill_true(self):
         # Ensure that only cached rows can be retrieved
@@ -547,7 +600,6 @@ class CachedDimensionTest(DimensionTest):
                                               attributes=self.initial.attributes,
                                               prefill=True,
                                               cachefullrows=False)
-
         self.connection_wrapper.close()
 
         # The following three rows should not have been cached, and an exception
@@ -831,6 +883,13 @@ class BulkDimensionTest(DimensionTest):
                                             attributes=self.initial.attributes,
                                             bulkloader=self.loader)
 
+    # Get an instance of the class being tested by this TestCase
+    def get_test_dimension_instance(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes, 'bulkloader':self.loader}
+        args.update(specifics)
+        return BulkDimension(**args)
+
     def loader(self, name, attributes, fieldsep, rowsep, nullval, filehandle):
         sql = "INSERT INTO book(id, title, genre) VALUES({}, '{}', '{}')"
         encoding = utilities.get_os_encoding()
@@ -872,6 +931,14 @@ class CachedBulkDimensionTest(BulkDimensionTest):
                                                   key=self.initial.key(),
                                                   attributes=self.initial.attributes,
                                                   bulkloader=self.loader)
+
+    # Get an instance of the class being tested by this TestCase
+    def get_test_dimension_instance(self, **specifics):
+        args = {'name':self.initial.name, 'key':self.initial.key(),
+                'attributes':self.initial.attributes, 'bulkloader':self.loader}
+        args.update(specifics)
+        return CachedBulkDimension(**args)
+
 
 
 class SlowlyChangingDimensionTest(DimensionTest):
@@ -954,7 +1021,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
     # Return a row that does not exist in the test dimension. The row is
     # returned with or without the key depending on the withkey argument
-    def generate_nonexisting_row(self, withkey=False):
+    def get_nonexisting_row(self, withkey=False):
         row = {}
 
         if withkey:
@@ -1056,18 +1123,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         postcondition.assertEqual()
 
-    def test_lookup_with_lookupatts_toatt_is_none(self):
-        postcondition = self.initial
-
-        key = self.scdimension.lookup({'name': 'Ann', 'age': 20})
-        self.assertEqual(3, key)
-
-        # The row is missing a lookup attribute
-        self.assertRaises(KeyError, self.scdimension.lookup, {'name': 'Ann'})
-
-        postcondition.assertEqual()
-
-    def test_lookup_with_lookupatts_tooatt_is_none_and_with_custom_quotechar(self):
+    def test_lookup_with_lookupatts_with_custom_quotechar(self):
         # The identifiers are now wrapped with ""
         pygrametl.tables.definequote('\"')
 
@@ -1098,6 +1154,27 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         self.assertRaises(KeyError, self.test_dimension.lookup, row)
         self.connection_wrapper.commit()
+
+        postcondition.assertEqual()
+
+    def test_lookuprow_with_lookupatts(self):
+        postcondition = self.initial
+        actual_row = self.scdimension.lookuprow({'name':'Ann', 'age':20})
+        self.connection_wrapper.commit()
+
+        expected_row = {'id':3, 'name':'Ann', 'age':20, 'city':'Aarhus', \
+                        'fromdate':'2010-03-03', 'todate':None, 'version':2}
+        self.assertDictEqual(expected_row, actual_row)
+        postcondition.assertEqual()
+
+    def test_lookuprow_with_lookupatts_nonexisting_row(self):
+        postcondition = self.initial
+        nonexisting = self.get_nonexisting_row(withkey=False)
+        result = self.test_dimension.lookuprow(nonexisting)
+        self.connection_wrapper.commit()
+
+        for att in result:
+            self.assertIsNone(result[att])
 
         postcondition.assertEqual()
 
@@ -2042,7 +2119,7 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         utilities.ensure_default_connection_wrapper()
         self.connection_wrapper = pygrametl.getdefaulttargetconnection()
 
-    def test_lookupasof_usingto(self):
+    def test_lookupasof_and_lookuprowasof_usingto(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | todate:timestamp | version:int |
         | ----------- | ------------ | ------------ | ---------------- | ----------- |
@@ -2074,7 +2151,19 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", True)
         self.assertEqual(key, None)
 
-    def test_lookupasof_usingto_noversion(self):
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", False)
+        self.assertDictEqual(row, table[2])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", True)
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+
+    def test_lookupasof_and_lookuprowasof_usingto_noversion(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | todate:timestamp |
         | ----------- | ------------ | ------------ | ---------------- |
@@ -2104,8 +2193,20 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, 5)
         key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", True)
         self.assertEqual(key, None)
+
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", False)
+        self.assertDictEqual(row, table[2])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", True)
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
         
-    def test_lookupasof_usingfrom(self):
+    def test_lookupasof_and_lookuprowasof_usingfrom(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | version:int |
         | ----------- | ------------ | ------------ | ------------------ | ----------- |
@@ -2138,7 +2239,20 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", False)
         self.assertEqual(key, 1)
 
-    def test_lookupasof_usingfrom_noversion(self):
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "1999-05-05", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", True)
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", False)
+        self.assertDictEqual(row, table[1])
+
+
+    def test_lookupasof_and_lookuprowasof_usingfrom_noversion(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp |
         | ----------- | ------------ | ------------ | ------------------ |
@@ -2169,8 +2283,21 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, 3)
         key = test_dimension.lookupasof({'name':'Ann'}, "2002-01-01", False)
         self.assertEqual(key, 1)
+
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "1999-05-05", True)
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-12-31", True)
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", True)
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", True)
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-01-01", False)
+        self.assertDictEqual(row, table[1])
+
         
-    def test_lookupasof_usingfromto(self):
+    def test_lookupasof_and_lookuprowasof_usingfromto(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | todate:timestamp | version:int |
         | ----------- | ------------ | ------------ | ------------------ | ---------------- | ----------- |
@@ -2213,7 +2340,29 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertEqual(key, None)
         self.assertRaises(ValueError, test_dimension.lookupasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
 
-    def test_lookupasof_usingfromto_noversion(self):
+        row = test_dimension.lookuprowasof({'name':'Aida'}, "2001-05-05", (True, True))
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-09-09", (True, False))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (True, False))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Charlie'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", (True, True))
+        self.assertDictEqual(row, table[5])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", (True, True))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        self.assertRaises(ValueError, test_dimension.lookuprowasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
+
+    def test_lookupasof_and_lookuprowasof_usingfromto_noversion(self):
         table = dtt.Table("customers", """
         | id:int (pk) | name:varchar | city:varchar | fromdate:timestamp | todate:timestamp |
         | ----------- | ------------ | ------------ | ------------------ | ---------------- |
@@ -2254,4 +2403,25 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         key = test_dimension.lookupasof({'name':'Bob'}, "2222-12-31", (True, True))
         self.assertEqual(key, None)
         self.assertRaises(ValueError, test_dimension.lookupasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))
-        
+
+        row = test_dimension.lookuprowasof({'name':'Aida'}, "2001-05-05", (True, True))
+        self.assertDictEqual(row, table[0])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "1999-09-09", (True, False))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (True, False))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-05-05", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2001-12-31", (False, True))
+        self.assertDictEqual(row, table[1])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[3])
+        row = test_dimension.lookuprowasof({'name':'Charlie'}, "2002-12-31", (True, True))
+        self.assertDictEqual(row, table[4])
+        row = test_dimension.lookuprowasof({'name':'Ann'}, "2222-12-31", (True, True))
+        self.assertDictEqual(row, table[5])
+        row = test_dimension.lookuprowasof({'name':'Bob'}, "2222-12-31", (True, True))
+        for att in test_dimension.all:
+            self.assertEqual(row[att], None)
+        self.assertRaises(ValueError, test_dimension.lookuprowasof, row={'name':'Ann'}, when="2222-12-31", inclusive=(False, False))

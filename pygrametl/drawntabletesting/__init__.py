@@ -151,6 +151,15 @@ class Table:
         """Return an iterator of the rows as dicts."""
         return map(lambda row: dict(zip(self.__columns, row)), self.__rows)
 
+    def __getitem__(self, index):
+        """Return the row at the given index as a dict.
+
+           Arguments:
+
+           - index: the index of the row to be updated.
+        """
+        return dict(zip(self.__columns, self.__rows[index]))
+
     def __add__(self, lines):
         """Create a new instance with the new rows provide appended.
 

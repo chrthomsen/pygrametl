@@ -4,6 +4,19 @@ Unreleased
   Support for specifying if all or only the latest version of a member should be
   updated when type 1 updates are applied to ``SlowlyChangingDimension``.
 
+  ``lookuprow`` doing ``lookup`` followed by ``getbykey`` added to ``Dimension``
+  classes and ``Dimension``-like classes. Given a row with the ``lookupatts``,
+  this method returns the full row.
+
+  ``SlowlyChangingDimension.lookuprowasof`` doing ``lookupasof`` followed by
+  ``getbykey`` added to ``SlowlyChangingDimension``. Given a row with the
+  ``lookupatts`` and a timestamp, this method returns the full row version
+  that was valid at the timestamp.
+
+  ``__getitem__`` added to ``drawntabletesting.Table``. For a Table
+  ``t``, this makes it possible to use ``t[n]`` to get the ``n``th row
+  in ``t``.
+
 **Fixed**
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize
   the chance of errors due to different encodings.
