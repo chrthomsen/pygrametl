@@ -387,7 +387,7 @@ class MappingSource(object):
         for row in self._source:
             for (att, func) in self._callables.items():
                 row[att] = func(row[att])
-                yield row
+            yield row
 
 
 class TransformingSource(object):
