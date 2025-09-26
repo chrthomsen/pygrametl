@@ -24,6 +24,8 @@ Unreleased
   ``dependson`` is now a list instead of a filter iterator. This fixes issue #72 
   where dependencies were only loaded in the first bulk load.
 
+  ``MappingSource`` no longer duplicates rows when passing multiple callables.
+
 **Changed**
   ``SQLSource`` now has a ``fetchsize`` constructor parameter so the end-user can
   control how much data should be held in main memory for each round trip to the RDBMS.

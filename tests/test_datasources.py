@@ -26,8 +26,56 @@ import sqlite3
 import unittest
 
 import pygrametl
-from pygrametl.datasources import SQLTransformingSource
+from pygrametl.datasources import MappingSource, SQLTransformingSource
 from tests import utilities
+
+
+class MappingSourceTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Ensure other tests does not affect these tests
+        utilities.remove_default_connection_wrapper()
+
+    def setUp(self):
+        self.input_list = [
+            { "id": 1, "title": "Unknown", "genre": "Unknown" },
+            { "id": 2, "title": "Nineteen Eighty-Four", "genre": "Novel" },
+            { "id": 3, "title": "Calvin and Hobbes One", "genre": "Comic" },
+            { "id": 4, "title": "Calvin and Hobbes Two", "genre": "Comic" },
+            { "id": 5, "title": "The Silver Spoon", "genre": "Cookbook" }
+        ]
+
+    def test_mapping_single_callable(self):
+        source = MappingSource(iter(self.input_list), {
+            "id": lambda x: x + 1
+        })
+        expected = [
+            { "id": 2, "title": "Unknown", "genre": "Unknown" },
+            { "id": 3, "title": "Nineteen Eighty-Four", "genre": "Novel" },
+            { "id": 4, "title": "Calvin and Hobbes One", "genre": "Comic" },
+            { "id": 5, "title": "Calvin and Hobbes Two", "genre": "Comic" },
+            { "id": 6, "title": "The Silver Spoon", "genre": "Cookbook" }
+        ]
+
+        self.assertIsNone(pygrametl.getdefaulttargetconnection())
+        self.assertEqual(expected, list(source))
+
+    def test_mapping_two_callables(self):
+        source = MappingSource(iter(self.input_list), {
+            "id": lambda x: x + 1,
+            "genre": lambda x: x[0]
+        })
+        expected = [
+            { "id": 2, "title": "Unknown", "genre": "U" },
+            { "id": 3, "title": "Nineteen Eighty-Four", "genre": "N" },
+            { "id": 4, "title": "Calvin and Hobbes One", "genre": "C" },
+            { "id": 5, "title": "Calvin and Hobbes Two", "genre": "C" },
+            { "id": 6, "title": "The Silver Spoon", "genre": "C" }
+        ]
+
+
+        self.assertIsNone(pygrametl.getdefaulttargetconnection())
+        self.assertEqual(expected, list(source))
 
 
 class SQLTransformationSourceTest(unittest.TestCase):
