@@ -17,6 +17,10 @@ Unreleased
   ``t``, this makes it possible to use ``t[n]`` to get the ``n``th row
   in ``t``.
 
+  ``__len__`` added to ``drawntabletesting.Table``. For a Table ``t``,
+  this makes it possible to use ``len(n)`` to get the number of rows
+  in ``t``.
+
 **Fixed**
   All uses of ``open()`` in the beginner guide now include "utf-8" to minimize
   the chance of errors due to different encodings.

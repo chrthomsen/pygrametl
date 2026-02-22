@@ -26,8 +26,65 @@ import sqlite3
 import unittest
 
 import pygrametl
-from pygrametl.datasources import MappingSource, SQLTransformingSource
+import pygrametl.drawntabletesting as dtt
+from pygrametl.datasources import SQLSource, MappingSource, SQLTransformingSource
 from tests import utilities
+
+class SQLSourceTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.connection = utilities.get_connection()
+        cls.connection_wrapper = pygrametl.ConnectionWrapper(cls.connection)
+        cls.initial = dtt.Table("book", """
+        | id:int (pk) | title:text            | genre:text |
+        | ----------- | --------------------- | ---------- |
+        | 1           | Unknown               | Unknown    |
+        | 2           | Nineteen Eighty-Four  | Novel      |
+        | 3           | Calvin and Hobbes One | Comic      |
+        | 4           | Calvin and Hobbes Two | Comic      |
+        | 5           | The Silver Spoon      | Cookbook   |
+        """)
+        cls.row_len = len(cls.initial)
+        cls.column_len = len(cls.initial[0].keys())
+        cls.names = list(cls.initial[0].keys())
+        cls.initial.ensure()
+        cls.query = "SELECT * FROM book"
+
+    def assert_all_rows_and_columns_returned(self, sql_source, names):
+        row_counter = 0
+        for row in sql_source:
+            row_counter += 1
+            self.assertEqual(self.column_len, len(row.keys()))
+            self.assertEqual(names, list(row.keys()))
+        self.assertEqual(self.row_len, row_counter)
+
+    def test_with_default_arguments(self):
+        sql_source = SQLSource(self.connection, self.query)
+        self.assert_all_rows_and_columns_returned(sql_source, self.names)
+
+    def test_with_correct_number_of_names(self):
+        names = ["bid", "title", "genre"]
+        sql_source = SQLSource(self.connection, self.query, names=names)
+        self.assert_all_rows_and_columns_returned(sql_source, names)
+
+    def test_with_too_few_names(self):
+        with self.assertRaises(ValueError):
+            sql_source = SQLSource(self.connection, self.query, names=["bid"])
+            self.assert_all_rows_and_columns_returned(sql_source, self.names)
+
+    def test_with_too_many_names(self):
+        with self.assertRaises(ValueError):
+            sql_source = SQLSource(self.connection, self.query, names=["bid", "title", "genre", "publisher"])
+            self.assert_all_rows_and_columns_returned(sql_source, self.names)
+
+    def test_with_succeeding_initsql(self):
+        sql_source = SQLSource(self.connection, self.query, initsql="CREATE TABLE author (name VARCHAR)")
+        self.assert_all_rows_and_columns_returned(sql_source, self.names)
+
+    def test_with_failing_initsql(self):
+        with self.assertRaises(sqlite3.OperationalError):
+            SQLSource(self.connection, self.query, initsql="CREATE TABLE book (bid INTEGER)")
 
 
 class MappingSourceTest(unittest.TestCase):
