@@ -147,6 +147,10 @@ class Table:
         """Return a string version of the table in the input format."""
         return self.__table2str(self.__rows, False, indention=0)
 
+    def __len__(self):
+        """Return the number rows in the table."""
+        return len(self.__rows)
+
     def __iter__(self):
         """Return an iterator of the rows as dicts."""
         return map(lambda row: dict(zip(self.__columns, row)), self.__rows)

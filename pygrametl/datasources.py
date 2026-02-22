@@ -134,6 +134,7 @@ class SQLSource(object):
         self.names = names
         self.executed = False
         self.parameters = parameters
+        self.fetchsize = fetchsize
 
     def __iter__(self):
         try:
@@ -147,10 +148,10 @@ class SQLSource(object):
                     names = self.names or \
                         [t[0] for t in self.cursor.description]
             while True:
-                if fetchsize <= 0:
+                if self.fetchsize <= 0:
                     data = self.cursor.fetchall()
                 else:
-                    data = self.cursor.fetchmany(fetchsize)
+                    data = self.cursor.fetchmany(self.fetchsize)
 
                 if not data:
                     break
@@ -169,7 +170,7 @@ class SQLSource(object):
 
                 # It is not well defined in PEP 249 what fetchall will do if called twice
                 # Therefore it is safest to break the loop if fetchall is used
-                if fetchsize <= 0:
+                if self.fetchsize <= 0:
                     break
         finally:
             try:
