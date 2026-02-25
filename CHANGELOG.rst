@@ -31,6 +31,9 @@ Unreleased
   ``MappingSource`` no longer duplicates rows when passing multiple callables.
 
 **Changed**
+  Changed the start method in ``multiprocessing`` to ``fork`` so the
+  resources of the parent process are inherited by the child process.
+
   ``SQLSource`` now has a ``fetchsize`` constructor parameter so the end-user can
   control how much data should be held in main memory for each round trip to the RDBMS.
   
