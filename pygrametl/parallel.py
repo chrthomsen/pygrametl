@@ -48,8 +48,7 @@ else:
     import multiprocessing
     # This module assumes processes inherit state through fork. Thus,
     # it requires that the platform supports the fork start method
-    start_method = multiprocessing.get_start_method(allow_none=True)
-    if start_method is None or start_method != 'fork':
+    if multiprocessing.get_start_method(allow_none=True) != 'fork':
         multiprocessing.set_start_method('fork')
 
 __all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
