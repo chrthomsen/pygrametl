@@ -54,7 +54,14 @@ import types
 
 import pygrametl
 from pygrametl.FIFODict import FIFODict
-import pygrametl.parallel
+
+try:
+    from pygrametl.parallel import Decoupled
+except ValueError:
+    class Decoupled(object):
+        def __init__(*args):
+            raise ValueError(
+                "Decoupled is not supported on platforms without fork")
 
 
 try:
@@ -3051,7 +3058,7 @@ class SubprocessFactTable(object):
         raise TypeError('A SubProcessFactTable cannot be decoupled')
 
 
-class DecoupledDimension(pygrametl.parallel.Decoupled):
+class DecoupledDimension(Decoupled):
 
     """A Dimension-like class that enables parallelism by executing all
        operations on a given Dimension in a separate, dedicated process
@@ -3084,16 +3091,16 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
              good performance.
              Default: 200
         """
-        pygrametl.parallel.Decoupled.__init__(self,
-                                              obj=dim,
-                                              returnvalues=returnvalues,
-                                              consumes=consumes,
-                                              directupdatepositions=tuple(
-                                                  [(0, a) for a in
-                                                   attstoconsume]),
-                                              batchsize=batchsize,
-                                              queuesize=queuesize,
-                                              autowrap=False)
+        Decoupled.__init__(self,
+                           obj=dim,
+                           returnvalues=returnvalues,
+                           consumes=consumes,
+                           directupdatepositions=tuple(
+                               [(0, a) for a in
+                                attstoconsume]),
+                           batchsize=batchsize,
+                           queuesize=queuesize,
+                           autowrap=False)
 
         if dim in pygrametl._alltables:
             pygrametl._alltables.remove(dim)  # We add self instead...
@@ -3142,7 +3149,7 @@ class DecoupledDimension(pygrametl.parallel.Decoupled):
             raise AttributeError('The object does not support scdensure')
 
 
-class DecoupledFactTable(pygrametl.parallel.Decoupled):
+class DecoupledFactTable(Decoupled):
 
     """A FactTable-like class that enables parallelism by executing all
        operations on a given FactTable in a separate, dedicated process
@@ -3174,16 +3181,16 @@ class DecoupledFactTable(pygrametl.parallel.Decoupled):
              good performance.
              Default: 200
         """
-        pygrametl.parallel.Decoupled.__init__(self,
-                                              obj=facttbl,
-                                              returnvalues=returnvalues,
-                                              consumes=consumes,
-                                              directupdatepositions=tuple(
-                                                  [(0, a) for a in
-                                                   attstoconsume]),
-                                              batchsize=batchsize,
-                                              queuesize=queuesize,
-                                              autowrap=False)
+        Decoupled.__init__(self,
+                           obj=facttbl,
+                           returnvalues=returnvalues,
+                           consumes=consumes,
+                           directupdatepositions=tuple(
+                               [(0, a) for a in
+                                attstoconsume]),
+                           batchsize=batchsize,
+                           queuesize=queuesize,
+                           autowrap=False)
 
         if facttbl in pygrametl._alltables:
             pygrametl._alltables.remove(facttbl)  # We add self instead
