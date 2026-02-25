@@ -46,6 +46,9 @@ if sys.platform.startswith('java'):
 else:
     # Use (C)Python's std. lib.
     import multiprocessing
+    # This module assumes processes inherit state through fork. Thus,
+    # it requires that the platform supports the fork start method
+    multiprocessing.set_start_method('fork')
 
 __all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
            'shareconnectionwrapper', 'getsharedsequencefactory']
