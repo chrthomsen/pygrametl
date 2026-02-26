@@ -38,9 +38,9 @@ import pygrametl.drawntabletesting as dtt
 
 
 # Types
-ReaderError = namedtuple('ReaderError', 'path start end name cause')
-PreCondition = namedtuple('PreCondition', 'path start end table')
-PostCondition = namedtuple('PostCondition', 'path start end table assert_name')
+ReaderError = namedtuple("ReaderError", "path start end name cause")
+PreCondition = namedtuple("PreCondition", "path start end table")
+PostCondition = namedtuple("PostCondition", "path start end table assert_name")
 
 
 class ExtendAction(argparse.Action):
@@ -53,19 +53,24 @@ class ExtendAction(argparse.Action):
 
 
 # Constants
-DEFAULT_CONNECTION_NAME = 'connection'
+DEFAULT_CONNECTION_NAME = "connection"
 
 
 # Functions
 def print_reason_for_failure(when, condition, reason):
-    print("[{} {}({}-{})] {}".format(when, condition.path, condition.start,
-                                     condition.end, reason), end='\n')
+    print(
+        "[{} {}({}-{})] {}".format(
+            when, condition.path, condition.start, condition.end, reason
+        ),
+        end="\n",
+    )
 
 
 def print_reader_error(path, firstlinenumber, lastlinenumber, reader_name, e):
     reader_error = ReaderError(
-        path, firstlinenumber, lastlinenumber, reader_name, e)
-    reason = reader_error.name + ' - ' + str(reader_error.cause)
+        path, firstlinenumber, lastlinenumber, reader_name, e
+    )
+    reason = reader_error.name + " - " + str(reader_error.cause)
     print_reason_for_failure("(Reader)", reader_error, reason)
 
 
@@ -75,12 +80,12 @@ def read_csv(columns, path, delimiter):
 
 
 def read_sql(columns, config, *arguments):
-    if 'SELECT' == arguments[0]:
+    if "SELECT" == arguments[0]:
         connection = DEFAULT_CONNECTION_NAME
-        query = ' '.join(arguments)
+        query = " ".join(arguments)
     else:
         connection = arguments[0]
-        query = ' '.join(arguments[1:])
+        query = " ".join(arguments[1:])
     connection = getattr(config, connection)
 
     # DTT expects a sequence of dicts with the column names as keys
@@ -91,23 +96,33 @@ def read_sql(columns, config, *arguments):
     return rows
 
 
-def read_dt(path, dt, lastlinenumber, pre_dtts, post_dtts, config, nullsubst,
-            variableprefix, connection_wrappers, pre_conditions,
-            post_conditions):
-    header = list(map(lambda s: s.strip(), dt[0].split(',')))
+def read_dt(
+    path,
+    dt,
+    lastlinenumber,
+    pre_dtts,
+    post_dtts,
+    config,
+    nullsubst,
+    variableprefix,
+    connection_wrappers,
+    pre_conditions,
+    post_conditions,
+):
+    header = list(map(lambda s: s.strip(), dt[0].split(",")))
     firstlinenumber = lastlinenumber - len(dt) + 1
 
     # If the last line does not start with a pipe it cannot be a DT column and
     # must instead be a data source with the column names defined by the DT
     loadFrom = None
     reader_name = "UNKNOWN"
-    if '|' != dt[-1].strip()[0]:
-        columns = [c.split(':')[0].strip() for c in dt[1].split('|') if c]
+    if "|" != dt[-1].strip()[0]:
+        columns = [c.split(":")[0].strip() for c in dt[1].split("|") if c]
         (reader_name, *arguments) = shlex.split(dt[-1])  # Splits as POSIX SH
         try:
-            if reader_name == 'csv':
+            if reader_name == "csv":
                 reader_function = read_csv
-            elif reader_name == 'sql':
+            elif reader_name == "sql":
                 reader_function = read_sql
                 arguments.insert(0, config)
             else:
@@ -117,45 +132,68 @@ def read_dt(path, dt, lastlinenumber, pre_dtts, post_dtts, config, nullsubst,
             dt = dt[:-1]  # The external data source should be passed to Table
         except Exception as e:
             # Errors are caught so the test runner is not terminated
-            print_reader_error(path, firstlinenumber, lastlinenumber,
-                               str(reader_name), e)
+            print_reader_error(
+                path, firstlinenumber, lastlinenumber, str(reader_name), e
+            )
             return
 
     # If the user has not given a connection the default is used
     connection = DEFAULT_CONNECTION_NAME
-    if '@' in header[0]:
-        (header[0], connection) = header[0].split('@')
+    if "@" in header[0]:
+        (header[0], connection) = header[0].split("@")
 
     # Ensures a connection to the test data is available and creates the table
     try:
         # Only one ConnectionWrapper should be created per connection
         if connection not in connection_wrappers:
-            connection_wrappers[connection] = \
-                dtt.connectionwrapper(getattr(config, connection))
-        table = dtt.Table(name=header[0], table='\n'.join(dt[1:]),
-                          nullsubst=nullsubst, variableprefix=variableprefix,
-                          loadFrom=loadFrom,
-                          testconnection=connection_wrappers[connection])
+            connection_wrappers[connection] = dtt.connectionwrapper(
+                getattr(config, connection)
+            )
+        table = dtt.Table(
+            name=header[0],
+            table="\n".join(dt[1:]),
+            nullsubst=nullsubst,
+            variableprefix=variableprefix,
+            loadFrom=loadFrom,
+            testconnection=connection_wrappers[connection],
+        )
     except Exception as e:
         # Errors are caught so the test runner is not terminated
-        print_reader_error(path, firstlinenumber, lastlinenumber,
-                           str(reader_name), e)
+        print_reader_error(
+            path, firstlinenumber, lastlinenumber, str(reader_name), e
+        )
         return
 
     # Only postconditions include an assert
     if len(header) == 1 and path in pre_dtts:
-        pre_conditions.append(PreCondition(path, firstlinenumber,
-                                           lastlinenumber, table))
+        pre_conditions.append(
+            PreCondition(path, firstlinenumber, lastlinenumber, table)
+        )
     elif len(header) == 2 and path in post_dtts:
-        post_conditions.append(PostCondition(path, firstlinenumber,
-                                             lastlinenumber, table,
-                                             header[1].capitalize()))
+        post_conditions.append(
+            PostCondition(
+                path,
+                firstlinenumber,
+                lastlinenumber,
+                table,
+                header[1].capitalize(),
+            )
+        )
 
 
-def read_dtt_file(path, pre_dtts, post_dtts, config, nullsubst, variableprefix,
-                  connection_wrappers, pre_conditions, post_conditions):
+def read_dtt_file(
+    path,
+    pre_dtts,
+    post_dtts,
+    config,
+    nullsubst,
+    variableprefix,
+    connection_wrappers,
+    pre_conditions,
+    post_conditions,
+):
     linenumber = 0
-    with open(path, 'r') as f:
+    with open(path, "r") as f:
         dt = []
         for line in f:
             line = line.strip()
@@ -165,16 +203,36 @@ def read_dtt_file(path, pre_dtts, post_dtts, config, nullsubst, variableprefix,
                 dt.append(line)
             # Empty lines separate DTs in the file
             elif dt:
-                read_dt(path, dt, linenumber - 1, pre_dtts, post_dtts, config,
-                        nullsubst, variableprefix, connection_wrappers,
-                        pre_conditions, post_conditions)
+                read_dt(
+                    path,
+                    dt,
+                    linenumber - 1,
+                    pre_dtts,
+                    post_dtts,
+                    config,
+                    nullsubst,
+                    variableprefix,
+                    connection_wrappers,
+                    pre_conditions,
+                    post_conditions,
+                )
                 dt = []
 
     # Reads the last DT if the file not end with an empty line
     if dt:
-        read_dt(path, dt, linenumber - 1, pre_dtts, post_dtts, config,
-                nullsubst, variableprefix, connection_wrappers,
-                pre_conditions, post_conditions)
+        read_dt(
+            path,
+            dt,
+            linenumber - 1,
+            pre_dtts,
+            post_dtts,
+            config,
+            nullsubst,
+            variableprefix,
+            connection_wrappers,
+            pre_conditions,
+            post_conditions,
+        )
 
 
 def ensure_pre_condition(pre_condition):
@@ -196,8 +254,14 @@ def assert_post_condition(post_condition):
 
 
 def usage(parser, verbose):
-    print("usage: " + Path(sys.argv[0]).stem + " [-" + "".join(map(
-        lambda a: a.option_strings[0][1:], parser._actions)) + "]", end="\n")
+    print(
+        "usage: "
+        + Path(sys.argv[0]).stem
+        + " [-"
+        + "".join(map(lambda a: a.option_strings[0][1:], parser._actions))
+        + "]",
+        end="\n",
+    )
 
     if verbose:
         print()
@@ -207,7 +271,7 @@ def usage(parser, verbose):
             if action.metavar:
                 print(action.metavar, end="\t")
             else:
-                print("", end='\t')
+                print("", end="\t")
             print(action.help, end="")
             print()
     sys.exit(1)
@@ -215,29 +279,67 @@ def usage(parser, verbose):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(add_help=False)
-    parser.register('action', 'extend', ExtendAction)
+    parser.register("action", "extend", ExtendAction)
 
     # HACK: Correcting tab characters are inserted here for alignment
-    parser.add_argument('-e', '--etl', action='extend', nargs='+',
-                        metavar="ETL [ARGS...]",
-                        help="run the command ETL with the arguments ARGS")
-    parser.add_argument('-f', '--files', action='extend', nargs='+',
-                        metavar="FILES...",
-                        help="use only the conditions specified in FILES")
-    parser.add_argument('-h', '--help', action='store_true',
-                        help="\tshow this help message and exit")
-    parser.add_argument('-n', '--null', action='store', metavar="STRING",
-                        help="\tuse STRING to represent NULL (default: NULL)")
-    parser.add_argument('-p', '--pre', action='extend', nargs='+',
-                        metavar="FILES...",
-                        help="use only the preconditions specified in FILES")
-    parser.add_argument('-P', '--post', action='extend', nargs='+',
-                        metavar="FILES...",
-                        help="use only the postconditions specified in FILES")
-    parser.add_argument('-r', '--recursion-off', action='store_true',
-                        help="execute only the tests in cwd and not sub-folders")
-    parser.add_argument('-v', '--varprefix', action='store', metavar="STRING",
-                        help="\tuse STRING as prefix for variables (default: $)")
+    parser.add_argument(
+        "-e",
+        "--etl",
+        action="extend",
+        nargs="+",
+        metavar="ETL [ARGS...]",
+        help="run the command ETL with the arguments ARGS",
+    )
+    parser.add_argument(
+        "-f",
+        "--files",
+        action="extend",
+        nargs="+",
+        metavar="FILES...",
+        help="use only the conditions specified in FILES",
+    )
+    parser.add_argument(
+        "-h",
+        "--help",
+        action="store_true",
+        help="\tshow this help message and exit",
+    )
+    parser.add_argument(
+        "-n",
+        "--null",
+        action="store",
+        metavar="STRING",
+        help="\tuse STRING to represent NULL (default: NULL)",
+    )
+    parser.add_argument(
+        "-p",
+        "--pre",
+        action="extend",
+        nargs="+",
+        metavar="FILES...",
+        help="use only the preconditions specified in FILES",
+    )
+    parser.add_argument(
+        "-P",
+        "--post",
+        action="extend",
+        nargs="+",
+        metavar="FILES...",
+        help="use only the postconditions specified in FILES",
+    )
+    parser.add_argument(
+        "-r",
+        "--recursion-off",
+        action="store_true",
+        help="execute only the tests in cwd and not sub-folders",
+    )
+    parser.add_argument(
+        "-v",
+        "--varprefix",
+        action="store",
+        metavar="STRING",
+        help="\tuse STRING as prefix for variables (default: $)",
+    )
 
     args, failed = parser.parse_known_args()
     if args.help:
@@ -260,29 +362,44 @@ def main():
     try:
         sys.path.insert(0, os.getcwd())
         import config  # Must specify a PEP 249 connection named 'connection'
-        del(sys.path[0])
+
+        del sys.path[0]
     except ImportError:
-        config = types.ModuleType('config')
-        config.connection = sqlite3.connect(':memory:')
+        config = types.ModuleType("config")
+        config.connection = sqlite3.connect(":memory:")
 
     # Reads only the DTT files required to execute the tests, the arguments
     # to Table is always given to ensure the defaults in dttr.py is used
-    dtts = list(map(lambda p: str(p), Path(os.getcwd()).glob('*.dtt') if
-                    args.recursion_off else Path(os.getcwd()).rglob('*.dtt')))
+    dtts = list(
+        map(
+            lambda p: str(p),
+            Path(os.getcwd()).glob("*.dtt")
+            if args.recursion_off
+            else Path(os.getcwd()).rglob("*.dtt"),
+        )
+    )
     if args.pre and args.post:
         paths = set(args.pre + args.post)
         dtts = filter(lambda path: str(path) in paths, dtts)
     pre_dtts = set(args.pre if args.pre else dtts)
     post_dtts = set(args.post if args.post else dtts)
-    nullsubst = args.null if args.null else 'NULL'
-    variableprefix = args.varprefix if args.varprefix else '$'
+    nullsubst = args.null if args.null else "NULL"
+    variableprefix = args.varprefix if args.varprefix else "$"
     connection_wrappers = {}
     pre_conditions = []
     post_conditions = []
     for dtt_path in dtts:
-        read_dtt_file(dtt_path, pre_dtts, post_dtts, config, nullsubst,
-                      variableprefix, connection_wrappers, pre_conditions,
-                      post_conditions)
+        read_dtt_file(
+            dtt_path,
+            pre_dtts,
+            post_dtts,
+            config,
+            nullsubst,
+            variableprefix,
+            connection_wrappers,
+            pre_conditions,
+            post_conditions,
+        )
 
     # Ensures all preconditions can setup state for the tests
     for pre_condition in pre_conditions:
@@ -290,12 +407,12 @@ def main():
 
     # Executes the ETL flow to load data into the test warehouse
     if args.etl:
-        os.system(' '.join(args.etl))
+        os.system(" ".join(args.etl))
 
     # Checks that postconditions are met after the ETL flow is run
     for post_condition in post_conditions:
         assert_post_condition(post_condition)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

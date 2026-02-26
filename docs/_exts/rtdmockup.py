@@ -1,10 +1,10 @@
 """Simple mock-up of the external dependencies so documentation can be
-   created without requiring the installation of Java and Jython.
+created without requiring the installation of Java and Jython.
 
-   The code used is made publicly available by www.readthedocs.org, under the
-   MIT license. For more information see the following links:
-   https://github.com/rtfd/readthedocs.org
-   https://read-the-docs.readthedocs.org/en/latest/index.html
+The code used is made publicly available by www.readthedocs.org, under the
+MIT license. For more information see the following links:
+https://github.com/rtfd/readthedocs.org
+https://read-the-docs.readthedocs.org/en/latest/index.html
 """
 
 # Copyright (c) 2011 Charles Leifer, Eric Holscher, Bobby Grace
@@ -34,7 +34,6 @@ import sys
 
 
 class Mock(object):
-
     def __init__(self, *args, **kwargs):
         pass
 
@@ -43,8 +42,8 @@ class Mock(object):
 
     @classmethod
     def __getattr__(cls, name):
-        if name in ('__file__', '__path__'):
-            return '/dev/null'
+        if name in ("__file__", "__path__"):
+            return "/dev/null"
         elif name[0] == name[0].upper():
             mockType = type(name, (), {})
             mockType.__module__ = __name__

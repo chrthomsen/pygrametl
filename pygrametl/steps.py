@@ -1,6 +1,6 @@
 """This module contains classes for making "steps" in an ETL flow.
-   Steps can be connected such that a row flows from step to step and
-   each step does something with the row.
+Steps can be connected such that a row flows from step to step and
+each step does something with the row.
 """
 
 # Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
@@ -30,10 +30,22 @@
 import pygrametl
 
 
-__all__ = ['Step', 'SourceStep', 'MappingStep', 'ValueMappingStep',
-           'PrintStep', 'DimensionStep', 'SCDimensionStep', 'RenamingStep',
-           'RenamingFromToStep', 'RenamingToFromStep', 'GarbageStep',
-           'ConditionalStep', 'CopyStep', 'connectsteps']
+__all__ = [
+    "Step",
+    "SourceStep",
+    "MappingStep",
+    "ValueMappingStep",
+    "PrintStep",
+    "DimensionStep",
+    "SCDimensionStep",
+    "RenamingStep",
+    "RenamingFromToStep",
+    "RenamingToFromStep",
+    "GarbageStep",
+    "ConditionalStep",
+    "CopyStep",
+    "connectsteps",
+]
 
 
 def connectsteps(*steps):
@@ -43,7 +55,6 @@ def connectsteps(*steps):
 
 
 class Step(object):
-
     """The basic class for steps in an ETL flow."""
 
     __steps = {}
@@ -51,17 +62,17 @@ class Step(object):
     def __init__(self, worker=None, next=None, name=None):
         """Arguments:
 
-           - worker: A function f(row) that performs the Step's operation.
-             If None, self.defaultworker is used. Default: None
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - worker: A function f(row) that performs the Step's operation.
+          If None, self.defaultworker is used. Default: None
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
 
         if name is not None:
@@ -69,14 +80,14 @@ class Step(object):
         self.__name = name
         self.__redirected = False
         self.__row = None
-        self.worker = (worker or self.defaultworker)
+        self.worker = worker or self.defaultworker
         self.next = next
 
     def process(self, row):
         """Perform the Step's operation on the given row.
 
-           If the row is not explicitly redirected (see _redirect), it will
-           be passed on the the next step if this has been set.
+        If the row is not explicitly redirected (see _redirect), it will
+        be passed on the the next step if this has been set.
         """
         self.__redirected = False
         self.__row = row
@@ -89,8 +100,8 @@ class Step(object):
     def _redirect(self, target):
         """Redirect the current row to the given target.
 
-           The target is either an instance of Step or the name of a Step
-           instance.
+        The target is either an instance of Step or the name of a Step
+        instance.
         """
         self.__redirected = True
         self._inject(self.__row, target)
@@ -98,9 +109,9 @@ class Step(object):
     def _inject(self, row, target=None):
         """Give a row to another Step before the current row is passed on.
 
-           The target is either 1) an instance of Step, 2) the name of a Step
-           instance, or 3) None. If None, the next default Step is used
-           and must be defined.
+        The target is either 1) an instance of Step, 2) the name of a Step
+        instance, or 3) None. If None, the next default Step is used
+        and must be defined.
         """
         if target is None:
             target = self.next
@@ -125,30 +136,29 @@ class Step(object):
     def defaultworker(self, row):
         """Perform the Step's operation on the given row.
 
-           Inheriting classes should implement this method.
+        Inheriting classes should implement this method.
         """
         pass
 
 
 class SourceStep(Step):
-
     """A Step that iterates over a data source and gives each row to the
-       next step. The start method must be called.
+    next step. The start method must be called.
     """
 
     def __init__(self, source, next=None, name=None):
         """Arguments:
 
-           - source: The data source. Must be iterable.
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - source: The data source. Must be iterable.
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=next, name=name)
         self.source = source
@@ -160,35 +170,34 @@ class SourceStep(Step):
 
 
 class MappingStep(Step):
-
     """A Step that applies functions to attributes in rows."""
 
     def __init__(self, targets, requiretargets=True, next=None, name=None):
         """Arguments:
 
-           - targets: A sequence of (name, function) pairs. For each element,
-             row[name] is set to function(row[name]) for each row given to the
-             step.
-           - requiretargets: A flag that decides if a KeyError should be raised
-             if a name from targets does not exist in a row. If True, a
-             KeyError is raised, if False the missing attribute is ignored and
-             not set. Default: True
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - targets: A sequence of (name, function) pairs. For each element,
+          row[name] is set to function(row[name]) for each row given to the
+          step.
+        - requiretargets: A flag that decides if a KeyError should be raised
+          if a name from targets does not exist in a row. If True, a
+          KeyError is raised, if False the missing attribute is ignored and
+          not set. Default: True
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=next, name=name)
         self.targets = targets
         self.requiretargets = requiretargets
 
     def defaultworker(self, row):
-        for (element, function) in self.targets:
+        for element, function in self.targets:
             if element in row:
                 row[element] = function(row[element])
             elif self.requiretargets:
@@ -196,31 +205,38 @@ class MappingStep(Step):
 
 
 class ValueMappingStep(Step):
-
     """A Step that Maps values to other values (e.g., DK -> Denmark)"""
 
-    def __init__(self, outputatt, inputatt, mapping, requireinput=True,
-                 defaultvalue=None, next=None, name=None):
+    def __init__(
+        self,
+        outputatt,
+        inputatt,
+        mapping,
+        requireinput=True,
+        defaultvalue=None,
+        next=None,
+        name=None,
+    ):
         """Arguments:
 
-           - outputatt: The attribute to write the mapped value to in each row.
-           - inputatt: The attribute to map.
-           - mapping: A dict with the mapping itself.
-           - requireinput: A flag that decides if a KeyError should be raised
-             if inputatt does not exist in a given row. If True, a KeyError
-             will be raised when the attriubte is missing. If False, a
-             the outputatt will be set to defaultvalue. Default: True
-           - defaultvalue: The default value to use when the mapping cannot be
-             done. Default: None
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - outputatt: The attribute to write the mapped value to in each row.
+        - inputatt: The attribute to map.
+        - mapping: A dict with the mapping itself.
+        - requireinput: A flag that decides if a KeyError should be raised
+          if inputatt does not exist in a given row. If True, a KeyError
+          will be raised when the attriubte is missing. If False, a
+          the outputatt will be set to defaultvalue. Default: True
+        - defaultvalue: The default value to use when the mapping cannot be
+          done. Default: None
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=next, name=name)
         self.outputatt = outputatt
@@ -231,8 +247,9 @@ class ValueMappingStep(Step):
 
     def defaultworker(self, row):
         if self.inputatt in row:
-            row[self.outputatt] = self.mapping.get(row[self.inputatt],
-                                                   self.defaultvalue)
+            row[self.outputatt] = self.mapping.get(
+                row[self.inputatt], self.defaultvalue
+            )
         elif not self.requireinput:
             row[self.attribute] = self.defaultvalue
         else:
@@ -240,21 +257,20 @@ class ValueMappingStep(Step):
 
 
 class PrintStep(Step):
-
     """A Step that prints each given row."""
 
     def __init__(self, next=None, name=None):
         """Arguments:
 
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=next, name=name)
 
@@ -263,24 +279,23 @@ class PrintStep(Step):
 
 
 class DimensionStep(Step):
-
     """A Step that performs ensure(row) on a given dimension for each row."""
 
     def __init__(self, dimension, keyfield=None, next=None, name=None):
         """Arguments:
 
-           - dimension: the Dimension object to call ensure on.
-           - keyfield: the name of the attribute that in each row is set to
-             hold the key value for the dimension member
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - dimension: the Dimension object to call ensure on.
+        - keyfield: the name of the attribute that in each row is set to
+          hold the key value for the dimension member
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=next, name=name)
         self.dimension = dimension
@@ -293,24 +308,23 @@ class DimensionStep(Step):
 
 
 class SCDimensionStep(Step):
-
     """A Step that performs scdensure(row) on a given dimension for each row."""
 
     def __init__(self, dimension, next=None, name=None):
         """Arguments:
 
-           - dimension: the Dimension object to call ensure on.
-           - keyfield: the name of the attribute that in each row is set to
-             hold the key value for the dimension member
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - dimension: the Dimension object to call ensure on.
+        - keyfield: the name of the attribute that in each row is set to
+          hold the key value for the dimension member
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=next, name=name)
         self.dimension = dimension
@@ -320,27 +334,26 @@ class SCDimensionStep(Step):
 
 
 class RenamingFromToStep(Step):
-
     """Step that performs renamings of attributes in rows."""
 
     def __init__(self, renaming, next=None, name=None):
         """Arguments:
 
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
-           - renaming: A dict with pairs (oldname, newname) which will
-             by used by pygrametl.renamefromto to do the renaming
-           - next: The default next step to use. This should be 1) an instance
-             of a Step, 2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
+        - renaming: A dict with pairs (oldname, newname) which will
+          by used by pygrametl.renamefromto to do the renaming
+        - next: The default next step to use. This should be 1) an instance
+          of a Step, 2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=next, name=name)
         self.renaming = renaming
@@ -348,26 +361,25 @@ class RenamingFromToStep(Step):
     def defaultworker(self, row):
         pygrametl.renamefromto(row, self.renaming)
 
+
 RenamingStep = RenamingFromToStep  # for backwards compat.
 
 
 class RenamingToFromStep(RenamingFromToStep):
-
     def defaultworker(self, row):
         pygrametl.renametofrom(row, self.renaming)
 
 
 class GarbageStep(Step):
-
-    """ A Step that does nothing. Rows are neither modified nor passed on."""
+    """A Step that does nothing. Rows are neither modified nor passed on."""
 
     def __init__(self, name=None):
         """Arguments:
 
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=None, name=name)
 
@@ -376,26 +388,25 @@ class GarbageStep(Step):
 
 
 class ConditionalStep(Step):
-
     """A Step that redirects rows based on a condition."""
 
     def __init__(self, condition, whentrue, whenfalse=None, name=None):
         """Arguments:
 
-           - condition: A function f(row) that is evaluated for each row.
-           - whentrue: The next step to use if the condition evaluates to a
-             true value. This argument  should be 1) an instance of a Step,
-             2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on.
-           - whenfalse: The Step that rows are sent to when the condition
-             evaluates to a false value. If None, the rows are silently
-             discarded. Default: None
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
+        - condition: A function f(row) that is evaluated for each row.
+        - whentrue: The next step to use if the condition evaluates to a
+          true value. This argument  should be 1) an instance of a Step,
+          2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on.
+        - whenfalse: The Step that rows are sent to when the condition
+          evaluates to a false value. If None, the rows are silently
+          discarded. Default: None
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
         """
         Step.__init__(self, worker=None, next=whentrue, name=name)
         self.whenfalse = whenfalse
@@ -412,33 +423,33 @@ class ConditionalStep(Step):
 
 
 class CopyStep(Step):
-
     """A Step that copies each row and passes on the copy and the original"""
 
     def __init__(self, originaldest, copydest, deepcopy=False, name=None):
         """Arguments:
 
-           - originaldest: The Step each given row is passed on to.
-             This argument  should be 1) an instance of a Step,
-             2) the name of a Step, or 3) None.
-             If if is a name, the next step will be looked up dynamically
-             each time. If it is None, no default step will exist and rows
-             will not be passed on.
-           - copydest: The Step a copy of each given row is passed on to.
-             This argument can be 1) an instance of a Step or 2) the name
-             of a step.
-           - name: A name for the Step instance. This is used when another
-             Step (implicitly or explicitly) passes on rows. If two instanes
-             have the same name, the name is mapped to the instance that was
-             created the latest. Default: None
-           - deepcopy: Decides if the copy should be deep or not.
-             Default: False
+        - originaldest: The Step each given row is passed on to.
+          This argument  should be 1) an instance of a Step,
+          2) the name of a Step, or 3) None.
+          If if is a name, the next step will be looked up dynamically
+          each time. If it is None, no default step will exist and rows
+          will not be passed on.
+        - copydest: The Step a copy of each given row is passed on to.
+          This argument can be 1) an instance of a Step or 2) the name
+          of a step.
+        - name: A name for the Step instance. This is used when another
+          Step (implicitly or explicitly) passes on rows. If two instanes
+          have the same name, the name is mapped to the instance that was
+          created the latest. Default: None
+        - deepcopy: Decides if the copy should be deep or not.
+          Default: False
         """
         Step.__init__(self, worker=None, next=originaldest, name=name)
         if copydest is None:
-            raise ValueError('copydest is None')
+            raise ValueError("copydest is None")
         self.copydest = copydest
         import copy
+
         if deepcopy:
             self.copyfunc = copy.deepcopy
         else:
@@ -449,6 +460,7 @@ class CopyStep(Step):
         self._inject(copy, self.copydest)
         # process will pass on row to originaldest = self.next
 
+
 # For aggregations. Experimental.
 
 
@@ -457,7 +469,6 @@ class AggregatedRow(dict):
 
 
 class AggregatingStep(Step):
-
     def __init__(self, aggregator=None, finalizer=None, next=None, name=None):
         Step.__init__(self, worker=aggregator, next=next, name=name)
         self.finalizer = finalizer or self.defaultfinalizer
@@ -478,13 +489,10 @@ class AggregatingStep(Step):
 
 
 class SumAggregator(AggregatingStep):
-
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self,
-                                 aggregator=None,
-                                 finalizer=None,
-                                 next=next,
-                                 name=name)
+        AggregatingStep.__init__(
+            self, aggregator=None, finalizer=None, next=next, name=name
+        )
         self.sum = 0
         self.field = field
 
@@ -497,13 +505,10 @@ class SumAggregator(AggregatingStep):
 
 
 class AvgAggregator(AggregatingStep):
-
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self,
-                                 aggregator=None,
-                                 finalizer=None,
-                                 next=next,
-                                 name=name)
+        AggregatingStep.__init__(
+            self, aggregator=None, finalizer=None, next=next, name=name
+        )
         self.sum = 0
         self.cnt = 0
         self.field = field
@@ -523,13 +528,10 @@ class AvgAggregator(AggregatingStep):
 
 
 class MaxAggregator(AggregatingStep):
-
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self,
-                                 aggregator=None,
-                                 finalizer=None,
-                                 next=next,
-                                 name=name)
+        AggregatingStep.__init__(
+            self, aggregator=None, finalizer=None, next=next, name=name
+        )
         self.max = None
         self.field = field
 
@@ -543,13 +545,10 @@ class MaxAggregator(AggregatingStep):
 
 
 class MinAggregator(AggregatingStep):
-
     def __init__(self, field, next=None, name=None):
-        AggregatingStep.__init__(self,
-                                 aggregator=None,
-                                 finalizer=None,
-                                 next=next,
-                                 name=name)
+        AggregatingStep.__init__(
+            self, aggregator=None, finalizer=None, next=next, name=name
+        )
         self.min = None
         self.field = field
 
