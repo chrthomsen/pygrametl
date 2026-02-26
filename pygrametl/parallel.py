@@ -53,7 +53,7 @@ else:
     # prevents Windows from doing so
     if (
         multiprocessing.get_start_method(allow_none=True) != "fork"
-        and os.environ["SPHINX_BUILD"] != "1"
+        and os.environ.get("SPHINX_BUILD") != "1"
     ):
         multiprocessing.set_start_method("fork")
 
