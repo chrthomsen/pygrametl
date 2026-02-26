@@ -17,11 +17,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install Ruff
-      run: pip install ruff
+    - name: Install Ruff and Sphinx
+      run: pip install ruff sphinx
+
     - name: Ruff Check
       run: ruff check --output-format=github
     - name: Ruff Format Check
       run: ruff format --check --preview --output-format=github
+
     - name: Python Unittest
       run: python3 -m unittest --verbose
+
+    - name: Sphinx (Ubuntu/macOS)
+      if: runner.os != 'Windows'
+      run: make html
+      working-directory: docs
+    - name: Sphinx (Windows)
+      if: runner.os == 'Windows'
+      run: make.bat hmtl
+      working-directory: docs
