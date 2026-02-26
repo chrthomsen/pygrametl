@@ -47,9 +47,14 @@ else:
     # Use (C)Python's std. lib.
     import multiprocessing
 
-    # This module assumes processes inherit state through fork. Thus,
-    # it requires that the platform supports the fork start method
-    if multiprocessing.get_start_method(allow_none=True) != "fork":
+    # This module assumes processes inherit state through fork. Thus, it
+    # requires that the platform supports the fork start method. The start
+    # method is not set to fork when Sphinx is building the documentation as it
+    # prevents Windows from doing so
+    if (
+        multiprocessing.get_start_method(allow_none=True) != "fork"
+        and os.environ["SPHINX_BUILD"] != "1"
+    ):
         multiprocessing.set_start_method("fork")
 
 __all__ = [

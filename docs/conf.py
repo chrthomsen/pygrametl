@@ -14,8 +14,9 @@
 
 # -- Interpreter configuration -------------------------------------------
 
-from os.path import abspath, dirname
 import sys
+import os
+from os.path import abspath, dirname
 
 # Make sure we get this copy of pygrametl, and not one on the system
 sys.path.insert(1, dirname(dirname(abspath(__file__))))
@@ -29,6 +30,9 @@ import rtdmockup
 
 # Prevents the creation of .pyc and .pyo by the Python interpreter
 sys.dont_write_bytecode = True
+
+# Set an environment variable when Sphinx is build the documentation
+os.environ["SPHINX_BUILD"] = "1"
 
 # Creates mockups of Java code used in the Jython modules used in the framework
 rtdmockup.mockModules(["pygrametl.jythonsupport", "java", "java.sql"])
