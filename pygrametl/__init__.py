@@ -370,8 +370,8 @@ def rowfactory(source, names, close=True):
                 try:
                     source.close()
                 except Exception:
-                    return
-            return
+                    pass
+        return
 
     # Try next and fetchone and otherwise fetchall
     nextfunc = getattr(source, 'next', None)
@@ -397,7 +397,7 @@ def rowfactory(source, names, close=True):
             try:
                 source.close()
             except Exception:
-                return
+                pass
 
 
 def endload():
