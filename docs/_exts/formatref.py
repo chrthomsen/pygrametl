@@ -79,4 +79,7 @@ def setup(app):
     # stores the name of the first format. Also, Sphinx caches the output of
     # role, so make clean must always be run before make latexpdf or make html
     logger = logging.getLogger(__name__)
-    logger.warning("make clean must be run before make html and make latexpdf")
+    logger.info(
+        "make clean must be run before make html and make latexpdf",
+        color="red",
+    )

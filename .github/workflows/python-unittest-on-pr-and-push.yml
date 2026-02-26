@@ -28,12 +28,12 @@ jobs:
     - name: Python Unittest
       run: python3 -m unittest --verbose
 
+    # Windows purposely fails when importing parallel.py as it does not support fork.
     - name: Sphinx (Ubuntu/macOS)
       if: runner.os != 'Windows'
-      run: make html
+      run: python -m sphinx.cmd.build --builder html . _build --fresh-env --fail-on-warning
       working-directory: docs
     - name: Sphinx (Windows)
       if: runner.os == 'Windows'
-      shell: cmd
-      run: make.bat html
+      run: python -m sphinx.cmd.build --builder html . _build --fresh-env
       working-directory: docs
