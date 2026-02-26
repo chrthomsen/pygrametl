@@ -46,7 +46,6 @@ from datetime import date, datetime
 from sys import modules, version_info
 from threading import Thread
 
-import copy as pcopy
 from pygrametl.FIFODict import FIFODict
 
 
@@ -163,14 +162,6 @@ def getint(value, default=None):
     """getint(value[, default]) -> int(value) if possible, else default."""
     try:
         return int(value)
-    except Exception:
-        return default
-
-
-def getlong(value, default=None):
-    """getlong(value[, default]) -> long(value) if possible, else default."""
-    try:
-        return long(value)
     except Exception:
         return default
 
@@ -369,16 +360,16 @@ def rowfactory(source, names, close=True):
     if hasattr(source, 'fetchmany'):
         try:
             while True:
-                l = source.fetchmany(200)
-                if not l:
+                rows = source.fetchmany(200)
+                if not rows:
                     break
-                for tmp in l:
-                    yield dict(zip(names, tmp))
+                for row in rows:
+                    yield dict(zip(names, row))
         finally:
             if close:
                 try:
                     source.close()
-                except:
+                except Exception:
                     return
             return
 
@@ -405,7 +396,7 @@ def rowfactory(source, names, close=True):
         if close:
             try:
                 source.close()
-            except:
+            except Exception:
                 return
 
 

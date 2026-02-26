@@ -14,24 +14,23 @@
 
 # -- Interpreter configuration -------------------------------------------
 
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname
 import sys
-import os
 
 # Make sure we get this copy of pygrametl, and not one on the system
 sys.path.insert(1, dirname(dirname(abspath(__file__))))
 import pygrametl
+import rtdmockup
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('_exts'))
+sys.path.insert(0, abspath('_exts'))
 
 # Prevents the creation of .pyc and .pyo by the Python interpreter
 sys.dont_write_bytecode = True
 
 # Creates mockups of Java code used in the Jython modules used in the framework
-import rtdmockup
 rtdmockup.mockModules(['pygrametl.jythonsupport', 'java', 'java.sql'])
 
 # -- General configuration -----------------------------------------------

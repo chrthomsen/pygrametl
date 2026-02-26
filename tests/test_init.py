@@ -22,14 +22,14 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import sys
 import unittest
+from unittest.mock import patch
+from datetime import date, datetime
+from sqlite3.dbapi2 import Timestamp, Date
+
 import pygrametl
 import pygrametl.drawntabletesting as dtt
 from tests import utilities
-from sqlite3.dbapi2 import Timestamp, Date
-from datetime import date, datetime
-from unittest.mock import patch
 
 
 class InitTest(unittest.TestCase):
@@ -97,15 +97,6 @@ class InitTest(unittest.TestCase):
             self.assertEqual(2, pygrametl.getint(i))
 
         self.assertIsNone(pygrametl.getint("not convertible"))
-
-    def test_getlong(self):
-        # long() is not supported in Python 3
-        python_version = sys.version_info[0]
-        if python_version < 3:
-            for i in ("2", 2, 2.0):
-                self.assertEqual(long, type(pygrametl.getlong(i)))
-
-            self.assertIsNone(pygrametl.getlong("not convertible"))
 
     def test_getfloat(self):
         for i in ("2", "2.9", 2.7, 2):

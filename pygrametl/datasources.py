@@ -81,7 +81,7 @@ class TypedCSVSource(DictReader):
                             restkey=restkey, restval=restval, dialect=dialect,
                             *args, **kwds)
 
-        if not type(casts) == dict:
+        if type(casts) is not dict:
             raise TypeError("The casts argument must be a dict")
         for v in casts.values():
             if not callable(v):
@@ -277,9 +277,9 @@ class HashJoiningSource(object):
     def __buildhash(self):
         for row in self.__src2:
             keyval = row[self.__key2]
-            l = self.__hash.get(keyval, [])
-            l.append(row)
-            self.__hash[keyval] = l
+            rows = self.__hash.get(keyval, [])
+            rows.append(row)
+            self.__hash[keyval] = rows 
         self.__ready = True
 
     def __iter__(self):
@@ -375,7 +375,7 @@ class MappingSource(object):
            - callables: A dict mapping from attribute names to functions to
              apply to these names, e.g. type casting {'id':int, 'salary':float}
         """
-        if not type(callables) == dict:
+        if type(callables) is not dict:
             raise TypeError("The callables argument must be a dict")
         for v in callables.values():
             if not callable(v):
@@ -505,11 +505,11 @@ class SQLTransformingSource(object):
         # Create insert SQL
         # This gives "INSERT INTO tablename(att1, att2, att3, ...)
         #             VALUES (%(att1)s, %(att2)s, %(att3)s, ...)"
-        quote = tables._quote
-        quotelist = lambda x: [quote(xn) for xn in x]
-        self.__insertsql = "INSERT INTO " + temptablename \
-            + "(" + ", ".join(quotelist(row.keys())) + ") VALUES (" + \
-            ", ".join(["%%(%s)s" % (att,) for att in row.keys()]) + ")"
+        self.__insertsql = "INSERT INTO " + temptablename + "(" + \
+            ", ".join([tables._quote(key) for key in row.keys()]) + \
+            ") VALUES (" + \
+            ", ".join(["%%(%s)s" % (att,) for att in row.keys()]) + \
+            ")"
 
         # Create drop and truncate SQL
         self.__dropsql = "DROP TABLE " + temptablename

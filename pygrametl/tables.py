@@ -50,7 +50,6 @@ from subprocess import Popen, PIPE
 from sys import version_info
 import tempfile
 from time import sleep
-import types
 
 import pygrametl
 from pygrametl.FIFODict import FIFODict
@@ -140,7 +139,7 @@ class Dimension(object):
            - targetconnection: The ConnectionWrapper to use. If not given,
              the default target connection is used.
         """
-        if not type(key) in pygrametl._stringtypes:
+        if type(key) not in pygrametl._stringtypes:
             raise ValueError("Key argument must be a string")
         if not len(attributes):
             raise ValueError("No attributes given")
@@ -509,7 +508,7 @@ class CachedDimension(Dimension):
                 # select the key and the lookup attributes
                 sql = "SELECT %s FROM %s" % \
                     (", ".join(
-                        self.quotelist([key] + [l for l in self.lookupatts])),
+                        self.quotelist([key] + list(self.lookupatts))),
                      name)
                 positions = range(1, len(self.lookupatts) + 1)
             if size > 0 and usefetchfirst:
@@ -1064,7 +1063,7 @@ class SlowlyChangingDimension(Dimension):
                                self.quote(self.orderingatt), self.name,
                                lookupattlist))
             joincond = ' AND '.join(['A.%s = B.%s' % (self.quote(att), att)
-                                     for att in [l for l in self.lookupatts] +
+                                     for att in list(self.lookupatts) +
                                      [self.orderingatt]
                                      ])
             sql = 'SELECT %s FROM (%s) AS A, %s AS B WHERE %s' %\
@@ -1524,7 +1523,7 @@ class SlowlyChangingDimension(Dimension):
         versions = self._getversions(row, namemapping)
         for ver in versions:
             toattval = ver[self.toatt]
-            if toattval == None or op(toattval, when):
+            if toattval is None or op(toattval, when):
                 return ver[self.key]
         return None
 
@@ -1543,7 +1542,7 @@ class SlowlyChangingDimension(Dimension):
         versions.reverse()
         for ver in versions:
             fromattval = ver[self.fromatt]
-            if fromattval == None or op(fromattval, when):
+            if fromattval is None or op(fromattval, when):
                 return ver[self.key]
         return None
 
@@ -1564,9 +1563,9 @@ class SlowlyChangingDimension(Dimension):
 
         for ver in versions:
             toattval = ver[self.toatt]
-            if toattval == None or toop(toattval, when):
+            if toattval is None or toop(toattval, when):
                 fromattval = ver[self.fromatt]
-                if fromattval == None or fromop(fromattval, when):
+                if fromattval is None or fromop(fromattval, when):
                     return ver[self.key]
                 else:
                     # Different versions don't overlap in the dimension, so no
@@ -1812,11 +1811,11 @@ class SnowflakedDimension(object):
         if res is not None:
             return
 
-        for l in self.levellist:
-            for t in self.levels[l]:
-                if t.key in row or \
-                        (t.key in namemapping and namemapping[t.key] in row):
-                    t.update(row, namemapping)
+        for level in self.levellist:
+            for dim in self.levels[level]:
+                if dim.key in row or \
+                        (dim.key in namemapping and namemapping[dim.key] in row):
+                    dim.update(row, namemapping)
 
         self._after_update(row, namemapping)
 

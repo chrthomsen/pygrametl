@@ -96,7 +96,7 @@ class Table:
         if '|' not in table or ':' not in lines[0] or \
            (len(lines) > 1 and not all(ch in delim for ch in lines[1])) \
            or all(len(lines[0]) != len(line) for line in lines):
-            table = '\n'.join(map(lambda l: l.strip(), table.split('\n')))
+            table = '\n'.join(map(lambda line: line.strip(), table.split('\n')))
             raise ValueError("Malformed table\n{}".format(table))
 
         # Mapping of database types to Python types
