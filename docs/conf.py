@@ -20,12 +20,12 @@ import sys
 # Make sure we get this copy of pygrametl, and not one on the system
 sys.path.insert(1, dirname(dirname(abspath(__file__))))
 import pygrametl
-import rtdmockup
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, abspath('_exts'))
+import rtdmockup
 
 # Prevents the creation of .pyc and .pyo by the Python interpreter
 sys.dont_write_bytecode = True
