@@ -18,7 +18,7 @@ Unreleased
   in ``t``.
 
   ``__len__`` added to ``drawntabletesting.Table``. For a Table ``t``,
-  this makes it possible to use ``len(n)`` to get the number of rows
+  this makes it possible to use ``len(t)`` to get the number of rows
   in ``t``.
 
 **Fixed**
