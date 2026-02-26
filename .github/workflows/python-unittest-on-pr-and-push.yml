@@ -34,5 +34,6 @@ jobs:
       working-directory: docs
     - name: Sphinx (Windows)
       if: runner.os == 'Windows'
+      shell: cmd
       run: make.bat html
       working-directory: docs
