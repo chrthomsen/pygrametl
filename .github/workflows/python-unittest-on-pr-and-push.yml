@@ -17,5 +17,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Python unittest
+    - name: Install ruff
+      run: pip install ruff
+    - name: Run ruff
+      run: ruff check --output-format=github
+    - name: Run unittest
       run: python3 -m unittest --verbose
