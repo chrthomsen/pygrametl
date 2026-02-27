@@ -62,9 +62,7 @@ def escape_star(line):
     return " ".join(line_split)
 
 
-def correct_signature(
-    app, what, name, obj, options, signature, return_annotation
-):
+def correct_signature(app, what, name, obj, options, signature, return_annotation):
     """Makes some correction to the markup, to prevent Sphinx from using escape
     sequences instead of just printing them"""
 

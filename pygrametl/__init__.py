@@ -595,8 +595,7 @@ def datespan(
 
     for arg in (fromdate, todate):
         if not (
-            (type(arg) in _stringtypes and arg.count("-") == 2)
-            or isinstance(arg, date)
+            (type(arg) in _stringtypes and arg.count("-") == 2) or isinstance(arg, date)
         ):
             raise ValueError(
                 "fromdate and today must be datetime.dates or "
@@ -843,9 +842,7 @@ class ConnectionWrapper(object):
                 break
             name = newstmt[start + 2 : end]
             names.append(name)
-            newstmt = newstmt.replace(
-                newstmt[start : end + 2], "?", 1
-            )  # Replace once!
+            newstmt = newstmt.replace(newstmt[start : end + 2], "?", 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -911,9 +908,7 @@ class ConnectionWrapper(object):
         if self.__cursor.description is None:
             return {}
         if names is None:
-            names = [
-                self.nametranslator(t[0]) for t in self.__cursor.description
-            ]
+            names = [self.nametranslator(t[0]) for t in self.__cursor.description]
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
@@ -966,17 +961,13 @@ class ConnectionWrapper(object):
                 modname = fullmodname.rsplit(".", i)[0]
                 try:
                     modref = modules[modname]
-                    if hasattr(modref, "paramstyle") and hasattr(
-                        modref, "connect"
-                    ):
+                    if hasattr(modref, "paramstyle") and hasattr(modref, "connect"):
                         self.__underlyingmodule = modref
                         return modref
                 except KeyError:
                     pass
 
-        return (
-            None  # We could not finde the module. Raise an Exception instead?
-        )
+        return None  # We could not finde the module. Raise an Exception instead?
 
     def commit(self):
         """Commit the transaction."""
@@ -1093,9 +1084,7 @@ class BackgroundConnectionWrapper(object):
                 # The attributes to extract
                 names = self.__translations[stmt][1]
                 newparams = [[p[n] for n in names] for p in params]
-                self.__queue.put(
-                    (self._MANY, self.__cursor, newstmt, newparams)
-                )
+                self.__queue.put((self._MANY, self.__cursor, newstmt, newparams))
         else:
             # for pyformat when no translation is necessary
             self.__queue.put((self._MANY, self.__cursor, stmt, params))
@@ -1132,9 +1121,7 @@ class BackgroundConnectionWrapper(object):
             end = newstmt.find(")s", start)
             name = newstmt[start + 2 : end]
             names.append(name)
-            newstmt = newstmt.replace(
-                newstmt[start : end + 2], "?", 1
-            )  # Replace once!
+            newstmt = newstmt.replace(newstmt[start : end + 2], "?", 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -1196,9 +1183,7 @@ class BackgroundConnectionWrapper(object):
         if self.__cursor.description is None:
             return {}
         if names is None:
-            names = [
-                self.nametranslator(t[0]) for t in self.__cursor.description
-            ]
+            names = [self.nametranslator(t[0]) for t in self.__cursor.description]
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
@@ -1252,17 +1237,13 @@ class BackgroundConnectionWrapper(object):
                 modname = fullmodname.rsplit(".", i)[0]
                 try:
                     modref = modules[modname]
-                    if hasattr(modref, "paramstyle") and hasattr(
-                        modref, "connect"
-                    ):
+                    if hasattr(modref, "paramstyle") and hasattr(modref, "connect"):
                         self.__underlyingmodule = modref
                         return modref
                 except KeyError:
                     pass
 
-        return (
-            None  # We could not finde the module. Raise an Exception instead?
-        )
+        return None  # We could not finde the module. Raise an Exception instead?
 
     def commit(self):
         endload()

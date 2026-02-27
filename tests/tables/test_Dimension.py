@@ -117,10 +117,7 @@ class DimensionTest(unittest.TestCase):
 
     # Apply the namemapping in cls.namemapping
     def apply_namemapping(self, row):
-        return {
-            self.namemapping.get(key, key): value
-            for (key, value) in row.items()
-        }
+        return {self.namemapping.get(key, key): value for (key, value) in row.items()}
 
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
@@ -259,9 +256,7 @@ class DimensionTest(unittest.TestCase):
 
     def test_getbyvals(self):
         postcondition = self.initial
-        vals, expected_num_of_rows = (
-            self.get_part_of_row_and_num_of_occurrences()
-        )
+        vals, expected_num_of_rows = self.get_part_of_row_and_num_of_occurrences()
 
         rows = self.test_dimension.getbyvals(vals)
         self.connection_wrapper.commit()
@@ -289,9 +284,7 @@ class DimensionTest(unittest.TestCase):
 
     def test_getbyvals_with_namemapping(self):
         postcondition = self.initial
-        vals, expected_num_of_rows = (
-            self.get_part_of_row_and_num_of_occurrences()
-        )
+        vals, expected_num_of_rows = self.get_part_of_row_and_num_of_occurrences()
         vals_namemapped = self.apply_namemapping(vals)
 
         # Determine the namemapping arguments as vals_namemapped may contain a
@@ -301,9 +294,7 @@ class DimensionTest(unittest.TestCase):
             if value in vals_namemapped.keys():
                 namemapping[key] = value
 
-        rows = self.test_dimension.getbyvals(
-            vals_namemapped, namemapping=namemapping
-        )
+        rows = self.test_dimension.getbyvals(vals_namemapped, namemapping=namemapping)
         self.connection_wrapper.commit()
 
         self.assertEqual(expected_num_of_rows, len(rows))
@@ -334,9 +325,7 @@ class DimensionTest(unittest.TestCase):
 
         updated_row_namemapped = self.apply_namemapping(updated_row)
 
-        self.test_dimension.update(
-            updated_row_namemapped, namemapping=self.namemapping
-        )
+        self.test_dimension.update(updated_row_namemapped, namemapping=self.namemapping)
         self.connection_wrapper.commit()
 
         postcondition.assertEqual()
@@ -510,9 +499,7 @@ class DimensionTest(unittest.TestCase):
         row_with_mock_key = self.get_nonexisting_row(withkey=True)
         row_with_mock_key["id"] = 99  # Must matchmock_idfinder()
 
-        postcondition = self.initial + self.convert_row_to_dtt_str(
-            row_with_mock_key
-        )
+        postcondition = self.initial + self.convert_row_to_dtt_str(row_with_mock_key)
 
         dimension = Dimension(
             name=self.initial.name,
@@ -644,9 +631,7 @@ class CachedDimensionTest(DimensionTest):
             {"id": 4, "title": "Calvin and Hobbes Two", "genre": "Comic"},
             {"id": 5, "title": "The Silver Spoon", "genre": "Cookbook"},
         ]:
-            self.assertRaises(
-                Exception, self.test_dimension.getbykey, row["id"]
-            )
+            self.assertRaises(Exception, self.test_dimension.getbykey, row["id"])
 
         # However, the cache can still be used to lookup keys by attributes
         for row, key in [
@@ -842,9 +827,7 @@ class CachedDimensionTest(DimensionTest):
             {"id": 4, "title": "Calvin and Hobbes Two", "genre": "Comic"},
             {"id": 5, "title": "The Silver Spoon", "genre": "Cookbook"},
         ]:
-            self.assertRaises(
-                Exception, self.test_dimension.getbykey, row["id"]
-            )
+            self.assertRaises(Exception, self.test_dimension.getbykey, row["id"])
 
     def test_getbykey_cache_after_some_lookups(self):
         self.test_dimension = CachedDimension(
@@ -945,9 +928,7 @@ class CachedDimensionTest(DimensionTest):
         )
 
         non_existing_row = {"title": "Title", "genre": "Genre"}
-        self.assertEqual(
-            "unknown", self.test_dimension.lookup(non_existing_row)
-        )
+        self.assertEqual("unknown", self.test_dimension.lookup(non_existing_row))
 
         existing_row = {"id": 1, "title": "Unknown", "genre": "Unknown"}
         self.assertEqual(1, self.test_dimension.lookup(existing_row))
@@ -994,10 +975,7 @@ class BulkDimensionTest(DimensionTest):
             + "| 7 | Book 2 | Genre |"
             + "| 8 | Book 3 | Genre |"
         )
-        [
-            self.test_dimension.insert(row)
-            for row in expected.additions(withKey=True)
-        ]
+        [self.test_dimension.insert(row) for row in expected.additions(withKey=True)]
         self.assertEqual(self.test_dimension.awaitingrows, 3)
 
     def test_awaiting_insert_commit(self):
@@ -1008,10 +986,7 @@ class BulkDimensionTest(DimensionTest):
             + "| 7 | Book 2 | Genre |"
             + "| 8 | Book 3 | Genre |"
         )
-        [
-            self.test_dimension.insert(row)
-            for row in expected.additions(withKey=True)
-        ]
+        [self.test_dimension.insert(row) for row in expected.additions(withKey=True)]
         self.assertEqual(self.test_dimension.awaitingrows, 3)
         self.connection_wrapper.commit()
         self.assertEqual(self.test_dimension.awaitingrows, 0)
@@ -1250,9 +1225,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
         postcondition = self.initial
 
-        self.assertEqual(
-            3, self.scdimension.lookup({"name": "Ann", "age": 20})
-        )
+        self.assertEqual(3, self.scdimension.lookup({"name": "Ann", "age": 20}))
 
         # The row is missing a lookup attribute
         self.assertRaises(KeyError, self.scdimension.lookup, {"name": "Ann"})
@@ -1402,9 +1375,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
         postcondition = (
             self.initial.update(
                 0, "| 1 | Ann | 21 | Aalborg | 2010-01-01 | 2010-03-03 | 1 |"
-            ).update(
-                2, "| 3 | Ann | 21 | Aarhus  | 2010-03-03 | 2010-04-04 | 2 |"
-            )
+            ).update(2, "| 3 | Ann | 21 | Aarhus  | 2010-03-03 | 2010-04-04 | 2 |")
             + "| 5 | Ann | 21 | Aabenraa  | 2010-04-04 | NULL | 3 |"
         )
 
@@ -1477,8 +1448,7 @@ class SlowlyChangingDimensionTest(DimensionTest):
 
     def test_scdensure_new_row(self):
         postcondition = (
-            self.initial
-            + "| 5 | Doris | 85 | Dublin | 2010-04-04 | NULL | 1 |"
+            self.initial + "| 5 | Doris | 85 | Dublin | 2010-04-04 | NULL | 1 |"
         )
 
         self.test_dimension.scdensure(
@@ -1863,33 +1833,23 @@ class SnowflakedDimensionTest(unittest.TestCase):
 
         self.assertEqual(
             1,
-            self.snowflaked_dimension.lookup(
-                {"day": "January 1, 2000", "mid": 1}
-            ),
+            self.snowflaked_dimension.lookup({"day": "January 1, 2000", "mid": 1}),
         )
         self.assertEqual(
             32,
-            self.snowflaked_dimension.lookup(
-                {"day": "February 1, 2000", "mid": 2}
-            ),
+            self.snowflaked_dimension.lookup({"day": "February 1, 2000", "mid": 2}),
         )
         self.assertEqual(
             33,
-            self.snowflaked_dimension.lookup(
-                {"day": "February 2, 2000", "mid": 2}
-            ),
+            self.snowflaked_dimension.lookup({"day": "February 2, 2000", "mid": 2}),
         )
         self.assertEqual(
             366,
-            self.snowflaked_dimension.lookup(
-                {"day": "January 1, 2001", "mid": 13}
-            ),
+            self.snowflaked_dimension.lookup({"day": "January 1, 2001", "mid": 13}),
         )
         self.assertEqual(
             731,
-            self.snowflaked_dimension.lookup(
-                {"day": "January 1, 2002", "mid": 25}
-            ),
+            self.snowflaked_dimension.lookup({"day": "January 1, 2002", "mid": 25}),
         )
 
         self.connection_wrapper.commit()
@@ -1987,14 +1947,10 @@ class SnowflakedDimensionTest(unittest.TestCase):
         postcondition_year = self.year_dt
 
         self.assertIsNone(
-            self.snowflaked_dimension.lookup(
-                {"day": "January 45, 2099", "mid": 1}
-            )
+            self.snowflaked_dimension.lookup({"day": "January 45, 2099", "mid": 1})
         )
         self.assertIsNone(
-            self.snowflaked_dimension.lookup(
-                {"day": "Non-existing row", "mid": -1}
-            )
+            self.snowflaked_dimension.lookup({"day": "Non-existing row", "mid": -1})
         )
 
         self.connection_wrapper.commit()
@@ -2012,9 +1968,7 @@ class SnowflakedDimensionTest(unittest.TestCase):
             self.snowflaked_dimension.lookup,
             {"day": "January 1, 2000"},
         )
-        self.assertRaises(
-            KeyError, self.snowflaked_dimension.lookup, {"mid": 2}
-        )
+        self.assertRaises(KeyError, self.snowflaked_dimension.lookup, {"mid": 2})
 
         self.connection_wrapper.commit()
         postcondition_day.assertEqual()
@@ -2254,9 +2208,7 @@ class SnowflakedDimensionTest(unittest.TestCase):
 
     def test_update_a_child_dimensionension_only(self):
         postcondition_day = self.day_dt
-        postcondition_month = self.month_dt.update(
-            0, "| 1 | January in 2000 | 1 |"
-        )
+        postcondition_month = self.month_dt.update(0, "| 1 | January in 2000 | 1 |")
         postcondition_year = self.year_dt
 
         updated_row = {"mid": 1, "month": "January in 2000"}
@@ -2361,9 +2313,7 @@ class SnowflakedDimensionTest(unittest.TestCase):
             + "| 1700 | April 4, 2004  | 52 |"
         )
         postcondition_month = (
-            self.month_dt
-            + "| 39 | March 2003 | 4 |"
-            + "| 52 | April 2004 | 5 |"
+            self.month_dt + "| 39 | March 2003 | 4 |" + "| 52 | April 2004 | 5 |"
         )
         postcondition_year = self.year_dt + "| 4 | 2003 |" + "| 5 | 2004 |"
 
@@ -2490,9 +2440,7 @@ class SnowflakedDimensionTest(unittest.TestCase):
             + "| 1700 | April 4, 2004  | 52 |"
         )
         postcondition_month = (
-            self.month_dt
-            + "| 39 | March 2003 | 4 |"
-            + "| 52 | April 2004 | 5 |"
+            self.month_dt + "| 39 | March 2003 | 4 |" + "| 52 | April 2004 | 5 |"
         )
         postcondition_year = self.year_dt + "| 4 | 2003 |" + "| 5 | 2004 |"
 
@@ -2604,9 +2552,7 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertDictEqual(row, table[0])
         row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-12-31", True)
         self.assertDictEqual(row, table[0])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-12-31", False
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-12-31", False)
         self.assertDictEqual(row, table[2])
         row = test_dimension.lookuprowasof({"name": "Ann"}, "2222-12-31", True)
         self.assertDictEqual(row, table[4])
@@ -2653,9 +2599,7 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertDictEqual(row, table[0])
         row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-12-31", True)
         self.assertDictEqual(row, table[0])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-12-31", False
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-12-31", False)
         self.assertDictEqual(row, table[2])
         row = test_dimension.lookuprowasof({"name": "Ann"}, "2222-12-31", True)
         self.assertDictEqual(row, table[4])
@@ -2709,9 +2653,7 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertDictEqual(row, table[1])
         row = test_dimension.lookuprowasof({"name": "Ann"}, "2002-01-01", True)
         self.assertDictEqual(row, table[3])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2002-01-01", False
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2002-01-01", False)
         self.assertDictEqual(row, table[1])
 
     def test_lookupasof_and_lookuprowasof_usingfrom_noversion(self):
@@ -2759,9 +2701,7 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
         self.assertDictEqual(row, table[1])
         row = test_dimension.lookuprowasof({"name": "Ann"}, "2002-01-01", True)
         self.assertDictEqual(row, table[3])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2002-01-01", False
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2002-01-01", False)
         self.assertDictEqual(row, table[1])
 
     def test_lookupasof_and_lookuprowasof_usingfromto(self):
@@ -2791,41 +2731,23 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
             cachesize=100,
             prefill=True,
         )
-        key = test_dimension.lookupasof(
-            {"name": "Aida"}, "2001-05-05", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Aida"}, "2001-05-05", (True, True))
         self.assertEqual(key, 0)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "1999-09-09", (True, False)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "1999-09-09", (True, False))
         self.assertEqual(key, None)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2001-05-05", (True, False)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2001-05-05", (True, False))
         self.assertEqual(key, 1)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2001-05-05", (False, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2001-05-05", (False, True))
         self.assertEqual(key, 1)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2001-12-31", (False, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2001-12-31", (False, True))
         self.assertEqual(key, 1)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2002-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2002-12-31", (True, True))
         self.assertEqual(key, 3)
-        key = test_dimension.lookupasof(
-            {"name": "Charlie"}, "2002-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Charlie"}, "2002-12-31", (True, True))
         self.assertEqual(key, 4)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2222-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2222-12-31", (True, True))
         self.assertEqual(key, 5)
-        key = test_dimension.lookupasof(
-            {"name": "Bob"}, "2222-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Bob"}, "2222-12-31", (True, True))
         self.assertEqual(key, None)
         self.assertRaises(
             ValueError,
@@ -2835,42 +2757,26 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
             inclusive=(False, False),
         )
 
-        row = test_dimension.lookuprowasof(
-            {"name": "Aida"}, "2001-05-05", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Aida"}, "2001-05-05", (True, True))
         self.assertDictEqual(row, table[0])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "1999-09-09", (True, False)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "1999-09-09", (True, False))
         for att in test_dimension.all:
             self.assertEqual(row[att], None)
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-05-05", (True, False)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-05-05", (True, False))
         self.assertDictEqual(row, table[1])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-05-05", (False, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-05-05", (False, True))
         self.assertDictEqual(row, table[1])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-12-31", (False, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-12-31", (False, True))
         self.assertDictEqual(row, table[1])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2002-12-31", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2002-12-31", (True, True))
         self.assertDictEqual(row, table[3])
         row = test_dimension.lookuprowasof(
             {"name": "Charlie"}, "2002-12-31", (True, True)
         )
         self.assertDictEqual(row, table[4])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2222-12-31", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2222-12-31", (True, True))
         self.assertDictEqual(row, table[5])
-        row = test_dimension.lookuprowasof(
-            {"name": "Bob"}, "2222-12-31", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Bob"}, "2222-12-31", (True, True))
         for att in test_dimension.all:
             self.assertEqual(row[att], None)
         self.assertRaises(
@@ -2907,41 +2813,23 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
             cachesize=100,
             prefill=True,
         )
-        key = test_dimension.lookupasof(
-            {"name": "Aida"}, "2001-05-05", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Aida"}, "2001-05-05", (True, True))
         self.assertEqual(key, 0)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "1999-09-09", (True, False)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "1999-09-09", (True, False))
         self.assertEqual(key, None)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2001-05-05", (True, False)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2001-05-05", (True, False))
         self.assertEqual(key, 1)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2001-05-05", (False, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2001-05-05", (False, True))
         self.assertEqual(key, 1)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2001-12-31", (False, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2001-12-31", (False, True))
         self.assertEqual(key, 1)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2002-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2002-12-31", (True, True))
         self.assertEqual(key, 3)
-        key = test_dimension.lookupasof(
-            {"name": "Charlie"}, "2002-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Charlie"}, "2002-12-31", (True, True))
         self.assertEqual(key, 4)
-        key = test_dimension.lookupasof(
-            {"name": "Ann"}, "2222-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Ann"}, "2222-12-31", (True, True))
         self.assertEqual(key, 5)
-        key = test_dimension.lookupasof(
-            {"name": "Bob"}, "2222-12-31", (True, True)
-        )
+        key = test_dimension.lookupasof({"name": "Bob"}, "2222-12-31", (True, True))
         self.assertEqual(key, None)
         self.assertRaises(
             ValueError,
@@ -2951,42 +2839,26 @@ class SlowlyChangingDimensionLookupasofTest(unittest.TestCase):
             inclusive=(False, False),
         )
 
-        row = test_dimension.lookuprowasof(
-            {"name": "Aida"}, "2001-05-05", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Aida"}, "2001-05-05", (True, True))
         self.assertDictEqual(row, table[0])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "1999-09-09", (True, False)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "1999-09-09", (True, False))
         for att in test_dimension.all:
             self.assertEqual(row[att], None)
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-05-05", (True, False)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-05-05", (True, False))
         self.assertDictEqual(row, table[1])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-05-05", (False, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-05-05", (False, True))
         self.assertDictEqual(row, table[1])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2001-12-31", (False, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2001-12-31", (False, True))
         self.assertDictEqual(row, table[1])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2002-12-31", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2002-12-31", (True, True))
         self.assertDictEqual(row, table[3])
         row = test_dimension.lookuprowasof(
             {"name": "Charlie"}, "2002-12-31", (True, True)
         )
         self.assertDictEqual(row, table[4])
-        row = test_dimension.lookuprowasof(
-            {"name": "Ann"}, "2222-12-31", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Ann"}, "2222-12-31", (True, True))
         self.assertDictEqual(row, table[5])
-        row = test_dimension.lookuprowasof(
-            {"name": "Bob"}, "2222-12-31", (True, True)
-        )
+        row = test_dimension.lookuprowasof({"name": "Bob"}, "2222-12-31", (True, True))
         for att in test_dimension.all:
             self.assertEqual(row[att], None)
         self.assertRaises(

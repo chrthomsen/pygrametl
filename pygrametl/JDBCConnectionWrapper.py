@@ -129,9 +129,7 @@ class JDBCConnectionWrapper(object):
         if ps.execute():
             self.__resultset = ps.getResultSet()
             if sql not in self.__resultmeta:
-                self.__resultmeta[sql] = self.__extractresultmetadata(
-                    self.__resultset
-                )
+                self.__resultmeta[sql] = self.__extractresultmetadata(self.__resultset)
             (self.__resultnames, self.__resulttypes) = self.__resultmeta[sql]
         else:
             self.__resultset = None
@@ -400,9 +398,7 @@ class BackgroundJDBCConnectionWrapper(object):
         if ps.execute():
             self.__resultset = ps.getResultSet()
             if sql not in self.__resultmeta:
-                self.__resultmeta[sql] = self.__extractresultmetadata(
-                    self.__resultset
-                )
+                self.__resultmeta[sql] = self.__extractresultmetadata(self.__resultset)
             (self.__resultnames, self.__resulttypes) = self.__resultmeta[sql]
         else:
             self.__resultset = None

@@ -151,9 +151,7 @@ def _getexcepthook():
     def excepthook(exctype, excvalue, exctraceback):
         import traceback
 
-        sys.stderr.write(
-            "An uncaught exception occured. Terminating pygrametl.\n"
-        )
+        sys.stderr.write("An uncaught exception occured. Terminating pygrametl.\n")
         traceback.print_exception(exctype, excvalue, exctraceback)
         exit()
 
@@ -243,9 +241,7 @@ def splitpoint(*arg, **kwargs):
 
     for kw in kwargs.keys():
         if kw not in ("instances", "output", "queuesize"):
-            raise TypeError(
-                "'%s' is an invalid keyword argument for splitpoint" % kw
-            )
+            raise TypeError("'%s' is an invalid keyword argument for splitpoint" % kw)
 
     output = kwargs.get("output", None)
     instances = kwargs.get("instances", 1)
@@ -510,9 +506,7 @@ def createflow(*functions, **options):
                 raise ValueError("An element is neither iterable nor callable")
             for f in item:
                 if not callable(f):
-                    raise ValueError(
-                        "An element in a sequence is not callable"
-                    )
+                    raise ValueError("An element in a sequence is not callable")
             # We can - finally - create the function
             groupfunc = _buildgroupfunction(item)
             resultfuncs.append(groupfunc)
@@ -611,10 +605,7 @@ class Decoupled(object):
         else:
             self.__fromworker = None
         self.__otherqueues = dict(
-            [
-                (dcpld.__instancenumber, dcpld.__fromworker)
-                for dcpld in consumes
-            ]
+            [(dcpld.__instancenumber, dcpld.__fromworker) for dcpld in consumes]
         )
         # Will store dicts - see also __decoupledworker
         self.__otherresults = {}
@@ -713,9 +704,7 @@ class Decoupled(object):
                     else:
                         args = self.__replacefuturesintuple(args)
                 func = getattr(self._obj, funcname)
-                res = func(
-                    *args
-                )  # NB: func's side-effects on args are ignored
+                res = func(*args)  # NB: func's side-effects on args are ignored
                 if id is not None:
                     resbatch.append((id, res))
             if self.__fromworker and resbatch:
@@ -1089,9 +1078,7 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
     freelines = multiprocessing.Queue()
     for i in range(maxclients):
         freelines.put(i)
-    serverCW = SharedConnectionWrapperServer(
-        targetconnection, toserver, toclients
-    )
+    serverCW = SharedConnectionWrapperServer(targetconnection, toserver, toclients)
     userfuncnames = []
     for func in userfuncs:
         # Compatability for Python 2 and 3
@@ -1101,9 +1088,7 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
                 and hasattr(func, "func_name")
                 and not func.func_name == "<lambda>"
             ):
-                raise ValueError(
-                    "Elements in userfunc must be callable and named"
-                )
+                raise ValueError("Elements in userfunc must be callable and named")
             if hasattr(SharedConnectionWrapperClient, func.func_name):
                 raise ValueError("Illegal function name: " + func.func_name)
             setattr(serverCW, "_userfunc_" + func.func_name, func)
@@ -1114,9 +1099,7 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
                 and hasattr(func, "__name__")
                 and not func.__name__ == "<lambda>"
             ):
-                raise ValueError(
-                    "Elements in userfunc must be callable and named"
-                )
+                raise ValueError("Elements in userfunc must be callable and named")
             if hasattr(SharedConnectionWrapperClient, func.__name__):
                 raise ValueError("Illegal function name: " + func.__name__)
             setattr(serverCW, "_userfunc_" + func.__name__, func)

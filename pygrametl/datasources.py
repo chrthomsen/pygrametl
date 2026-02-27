@@ -181,9 +181,7 @@ class SQLSource(object):
                     self.cursor.execute(self.query)
                 names = None
                 if self.names or self.cursor.description:
-                    names = self.names or [
-                        t[0] for t in self.cursor.description
-                    ]
+                    names = self.names or [t[0] for t in self.cursor.description]
             while True:
                 if self.fetchsize <= 0:
                     data = self.cursor.fetchall()
@@ -530,10 +528,7 @@ class SQLTransformingSource(object):
             self.__targetconnection = ConnectionWrapper(targetconnection)
 
             # Ensure the implicitly created ConnectionWrapper is not default
-            if (
-                self.__targetconnection
-                == pygrametl.getdefaulttargetconnection()
-            ):
+            if self.__targetconnection == pygrametl.getdefaulttargetconnection():
                 pygrametl._defaulttargetconnection = None
 
         # Create table SQL
@@ -544,10 +539,7 @@ class SQLTransformingSource(object):
         createsql = "CREATE TABLE {}({})".format(
             temptablename,
             ", ".join(
-                [
-                    name + " " + self.__casts[type(value)]
-                    for name, value in row.items()
-                ]
+                [name + " " + self.__casts[type(value)] for name, value in row.items()]
             ),
         )
         self.__targetconnection.execute(createsql)
@@ -664,14 +656,10 @@ class CrossTabbingSource(object):
             self.__aggregator.process((row, col), data[self.__values])
 
         # ... and then we build result rows
-        for row in (
-            self.__sortrows and sorted(self.__allrows) or self.__allrows
-        ):
+        for row in self.__sortrows and sorted(self.__allrows) or self.__allrows:
             res = {self.__rowvaluesatt: row}
             for col in self.__allcolumns:
-                res[col] = self.__aggregator.finish(
-                    (row, col), self.__nonevalue
-                )
+                res[col] = self.__aggregator.finish((row, col), self.__nonevalue)
             yield res
 
 

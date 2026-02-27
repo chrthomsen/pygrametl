@@ -148,15 +148,11 @@ class InitTest(unittest.TestCase):
         # Cases with custom truevalues and falsevalues
         self.assertEqual(
             True,
-            pygrametl.getbool(
-                "CustomTrueValue", truevalues={"CustomTrueValue"}
-            ),
+            pygrametl.getbool("CustomTrueValue", truevalues={"CustomTrueValue"}),
         )
         self.assertEqual(
             False,
-            pygrametl.getbool(
-                "CustomFalseValue", falsevalues={"CustomFalseValue"}
-            ),
+            pygrametl.getbool("CustomFalseValue", falsevalues={"CustomFalseValue"}),
         )
 
     def test_getdate(self):
@@ -185,17 +181,11 @@ class InitTest(unittest.TestCase):
         )
 
         # 'surname' and 'gender' are renamed in mapping
-        self.assertEqual(
-            "Doe", pygrametl.getvalue(self.row, "surname", self.renaming)
-        )
-        self.assertEqual(
-            "male", pygrametl.getvalue(self.row, "gender", self.renaming)
-        )
+        self.assertEqual("Doe", pygrametl.getvalue(self.row, "surname", self.renaming))
+        self.assertEqual("male", pygrametl.getvalue(self.row, "gender", self.renaming))
 
         # Old keys can still be used despite renaming
-        self.assertEqual(
-            "male", pygrametl.getvalue(self.row, "sex", self.renaming)
-        )
+        self.assertEqual("male", pygrametl.getvalue(self.row, "sex", self.renaming))
 
     def test_getvalueor(self):
         self.assertEqual(
@@ -211,20 +201,14 @@ class InitTest(unittest.TestCase):
         )
 
         # Old keys can still be used despite renaming
-        self.assertEqual(
-            "male", pygrametl.getvalue(self.row, "sex", self.renaming)
-        )
+        self.assertEqual("male", pygrametl.getvalue(self.row, "sex", self.renaming))
 
         # The key 'salary' does not exist in dict
-        self.assertEqual(
-            None, pygrametl.getvalueor(self.row, "salary", self.renaming)
-        )
+        self.assertEqual(None, pygrametl.getvalueor(self.row, "salary", self.renaming))
 
         self.assertEqual(
             "Default value",
-            pygrametl.getvalueor(
-                self.row, "salary", self.renaming, "Default value"
-            ),
+            pygrametl.getvalueor(self.row, "salary", self.renaming, "Default value"),
         )
 
     def test_setdefaults_a_parameters_as_sequences_of_atts_and_defaults(self):
@@ -245,9 +229,7 @@ class InitTest(unittest.TestCase):
         defaults = [0, "unknown", 180]
 
         # An exception should be raised since the lists have different lengths
-        self.assertRaises(
-            ValueError, pygrametl.setdefaults, self.row, atts, defaults
-        )
+        self.assertRaises(ValueError, pygrametl.setdefaults, self.row, atts, defaults)
 
     def test_setdefaults_b_parameters_as_pairs_of_atts_and_defaults(self):
         atts_and_defaults = [
@@ -308,9 +290,7 @@ class InitTest(unittest.TestCase):
         self.assertEqual(expected_num_of_rows, dict_counter)
 
         times_close_should_be_called = 1 if close is True else 0
-        self.assertEqual(
-            times_close_should_be_called, source.times_closed_was_called
-        )
+        self.assertEqual(times_close_should_be_called, source.times_closed_was_called)
 
     class MockSourceWithFetchmany:
         def __init__(self, rows_left):
@@ -391,16 +371,12 @@ class InitTest(unittest.TestCase):
             self.MockDimensionOrFacttable()
 
         for dimension_or_facttable in pygrametl._alltables:
-            self.assertEqual(
-                0, dimension_or_facttable.times_endload_was_called
-            )
+            self.assertEqual(0, dimension_or_facttable.times_endload_was_called)
 
         pygrametl.endload()
 
         for dimension_or_facttable in pygrametl._alltables:
-            self.assertEqual(
-                1, dimension_or_facttable.times_endload_was_called
-            )
+            self.assertEqual(1, dimension_or_facttable.times_endload_was_called)
         pygrametl._alltables = alltables
 
     class MockDimensionOrFacttable:
@@ -460,9 +436,7 @@ class InitTest(unittest.TestCase):
 
         # Incorrect input or format
         self.assertRaises(Exception, pygrametl.ymdhmsparser, "Not a datetime")
-        self.assertRaises(
-            Exception, pygrametl.ymdhmsparser, "01-01-2021 14:32:56"
-        )
+        self.assertRaises(Exception, pygrametl.ymdhmsparser, "01-01-2021 14:32:56")
         self.assertRaises(Exception, pygrametl.ymdhmsparser, "2021-01-01")
 
     def test_datereader(self):
@@ -497,13 +471,7 @@ class InitTest(unittest.TestCase):
             minutes_str = str(i) if i > 9 else "0" + str(i)
             seconds_str = minutes_str
             datetime_str = (
-                date_str
-                + " "
-                + hours_str
-                + ":"
-                + minutes_str
-                + ":"
-                + seconds_str
+                date_str + " " + hours_str + ":" + minutes_str + ":" + seconds_str
             )
             mydict = {"time": datetime_str, "price": 150}
 
@@ -570,9 +538,7 @@ class InitTest(unittest.TestCase):
         todate = date(2021, 1, 2)
 
         # Tests that date is now 'dd-mm-yyyy' as specified in 'strings'
-        dategen = pygrametl.datespan(
-            fromdate, todate, strings={"date": "%d-%m-%Y"}
-        )
+        dategen = pygrametl.datespan(fromdate, todate, strings={"date": "%d-%m-%Y"})
         date_str = fromdate.strftime("%d-%m-%Y")
         self.assertEqual(date_str, next(dategen)["date"])
 
@@ -638,9 +604,7 @@ class InitTest(unittest.TestCase):
         # Create a new connection. The returned default target connection
         # wrapper should still be the previous connection wrapper
         connection_second = utilities.get_connection()
-        connectionwrapper_second = pygrametl.ConnectionWrapper(
-            connection_second
-        )
+        connectionwrapper_second = pygrametl.ConnectionWrapper(connection_second)
         self.assertNotEqual(
             connectionwrapper_second, pygrametl.getdefaulttargetconnection()
         )

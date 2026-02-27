@@ -44,18 +44,14 @@ def get_connection():
     )
 
     # Select the
-    connection_type, connection_string = connection_type_and_string.split(
-        "://"
-    )
+    connection_type, connection_string = connection_type_and_string.split("://")
 
     if connection_type == "sqlite":
         return __sqlite3_connection(connection_string)
     elif connection_type == "psycopg2":
         return __psycopg2_connection(connection_string)
     else:
-        raise ValueError(
-            "Expected sqlite:// or psycopg2:// and a connection string"
-        )
+        raise ValueError("Expected sqlite:// or psycopg2:// and a connection string")
 
 
 def ensure_default_connection_wrapper():

@@ -60,9 +60,7 @@ except ValueError:
 
     class Decoupled(object):
         def __init__(*args):
-            raise ValueError(
-                "Decoupled is not supported on platforms without fork"
-            )
+            raise ValueError("Decoupled is not supported on platforms without fork")
 
 
 try:
@@ -121,9 +119,7 @@ def definequote(quotechar):
         def _quote(x):
             return quotechar[0] + x + quotechar[1]
     else:
-        raise AttributeError(
-            "Expected either a string or a tuple of two strings"
-        )
+        raise AttributeError("Expected either a string or a tuple of two strings")
 
 
 class Dimension(object):
@@ -211,9 +207,7 @@ class Dimension(object):
             + " FROM "
             + name
             + " WHERE "
-            + " AND ".join(
-                ["%s = %%(%s)s" % (self.quote(lv), lv) for lv in lookupatts]
-            )
+            + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv) for lv in lookupatts])
         )
 
         # This gives "SELECT key, att1, att2, ... FROM NAME WHERE key =
@@ -314,9 +308,7 @@ class Dimension(object):
 
         # select all attributes from the table. The attributes available from
         # the values dict are used in the WHERE clause.
-        attstouse = [
-            a for a in self.attributes if a in values or a in namemapping
-        ]
+        attstouse = [a for a in self.attributes if a in values or a in namemapping]
         sql = (
             "SELECT "
             + ", ".join(self.quotelist(self.all))
@@ -356,13 +348,9 @@ class Dimension(object):
             return
 
         if self.key not in row:
-            raise KeyError(
-                "The key value (%s) is missing in the row" % (self.key,)
-            )
+            raise KeyError("The key value (%s) is missing in the row" % (self.key,))
 
-        attstouse = [
-            a for a in self.attributes if a in row or a in namemapping
-        ]
+        attstouse = [a for a in self.attributes if a in row or a in namemapping]
         if not attstouse:
             # Only the key was there - there are no attributes to update
             return
@@ -371,9 +359,7 @@ class Dimension(object):
             "UPDATE "
             + self.name
             + " SET "
-            + ", ".join(
-                ["%s = %%(%s)s" % (self.quote(att), att) for att in attstouse]
-            )
+            + ", ".join(["%s = %%(%s)s" % (self.quote(att), att) for att in attstouse])
             + " WHERE %s = %%(%s)s" % (self.quote(self.key), self.key)
         )
         self.targetconnection.execute(sql, row, namemapping)
@@ -577,9 +563,7 @@ class CachedDimension(Dimension):
 
         if prefill:
             if cachefullrows:
-                positions = tuple(
-                    [self.all.index(att) for att in self.lookupatts]
-                )
+                positions = tuple([self.all.index(att) for att in self.lookupatts])
                 # select the key and all attributes
                 sql = "SELECT %s FROM %s" % (
                     ", ".join(self.quotelist(self.all)),
@@ -870,10 +854,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                 + self.name
                 + " SET "
                 + ", ".join(
-                    [
-                        "%s = %%(%s)s" % (self.quote(att), att)
-                        for att in type1atts
-                    ]
+                    ["%s = %%(%s)s" % (self.quote(att), att) for att in type1atts]
                 )
                 + " WHERE %s = %%(%s)s" % (self.quote(key), key)
             )
@@ -893,9 +874,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         if self.cachefullrows:
             CachedDimension._after_getbykey(self, keyvalue, resultrow)
         elif resultrow[self.key] is not None:
-            self.__key2sca[keyvalue] = tuple(
-                [resultrow[a] for a in self.type1atts]
-            )
+            self.__key2sca[keyvalue] = tuple([resultrow[a] for a in self.type1atts])
 
     def _after_update(self, row, namemapping):
         CachedDimension._after_update(self, row, namemapping)
@@ -909,10 +888,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         # as the value is changed in place no rows are moved in the cache.
         oldtype1vals = dict(zip(self.type1atts, self.__key2sca[keyvalue]))
         self.__key2sca[keyvalue] = tuple(
-            [
-                row.get(namemapping.get(a, a)) or oldtype1vals[a]
-                for a in self.type1atts
-            ]
+            [row.get(namemapping.get(a, a)) or oldtype1vals[a] for a in self.type1atts]
         )
 
     def _after_insert(self, row, namemapping, newkeyvalue):
@@ -922,9 +898,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         # break this assumption.
         if not self.cachefullrows:
             tmp = pygrametl.project(self.type1atts, row, namemapping)
-            self.__key2sca[newkeyvalue] = tuple(
-                [tmp[a] for a in self.type1atts]
-            )
+            self.__key2sca[newkeyvalue] = tuple([tmp[a] for a in self.type1atts])
 
 
 class SlowlyChangingDimension(Dimension):
@@ -1099,9 +1073,7 @@ class SlowlyChangingDimension(Dimension):
         self.maxto = maxto
         self.srcdateatt = srcdateatt
         self.srcdateparser = srcdateparser
-        self.type1atts = [
-            att if type(att) is str else att[0] for att in type1atts
-        ]
+        self.type1atts = [att if type(att) is str else att[0] for att in type1atts]
         type1lookupatts = set(self.type1atts) & set(self.lookupatts)
         if type1lookupatts:
             raise ValueError(
@@ -1126,14 +1098,10 @@ class SlowlyChangingDimension(Dimension):
         # attributes
         for var in [orderingatt, versionatt, fromatt, toatt] + self.type1atts:
             if var and var not in attributes:
-                raise ValueError(
-                    "%s not present in attributes argument" % (var,)
-                )
+                raise ValueError("%s not present in attributes argument" % (var,))
 
         # Now extend the SQL from Dimension such that we use the versioning
-        self.keylookupsql += " ORDER BY %s DESC" % (
-            self.quote(self.orderingatt),
-        )
+        self.keylookupsql += " ORDER BY %s DESC" % (self.quote(self.orderingatt),)
         # There could be NULLs in toatt and fromatt
         if self.orderingatt == self.toatt:
             self.keylookupsql += " NULLS FIRST"
@@ -1151,21 +1119,16 @@ class SlowlyChangingDimension(Dimension):
             + " FROM "
             + name
             + " WHERE "
-            + " AND ".join(
-                ["%s = %%(%s)s" % (self.quote(lv), lv) for lv in lookupatts]
-            )
+            + " AND ".join(["%s = %%(%s)s" % (self.quote(lv), lv) for lv in lookupatts])
         )
 
         if toatt:
-            self.updatetodatesql = (
-                "UPDATE %s SET %s = %%(%s)s WHERE %s = %%(%s)s"
-                % (
-                    name,
-                    self.quote(toatt),
-                    toatt,
-                    self.quote(key),
-                    key,
-                )
+            self.updatetodatesql = "UPDATE %s SET %s = %%(%s)s WHERE %s = %%(%s)s" % (
+                name,
+                self.quote(toatt),
+                toatt,
+                self.quote(key),
+                key,
             )
 
         if self.toatt or self.fromatt:
@@ -1186,10 +1149,7 @@ class SlowlyChangingDimension(Dimension):
                 + name
                 + " WHERE "
                 + " AND ".join(
-                    [
-                        "%s = %%(%s)s" % (self.quote(lv), lv)
-                        for lv in lookupatts
-                    ]
+                    ["%s = %%(%s)s" % (self.quote(lv), lv) for lv in lookupatts]
                 )
                 + " ORDER BY %s ASC" % (self.quote(self.orderingatt),)
             )
@@ -1235,9 +1195,7 @@ class SlowlyChangingDimension(Dimension):
                 ]
             )
             sql = "SELECT %s FROM (%s) AS A, %s AS B WHERE %s" % (
-                ", ".join(
-                    ["B.%s AS %s" % (self.quote(att), att) for att in self.all]
-                ),
+                ", ".join(["B.%s AS %s" % (self.quote(att), att) for att in self.all]),
                 newestversions,
                 self.name,
                 joincond,
@@ -1254,9 +1212,7 @@ class SlowlyChangingDimension(Dimension):
         if self.__cachesize < 0:
             allrawrows = self.targetconnection.fetchalltuples()
         else:
-            allrawrows = self.targetconnection.fetchmanytuples(
-                self.__cachesize
-            )
+            allrawrows = self.targetconnection.fetchmanytuples(self.__cachesize)
 
         for rawrow in allrawrows:
             self.rowcache[rawrow[0]] = rawrow
@@ -1298,9 +1254,7 @@ class SlowlyChangingDimension(Dimension):
         if key is not None:
             return key
 
-        self.targetconnection.execute(
-            self.keyversionlookupsql, row, namemapping
-        )
+        self.targetconnection.execute(self.keyversionlookupsql, row, namemapping)
 
         versions = [kv for kv in self.targetconnection.fetchalltuples()]
         if not versions:
@@ -1406,9 +1360,7 @@ class SlowlyChangingDimension(Dimension):
                             # They have different types (and are thus not
                             # equal). Try to convert to strings and see if they
                             # are equal.
-                            modref = (
-                                self.targetconnection.getunderlyingmodule()
-                            )
+                            modref = self.targetconnection.getunderlyingmodule()
                             rowdate = modref.Date(rdt.year, rdt.month, rdt.day)
                             if str(rowdate).strip("'\"") != str(
                                 other[self.fromatt]
@@ -1448,9 +1400,7 @@ class SlowlyChangingDimension(Dimension):
                 # Update the todate attribute in the old row version in the DB
                 # if it has not been set manually or by closecurrent
                 if toatt and other[self.toatt] == self.maxto:
-                    toattval = self.tofinder(
-                        self.targetconnection, row, namemapping
-                    )
+                    toattval = self.tofinder(self.targetconnection, row, namemapping)
                     self.targetconnection.execute(
                         self.updatetodatesql,
                         {self.key: keyval, self.toatt: toattval},
@@ -1560,9 +1510,7 @@ class SlowlyChangingDimension(Dimension):
     def __performtype1updates(self, updatekeys, updates):
         """ """
         # Generate SQL for the update
-        valparts = ", ".join(
-            ["%s = %%(%s)s" % (self.quote(k), k) for k in updates]
-        )
+        valparts = ", ".join(["%s = %%(%s)s" % (self.quote(k), k) for k in updates])
         keyparts = ", ".join([str(k) for k in updatekeys])
         sql = "UPDATE %s SET %s WHERE %s IN (%s)" % (
             self.name,
@@ -1683,13 +1631,9 @@ class SlowlyChangingDimension(Dimension):
                 row, when, inclusive, namemapping
             )
         elif self.fromatt:
-            return self._lookupasofusingfromatt(
-                row, when, inclusive, namemapping
-            )
+            return self._lookupasofusingfromatt(row, when, inclusive, namemapping)
         elif self.toatt:
-            return self._lookupasofusingtoatt(
-                row, when, inclusive, namemapping
-            )
+            return self._lookupasofusingtoatt(row, when, inclusive, namemapping)
         else:
             raise RuntimeError(
                 "fromatt and/or toatt must be set if lookupasof should be used"
@@ -1699,9 +1643,7 @@ class SlowlyChangingDimension(Dimension):
         """Return an ordered list of all versions of a given member"""
         # The constructed SQL depends on what arguments the user
         # passed to __init__.
-        self.targetconnection.execute(
-            self.keyvaliditylookupsql, row, namemapping
-        )
+        self.targetconnection.execute(self.keyvaliditylookupsql, row, namemapping)
         return [kv for kv in self.targetconnection.rowfactory()]
 
     def _lookupasofusingtoatt(self, row, when, inclusive, namemapping):
@@ -1741,9 +1683,7 @@ class SlowlyChangingDimension(Dimension):
                 return ver[self.key]
         return None
 
-    def _lookupasofusingfromattandtoatt(
-        self, row, when, inclusive, namemapping
-    ):
+    def _lookupasofusingfromattandtoatt(self, row, when, inclusive, namemapping):
         """Helper function for lookupasof"""
         # At least one of the timestamps must be included as there otherwise
         # would be gaps between versions. In other words, [from, to), (from,
@@ -1937,9 +1877,7 @@ class SnowflakedDimension(object):
         if not fullrow:
             res = self.root.getbykey(keyvalue)
         else:
-            self.targetconnection.execute(
-                self.rowlookupsql, {self.root.key: keyvalue}
-            )
+            self.targetconnection.execute(self.rowlookupsql, {self.root.key: keyvalue})
             res = self.targetconnection.fetchone(self.allnames)
         self._after_getbykey(keyvalue, res, fullrow)
         return res
@@ -1974,14 +1912,9 @@ class SnowflakedDimension(object):
             # select all attributes from the table.
             # The attributes available from the
             # values dict are used in the WHERE clause.
-            attstouse = [
-                a for a in self.allnames if a in values or a in namemapping
-            ]
+            attstouse = [a for a in self.allnames if a in values or a in namemapping]
             sqlwhere = " WHERE " + " AND ".join(
-                [
-                    "%s = %%(%s)s" % (self.root.quote(att), att)
-                    for att in attstouse
-                ]
+                ["%s = %%(%s)s" % (self.root.quote(att), att) for att in attstouse]
             )
             self.targetconnection.execute(
                 self.alljoinssql + sqlwhere, values, namemapping
@@ -2078,9 +2011,7 @@ class SnowflakedDimension(object):
         key = self._before_insert(row, namemapping)
         if key is not None:
             return key
-        (key, insertdone) = self.__ensure_helper(
-            self.root, row, namemapping, False
-        )
+        (key, insertdone) = self.__ensure_helper(self.root, row, namemapping, False)
         if not insertdone:
             raise ValueError("Member already present - nothing inserted")
         self._after_insert(row, namemapping, key)
@@ -2196,8 +2127,8 @@ class SnowflakedDimension(object):
             (keyval, _) = self.__ensure_helper(dim, row, namemapping, False)
             row[(namemapping.get(dim.key) or dim.key)] = keyval
 
-        row[(namemapping.get(self.root.key) or self.root.key)] = (
-            self.root.scdensure(row, namemapping)
+        row[(namemapping.get(self.root.key) or self.root.key)] = self.root.scdensure(
+            row, namemapping
         )
         return row[(namemapping.get(self.root.key) or self.root.key)]
 
@@ -2247,9 +2178,7 @@ class FactTable(object):
             + " FROM "
             + name
             + " WHERE "
-            + " AND ".join(
-                ["%s = %%(%s)s" % (self.quote(k), k) for k in self.keyrefs]
-            )
+            + " AND ".join(["%s = %%(%s)s" % (self.quote(k), k) for k in self.keyrefs])
         )
 
     def insert(self, row, namemapping={}):
@@ -2390,11 +2319,7 @@ class BatchFactTable(FactTable):
             self.__basesql = self.insertsql[: self.insertsql.find(" (") + 1]
             self.__rowtovalue = lambda row: (
                 "("
-                + ",".join(
-                    map(
-                        lambda c: pygrametl.getsqlfriendlystr(row[c]), self.all
-                    )
-                )
+                + ",".join(map(lambda c: pygrametl.getsqlfriendlystr(row[c]), self.all))
                 + ")"
             )
         else:
@@ -2482,9 +2407,7 @@ class AccumulatingSnapshotFactTable(FactTable):
             targetconnection=targetconnection,
         )
 
-        self.measures = (
-            measures  # FactTable.__init__ set it to otherrefs+measures
-        )
+        self.measures = measures  # FactTable.__init__ set it to otherrefs+measures
         self.otherrefs = otherrefs
         self.ignorenonerefs = ignorenonerefs
         self.ignorenonemeasures = ignorenonemeasures
@@ -2577,9 +2500,7 @@ class AccumulatingSnapshotFactTable(FactTable):
             + " SET "
             + ",".join(["%s = %%(%s)s" % (self.quote(a), a) for a in updated])
             + " WHERE "
-            + " AND ".join(
-                ["%s = %%(%s)s" % (self.quote(k), k) for k in self.keyrefs]
-            )
+            + " AND ".join(["%s = %%(%s)s" % (self.quote(k), k) for k in self.keyrefs])
         )
         self.targetconnection.execute(updatesql, newrow, namemapping)
 
@@ -2719,9 +2640,7 @@ class _BaseBulkloadable(object):
                 expl += ". A nullsubst must be defined."
             raise TypeError(expl, e)
         self.__count += 1
-        self.tempdest.write(
-            self._tobytes("%s%s" % (line, self.rowsep), self.encoding)
-        )
+        self.tempdest.write(self._tobytes("%s%s" % (line, self.rowsep), self.encoding))
         if self.__count == self.bulksize:
             self._bulkloadnow()
 
@@ -3357,9 +3276,7 @@ class SubprocessFactTable(object):
         self.rowsep = rowsep
         self.strconverter = strconverter
         self.nullsubst = nullsubst
-        self.process = Popen(
-            executable, bufsize=buffersize, shell=True, stdin=PIPE
-        )
+        self.process = Popen(executable, bufsize=buffersize, shell=True, stdin=PIPE)
         self.pipe = self.process.stdin
 
         if initcommand is not None:
@@ -3762,19 +3679,13 @@ class FactTablePartitioner(BasePartitioner):
         if partitioner is not None:
             self.partitioner = partitioner
         else:
-            self.partitioner = lambda row: reduce(
-                (lambda x, y: x + y), row.values()
-            )
+            self.partitioner = lambda row: reduce((lambda x, y: x + y), row.values())
         self.all = parts[0].all
         self.keyrefs = parts[0].keyrefs
         self.measures = parts[0].measures
         for ft in parts:
-            if not (
-                self.keyrefs == ft.keyrefs and self.measures == ft.measures
-            ):
-                raise ValueError(
-                    "The parts must have the same measures and keyrefs"
-                )
+            if not (self.keyrefs == ft.keyrefs and self.measures == ft.measures):
+                raise ValueError("The parts must have the same measures and keyrefs")
 
     def getpart(self, row, namemapping={}):
         """Return the relevant part for the given row"""

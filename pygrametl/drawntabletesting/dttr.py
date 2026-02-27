@@ -67,9 +67,7 @@ def print_reason_for_failure(when, condition, reason):
 
 
 def print_reader_error(path, firstlinenumber, lastlinenumber, reader_name, e):
-    reader_error = ReaderError(
-        path, firstlinenumber, lastlinenumber, reader_name, e
-    )
+    reader_error = ReaderError(path, firstlinenumber, lastlinenumber, reader_name, e)
     reason = reader_error.name + " - " + str(reader_error.cause)
     print_reason_for_failure("(Reader)", reader_error, reason)
 
@@ -159,9 +157,7 @@ def read_dt(
         )
     except Exception as e:
         # Errors are caught so the test runner is not terminated
-        print_reader_error(
-            path, firstlinenumber, lastlinenumber, str(reader_name), e
-        )
+        print_reader_error(path, firstlinenumber, lastlinenumber, str(reader_name), e)
         return
 
     # Only postconditions include an assert

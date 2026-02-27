@@ -132,9 +132,7 @@ class FactTableTest(unittest.TestCase):
     def test_lookup_with_missing_key(self):
         postcondition = self.initial
 
-        self.assertRaises(
-            KeyError, self.fact_table.lookup, {"bib": 2, "cid": 1}
-        )
+        self.assertRaises(KeyError, self.fact_table.lookup, {"bib": 2, "cid": 1})
 
         self.connection_wrapper.commit()
         postcondition.assertEqual()
@@ -188,9 +186,7 @@ class FactTableTest(unittest.TestCase):
             "profit": 7000,
         }
 
-        self.assertFalse(
-            self.fact_table.ensure(new_fact, namemapping=namemapping)
-        )
+        self.assertFalse(self.fact_table.ensure(new_fact, namemapping=namemapping))
 
         self.connection_wrapper.commit()
         postcondition.assertEqual()
@@ -215,9 +211,7 @@ class FactTableTest(unittest.TestCase):
             {"bib": 2, "cid": 2, "did": 60, "count": 20, "profit": 50000},
             {"bib": 2, "cid": 2, "did": 60, "count": 30, "profit": 50000},
         ]:
-            self.assertRaises(
-                ValueError, self.fact_table.ensure, fact, compare=True
-            )
+            self.assertRaises(ValueError, self.fact_table.ensure, fact, compare=True)
 
         self.connection_wrapper.commit()
         postcondition.assertEqual()
@@ -298,9 +292,7 @@ class BatchFactTableTest(FactTableTest):
                 "count": i,
                 "profit": i,
             }
-            actual_fact = self.fact_table.lookup(
-                {"bib": 10, "cid": 10, "did": i}
-            )
+            actual_fact = self.fact_table.lookup({"bib": 10, "cid": 10, "did": i})
             self.assertDictEqual(expected_fact, actual_fact)
 
     def test_insert_batchsize_num_of_facts_without_commit(self):
@@ -356,9 +348,7 @@ class BatchFactTableTest(FactTableTest):
                 "count": i,
                 "profit": i,
             }
-            actual_fact = self.fact_table.lookup(
-                {"bib": 10, "cid": 10, "did": i}
-            )
+            actual_fact = self.fact_table.lookup({"bib": 10, "cid": 10, "did": i})
             self.assertDictEqual(expected_fact, actual_fact)
 
     def test_insert_multiple_batches_without_commit(self):
@@ -412,7 +402,9 @@ class BulkFactTableTest(unittest.TestCase):
         )
 
     def loader(self, name, attributes, fieldsep, rowsep, nullval, filehandle):
-        sql = "INSERT INTO sales(bib, cid, did, count, profit) VALUES({}, {}, {}, {}, {})"
+        sql = (
+            "INSERT INTO sales(bib, cid, did, count, profit) VALUES({}, {}, {}, {}, {})"
+        )
         encoding = utilities.get_os_encoding()
 
         # If the default rowsep is used
@@ -644,8 +636,7 @@ class BulkFactTableTest(unittest.TestCase):
         encoding = utilities.get_os_encoding()
         filehandle.seek(0)
         facts_in_file = [
-            line.decode(encoding).strip().split(fieldsep)
-            for line in filehandle
+            line.decode(encoding).strip().split(fieldsep) for line in filehandle
         ]
 
         self.assertEqual(inserted_facts, facts_in_file)
@@ -722,9 +713,7 @@ class BulkFactTableTest(unittest.TestCase):
         file_content = filehandle.read().decode(encoding)
         facts_in_file = file_content.split(rowsep)
         facts_in_file_with_fields_separated = [
-            fact.strip().split("\t")
-            for fact in facts_in_file
-            if len(fact) != 0
+            fact.strip().split("\t") for fact in facts_in_file if len(fact) != 0
         ]
 
         self.assertEqual(inserted_facts, facts_in_file_with_fields_separated)
@@ -803,9 +792,7 @@ class BulkFactTableTest(unittest.TestCase):
         file_content = filehandle.read().decode(encoding)
         facts_in_file = file_content.split(rowsep)
         facts_in_file_with_fields_separated = [
-            fact.strip().split(fieldsep)
-            for fact in facts_in_file
-            if len(fact) != 0
+            fact.strip().split(fieldsep) for fact in facts_in_file if len(fact) != 0
         ]
 
         self.assertEqual(inserted_facts, facts_in_file_with_fields_separated)

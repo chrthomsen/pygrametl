@@ -107,9 +107,7 @@ class Table:
             or (len(lines) > 1 and not all(ch in delim for ch in lines[1]))
             or all(len(lines[0]) != len(line) for line in lines)
         ):
-            table = "\n".join(
-                map(lambda line: line.strip(), table.split("\n"))
-            )
+            table = "\n".join(map(lambda line: line.strip(), table.split("\n")))
             raise ValueError("Malformed table\n{}".format(table))
 
         # Mapping of database types to Python types
@@ -225,9 +223,7 @@ class Table:
         )
 
         # Add global constraints
-        sql += (
-            ")" if not self.__globalConstraints else self.__globalConstraints
-        )
+        sql += ")" if not self.__globalConstraints else self.__globalConstraints
         return sql
 
     def getSQLToInsert(self):
@@ -380,9 +376,7 @@ class Table:
             table.__additions.add(index)
             return table
         raise ValueError(
-            "{} index out of bounds {} > {}".format(
-                self.name, index, len(self.__rows)
-            )
+            "{} index out of bounds {} > {}".format(self.name, index, len(self.__rows))
         )
 
     def additions(self, withKey=False):
@@ -453,10 +447,7 @@ class Table:
                     elif constraint.startswith("fk "):
                         reference = constraint.split(" ", 1)[1]
                         globalConstraints.append(
-                            "FOREIGN KEY ("
-                            + name
-                            + ") REFERENCES "
-                            + reference
+                            "FOREIGN KEY (" + name + ") REFERENCES " + reference
                         )
                     else:
                         raise ValueError(
@@ -471,22 +462,16 @@ class Table:
             if primaryKey:
                 keyrefs.append(name)
                 if afterKeyrefs:
-                    raise ValueError(
-                        "Primary key after other attributes: {}" + line
-                    )
+                    raise ValueError("Primary key after other attributes: {}" + line)
             else:
                 attributes.append(name)
                 afterKeyrefs = True
             types.append(column[1].strip())
 
         # Formats both types of constraints for use with generated SQL
-        localConstraints = list(
-            map(lambda c: " " + c if c else c, localConstraints)
-        )
+        localConstraints = list(map(lambda c: " " + c if c else c, localConstraints))
         if keyrefs:
-            globalConstraints.insert(
-                0, "PRIMARY KEY (" + ", ".join(keyrefs) + ")"
-            )
+            globalConstraints.insert(0, "PRIMARY KEY (" + ", ".join(keyrefs) + ")")
             globalConstraints = ", " + ", ".join(globalConstraints) + ")"
         return (
             keyrefs,
@@ -574,9 +559,7 @@ class Table:
         rowSet = set(self.__rows)
         if len(self.__rows) != len(rowSet):
             raise ValueError(
-                "The '{}' table instance contains duplicate rows".format(
-                    self.name
-                )
+                "The '{}' table instance contains duplicate rows".format(self.name)
             )
 
         self.__testconnection.execute(
@@ -586,9 +569,7 @@ class Table:
         dbSet = set(dbRows)
         if len(dbRows) != len(dbSet):
             raise ValueError(
-                "The '{}' database table contains duplicate rows".format(
-                    self.name
-                )
+                "The '{}' database table contains duplicate rows".format(self.name)
             )
 
         success = comparison(rowSet, dbSet)
@@ -734,9 +715,7 @@ class Variable:
         return self.value == other
 
     def __format__(self, format_spec):
-        return format(
-            "{}({})".format(self.definition, self.value), format_spec
-        )
+        return format("{}({})".format(self.definition, self.value), format_spec)
 
     def __str__(self):
         return str(self.value)

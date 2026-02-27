@@ -218,9 +218,7 @@ class TableTest(unittest.TestCase):
 
     def test_add_update_and_additions(self):
         book = self.initial
-        book_added = (
-            book + "| 6 | Metro 2033 | Novel |" + "| 7 | Metro 2034 | Novel |"
-        )
+        book_added = book + "| 6 | Metro 2033 | Novel |" + "| 7 | Metro 2034 | Novel |"
         book_updated = book_added.update(0, "| -1 | Unknown | Unknown |")
         book_expected = [
             {"bid": -1, "title": "Unknown", "genre": "Unknown"},

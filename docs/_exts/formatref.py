@@ -43,9 +43,7 @@ def role(name, rawtext, text, lineno, inliner, options={}, content=[]):
     global sphinx_app
     if sphinx_app.builder.format == "html":
         # For HTML :formatref:` <>` links to the local file like ` <>`_
-        node = nodes.reference(
-            rawtext, file_name, refuri=str(file_path), **options
-        )
+        node = nodes.reference(rawtext, file_name, refuri=str(file_path), **options)
     elif sphinx_app.builder.format == "latex":
         # For PDF :formatref:` <>` links to www.pygrametl.org/doc/<file path>
         # Thus, the file path is converted so it is relative to the root of the
