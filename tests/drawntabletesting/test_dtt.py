@@ -27,12 +27,15 @@ import pygrametl
 import pygrametl.drawntabletesting as dtt
 from tests import utilities
 
+
 # Examples are from docs/examples/testing.rst
 class TableTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         utilities.ensure_default_connection_wrapper()
-        cls.initial = dtt.Table("book", """
+        cls.initial = dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text            | genre:text |
         | ------------ | --------------------- | ---------- |
         | 1            | Unknown               | Unknown    |
@@ -40,13 +43,16 @@ class TableTest(unittest.TestCase):
         | 3            | Calvin and Hobbes One | Comic      |
         | 4            | Calvin and Hobbes Two | Comic      |
         | 5            | The Silver Spoon      | Cookbook   |
-        """)
+        """,
+        )
 
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
 
     def test_init_correct(self):
-        dtt.Table("book", """
+        dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text (unique)   | genre:text (not null) |
         | ------------ | --------------------- | --------------------- |
         | 1            | Unknown               | Unknown               |
@@ -54,12 +60,15 @@ class TableTest(unittest.TestCase):
         | 3            | Calvin and Hobbes One | Comic                 |
         | 4            | Calvin and Hobbes Two | Comic                 |
         | 5            | The Silver Spoon      | Cookbook              |
-        """)
+        """,
+        )
 
     def test_init_unknown_incorrect(self):
         # Unknown constraints
         with self.assertRaises(ValueError):
-            dtt.Table("book", """
+            dtt.Table(
+                "book",
+                """
             | bid:int (pk) | title:text (unique)   | genre:text (notnull) |
             | ------------ | --------------------- | -------------------- |
             | 1            | Unknown               | Unknown              |
@@ -67,11 +76,14 @@ class TableTest(unittest.TestCase):
             | 3            | Calvin and Hobbes One | Comic                |
             | 4            | Calvin and Hobbes Two | Comic                |
             | 5            | The Silver Spoon      | Cookbook             |
-            """)
+            """,
+            )
 
         # Missing : between name and type
         with self.assertRaises(ValueError):
-            dtt.Table("book", """
+            dtt.Table(
+                "book",
+                """
             | bid int (pk) | title text (unique)   | genre text (not null) |
             | ------------ | --------------------- | --------------------- |
             | 1            | Unknown               | Unknown               |
@@ -79,19 +91,25 @@ class TableTest(unittest.TestCase):
             | 3            | Calvin and Hobbes One | Comic                 |
             | 4            | Calvin and Hobbes Two | Comic                 |
             | 5            | The Silver Spoon      | Cookbook              |
-            """)
+            """,
+            )
 
     def test_ensure_and_foreign_key(self):
-        dtt.Table("genre", """
+        dtt.Table(
+            "genre",
+            """
         | bid:int (pk) | genre:text |
         | ------------ | ---------- |
         | 1            | Unknown    |
         | 2            | Novel      |
         | 3            | Comic      |
         | 4            | Cookbook   |
-        """).ensure()
+        """,
+        ).ensure()
 
-        dtt.Table("book", """
+        dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text             | gid:int (fk genre(bid)) |
         | ------------ | ---------------------- | ------------------------ |
         | 1            | Unknown                | 1                        |
@@ -99,7 +117,8 @@ class TableTest(unittest.TestCase):
         | 3            | Calvin and Hobbes One  | 3                        |
         | 4            | Calvin and Hobbes Two  | 3                        |
         | 5            | The Silver Spoon       | 4                        |
-        """).ensure()
+        """,
+        ).ensure()
 
     def test_key(self):
         self.assertEqual(self.initial.key(), "bid")
@@ -107,16 +126,21 @@ class TableTest(unittest.TestCase):
     def test_getsqltocreate(self):
         self.assertEqual(
             self.initial.getSQLToCreate(),
-            "CREATE TABLE book(bid int, title text, genre text, PRIMARY KEY (bid))")
+            "CREATE TABLE book(bid int, title text, genre text, PRIMARY KEY (bid))",
+        )
 
     def test_getsqltoinsert(self):
-        self.assertEqual(self.initial.getSQLToInsert(), (
-            "INSERT INTO book(bid, title, genre) VALUES"
-            "(1, 'Unknown', 'Unknown'), "
-            "(2, 'Nineteen Eighty-Four', 'Novel'), "
-            "(3, 'Calvin and Hobbes One', 'Comic'), "
-            "(4, 'Calvin and Hobbes Two', 'Comic'), "
-            "(5, 'The Silver Spoon', 'Cookbook')"))
+        self.assertEqual(
+            self.initial.getSQLToInsert(),
+            (
+                "INSERT INTO book(bid, title, genre) VALUES"
+                "(1, 'Unknown', 'Unknown'), "
+                "(2, 'Nineteen Eighty-Four', 'Novel'), "
+                "(3, 'Calvin and Hobbes One', 'Comic'), "
+                "(4, 'Calvin and Hobbes Two', 'Comic'), "
+                "(5, 'The Silver Spoon', 'Cookbook')"
+            ),
+        )
 
     def test_assert_equal(self):
         book = self.initial
@@ -131,11 +155,14 @@ class TableTest(unittest.TestCase):
 
     def test_assert_disjoint(self):
         self.initial.ensure()
-        dtt.Table("book", """
+        dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text            | genre:text |
         | ------------ | --------------------- | ---------- |
         | 1            | None                  | None       |
-        """).assertDisjoint()
+        """,
+        ).assertDisjoint()
 
     def test_assert_not_disjoint(self):
         book = self.initial
@@ -145,11 +172,14 @@ class TableTest(unittest.TestCase):
 
     def test_assert_subset(self):
         self.initial.ensure()
-        dtt.Table("book", """
+        dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text            | genre:text |
         | ------------ | --------------------- | ---------- |
         | 1            | Unknown               | Unknown    |
-        """).assertSubset()
+        """,
+        ).assertSubset()
 
     def test_assert_not_subset(self):
         book = self.initial
@@ -188,110 +218,145 @@ class TableTest(unittest.TestCase):
 
     def test_add_update_and_additions(self):
         book = self.initial
-        book_added = book + "| 6 | Metro 2033 | Novel |" \
-            + "| 7 | Metro 2034 | Novel |"
+        book_added = book + "| 6 | Metro 2033 | Novel |" + "| 7 | Metro 2034 | Novel |"
         book_updated = book_added.update(0, "| -1 | Unknown | Unknown |")
         book_expected = [
-            {'bid': -1, 'title': 'Unknown', 'genre': 'Unknown'},
-            {'bid': 6, 'title': 'Metro 2033', 'genre': 'Novel'},
-            {'bid': 7, 'title': 'Metro 2034', 'genre': 'Novel'}
+            {"bid": -1, "title": "Unknown", "genre": "Unknown"},
+            {"bid": 6, "title": "Metro 2033", "genre": "Novel"},
+            {"bid": 7, "title": "Metro 2034", "genre": "Novel"},
         ]
         self.assertEqual(book_expected, book_updated.additions(withKey=True))
 
     def test_variables_and_foreign_keys_correct(self):
-        dtt.Table("genre", """
+        dtt.Table(
+            "genre",
+            """
         | gid:int (pk) | genre:text |
         | ------------ | ---------- |
         | 1            | Novel      |
         | 2            | Comic      |
-        """).ensure()
+        """,
+        ).ensure()
 
-        dtt.Table("book", """
+        dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid))  |
         | ------------ | ---------------------- | ------------------------ |
         | 1            | Nineteen Eighty-Four   | 1                        |
         | 2            | Calvin and Hobbes One  | 2                        |
         | 3            | Calvin and Hobbes Two  | 2                        |
-        """).ensure()
+        """,
+        ).ensure()
 
-        dtt.Table("genre", """
+        dtt.Table(
+            "genre",
+            """
         | gid:int (pk)  | genre:text |
         | ------------- | ---------- |
         | $1            | Novel      |
         | $2            | Comic      |
-        """).assertEqual()
+        """,
+        ).assertEqual()
 
-        dtt.Table("book", """
+        dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid)) |
         | ------------ | ---------------------- | ----------------------- |
         | 1            | Nineteen Eighty-Four   | $1                      |
         | 2            | Calvin and Hobbes One  | $2                      |
         | 3            | Calvin and Hobbes Two  | $2                      |
-        """).assertEqual()
+        """,
+        ).assertEqual()
 
     def test_variables_and_foreign_keys_wrong(self):
-        dtt.Table("genre", """
+        dtt.Table(
+            "genre",
+            """
         | gid:int (pk) | genre:text |
         | ------------ | ---------- |
         | 1            | Novel      |
         | 2            | Comic      |
-        """).ensure()
+        """,
+        ).ensure()
 
-        dtt.Table("book", """
+        dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid))  |
         | ------------ | ---------------------- | ------------------------ |
         | 1            | Nineteen Eighty-Four   | 2                        |
         | 2            | Calvin and Hobbes One  | 1                        |
         | 3            | Calvin and Hobbes Two  | 1                        |
-        """).ensure()
+        """,
+        ).ensure()
 
-        dtt.Table("genre", """
+        dtt.Table(
+            "genre",
+            """
         | gid:int (pk)  | genre:text |
         | ------------- | ---------- |
         | $1            | Novel      |
         | $2            | Comic      |
-        """).assertEqual()
+        """,
+        ).assertEqual()
 
-        book = dtt.Table("book", """
+        book = dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text             | gid:int (fk genre(gid)) |
         | ------------ | ---------------------- | ----------------------- |
         | 1            | Nineteen Eighty-Four   | $1                      |
         | 2            | Calvin and Hobbes One  | $2                      |
         | 3            | Calvin and Hobbes Two  | $2                      |
-        """)
+        """,
+        )
 
         with self.assertRaises(AssertionError):
             book.assertEqual()
 
     def test_variables_underscore(self):
-        dtt.Table("address", """
+        dtt.Table(
+            "address",
+            """
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date |
         | ------------ | --------- | ----------------------- | -------------- | ------------ |
         | NULL         | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | 2000-01-01   |
         | NULL         | CS        | Selma Lagerløfs Vej 300 | 2000-01-01     | NULL         |
-        """).ensure()
+        """,
+        ).ensure()
 
-        dtt.Table("address", """
+        dtt.Table(
+            "address",
+            """
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date  |
         | ------------ | --------- | ----------------------- | -------------- | ------------- |
         | $_           | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | $3            |
         | $_           | CS        | Selma Lagerløfs Vej 300 | $3             | NULL          |
-        """).assertEqual()
+        """,
+        ).assertEqual()
 
     def test_variables_underscore_not_null(self):
-        dtt.Table("address", """
+        dtt.Table(
+            "address",
+            """
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date |
         | ------------ | --------- | ----------------------- | -------------- | ------------ |
         | NULL         | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | 2000-01-01   |
         | NULL         | CS        | Selma Lagerløfs Vej 300 | 2000-01-01     | NULL         |
-        """).ensure()
+        """,
+        ).ensure()
 
-        address = dtt.Table("address", """
+        address = dtt.Table(
+            "address",
+            """
         | aid:int (pk) | dept:text | location:text           | validfrom:date | validto:date  |
         | ------------ | --------- | ----------------------- | -------------- | ------------- |
         | $_!          | CS        | Fredrik Bajers Vej 7    | 1990-01-01     | $4            |
         | $_!          | CS        | Selma Lagerløfs Vej 300 | $4             | NULL          |
-        """)
+        """,
+        )
 
         with self.assertRaises(AssertionError):
             address.assertEqual()
@@ -299,24 +364,36 @@ class TableTest(unittest.TestCase):
 
 # The tests are from docs/examples/testing.rst
 def executeETLFlow(cw, row):
-    if row['bid'] == 5:
-        cw.execute("INSERT INTO book (bid, title, genre) VALUES(" +
-                   (",".join(map(lambda x: "'" + x + "'" if type(x) is str
-                                 else str(x), list(row.values())))) + ")")
+    if row["bid"] == 5:
+        cw.execute(
+            "INSERT INTO book (bid, title, genre) VALUES("
+            + (
+                ",".join(
+                    map(
+                        lambda x: "'" + x + "'" if type(x) is str else str(x),
+                        list(row.values()),
+                    )
+                )
+            )
+            + ")"
+        )
 
 
 class BookStateTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         utilities.ensure_default_connection_wrapper()
-        cls.initial = dtt.Table("book", """
+        cls.initial = dtt.Table(
+            "book",
+            """
         | bid:int (pk) | title:text            | genre:text |
         | ------------ | --------------------- | ---------- |
         | 1            | Unknown               | Unknown    |
         | 2            | Nineteen Eighty-Four  | Novel      |
         | 3            | Calvin and Hobbes One | Comic      |
         | 4            | The Silver Spoon      | Cookbook   |
-        """)
+        """,
+        )
 
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
@@ -329,6 +406,6 @@ class BookStateTest(unittest.TestCase):
         expected.assertEqual()
 
     def test_insertExisting(self):
-        newrow = {'bid': 6, 'book': 'Calvin and Hobbes One', 'genre': 'Comic'}
+        newrow = {"bid": 6, "book": "Calvin and Hobbes One", "genre": "Comic"}
         executeETLFlow(pygrametl.getdefaulttargetconnection(), newrow)
         self.initial.assertEqual()

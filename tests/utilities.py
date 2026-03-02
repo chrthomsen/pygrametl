@@ -34,24 +34,24 @@ def get_os_encoding():
     # https://docs.python.org/3/library/functions.html#open
     return locale.getpreferredencoding(False)
 
+
 def get_connection():
     """Returns a new connection to the selected test database."""
 
     # The unit tests defaults to SQLite as it has no dependencies
-    connection_type_and_string = \
-        os.environ.get('PYGRAMETL_TEST_CONNECTIONSTRING', 'sqlite://:memory:')
+    connection_type_and_string = os.environ.get(
+        "PYGRAMETL_TEST_CONNECTIONSTRING", "sqlite://:memory:"
+    )
 
     # Select the
-    connection_type, connection_string = \
-        connection_type_and_string.split('://')
+    connection_type, connection_string = connection_type_and_string.split("://")
 
-    if connection_type == 'sqlite':
+    if connection_type == "sqlite":
         return __sqlite3_connection(connection_string)
-    elif connection_type == 'psycopg2':
+    elif connection_type == "psycopg2":
         return __psycopg2_connection(connection_string)
     else:
-        raise ValueError(
-            'Expected sqlite:// or psycopg2:// and a connection string')
+        raise ValueError("Expected sqlite:// or psycopg2:// and a connection string")
 
 
 def ensure_default_connection_wrapper():
@@ -79,12 +79,14 @@ def remove_default_connection_wrapper():
 def __sqlite3_connection(connection_string):
     """Create a new sqlite3 connection for use with unit tests."""
     import sqlite3
+
     connection = sqlite3.connect(connection_string)
-    connection.execute('PRAGMA foreign_keys = ON;')
+    connection.execute("PRAGMA foreign_keys = ON;")
     return connection
 
 
 def __psycopg2_connection(connection_string):
     """Create a new psycopg2 connection for use with unit tests."""
     import psycopg2
+
     return psycopg2.connect(connection_string)

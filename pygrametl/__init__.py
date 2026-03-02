@@ -1,21 +1,21 @@
 """A package for creating Extract-Transform-Load (ETL) programs in Python.
 
-   The package contains a number of classes for filling fact tables
-   and dimensions (including snowflaked and slowly changing dimensions),
-   classes for extracting data from different sources, classes for defining
-   'steps' in an ETL flow, and convenient functions for often-needed ETL
-   functionality.
+The package contains a number of classes for filling fact tables
+and dimensions (including snowflaked and slowly changing dimensions),
+classes for extracting data from different sources, classes for defining
+'steps' in an ETL flow, and convenient functions for often-needed ETL
+functionality.
 
-   The package's modules are:
+The package's modules are:
 
-   - datasources for access to different data sources
-   - tables for giving easy and abstracted access to dimension and fact tables
-   - parallel for parallelizing ETL operations
-   - JDBCConnectionWrapper and jythonmultiprocessing for support of Jython
-   - aggregators for aggregating data
-   - steps for defining steps in an ETL flow
-   - FIFODict for providing a dict with a limited size and where elements are
-     removed in first-in first-out order
+- datasources for access to different data sources
+- tables for giving easy and abstracted access to dimension and fact tables
+- parallel for parallelizing ETL operations
+- JDBCConnectionWrapper and jythonmultiprocessing for support of Jython
+- aggregators for aggregating data
+- steps for defining steps in an ETL flow
+- FIFODict for providing a dict with a limited size and where elements are
+  removed in first-in first-out order
 """
 
 # Copyright (c) 2009-2023, Aalborg University (pygrametl@cs.aau.dk)
@@ -46,12 +46,12 @@ from datetime import date, datetime
 from sys import modules, version_info
 from threading import Thread
 
-import copy as pcopy
 from pygrametl.FIFODict import FIFODict
 
 
 if version_info[0] == 2:
     import types
+
     _stringtypes = types.StringTypes  # (str, unicode) on Python 2
     from Queue import Queue
     from exceptions import Exception as _DBBaseException  # Used by PEP249,but
@@ -59,18 +59,45 @@ if version_info[0] == 2:
 else:  # For Python 3
     _stringtypes = (str,)
     from queue import Queue
+
     _DBBaseException = Exception
 
 
-__version__ = '2.8'
-__all__ = ['project', 'copy', 'renamefromto', 'rename', 'renametofrom',
-           'getint', 'getlong', 'getfloat', 'getstr', 'getstrippedstr',
-           'getstrornullvalue', 'getdbfriendlystr', 'getbool', 'getdate',
-           'gettimestamp', 'getvalue', 'getvalueor', 'setdefaults',
-           'rowfactory', 'endload', 'today', 'now', 'ymdparser', 'ymdhmsparser',
-           'datereader', 'datetimereader', 'datespan', 'toupper', 'tolower',
-           'keepasis', 'getdefaulttargetconnection', 'ConnectionWrapper',
-           '_stringtypes']
+__version__ = "2.8"
+__all__ = [
+    "project",
+    "copy",
+    "renamefromto",
+    "rename",
+    "renametofrom",
+    "getint",
+    "getfloat",
+    "getstr",
+    "getstrippedstr",
+    "getstrornullvalue",
+    "getdbfriendlystr",
+    "getbool",
+    "getdate",
+    "gettimestamp",
+    "getvalue",
+    "getvalueor",
+    "setdefaults",
+    "rowfactory",
+    "endload",
+    "today",
+    "now",
+    "ymdparser",
+    "ymdhmsparser",
+    "datereader",
+    "datetimereader",
+    "datespan",
+    "toupper",
+    "tolower",
+    "keepasis",
+    "getdefaulttargetconnection",
+    "ConnectionWrapper",
+    "_stringtypes",
+]
 
 
 _alltables = []
@@ -79,17 +106,17 @@ _alltables = []
 def project(atts, row, renaming={}):
     """Create a new dictionary with a subset of the attributes.
 
-       Arguments:
+    Arguments:
 
-       - atts is a sequence of attributes in row that should be copied to the
-         new result row.
-       - row is the original dictionary to copy data from.
-       - renaming is a mapping of names such that for each k in atts,
-         the following holds:
+    - atts is a sequence of attributes in row that should be copied to the
+      new result row.
+    - row is the original dictionary to copy data from.
+    - renaming is a mapping of names such that for each k in atts,
+      the following holds:
 
-         - If k in renaming then result[k] = row[renaming[k]].
-         - If k not in renaming then result[k] = row[k].
-         - renaming defaults to {}
+      - If k in renaming then result[k] = row[renaming[k]].
+      - If k not in renaming then result[k] = row[k].
+      - renaming defaults to {}
     """
     res = {}
     for c in atts:
@@ -103,14 +130,14 @@ def project(atts, row, renaming={}):
 def copy(row, **renaming):
     """Create a copy of a dictionary, but allow renamings.
 
-       Arguments:
+    Arguments:
 
-       - row the dictionary to copy
-       - **renaming allows renamings to be specified in the form
-         newname=oldname meaning that in the result, oldname will be
-         renamed to newname. The key oldname must exist in the row argument,
-         but it can be assigned to several newnames in the result as in
-         x='repeated', y='repeated'.
+    - row the dictionary to copy
+    - **renaming allows renamings to be specified in the form
+      newname=oldname meaning that in the result, oldname will be
+      renamed to newname. The key oldname must exist in the row argument,
+      but it can be assigned to several newnames in the result as in
+      x='repeated', y='repeated'.
     """
     if not renaming:
         return row.copy()
@@ -132,8 +159,8 @@ def copy(row, **renaming):
 def renamefromto(row, renaming):
     """Rename keys in a dictionary.
 
-       For each (oldname, newname) in renaming.items(): rename row[oldname] to
-       row[newname].
+    For each (oldname, newname) in renaming.items(): rename row[oldname] to
+    row[newname].
     """
     if not renaming:
         return row
@@ -142,14 +169,15 @@ def renamefromto(row, renaming):
         row[new] = row[old]
         del row[old]
 
+
 rename = renamefromto  # for backwards compatibility
 
 
 def renametofrom(row, renaming):
     """Rename keys in a dictionary.
 
-       For each (newname, oldname) in renaming.items(): rename row[oldname] to
-       row[newname].
+    For each (newname, oldname) in renaming.items(): rename row[oldname] to
+    row[newname].
     """
     if not renaming:
         return row
@@ -163,14 +191,6 @@ def getint(value, default=None):
     """getint(value[, default]) -> int(value) if possible, else default."""
     try:
         return int(value)
-    except Exception:
-        return default
-
-
-def getlong(value, default=None):
-    """getlong(value[, default]) -> long(value) if possible, else default."""
-    try:
-        return long(value)
     except Exception:
         return default
 
@@ -194,7 +214,7 @@ def getstr(value, default=None):
 def getstrippedstr(value, default=None):
     """Convert given value to a string and use .strip() on the result.
 
-       If the conversion fails, the given default value is returned.
+    If the conversion fails, the given default value is returned.
     """
     try:
         s = str(value)
@@ -203,13 +223,13 @@ def getstrippedstr(value, default=None):
         return default
 
 
-def getdbfriendlystr(value, nullvalue='None'):
+def getdbfriendlystr(value, nullvalue="None"):
     """Covert a value into a string that can be accepted by a DBMS.
 
-       None values are converted into the value of the argument nullvalues
-       (default: 'None'). Bools are converted into '1' or '0' (instead of
-       'True' or 'False' as str would do). Other values are currently just
-       converted by means of str.
+    None values are converted into the value of the argument nullvalues
+    (default: 'None'). Bools are converted into '1' or '0' (instead of
+    'True' or 'False' as str would do). Other values are currently just
+    converted by means of str.
 
     """
     if value is None:
@@ -222,24 +242,26 @@ def getdbfriendlystr(value, nullvalue='None'):
     else:
         return str(value)
 
+
 def getsqlfriendlystr(value):
     """Covert a value into a string that can be used in a SQL expression.
 
-       None values are converted to 'NULL'. Strings are surrounded by single
-       quotes and all single quotes in the string are escaped by doubling them.
-       Other values are currently just converted by means of str.
+    None values are converted to 'NULL'. Strings are surrounded by single
+    quotes and all single quotes in the string are escaped by doubling them.
+    Other values are currently just converted by means of str.
     """
     if value is None:
-        return 'NULL'
+        return "NULL"
     elif type(value) is str:
         return "'" + value.replace("'", "''") + "'"
     else:
         return str(value)
 
-def getstrornullvalue(value, nullvalue='None'):
+
+def getstrornullvalue(value, nullvalue="None"):
     """Convert a given value different from None to a string.
 
-       If the given value is None, nullvalue (default: 'None') is returned.
+    If the given value is None, nullvalue (default: 'None') is returned.
     """
     if value is None:
         return nullvalue
@@ -247,14 +269,17 @@ def getstrornullvalue(value, nullvalue='None'):
         return str(value)
 
 
-def getbool(value, default=None,
-            truevalues=set((True, 1, '1', 't', 'true', 'True')),
-            falsevalues=set((False, 0, '0', 'f', 'false', 'False'))):
+def getbool(
+    value,
+    default=None,
+    truevalues=set((True, 1, "1", "t", "true", "True")),
+    falsevalues=set((False, 0, "0", "f", "false", "False")),
+):
     """Convert a given value to True, False, or a default value.
 
-       If the given value is in the given truevalues, True is returned.
-       If the given value is in the given falsevalues, False is returned.
-       Otherwise, the default value is returned.
+    If the given value is in the given truevalues, True is returned.
+    If the given value is in the given falsevalues, False is returned.
+    Otherwise, the default value is returned.
     """
     if value in truevalues:
         return True
@@ -267,16 +292,16 @@ def getbool(value, default=None,
 def getdate(targetconnection, ymdstr, default=None):
     """Convert a string of the form 'yyyy-MM-dd' to a Date object.
 
-       The returned Date is in the given targetconnection's format.
+    The returned Date is in the given targetconnection's format.
 
-       Arguments:
-       - targetconnection: a ConnectionWrapper whose underlying module's
-         Date format is used
-       - ymdstr: the string to convert
-       - default: The value to return if the conversion fails
+    Arguments:
+    - targetconnection: a ConnectionWrapper whose underlying module's
+      Date format is used
+    - ymdstr: the string to convert
+    - default: The value to return if the conversion fails
     """
     try:
-        (year, month, day) = ymdstr.split('-')
+        (year, month, day) = ymdstr.split("-")
         modref = targetconnection.getunderlyingmodule()
         return modref.Date(int(year), int(month), int(day))
     except Exception:
@@ -286,22 +311,28 @@ def getdate(targetconnection, ymdstr, default=None):
 def gettimestamp(targetconnection, ymdhmsstr, default=None):
     """Converts a string of the form 'yyyy-MM-dd HH:mm:ss' to a Timestamp.
 
-       The returned Timestamp is in the given targetconnection's format.
+    The returned Timestamp is in the given targetconnection's format.
 
-       Arguments:
+    Arguments:
 
-       - targetconnection: a ConnectionWrapper whose underlying module's
-         Timestamp format is used
-       - ymdhmsstr: the string to convert
-       - default: The value to return if the conversion fails
+    - targetconnection: a ConnectionWrapper whose underlying module's
+      Timestamp format is used
+    - ymdhmsstr: the string to convert
+    - default: The value to return if the conversion fails
     """
     try:
-        (datepart, timepart) = ymdhmsstr.strip().split(' ')
-        (year, month, day) = datepart.split('-')
-        (hour, minute, second) = timepart.split(':')
+        (datepart, timepart) = ymdhmsstr.strip().split(" ")
+        (year, month, day) = datepart.split("-")
+        (hour, minute, second) = timepart.split(":")
         modref = targetconnection.getunderlyingmodule()
-        return modref.Timestamp(int(year), int(month), int(day),
-                                int(hour), int(minute), int(second))
+        return modref.Timestamp(
+            int(year),
+            int(month),
+            int(day),
+            int(hour),
+            int(minute),
+            int(second),
+        )
     except Exception:
         return default
 
@@ -315,8 +346,7 @@ def getvalue(row, name, mapping={}):
 
 
 def getvalueor(row, name, mapping={}, default=None):
-    """Return the value of name from row using a mapping and a default value.
-    """
+    """Return the value of name from row using a mapping and a default value."""
     if name in mapping:
         return row.get(mapping[name], default)
     else:
@@ -326,18 +356,18 @@ def getvalueor(row, name, mapping={}, default=None):
 def setdefaults(row, attributes, defaults=None):
     """Set default values for attributes not present in a dictionary.
 
-       Default values are set for "missing" values, existing values are not
-       updated.
+    Default values are set for "missing" values, existing values are not
+    updated.
 
-       Arguments:
+    Arguments:
 
-       - row is the dictionary to set default values in
-       - attributes is either
-           A) a sequence of attribute names in which case defaults must
-              be an equally long sequence of these attributes default values or
-           B) a sequence of pairs of the form (attribute, defaultvalue) in
-              which case the defaults argument should be None
-       - defaults is a sequence of default values (see above)
+    - row is the dictionary to set default values in
+    - attributes is either
+        A) a sequence of attribute names in which case defaults must
+           be an equally long sequence of these attributes default values or
+        B) a sequence of pairs of the form (attribute, defaultvalue) in
+           which case the defaults argument should be None
+    - defaults is a sequence of default values (see above)
     """
     if defaults and len(defaults) != len(attributes):
         raise ValueError("Lists differ in length")
@@ -355,37 +385,37 @@ def setdefaults(row, attributes, defaults=None):
 def rowfactory(source, names, close=True):
     """Generate dicts with key values from names and data values from source.
 
-       The given source should provide A) fetchmany returning the next set of
-       rows, B) next() or fetchone() returning a tuple, or C) fetchall()
-       returning a sequence of tuples. For each tuple, a dict is constructed
-       such that the i'th element in names maps to the i'th value in the
-       tuple.
+    The given source should provide A) fetchmany returning the next set of
+    rows, B) next() or fetchone() returning a tuple, or C) fetchall()
+    returning a sequence of tuples. For each tuple, a dict is constructed
+    such that the i'th element in names maps to the i'th value in the
+    tuple.
 
-       If close=True (the default), close will be called on source after
-       fetching all tuples.
+    If close=True (the default), close will be called on source after
+    fetching all tuples.
 
     """
     # Try fetchmany
-    if hasattr(source, 'fetchmany'):
+    if hasattr(source, "fetchmany"):
         try:
             while True:
-                l = source.fetchmany(200)
-                if not l:
+                rows = source.fetchmany(200)
+                if not rows:
                     break
-                for tmp in l:
-                    yield dict(zip(names, tmp))
+                for row in rows:
+                    yield dict(zip(names, row))
         finally:
             if close:
                 try:
                     source.close()
-                except:
-                    return
-            return
+                except Exception:
+                    pass
+        return
 
     # Try next and fetchone and otherwise fetchall
-    nextfunc = getattr(source, 'next', None)
+    nextfunc = getattr(source, "next", None)
     if nextfunc is None:
-        nextfunc = getattr(source, 'fetchone', None)
+        nextfunc = getattr(source, "fetchone", None)
 
     try:
         if nextfunc is not None:
@@ -405,37 +435,36 @@ def rowfactory(source, names, close=True):
         if close:
             try:
                 source.close()
-            except:
-                return
+            except Exception:
+                pass
 
 
 def endload():
-    """Signal to all Dimension and FactTable objects that all data is loaded.
-    """
+    """Signal to all Dimension and FactTable objects that all data is loaded."""
     global _alltables
     for t in _alltables:
-        method = getattr(t, 'endload', None)
+        method = getattr(t, "endload", None)
         if callable(method):
             method()
+
 
 _today = None
 
 
 def today(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
-    """Return the date of the first call this method as a datetime.date object.
-    """
+    """Return the date of the first call this method as a datetime.date object."""
     global _today
     if _today is not None:
         return _today
     _today = date.today()
     return _today
 
+
 _now = None
 
 
 def now(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
-    """Return the time of the first call this method as a datetime.datetime.
-    """
+    """Return the time of the first call this method as a datetime.datetime."""
     global _now
     if _now is not None:
         return _now
@@ -445,13 +474,13 @@ def now(ignoredtargetconn=None, ignoredrow=None, ignorednamemapping=None):
 
 def ymdparser(ymdstr):
     """Convert an input with a string representation of the form 'yyyy-MM-dd'
-       or a datetime.date or a datetime.datetime to a datetime.date.
+    or a datetime.date or a datetime.datetime to a datetime.date.
 
-       If the input is None, the return value is also None.
-       If the input is a datetime.date, it is returned.
-       If the input is a datetime.datetime, its date is returned.
-       Else the input is cast to str and quotes are stripped before it is
-       split into the different parts needed to create a datetime.date.
+    If the input is None, the return value is also None.
+    If the input is a datetime.date, it is returned.
+    If the input is a datetime.datetime, its date is returned.
+    Else the input is cast to str and quotes are stripped before it is
+    split into the different parts needed to create a datetime.date.
 
     """
     if ymdstr is None:
@@ -461,46 +490,48 @@ def ymdparser(ymdstr):
     elif isinstance(ymdstr, datetime):
         return ymdstr.date()
     ymdstr = str(ymdstr).strip("'\"")
-    (year, month, day) = ymdstr.split('-')
+    (year, month, day) = ymdstr.split("-")
     return date(int(year), int(month), int(day))
 
 
 def ymdhmsparser(ymdhmsstr):
     """Convert an input with a string representation of the form
-       'yyyy-MM-dd HH:mm:ss' or a datetime.datetime to a datetime.datetime.
+    'yyyy-MM-dd HH:mm:ss' or a datetime.datetime to a datetime.datetime.
 
-       If the input is None, the return value is also None.
-       If the input is a datetime.datetime, it is returned.
-       Else the input is cast to str and quotes are stripped before it is
-       split into the different parts needed to create a datetime.datetime.
+    If the input is None, the return value is also None.
+    If the input is a datetime.datetime, it is returned.
+    Else the input is cast to str and quotes are stripped before it is
+    split into the different parts needed to create a datetime.datetime.
     """
     if ymdhmsstr is None:
         return None
     elif isinstance(ymdhmsstr, datetime):
         return ymdhmsstr
     ymdhmsstr = str(ymdhmsstr).strip("'\"")
-    (datepart, timepart) = ymdhmsstr.strip().split(' ')
-    (year, month, day) = datepart.split('-')
-    (hour, minute, second) = timepart.split(':')
-    return datetime(int(year), int(month), int(day),
-                    int(hour), int(minute), int(second))
+    (datepart, timepart) = ymdhmsstr.strip().split(" ")
+    (year, month, day) = datepart.split("-")
+    (hour, minute, second) = timepart.split(":")
+    return datetime(
+        int(year), int(month), int(day), int(hour), int(minute), int(second)
+    )
 
 
 def datereader(dateattribute, parsingfunction=ymdparser):
     """Return a function that converts a certain dict member to a datetime.date
 
-       When setting, fromfinder for a tables.SlowlyChangingDimension, this
-       method can be used for generating a function that picks the relevant
-       dictionary member from each row and converts it.
+    When setting, fromfinder for a tables.SlowlyChangingDimension, this
+    method can be used for generating a function that picks the relevant
+    dictionary member from each row and converts it.
 
-       Arguments:
+    Arguments:
 
-       - dateattribute: the attribute the generated function should read
-       - parsingfunction: the parsing function that converts the string
-         to a datetime.date
+    - dateattribute: the attribute the generated function should read
+    - parsingfunction: the parsing function that converts the string
+      to a datetime.date
     """
+
     def readerfunction(targetconnection, row, namemapping={}):
-        atttouse = (namemapping.get(dateattribute) or dateattribute)
+        atttouse = namemapping.get(dateattribute) or dateattribute
         return parsingfunction(row[atttouse])  # a datetime.date
 
     return readerfunction
@@ -509,65 +540,73 @@ def datereader(dateattribute, parsingfunction=ymdparser):
 def datetimereader(datetimeattribute, parsingfunction=ymdhmsparser):
     """Return a function that converts a certain dict member to a datetime
 
-       When setting, fromfinder for a tables.SlowlyChangingDimension, this
-       method can be used for generating a function that picks the relevant
-       dictionary member from each row and converts it.
+    When setting, fromfinder for a tables.SlowlyChangingDimension, this
+    method can be used for generating a function that picks the relevant
+    dictionary member from each row and converts it.
 
-       Arguments:
+    Arguments:
 
-       - datetimeattribute: the attribute the generated function should read
-       - parsingfunction: the parsing function that converts the string
-         to a datetime.datetime
+    - datetimeattribute: the attribute the generated function should read
+    - parsingfunction: the parsing function that converts the string
+      to a datetime.datetime
     """
+
     def readerfunction(targetconnection, row, namemapping={}):
-        atttouse = (namemapping.get(datetimeattribute) or datetimeattribute)
+        atttouse = namemapping.get(datetimeattribute) or datetimeattribute
         return parsingfunction(row[atttouse])  # a datetime.datetime
 
     return readerfunction
 
 
-def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
-             key='dateid',
-             strings={'date': '%Y-%m-%d', 'monthname': '%B', 'weekday': '%A'},
-             ints={'year': '%Y', 'month': '%m', 'day': '%d'},
-             expander=None):
+def datespan(
+    fromdate,
+    todate,
+    fromdateincl=True,
+    todateincl=True,
+    key="dateid",
+    strings={"date": "%Y-%m-%d", "monthname": "%B", "weekday": "%A"},
+    ints={"year": "%Y", "month": "%m", "day": "%d"},
+    expander=None,
+):
     """Return a generator yielding dicts for all dates in an interval.
 
-       Arguments:
+    Arguments:
 
-       - fromdate: The lower bound for the date interval. Should be a
-         datetime.date or a YYYY-MM-DD formatted string.
-       - todate: The upper bound for the date interval. Should be a
-         datetime.date or a YYYY-MM-DD formatted string.
-       - fromdateincl: Decides if fromdate is included. Default: True
-       - todateincl: Decides if todate is included. Default: True
-       - key: The name of the attribute where an int (YYYYMMDD) that uniquely
-         identifies the date is stored. Default: 'dateid'.
-       - strings: A dict mapping attribute names to formatting directives (as
-         those used by strftime). The returned dicts will have the specified
-         attributes as strings.
-         Default: {'date':'%Y-%m-%d', 'monthname':'%B', 'weekday':'%A'}
-       - ints: A dict mapping attribute names to formatting directives (as
-         those used by strftime). The returned dicts will have the specified
-         attributes as ints.
-         Default: {'year':'%Y', 'month':'%m', 'day':'%d'}
-       - expander: A callable f(date, dict) that is invoked on each created
-         dict. Not invoked if None. Default: None
+    - fromdate: The lower bound for the date interval. Should be a
+      datetime.date or a YYYY-MM-DD formatted string.
+    - todate: The upper bound for the date interval. Should be a
+      datetime.date or a YYYY-MM-DD formatted string.
+    - fromdateincl: Decides if fromdate is included. Default: True
+    - todateincl: Decides if todate is included. Default: True
+    - key: The name of the attribute where an int (YYYYMMDD) that uniquely
+      identifies the date is stored. Default: 'dateid'.
+    - strings: A dict mapping attribute names to formatting directives (as
+      those used by strftime). The returned dicts will have the specified
+      attributes as strings.
+      Default: {'date':'%Y-%m-%d', 'monthname':'%B', 'weekday':'%A'}
+    - ints: A dict mapping attribute names to formatting directives (as
+      those used by strftime). The returned dicts will have the specified
+      attributes as ints.
+      Default: {'year':'%Y', 'month':'%m', 'day':'%d'}
+    - expander: A callable f(date, dict) that is invoked on each created
+      dict. Not invoked if None. Default: None
     """
 
     for arg in (fromdate, todate):
-        if not ((type(arg) in _stringtypes and arg.count('-') == 2) or
-                isinstance(arg, date)):
+        if not (
+            (type(arg) in _stringtypes and arg.count("-") == 2) or isinstance(arg, date)
+        ):
             raise ValueError(
-                "fromdate and today must be datetime.dates or " +
-                "YYYY-MM-DD formatted strings")
+                "fromdate and today must be datetime.dates or "
+                + "YYYY-MM-DD formatted strings"
+            )
 
     if type(fromdate) in _stringtypes:
-        (year, month, day) = fromdate.split('-')
+        (year, month, day) = fromdate.split("-")
         fromdate = date(int(year), int(month), int(day))
 
     if type(todate) in _stringtypes:
-        (year, month, day) = todate.split('-')
+        (year, month, day) = todate.split("-")
         todate = date(int(year), int(month), int(day))
 
     start = fromdate.toordinal()
@@ -581,23 +620,26 @@ def datespan(fromdate, todate, fromdateincl=True, todateincl=True,
     for i in range(start, end):
         d = date.fromordinal(i)
         res = {}
-        res[key] = int(d.strftime('%Y%m%d'))
-        for (att, attformat) in strings.items():
+        res[key] = int(d.strftime("%Y%m%d"))
+        for att, attformat in strings.items():
             res[att] = d.strftime(attformat)
-        for (att, attformat) in ints.items():
+        for att, attformat in ints.items():
             res[att] = int(d.strftime(attformat))
         if expander is not None:
             expander(d, res)
         yield res
 
 
-def toupper(s): return s.upper()
+def toupper(s):
+    return s.upper()
 
 
-def tolower(s): return s.lower()
+def tolower(s):
+    return s.lower()
 
 
-def keepasis(s): return s
+def keepasis(s):
+    return s
 
 
 _defaulttargetconnection = None
@@ -610,64 +652,69 @@ def getdefaulttargetconnection():
 
 
 class ConnectionWrapper(object):
-
     """Provide a uniform representation of different database connection types.
 
-       All Dimensions and FactTables communicate with the data warehouse using
-       a ConnectionWrapper. In this way, the code for loading the DW does not
-       have to care about which parameter format is used.
+    All Dimensions and FactTables communicate with the data warehouse using
+    a ConnectionWrapper. In this way, the code for loading the DW does not
+    have to care about which parameter format is used.
 
-       pygrametl's code uses the 'pyformat' but the ConnectionWrapper performs
-       translations of the SQL to use 'named', 'qmark', 'format', or 'numeric'
-       if the user's database connection needs this. Note that the
-       translations are simple and naive. Escaping as in %%(name)s is not
-       taken into consideration. These simple translations are enough for
-       pygrametl's code which is the important thing here; we're not trying to
-       make a generic, all-purpose tool to get rid of the problems with
-       different parameter formats. It is, however, possible to disable the
-       translation of a statement to execute such that 'problematic'
-       statements can be executed anyway.
+    pygrametl's code uses the 'pyformat' but the ConnectionWrapper performs
+    translations of the SQL to use 'named', 'qmark', 'format', or 'numeric'
+    if the user's database connection needs this. Note that the
+    translations are simple and naive. Escaping as in %%(name)s is not
+    taken into consideration. These simple translations are enough for
+    pygrametl's code which is the important thing here; we're not trying to
+    make a generic, all-purpose tool to get rid of the problems with
+    different parameter formats. It is, however, possible to disable the
+    translation of a statement to execute such that 'problematic'
+    statements can be executed anyway.
     """
 
-    def __init__(self, connection, stmtcachesize=1000, paramstyle=None, \
-                 copyintonew=False):
+    def __init__(
+        self,
+        connection,
+        stmtcachesize=1000,
+        paramstyle=None,
+        copyintonew=False,
+    ):
         """Create a ConnectionWrapper around the given PEP 249 connection
 
-           If no default ConnectionWrapper already exists, the new
-           ConnectionWrapper is set as the default.
+        If no default ConnectionWrapper already exists, the new
+        ConnectionWrapper is set as the default.
 
-           Arguments:
+        Arguments:
 
-           - connection: An open PEP 249 connection to the database
-           - stmtcachesize: A number deciding how many translated statements to
-             cache. A statement needs to be translated when the connection
-             does not use 'pyformat' to specify parameters. When 'pyformat' is
-             used and copyintonew == False, stmtcachesize is ignored as no
-             statements need to be translated.
-           - paramstyle: A string holding the name of the PEP 249 connection's
-             paramstyle. If None, pygrametl will try to find the paramstyle
-             automatically (an AttributeError can be raised if that fails).
-           - copyintonew: A boolean deciding if a new mapping only holding the
-             needed arguments should be created when a statement is executed.
-             Some drivers require this.
+        - connection: An open PEP 249 connection to the database
+        - stmtcachesize: A number deciding how many translated statements to
+          cache. A statement needs to be translated when the connection
+          does not use 'pyformat' to specify parameters. When 'pyformat' is
+          used and copyintonew == False, stmtcachesize is ignored as no
+          statements need to be translated.
+        - paramstyle: A string holding the name of the PEP 249 connection's
+          paramstyle. If None, pygrametl will try to find the paramstyle
+          automatically (an AttributeError can be raised if that fails).
+        - copyintonew: A boolean deciding if a new mapping only holding the
+          needed arguments should be created when a statement is executed.
+          Some drivers require this.
         """
         self.__connection = connection
         self.__cursor = connection.cursor()
         self.nametranslator = lambda s: s
 
-        self.__underlyingmodule = None # will be updated next
-        self.getunderlyingmodule() # updates self.__underlyingmodule
+        self.__underlyingmodule = None  # will be updated next
+        self.getunderlyingmodule()  # updates self.__underlyingmodule
 
         if paramstyle is None:
             paramstyle = self.__underlyingmodule.paramstyle
 
-        if copyintonew or not paramstyle == 'pyformat':
+        if copyintonew or not paramstyle == "pyformat":
             self.__translations = FIFODict(stmtcachesize)
             try:
-                self.__translate = getattr(self, '_translate2' + paramstyle)
+                self.__translate = getattr(self, "_translate2" + paramstyle)
             except AttributeError:
-                raise InterfaceError("The paramstyle '%s' is not supported" %
-                                     paramstyle)
+                raise InterfaceError(
+                    "The paramstyle '%s' is not supported" % paramstyle
+                )
         else:
             # Since paramstyle == 'pyformat' and copyintonew == False,
             # no translations are needed
@@ -683,15 +730,15 @@ class ConnectionWrapper(object):
     def execute(self, stmt, arguments=None, namemapping=None, translate=True):
         """Execute a statement.
 
-           Arguments:
+        Arguments:
 
-           - stmt: the statement to execute
-           - arguments: a mapping with the arguments (default: None)
-           - namemapping: a mapping of names such that if stmt uses %(arg)s
-             and namemapping[arg]=arg2, the value arguments[arg2] is used
-             instead of arguments[arg]
-           - translate: decides if translation from 'pyformat' to the
-             undlying connection's format should take place. Default: True
+        - stmt: the statement to execute
+        - arguments: a mapping with the arguments (default: None)
+        - namemapping: a mapping of names such that if stmt uses %(arg)s
+          and namemapping[arg]=arg2, the value arguments[arg2] is used
+          instead of arguments[arg]
+        - translate: decides if translation from 'pyformat' to the
+          undlying connection's format should take place. Default: True
         """
         if namemapping and arguments:
             arguments = copy(arguments, **namemapping)
@@ -704,7 +751,6 @@ class ConnectionWrapper(object):
         else:
             self.__cursor.execute(stmt, arguments)
 
-
     def executemany(self, stmt, params, translate=True):
         """Execute a sequence of statements."""
         if self.__translate and translate:
@@ -714,10 +760,10 @@ class ConnectionWrapper(object):
             (newstmt, _) = self.__translate(stmt, params[0])
             names = self.__translations[stmt][1]
 
-            if self.__paramstyle == 'pyformat' or self.__paramstyle == 'named':
+            if self.__paramstyle == "pyformat" or self.__paramstyle == "named":
                 if self.__copyintonew:
                     # we need to copy attributes from params into new dicts
-                    newparams = [{n:p[n] for n in names} for p in params]
+                    newparams = [{n: p[n] for n in names} for p in params]
                 else:
                     newparams = params
             else:
@@ -735,23 +781,22 @@ class ConnectionWrapper(object):
         # row only containing the required attributes must be made.
         (_, names) = self.__translations.get(stmt, (None, None))
         if names:
-            return (stmt, {n:row[n] for n in names})
+            return (stmt, {n: row[n] for n in names})
         elif names == []:
             # there are no arguments to copy
             return (stmt, None)
         names = []
         end = 0
         while True:
-            start = stmt.find('%(', end)
+            start = stmt.find("%(", end)
             if start == -1:
                 break
-            end = stmt.find(')s', start)
+            end = stmt.find(")s", start)
             if end == -1:
                 break
             names.append(stmt[start + 2 : end])
         self.__translations[stmt] = (stmt, names)
         return self._translate2pyformat(stmt, row)
-
 
     def _translate2named(self, stmt, row=None):
         # Translate %(name)s to :name. Make new row if self.__copyintonew.
@@ -761,20 +806,20 @@ class ConnectionWrapper(object):
             if not self.__copyintonew:
                 return (res, row)
             elif names:
-                return (res, {n:row[n] for n in names})
+                return (res, {n: row[n] for n in names})
             else:
                 return (res, None)
         names = []
         res = stmt
         while True:
-            start = res.find('%(')
+            start = res.find("%(")
             if start == -1:
                 break
-            end = res.find(')s', start)
+            end = res.find(")s", start)
             if end == -1:
                 break
-            name = res[start + 2: end]
-            res = res.replace(res[start:end + 2], ':' + name)
+            name = res[start + 2 : end]
+            res = res.replace(res[start : end + 2], ":" + name)
             names.append(name)
         self.__translations[stmt] = (res, names)
         return self._translate2named(stmt, row)
@@ -788,16 +833,15 @@ class ConnectionWrapper(object):
         names = []
         newstmt = stmt
         while True:
-            start = newstmt.find('%(')
+            start = newstmt.find("%(")
             if start == -1:
                 break
-            end = newstmt.find(')s', start)
+            end = newstmt.find(")s", start)
             if end == -1:
                 break
-            name = newstmt[start + 2: end]
+            name = newstmt[start + 2 : end]
             names.append(name)
-            newstmt = newstmt.replace(
-                newstmt[start:end + 2], '?', 1)  # Replace once!
+            newstmt = newstmt.replace(newstmt[start : end + 2], "?", 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -811,15 +855,15 @@ class ConnectionWrapper(object):
         cnt = 0
         newstmt = stmt
         while True:
-            start = newstmt.find('%(')
+            start = newstmt.find("%(")
             if start == -1:
                 break
-            end = newstmt.find(')s', start)
+            end = newstmt.find(")s", start)
             if end == -1:
                 break
-            name = newstmt[start + 2: end]
+            name = newstmt[start + 2 : end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end + 2], ':' + str(cnt))
+            newstmt = newstmt.replace(newstmt[start : end + 2], ":" + str(cnt))
             cnt += 1
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
@@ -833,16 +877,17 @@ class ConnectionWrapper(object):
         names = []
         newstmt = stmt
         while True:
-            start = newstmt.find('%(')
+            start = newstmt.find("%(")
             if start == -1:
                 break
-            end = newstmt.find(')s', start)
+            end = newstmt.find(")s", start)
             if end == -1:
                 break
-            name = newstmt[start + 2: end]
+            name = newstmt[start + 2 : end]
             names.append(name)
             newstmt = newstmt.replace(
-                newstmt[start:end + 2], '%s', 1)  # Replace once!
+                newstmt[start : end + 2], "%s", 1
+            )  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -862,8 +907,7 @@ class ConnectionWrapper(object):
         if self.__cursor.description is None:
             return {}
         if names is None:
-            names = [self.nametranslator(t[0])
-                     for t in self.__cursor.description]
+            names = [self.nametranslator(t[0]) for t in self.__cursor.description]
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
@@ -877,7 +921,7 @@ class ConnectionWrapper(object):
             return ()
         values = self.__cursor.fetchone()
         if values is None:
-            return (None, ) * len(self.__cursor.description)
+            return (None,) * len(self.__cursor.description)
         else:
             return values
 
@@ -904,27 +948,25 @@ class ConnectionWrapper(object):
     def getunderlyingmodule(self):
         """Return a reference to the underlying connection's module.
 
-           This is done by considering the connection's __class__'s __module__
-           string from right to left (e.g., 'a.b.c', 'a.b', 'a') and looking
-           for the attributes 'paramstyle' and 'connect' in the possible modules
+        This is done by considering the connection's __class__'s __module__
+        string from right to left (e.g., 'a.b.c', 'a.b', 'a') and looking
+        for the attributes 'paramstyle' and 'connect' in the possible modules
         """
         if self.__underlyingmodule is not None:
             return self.__underlyingmodule
         else:
             fullmodname = self.__connection.__class__.__module__
-            for i in reversed(range(fullmodname.count('.') + 1)):
-                modname = fullmodname.rsplit('.', i)[0]
+            for i in reversed(range(fullmodname.count(".") + 1)):
+                modname = fullmodname.rsplit(".", i)[0]
                 try:
                     modref = modules[modname]
-                    if hasattr(modref, 'paramstyle') and \
-                            hasattr(modref, 'connect'):
+                    if hasattr(modref, "paramstyle") and hasattr(modref, "connect"):
                         self.__underlyingmodule = modref
                         return modref
                 except KeyError:
                     pass
 
-        return None # We could not finde the module. Raise an Exception instead?
-
+        return None  # We could not finde the module. Raise an Exception instead?
 
     def commit(self):
         """Commit the transaction."""
@@ -961,7 +1003,7 @@ class ConnectionWrapper(object):
         # In case the ConnectionWrapper is pickled (to be sent to another
         # process), we need to create a new cursor when it is unpickled.
         res = self.__dict__.copy()
-        del res['_ConnectionWrapper__cursor']  # a dirty trick, but...
+        del res["_ConnectionWrapper__cursor"]  # a dirty trick, but...
         return res
 
     def __setstate__(self, dictdata):
@@ -970,20 +1012,20 @@ class ConnectionWrapper(object):
 
 
 class BackgroundConnectionWrapper(object):
-
     """Deprecated: This class is not maintained anymore! Use ConnectionWrapper
-       instead.
+    instead.
 
-       An alternative implementation of the ConnectionWrapper for experiments.
-       This implementation communicates with the database by using a
-       separate thread.
+    An alternative implementation of the ConnectionWrapper for experiments.
+    This implementation communicates with the database by using a
+    separate thread.
 
-       It is likely better to use ConnectionWrapper or a shared
-       ConnectionWrapper (see pygrametl.parallel).
+    It is likely better to use ConnectionWrapper or a shared
+    ConnectionWrapper (see pygrametl.parallel).
 
-       This class offers the same methods as ConnectionWrapper. The
-       documentation is not repeated here.
+    This class offers the same methods as ConnectionWrapper. The
+    documentation is not repeated here.
     """
+
     _SINGLE = 1
     _MANY = 2
 
@@ -995,19 +1037,20 @@ class BackgroundConnectionWrapper(object):
         self.__cursor = connection.cursor()
         self.nametranslator = lambda s: s
 
-        self.__underlyingmodule = None # will be updated next
-        self.getunderlyingmodule() # updates self.__underlyingmodule
+        self.__underlyingmodule = None  # will be updated next
+        self.getunderlyingmodule()  # updates self.__underlyingmodule
 
         if paramstyle is None:
             paramstyle = self.__underlyingmodule.paramstyle
 
-        if not paramstyle == 'pyformat':
+        if not paramstyle == "pyformat":
             self.__translations = FIFODict(stmtcachesize)
             try:
-                self.__translate = getattr(self, '_translate2' + paramstyle)
+                self.__translate = getattr(self, "_translate2" + paramstyle)
             except AttributeError:
-                raise InterfaceError("The paramstyle '%s' is not supported" %
-                                     paramstyle)
+                raise InterfaceError(
+                    "The paramstyle '%s' is not supported" % paramstyle
+                )
         else:
             self.__translate = None
 
@@ -1040,11 +1083,7 @@ class BackgroundConnectionWrapper(object):
                 # The attributes to extract
                 names = self.__translations[stmt][1]
                 newparams = [[p[n] for n in names] for p in params]
-                self.__queue.put(
-                    (self._MANY,
-                     self.__cursor,
-                     newstmt,
-                     newparams))
+                self.__queue.put((self._MANY, self.__cursor, newstmt, newparams))
         else:
             # for pyformat when no translation is necessary
             self.__queue.put((self._MANY, self.__cursor, stmt, params))
@@ -1057,12 +1096,12 @@ class BackgroundConnectionWrapper(object):
             return (res, row)
         res = stmt
         while True:
-            start = res.find('%(')
+            start = res.find("%(")
             if start == -1:
                 break
-            end = res.find(')s', start)
-            name = res[start + 2: end]
-            res = res.replace(res[start:end + 2], ':' + name)
+            end = res.find(")s", start)
+            name = res[start + 2 : end]
+            res = res.replace(res[start : end + 2], ":" + name)
         self.__translations[stmt] = res
         return (res, row)
 
@@ -1075,14 +1114,13 @@ class BackgroundConnectionWrapper(object):
         names = []
         newstmt = stmt
         while True:
-            start = newstmt.find('%(')
+            start = newstmt.find("%(")
             if start == -1:
                 break
-            end = newstmt.find(')s', start)
-            name = newstmt[start + 2: end]
+            end = newstmt.find(")s", start)
+            name = newstmt[start + 2 : end]
             names.append(name)
-            newstmt = newstmt.replace(
-                newstmt[start:end + 2], '?', 1)  # Replace once!
+            newstmt = newstmt.replace(newstmt[start : end + 2], "?", 1)  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -1096,13 +1134,13 @@ class BackgroundConnectionWrapper(object):
         cnt = 0
         newstmt = stmt
         while True:
-            start = newstmt.find('%(')
+            start = newstmt.find("%(")
             if start == -1:
                 break
-            end = newstmt.find(')s', start)
-            name = newstmt[start + 2: end]
+            end = newstmt.find(")s", start)
+            name = newstmt[start + 2 : end]
             names.append(name)
-            newstmt = newstmt.replace(newstmt[start:end + 2], ':' + str(cnt))
+            newstmt = newstmt.replace(newstmt[start : end + 2], ":" + str(cnt))
             cnt += 1
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
@@ -1116,14 +1154,15 @@ class BackgroundConnectionWrapper(object):
         names = []
         newstmt = stmt
         while True:
-            start = newstmt.find('%(')
+            start = newstmt.find("%(")
             if start == -1:
                 break
-            end = newstmt.find(')s', start)
-            name = newstmt[start + 2: end]
+            end = newstmt.find(")s", start)
+            name = newstmt[start + 2 : end]
             names.append(name)
             newstmt = newstmt.replace(
-                newstmt[start:end + 2], '%s', 1)  # Replace once!
+                newstmt[start : end + 2], "%s", 1
+            )  # Replace once!
         self.__translations[stmt] = (newstmt, names)
         return (newstmt, [row[n] for n in names])
 
@@ -1143,8 +1182,7 @@ class BackgroundConnectionWrapper(object):
         if self.__cursor.description is None:
             return {}
         if names is None:
-            names = [self.nametranslator(t[0])
-                     for t in self.__cursor.description]
+            names = [self.nametranslator(t[0]) for t in self.__cursor.description]
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
@@ -1158,7 +1196,7 @@ class BackgroundConnectionWrapper(object):
             return ()
         values = self.__cursor.fetchone()
         if values is None:
-            return (None, ) * len(self.__cursor.description)
+            return (None,) * len(self.__cursor.description)
         else:
             return values
 
@@ -1185,28 +1223,26 @@ class BackgroundConnectionWrapper(object):
     def getunderlyingmodule(self):
         """Return a reference to the underlying connection's module.
 
-           This is done by considering the connection's __class__'s __module__
-           string from right to left (e.g., 'a.b.c', 'a.b', 'a') and looking
-           for the attributes 'paramstyle' and 'connect' in the possible modules
+        This is done by considering the connection's __class__'s __module__
+        string from right to left (e.g., 'a.b.c', 'a.b', 'a') and looking
+        for the attributes 'paramstyle' and 'connect' in the possible modules
         """
         # No need to join the queue here
         if self.__underlyingmodule is not None:
             return self.__underlyingmodule
         else:
             fullmodname = self.__connection.__class__.__module__
-            for i in reversed(range(fullmodname.count('.') + 1)):
-                modname = fullmodname.rsplit('.', i)[0]
+            for i in reversed(range(fullmodname.count(".") + 1)):
+                modname = fullmodname.rsplit(".", i)[0]
                 try:
                     modref = modules[modname]
-                    if hasattr(modref, 'paramstyle') and \
-                            hasattr(modref, 'connect'):
+                    if hasattr(modref, "paramstyle") and hasattr(modref, "connect"):
                         self.__underlyingmodule = modref
                         return modref
                 except KeyError:
                     pass
 
-        return None # We could not finde the module. Raise an Exception instead?
-
+        return None  # We could not finde the module. Raise an Exception instead?
 
     def commit(self):
         endload()
@@ -1243,7 +1279,7 @@ class BackgroundConnectionWrapper(object):
         # In case the ConnectionWrapper is pickled (to be sent to another
         # process), we need to create a new cursor when it is unpickled.
         res = self.__dict__.copy()
-        del res['_ConnectionWrapper__cursor']  # a dirty trick, but...
+        del res["_ConnectionWrapper__cursor"]  # a dirty trick, but...
 
     def __setstate__(self, dictdata):
         self.__dict__.update(dictdata)

@@ -1,5 +1,5 @@
 """A simple mapping between keys and values, but with a limited capacity. When
-   the max. capacity is reached, the first inserted key/value pair is deleted
+the max. capacity is reached, the first inserted key/value pair is deleted
 """
 
 # Copyright (c) 2009-2020, Aalborg University (pygrametl@cs.aau.dk)
@@ -26,28 +26,26 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-__all__ = ['FIFODict']
+__all__ = ["FIFODict"]
 
 
 class FIFODictDeque:
-
     """A simple FIFO mapping between keys and values. Implemented using a dict
-       and a Deque. When the max. capacity is reached, the key/value pair that
-       has been in the dict the longest time is removed.
+    and a Deque. When the max. capacity is reached, the key/value pair that
+    has been in the dict the longest time is removed.
     """
 
     def __init__(self, size, finalizer=None):
         """Create a FIFODictDeque with the given maximum size.
 
-           Arguments:
+        Arguments:
 
-           - size: Determines the maximum size of the dict.
-           - finalizer: If finalizer is given, it must be a callable
-             f(key, value). It is then called, when a item is removed due to
-             the size of the dict reaching the maximum (finalizer is NOT called
-             when an item is explicitly deleted with del d[key] or when the
-             dict is cleared).
+        - size: Determines the maximum size of the dict.
+        - finalizer: If finalizer is given, it must be a callable
+          f(key, value). It is then called, when a item is removed due to
+          the size of the dict reaching the maximum (finalizer is NOT called
+          when an item is explicitly deleted with del d[key] or when the
+          dict is cleared).
         """
         if not isinstance(size, type(0)):
             raise TypeError("size must be an int")
@@ -64,13 +62,13 @@ class FIFODictDeque:
     def add(self, key, val):
         """Add a key/value pair to the dict.
 
-           If a pair p with the same key already exists, p is replaced by the
-           new pair n, but n gets p's position in the FIFO dict and is deleted
-           when the old pair p would have been deleted. When the maximum
-           capacity is reached, the pair with the oldest key is deleted
-           from the dict.
+        If a pair p with the same key already exists, p is replaced by the
+        new pair n, but n gets p's position in the FIFO dict and is deleted
+        when the old pair p would have been deleted. When the maximum
+        capacity is reached, the pair with the oldest key is deleted
+        from the dict.
 
-           The argument key is the key and the argument val is the value.
+        The argument key is the key and the argument val is the value.
         """
         if key in self.__data:
             self.__data[key] = val  # Replace old value
@@ -90,8 +88,8 @@ class FIFODictDeque:
     def get(self, key, default=None):
         """Find and return the element a given key maps to.
 
-           Look for the given key in the dict and return the associated value
-           if found. If not found, the value of default is returned.
+        Look for the given key in the dict and return the associated value
+        if found. If not found, the value of default is returned.
         """
         return self.__data.get(key, default)
 
@@ -118,7 +116,7 @@ class FIFODictDeque:
         return "{%s}" % ", ".join(allitems)
 
     def __contains__(self, item):
-        return (item in self.__data)
+        return item in self.__data
 
     def __delitem__(self, item):
         if item not in self.__data:
@@ -133,23 +131,22 @@ class FIFODictDeque:
 
 
 class FIFODictOrderedDict:
-
     """A simple FIFO mapping between keys and values. Implemented using an
-       OrderedDict. When the max. capacity is reached, the key/value pair that
-       has been in the dict the longest time is removed.
+    OrderedDict. When the max. capacity is reached, the key/value pair that
+    has been in the dict the longest time is removed.
     """
 
     def __init__(self, size, finalizer=None):
         """Create a FIFODictOrderedDict with the given maximum size.
 
-           Arguments:
+        Arguments:
 
-           - size: Determines the maximum size of the dict.
-           - finalizer: If finalizer is given, it must be a callable
-             f(key, value). It is then called, when a item is removed due to
-             the size of the dict reaching the maximum (finalizer is NOT called
-             when an item is explicitly deleted with del d[key] or when the
-             dict is cleared).
+        - size: Determines the maximum size of the dict.
+        - finalizer: If finalizer is given, it must be a callable
+          f(key, value). It is then called, when a item is removed due to
+          the size of the dict reaching the maximum (finalizer is NOT called
+          when an item is explicitly deleted with del d[key] or when the
+          dict is cleared).
         """
         if not isinstance(size, type(0)):
             raise TypeError("size must be an int")
@@ -165,13 +162,13 @@ class FIFODictOrderedDict:
     def add(self, key, val):
         """Add a key/value pair to the dict.
 
-           If a pair p with the same key already exists, p is replaced by the
-           new pair n, but n gets p's position in the FIFO dict and is deleted
-           when the old pair p would have been deleted. When the maximum
-           capacity is reached, the pair with the oldest key is deleted
-           from the dict.
+        If a pair p with the same key already exists, p is replaced by the
+        new pair n, but n gets p's position in the FIFO dict and is deleted
+        when the old pair p would have been deleted. When the maximum
+        capacity is reached, the pair with the oldest key is deleted
+        from the dict.
 
-           The argument key is the key and the argument val is the value.
+        The argument key is the key and the argument val is the value.
         """
         if key in self.__data:
             self.__data[key] = val  # Replace old value
@@ -190,8 +187,8 @@ class FIFODictOrderedDict:
     def get(self, key, default=None):
         """Find and return the element a given key maps to.
 
-           Look for the given key in the dict and return the associated value
-           if found. If not found, the value of default is returned.
+        Look for the given key in the dict and return the associated value
+        if found. If not found, the value of default is returned.
         """
         return self.__data.get(key, default)
 
@@ -217,7 +214,7 @@ class FIFODictOrderedDict:
         return "{%s}" % ", ".join(allitems)
 
     def __contains__(self, item):
-        return (item in self.__data)
+        return item in self.__data
 
     def __delitem__(self, item):
         if item not in self.__data:
@@ -234,7 +231,9 @@ class FIFODictOrderedDict:
 # OrderedDict is available in the version of Python used.
 try:
     from collections import OrderedDict
+
     FIFODict = FIFODictOrderedDict
 except ImportError:
     from collections import deque
+
     FIFODict = FIFODictDeque

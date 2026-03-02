@@ -1,4 +1,4 @@
 docs/_build
-*.egg-info/
-__pycache__/
-*.pyc
+__pycache__
+.egg-info
+.ruff_cache

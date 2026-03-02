@@ -22,30 +22,26 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import sys
 import unittest
+from unittest.mock import patch
+from datetime import date, datetime
+from sqlite3.dbapi2 import Timestamp, Date
+
 import pygrametl
 import pygrametl.drawntabletesting as dtt
 from tests import utilities
-from sqlite3.dbapi2 import Timestamp, Date
-from datetime import date, datetime
-from unittest.mock import patch
 
 
 class InitTest(unittest.TestCase):
-
     def setUp(self):
         self.row = {
             "firstname": "John",
             "lastname": "Doe",
             "age": 27,
-            "sex": "male"
+            "sex": "male",
         }
 
-        self.renaming = {
-            "surname": "lastname",
-            "gender": "sex"
-        }
+        self.renaming = {"surname": "lastname", "gender": "sex"}
 
     def test_project(self):
         atts = ["firstname", "surname", "age", "gender"]
@@ -61,7 +57,7 @@ class InitTest(unittest.TestCase):
             "surname": "lastname",
             "gender": "sex",
             "years": "age",
-            "years_in_country": "age"
+            "years_in_country": "age",
         }
 
         row = pygrametl.copy(self.row, **renaming)
@@ -74,7 +70,7 @@ class InitTest(unittest.TestCase):
         self.assertEqual(27, row["years_in_country"])
 
     def test_renamefromto(self):
-        renaming = dict((v,k) for k,v in self.renaming.items())
+        renaming = dict((v, k) for k, v in self.renaming.items())
 
         pygrametl.renamefromto(self.row, renaming)
 
@@ -98,15 +94,6 @@ class InitTest(unittest.TestCase):
 
         self.assertIsNone(pygrametl.getint("not convertible"))
 
-    def test_getlong(self):
-        # long() is not supported in Python 3
-        python_version = sys.version_info[0]
-        if python_version < 3:
-            for i in ("2", 2, 2.0):
-                self.assertEqual(long, type(pygrametl.getlong(i)))
-
-            self.assertIsNone(pygrametl.getlong("not convertible"))
-
     def test_getfloat(self):
         for i in ("2", "2.9", 2.7, 2):
             self.assertEqual(float, type(pygrametl.getfloat(i)))
@@ -128,8 +115,10 @@ class InitTest(unittest.TestCase):
         self.assertEqual("1", pygrametl.getdbfriendlystr(True))
         self.assertEqual("0", pygrametl.getdbfriendlystr(False))
         self.assertEqual("10", pygrametl.getsqlfriendlystr(10))
-        self.assertEqual("CustomNullValue",
-                         pygrametl.getdbfriendlystr(None, "CustomNullValue"))
+        self.assertEqual(
+            "CustomNullValue",
+            pygrametl.getdbfriendlystr(None, "CustomNullValue"),
+        )
 
     def test_getsqlfriendlystr(self):
         self.assertEqual("NULL", pygrametl.getsqlfriendlystr(None))
@@ -139,8 +128,10 @@ class InitTest(unittest.TestCase):
     def test_getstrornullvalue(self):
         self.assertEqual("None", pygrametl.getstrornullvalue(None))
         self.assertEqual("10", pygrametl.getstrornullvalue(10))
-        self.assertEqual("CustomNullValue",
-                         pygrametl.getstrornullvalue(None, "CustomNullValue"))
+        self.assertEqual(
+            "CustomNullValue",
+            pygrametl.getstrornullvalue(None, "CustomNullValue"),
+        )
 
     def test_getbool(self):
         # Cases where True should be returned
@@ -155,10 +146,14 @@ class InitTest(unittest.TestCase):
         self.assertIsNone(pygrametl.getbool("string"))
 
         # Cases with custom truevalues and falsevalues
-        self.assertEqual(True, pygrametl.getbool(
-            "CustomTrueValue", truevalues={"CustomTrueValue"}))
-        self.assertEqual(False, pygrametl.getbool(
-            "CustomFalseValue", falsevalues={"CustomFalseValue"}))
+        self.assertEqual(
+            True,
+            pygrametl.getbool("CustomTrueValue", truevalues={"CustomTrueValue"}),
+        )
+        self.assertEqual(
+            False,
+            pygrametl.getbool("CustomFalseValue", falsevalues={"CustomFalseValue"}),
+        )
 
     def test_getdate(self):
         connection_wrapper = dtt.connectionwrapper()
@@ -172,47 +167,49 @@ class InitTest(unittest.TestCase):
     def test_gettimestamp(self):
         connection_wrapper = dtt.connectionwrapper()
         timestamp_expected = Timestamp(2021, 4, 16, 12, 55, 32)
-        timestamp_actual = pygrametl.gettimestamp(connection_wrapper,
-                                                  "2021-04-16 12:55:32")
+        timestamp_actual = pygrametl.gettimestamp(
+            connection_wrapper, "2021-04-16 12:55:32"
+        )
         self.assertEqual(timestamp_expected, timestamp_actual)
 
         timestamp_actual = pygrametl.gettimestamp(connection_wrapper, "string")
         self.assertEqual(None, timestamp_actual)
 
     def test_getvalue(self):
-        self.assertEqual("John", pygrametl.getvalue(
-            self.row, "firstname", self.renaming))
+        self.assertEqual(
+            "John", pygrametl.getvalue(self.row, "firstname", self.renaming)
+        )
 
         # 'surname' and 'gender' are renamed in mapping
-        self.assertEqual("Doe", pygrametl.getvalue(
-            self.row, "surname", self.renaming))
-        self.assertEqual("male", pygrametl.getvalue(
-            self.row, "gender", self.renaming))
+        self.assertEqual("Doe", pygrametl.getvalue(self.row, "surname", self.renaming))
+        self.assertEqual("male", pygrametl.getvalue(self.row, "gender", self.renaming))
 
         # Old keys can still be used despite renaming
-        self.assertEqual("male", pygrametl.getvalue(
-            self.row, "sex", self.renaming))
+        self.assertEqual("male", pygrametl.getvalue(self.row, "sex", self.renaming))
 
     def test_getvalueor(self):
-        self.assertEqual("John", pygrametl.getvalueor(
-            self.row, "firstname", self.renaming))
+        self.assertEqual(
+            "John", pygrametl.getvalueor(self.row, "firstname", self.renaming)
+        )
 
         # 'surname' and 'gender' are renamed in mapping
-        self.assertEqual("Doe", pygrametl.getvalueor(
-            self.row, "surname", self.renaming))
-        self.assertEqual("male", pygrametl.getvalueor(
-            self.row, "gender", self.renaming))
+        self.assertEqual(
+            "Doe", pygrametl.getvalueor(self.row, "surname", self.renaming)
+        )
+        self.assertEqual(
+            "male", pygrametl.getvalueor(self.row, "gender", self.renaming)
+        )
 
         # Old keys can still be used despite renaming
-        self.assertEqual("male", pygrametl.getvalue(
-            self.row, "sex", self.renaming))
+        self.assertEqual("male", pygrametl.getvalue(self.row, "sex", self.renaming))
 
         # The key 'salary' does not exist in dict
-        self.assertEqual(None, pygrametl.getvalueor(
-            self.row, "salary", self.renaming))
+        self.assertEqual(None, pygrametl.getvalueor(self.row, "salary", self.renaming))
 
-        self.assertEqual("Default value", pygrametl.getvalueor(
-            self.row, "salary", self.renaming, "Default value"))
+        self.assertEqual(
+            "Default value",
+            pygrametl.getvalueor(self.row, "salary", self.renaming, "Default value"),
+        )
 
     def test_setdefaults_a_parameters_as_sequences_of_atts_and_defaults(self):
         atts = ["age", "sex", "salary", "nationality"]
@@ -232,12 +229,15 @@ class InitTest(unittest.TestCase):
         defaults = [0, "unknown", 180]
 
         # An exception should be raised since the lists have different lengths
-        self.assertRaises(ValueError, pygrametl.setdefaults,
-                          self.row, atts, defaults)
+        self.assertRaises(ValueError, pygrametl.setdefaults, self.row, atts, defaults)
 
     def test_setdefaults_b_parameters_as_pairs_of_atts_and_defaults(self):
-        atts_and_defaults = [("age", 0), ("sex", "unknown"),
-                             ("salary", 180), ("nationality", "England")]
+        atts_and_defaults = [
+            ("age", 0),
+            ("sex", "unknown"),
+            ("salary", 180),
+            ("nationality", "England"),
+        ]
         pygrametl.setdefaults(self.row, atts_and_defaults)
 
         # Existing values should not be updated
@@ -283,15 +283,14 @@ class InitTest(unittest.TestCase):
 
         for dictionary in dicts:
             self.assertEqual(dict, type(dictionary))
-            self.assertTrue('somekey' in dictionary)
-            self.assertTrue('anotherkey' in dictionary)
+            self.assertTrue("somekey" in dictionary)
+            self.assertTrue("anotherkey" in dictionary)
             dict_counter += 1
 
         self.assertEqual(expected_num_of_rows, dict_counter)
 
         times_close_should_be_called = 1 if close is True else 0
-        self.assertEqual(times_close_should_be_called,
-                         source.times_closed_was_called)
+        self.assertEqual(times_close_should_be_called, source.times_closed_was_called)
 
     class MockSourceWithFetchmany:
         def __init__(self, rows_left):
@@ -372,14 +371,12 @@ class InitTest(unittest.TestCase):
             self.MockDimensionOrFacttable()
 
         for dimension_or_facttable in pygrametl._alltables:
-            self.assertEqual(
-                0, dimension_or_facttable.times_endload_was_called)
+            self.assertEqual(0, dimension_or_facttable.times_endload_was_called)
 
         pygrametl.endload()
 
         for dimension_or_facttable in pygrametl._alltables:
-            self.assertEqual(
-                1, dimension_or_facttable.times_endload_was_called)
+            self.assertEqual(1, dimension_or_facttable.times_endload_was_called)
         pygrametl._alltables = alltables
 
     class MockDimensionOrFacttable:
@@ -401,7 +398,7 @@ class InitTest(unittest.TestCase):
         # for the first call
         future_date_ord = date_first_call.toordinal() + 2
         future_date = date.fromordinal(future_date_ord)
-        with patch('pygrametl.date') as mock_date:
+        with patch("pygrametl.date") as mock_date:
             mock_date.today.return_value = future_date
             self.assertEqual(date_first_call, pygrametl.today())
 
@@ -414,7 +411,7 @@ class InitTest(unittest.TestCase):
         future_time_stamp = time_first_call.timestamp() + 5
         future_time = datetime.fromtimestamp(future_time_stamp)
 
-        with patch('pygrametl.datetime') as mock_datetime:
+        with patch("pygrametl.datetime") as mock_datetime:
             mock_datetime.now.return_value = future_time
             self.assertEqual(time_first_call, pygrametl.now())
 
@@ -432,31 +429,28 @@ class InitTest(unittest.TestCase):
     def test_ymdhmsparser(self):
         datetime_expected = datetime(2021, 1, 1, 14, 32, 56)
 
-        self.assertEqual(datetime_expected,
-                         pygrametl.ymdhmsparser("2021-01-01 14:32:56"))
+        self.assertEqual(
+            datetime_expected, pygrametl.ymdhmsparser("2021-01-01 14:32:56")
+        )
         self.assertEqual(None, pygrametl.ymdparser(None))
 
         # Incorrect input or format
         self.assertRaises(Exception, pygrametl.ymdhmsparser, "Not a datetime")
-        self.assertRaises(Exception, pygrametl.ymdhmsparser,
-                          "01-01-2021 14:32:56")
+        self.assertRaises(Exception, pygrametl.ymdhmsparser, "01-01-2021 14:32:56")
         self.assertRaises(Exception, pygrametl.ymdhmsparser, "2021-01-01")
 
     def test_datereader(self):
         datereader = pygrametl.datereader("date")
 
-        year_str = '2021'
-        month_str = '01'
+        year_str = "2021"
+        month_str = "01"
 
         for i in range(1, 31):
             # Creates dicts where 'date' maps to a string representation of the
             # date in "yyyy-mm-dd" format
-            day_str = '0' + str(i) if i <= 9 else str(i)
-            date_str = year_str + '-' + month_str + '-' + day_str
-            mydict = {
-                "date": date_str,
-                "price": 150
-            }
+            day_str = "0" + str(i) if i <= 9 else str(i)
+            date_str = year_str + "-" + month_str + "-" + day_str
+            mydict = {"date": date_str, "price": 150}
 
             date_obj = datereader(None, mydict)
             self.assertTrue(type(date_obj == date))
@@ -476,12 +470,10 @@ class InitTest(unittest.TestCase):
             hours_str = str(hours) if hours > 9 else "0" + str(hours)
             minutes_str = str(i) if i > 9 else "0" + str(i)
             seconds_str = minutes_str
-            datetime_str = date_str + ' ' + hours_str + \
-                ':' + minutes_str + ":" + seconds_str
-            mydict = {
-                "time": datetime_str,
-                "price": 150
-            }
+            datetime_str = (
+                date_str + " " + hours_str + ":" + minutes_str + ":" + seconds_str
+            )
+            mydict = {"time": datetime_str, "price": 150}
 
             datetime_obj = datetimereader(None, mydict)
             self.assertTrue(type(datetime_obj == datetime))
@@ -509,71 +501,75 @@ class InitTest(unittest.TestCase):
     def test_datespan_datetime_dates_custom_key(self):
         fromdate = date(2021, 1, 1)
         todate = date(2021, 1, 31)
-        dategen = pygrametl.datespan(fromdate, todate, key='dateinteger')
+        dategen = pygrametl.datespan(fromdate, todate, key="dateinteger")
 
-        self.datespan_test_method(fromdate, todate, dategen, key='dateinteger')
+        self.datespan_test_method(fromdate, todate, dategen, key="dateinteger")
 
     def test_datespan_datetime_date_fromdateincl_todateincl(self):
         fromdate = date(2021, 1, 1)
         todate = date(2021, 1, 31)
 
         dategen = pygrametl.datespan(fromdate, todate, fromdateincl=False)
-        self.datespan_test_method(date.fromordinal(
-            fromdate.toordinal() + 1), todate, dategen)
+        self.datespan_test_method(
+            date.fromordinal(fromdate.toordinal() + 1), todate, dategen
+        )
 
         dategen = pygrametl.datespan(fromdate, todate, todateincl=False)
-        self.datespan_test_method(fromdate, date.fromordinal(
-            todate.toordinal() - 1), dategen)
+        self.datespan_test_method(
+            fromdate, date.fromordinal(todate.toordinal() - 1), dategen
+        )
 
         dategen = pygrametl.datespan(fromdate, todate, fromdateincl=False)
-        self.datespan_test_method(date.fromordinal(
-            fromdate.toordinal() + 1), todate, dategen)
+        self.datespan_test_method(
+            date.fromordinal(fromdate.toordinal() + 1), todate, dategen
+        )
 
         dategen = pygrametl.datespan(
-            fromdate, todate, fromdateincl=False, todateincl=False)
-        self.datespan_test_method(date.fromordinal(fromdate.toordinal() + 1),
-                                  date.fromordinal(todate.toordinal() - 1),
-                                  dategen)
+            fromdate, todate, fromdateincl=False, todateincl=False
+        )
+        self.datespan_test_method(
+            date.fromordinal(fromdate.toordinal() + 1),
+            date.fromordinal(todate.toordinal() - 1),
+            dategen,
+        )
 
     def test_datespan_datetime_date_custom_strings_and_ints(self):
         fromdate = date(2021, 1, 2)
         todate = date(2021, 1, 2)
 
         # Tests that date is now 'dd-mm-yyyy' as specified in 'strings'
-        dategen = pygrametl.datespan(
-            fromdate, todate, strings={'date': '%d-%m-%Y'})
-        date_str = fromdate.strftime('%d-%m-%Y')
-        self.assertEqual(date_str, next(dategen)['date'])
+        dategen = pygrametl.datespan(fromdate, todate, strings={"date": "%d-%m-%Y"})
+        date_str = fromdate.strftime("%d-%m-%Y")
+        self.assertEqual(date_str, next(dategen)["date"])
 
         # Tests that year now maps to the month as specified in 'ints'
-        dategen = pygrametl.datespan(fromdate, todate, ints={'year': '%m'})
-        year_str = int(fromdate.strftime('%m'))
-        self.assertEqual(year_str, next(dategen)['year'])
+        dategen = pygrametl.datespan(fromdate, todate, ints={"year": "%m"})
+        year_str = int(fromdate.strftime("%m"))
+        self.assertEqual(year_str, next(dategen)["year"])
 
-    def datespan_test_method(self, fromdate, todate, dategen,
-                             key='dateid'):
+    def datespan_test_method(self, fromdate, todate, dategen, key="dateid"):
         date_counter = fromdate.toordinal()
 
         for date_dict in dategen:
             date_obj = date.fromordinal(date_counter)
 
-            dateid = int(date_obj.strftime('%Y%m%d'))
+            dateid = int(date_obj.strftime("%Y%m%d"))
 
-            date_str = date_obj.strftime('%Y-%m-%d')
-            monthname = date_obj.strftime('%B')
-            weekday = date_obj.strftime('%A')
+            date_str = date_obj.strftime("%Y-%m-%d")
+            monthname = date_obj.strftime("%B")
+            weekday = date_obj.strftime("%A")
 
-            year = int(date_obj.strftime('%Y'))
-            month = int(date_obj.strftime('%m'))
-            day = int(date_obj.strftime('%d'))
+            year = int(date_obj.strftime("%Y"))
+            month = int(date_obj.strftime("%m"))
+            day = int(date_obj.strftime("%d"))
 
             self.assertEqual(dateid, date_dict[key])
-            self.assertEqual(date_str, date_dict['date'])
-            self.assertEqual(monthname, date_dict['monthname'])
-            self.assertEqual(weekday, date_dict['weekday'])
-            self.assertEqual(year, date_dict['year'])
-            self.assertEqual(month, date_dict['month'])
-            self.assertEqual(day, date_dict['day'])
+            self.assertEqual(date_str, date_dict["date"])
+            self.assertEqual(monthname, date_dict["monthname"])
+            self.assertEqual(weekday, date_dict["weekday"])
+            self.assertEqual(year, date_dict["year"])
+            self.assertEqual(month, date_dict["month"])
+            self.assertEqual(day, date_dict["day"])
 
             date_counter += 1
 
@@ -601,22 +597,27 @@ class InitTest(unittest.TestCase):
         # Create a default connection and ConnectionWrapper. This should then be
         # the default target connection wrapper
         connectionwrapper_first = utilities.ensure_default_connection_wrapper()
-        self.assertEqual(connectionwrapper_first,
-                         pygrametl.getdefaulttargetconnection())
+        self.assertEqual(
+            connectionwrapper_first, pygrametl.getdefaulttargetconnection()
+        )
 
         # Create a new connection. The returned default target connection
         # wrapper should still be the previous connection wrapper
         connection_second = utilities.get_connection()
         connectionwrapper_second = pygrametl.ConnectionWrapper(connection_second)
-        self.assertNotEqual(connectionwrapper_second,
-                            pygrametl.getdefaulttargetconnection())
-        self.assertEqual(connectionwrapper_first,
-                         pygrametl.getdefaulttargetconnection())
+        self.assertNotEqual(
+            connectionwrapper_second, pygrametl.getdefaulttargetconnection()
+        )
+        self.assertEqual(
+            connectionwrapper_first, pygrametl.getdefaulttargetconnection()
+        )
 
         # Sets the second connection wrapper as default and tests that this
         # connection wrapper is now the default target connection wrapper
         connectionwrapper_second.setasdefault()
-        self.assertEqual(connectionwrapper_second,
-                         pygrametl.getdefaulttargetconnection())
-        self.assertNotEqual(connectionwrapper_first,
-                            pygrametl.getdefaulttargetconnection())
+        self.assertEqual(
+            connectionwrapper_second, pygrametl.getdefaulttargetconnection()
+        )
+        self.assertNotEqual(
+            connectionwrapper_first, pygrametl.getdefaulttargetconnection()
+        )

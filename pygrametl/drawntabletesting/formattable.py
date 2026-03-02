@@ -24,7 +24,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 import sys
 import pygrametl.drawntabletesting as dtt
 
@@ -36,34 +35,34 @@ path = sys.argv[1]
 point = int(sys.argv[2]) - 1  # Expected to be one-based
 
 # Extracts the table from the document
-with open(path, 'r') as f:
+with open(path, "r") as f:
     lines = f.readlines()
     length = len(lines)
 
     start = point
-    while start >= 0 and '|' in lines[start]:
+    while start >= 0 and "|" in lines[start]:
         start -= 1
     start += 1  # Do not include the header
 
     end = point
-    while end < length and '|' in lines[end]:
+    while end < length and "|" in lines[end]:
         end += 1
     end -= 1  # Do not include the delimiter
 
 # The table's indention must be taken into account
-table = ''.join(lines[start:end + 1])
-first_char = table.find('|')
-last_char = table.rfind('|')
+table = "".join(lines[start : end + 1])
+first_char = table.find("|")
+last_char = table.rfind("|")
 prefix = table[:first_char]
-suffix = table[last_char + 1:]
-table = table[first_char:last_char + 1]
+suffix = table[last_char + 1 :]
+table = table[first_char : last_char + 1]
 
 # The indention level must be added for each line
-table = dtt.Table('', table, testconnection=object())
-table = str(table).split('\n')
+table = dtt.Table("", table, testconnection=object())
+table = str(table).split("\n")
 
 write = 0
-indention = '\n' + ' ' * first_char
+indention = "\n" + " " * first_char
 for output in range(start, end):
     lines[output] = indention + table[write]
     write += 1
@@ -71,5 +70,5 @@ lines[start] = prefix + table[0]
 lines[end] = indention + table[-1] + suffix
 
 # The file is updated to format the table
-with open(path, 'w') as f:
+with open(path, "w") as f:
     f.writelines(lines)

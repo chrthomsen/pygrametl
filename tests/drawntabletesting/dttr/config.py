@@ -32,5 +32,5 @@ def csv_two(columns, path, delimiter):
         return list(f)
 
 
-connection = sqlite3.connect(':memory:')
-oltp = sqlite3.connect(':memory:')
+connection = sqlite3.connect(":memory:")
+oltp = sqlite3.connect(":memory:")

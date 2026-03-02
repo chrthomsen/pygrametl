@@ -1,6 +1,6 @@
 """Automatic addition of additional markup to the doc strings used by pygrametl,
-   which should allow them to be readable in the source code and in the
-   documentation after Sphinx has processed them.
+which should allow them to be readable in the source code and in the
+documentation after Sphinx has processed them.
 """
 
 # Copyright (c) 2014-2020, Aalborg University (pygrametl@cs.aau.dk)
@@ -27,31 +27,27 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import re
-import sys
-
 
 def correct_docstring(app, what, name, obj, options, lines):
     """Makes some correction to the markup, this should keep it readable in
-        the source files, and having the output formatted using Sphinx.
+    the source files, and having the output formatted using Sphinx.
     """
 
     # Iteration is immutable to prevent lines from being skipped
     for index, value in enumerate(lines):
-
         # Adds additional backslashes to keep escape sequences as text
-        if '\\t' in value or '\\n' in value:
+        if "\\t" in value or "\\n" in value:
             lines[index] = lines[index].replace("\\", "\\\\")
 
         # Escapes * in argument descriptions to stop Sphinx using them as
         # markup
-        if '*' in value:
+        if "*" in value:
             lines[index] = escape_star(value)
 
         # Formatting of the arguments header with bold and a newline
-        if value == 'Arguments:' or value == 'Keyword arguments:':
-            lines[index] = '**' + value + '**'
-            lines.insert(index + 1, '')
+        if value == "Arguments:" or value == "Keyword arguments:":
+            lines[index] = "**" + value + "**"
+            lines.insert(index + 1, "")
 
 
 def escape_star(line):
@@ -60,23 +56,22 @@ def escape_star(line):
 
     for index, value in enumerate(line_split):
         # Star is only added to the end of the word, if the are used for markup
-        if not value.endswith('*'):
+        if not value.endswith("*"):
             line_split[index] = line_split[index].replace("*", "\\*")
 
-    return ' '.join(line_split)
+    return " ".join(line_split)
 
 
-def correct_signature(app, what, name, obj, options, signature,
-                      return_annotation):
+def correct_signature(app, what, name, obj, options, signature, return_annotation):
     """Makes some correction to the markup, to prevent Sphinx from using escape
-        sequences instead of just printing them"""
+    sequences instead of just printing them"""
 
     # Returns the signature are empty, instead of doing None checks everywhere
     if not signature:
-        return(signature, return_annotation)
+        return (signature, return_annotation)
 
     # Adds additional backslashes to keep escape sequences as text
-    if '\\t' in signature or '\\n' in signature:
+    if "\\t" in signature or "\\n" in signature:
         signature = signature.replace("\\", "\\\\")
 
     # Removes the address added by Sphinx if a function pointer have defaults
@@ -84,12 +79,12 @@ def correct_signature(app, what, name, obj, options, signature,
         signature = correct_function_pointers(obj, signature)
 
     # Side effects are discarded, so we have to return a tuple with new strings
-    return(signature, return_annotation)
+    return (signature, return_annotation)
 
 
 def correct_function_pointers(obj, signature):
     """Manuel mapping of function pointers with addresses to their original
-        names, it is needed until Sphinx Issue #759 have been resolved.
+    names, it is needed until Sphinx Issue #759 have been resolved.
     """
 
     # Signatures can belong to either a function, method or object, depending
@@ -112,30 +107,30 @@ def correct_function_pointers(obj, signature):
     # split into a list of parameters, allowing the function names from the line
     # of source code read to easily substitute the memory addresses present in
     # the original signature given by Sphinx
-    signature_split = signature.split(',')
-    source_code_line_split = source_code_line.split(',')
+    signature_split = signature.split(",")
+    source_code_line_split = source_code_line.split(",")
 
     # Function name, def, self, and the ending colon are stripped to match the
     # original signature read by Sphinx, making substituting each part trivial
-    param_start_index = source_code_line_split[0].find('(')
+    param_start_index = source_code_line_split[0].find("(")
     source_code_line_split[0] = source_code_line_split[0][param_start_index:]
     source_code_line_split[-1] = source_code_line_split[-1][0:-1]
 
-    if source_code_line_split[0] == '(self':
-        del(source_code_line_split[0])
-        source_code_line_split[0] = '(' + source_code_line_split[0]
+    if source_code_line_split[0] == "(self":
+        del source_code_line_split[0]
+        source_code_line_split[0] = "(" + source_code_line_split[0]
 
     # Finally we substitute the pointers with the matching line from source
     # code
     result_string_list = []
     for sig, source in zip(signature_split, source_code_line_split):
-        if '<function ' in sig:
+        if "<function " in sig:
             result_string_list.append(source)
         else:
             result_string_list.append(sig)
 
     # The function pointer block is just replaced with the function_name
-    return ','.join(result_string_list)
+    return ",".join(result_string_list)
 
 
 def read_function_signature(filename, lineno):
@@ -152,14 +147,13 @@ def read_function_signature(filename, lineno):
     file_handle = open(filename)
     reached_function_signature = False
     for file_index, line in enumerate(file_handle):
-
         if file_index == lineno:
             reached_function_signature = True
 
         if reached_function_signature:
             function_signature += line.strip()
 
-            if line.endswith(':\n'):
+            if line.endswith(":\n"):
                 file_handle.close()
                 break
 
@@ -173,5 +167,5 @@ def setup(app):
 
     # Connection of functions to events raised by Sphinx's autodoc plug-in
     # Documentation: http://sphinx-doc.org/ext/autodoc.html
-    app.connect('autodoc-process-docstring', correct_docstring)
-    app.connect('autodoc-process-signature', correct_signature)
+    app.connect("autodoc-process-docstring", correct_docstring)
+    app.connect("autodoc-process-signature", correct_signature)

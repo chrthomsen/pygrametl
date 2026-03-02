@@ -1,13 +1,13 @@
 """A module with classes for aggregation.
-   An Aggregator has two methods: process and finish.
+An Aggregator has two methods: process and finish.
 
-   process(group, val) is called to "add" val to the aggregation of the set of
-   values identified by the value of group. The value in group (which could be
-   any hashable type, also a tuple as ('A', 'B')) thus corresponds to the
-   GROUP BY attributes in SQL.
+process(group, val) is called to "add" val to the aggregation of the set of
+values identified by the value of group. The value in group (which could be
+any hashable type, also a tuple as ('A', 'B')) thus corresponds to the
+GROUP BY attributes in SQL.
 
-   finish(group, default) is called to get the final result for group.
-   If no such results exists, default is returned.
+finish(group, default) is called to get the final result for group.
+If no such results exists, default is returned.
 """
 
 # Copyright (c) 2011-2020, Aalborg University (pygrametl@cs.aau.dk)
@@ -34,12 +34,19 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__all__ = ['Aggregator', 'SimpleAggregator', 'Sum', 'Count', 'CountDistinct',
-           'Max', 'Min', 'Avg']
+__all__ = [
+    "Aggregator",
+    "SimpleAggregator",
+    "Sum",
+    "Count",
+    "CountDistinct",
+    "Max",
+    "Min",
+    "Avg",
+]
 
 
 class Aggregator(object):
-
     def process(self, group, val):
         raise NotImplementedError()
 
@@ -48,7 +55,6 @@ class Aggregator(object):
 
 
 class SimpleAggregator(Aggregator):
-
     def __init__(self):
         self._results = {}
 
@@ -60,7 +66,6 @@ class SimpleAggregator(Aggregator):
 
 
 class Sum(SimpleAggregator):
-
     def process(self, group, val):
         tmp = self._results.get(group, 0)
         tmp += val
@@ -68,7 +73,6 @@ class Sum(SimpleAggregator):
 
 
 class Count(SimpleAggregator):
-
     def process(self, group, val):
         tmp = self._results.get(group, 0)
         tmp += 1
@@ -76,7 +80,6 @@ class Count(SimpleAggregator):
 
 
 class CountDistinct(SimpleAggregator):
-
     def process(self, group, val):
         if group not in self._results:
             self._results[group] = set()
@@ -89,7 +92,6 @@ class CountDistinct(SimpleAggregator):
 
 
 class Max(SimpleAggregator):
-
     def process(self, group, val):
         if group not in self._results:
             self._results[group] = val
@@ -100,7 +102,6 @@ class Max(SimpleAggregator):
 
 
 class Min(SimpleAggregator):
-
     def process(self, group, val):
         if group not in self._results:
             self._results[group] = val
@@ -111,7 +112,6 @@ class Min(SimpleAggregator):
 
 
 class Avg(Aggregator):
-
     def __init__(self):
         self.__sum = Sum()
         self.__count = Count()

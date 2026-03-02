@@ -27,16 +27,22 @@ import unittest
 
 import pygrametl
 import pygrametl.drawntabletesting as dtt
-from pygrametl.datasources import SQLSource, MappingSource, SQLTransformingSource
+from pygrametl.datasources import (
+    SQLSource,
+    MappingSource,
+    SQLTransformingSource,
+)
 from tests import utilities
 
-class SQLSourceTest(unittest.TestCase):
 
+class SQLSourceTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.connection = utilities.get_connection()
         cls.connection_wrapper = pygrametl.ConnectionWrapper(cls.connection)
-        cls.initial = dtt.Table("book", """
+        cls.initial = dtt.Table(
+            "book",
+            """
         | id:int (pk) | title:text            | genre:text |
         | ----------- | --------------------- | ---------- |
         | 1           | Unknown               | Unknown    |
@@ -44,7 +50,8 @@ class SQLSourceTest(unittest.TestCase):
         | 3           | Calvin and Hobbes One | Comic      |
         | 4           | Calvin and Hobbes Two | Comic      |
         | 5           | The Silver Spoon      | Cookbook   |
-        """)
+        """,
+        )
         cls.row_len = len(cls.initial)
         cls.column_len = len(cls.initial[0].keys())
         cls.names = list(cls.initial[0].keys())
@@ -75,16 +82,28 @@ class SQLSourceTest(unittest.TestCase):
 
     def test_with_too_many_names(self):
         with self.assertRaises(ValueError):
-            sql_source = SQLSource(self.connection, self.query, names=["bid", "title", "genre", "publisher"])
+            sql_source = SQLSource(
+                self.connection,
+                self.query,
+                names=["bid", "title", "genre", "publisher"],
+            )
             self.assert_all_rows_and_columns_returned(sql_source, self.names)
 
     def test_with_succeeding_initsql(self):
-        sql_source = SQLSource(self.connection, self.query, initsql="CREATE TABLE author (name VARCHAR)")
+        sql_source = SQLSource(
+            self.connection,
+            self.query,
+            initsql="CREATE TABLE author (name VARCHAR)",
+        )
         self.assert_all_rows_and_columns_returned(sql_source, self.names)
 
     def test_with_failing_initsql(self):
         with self.assertRaises(sqlite3.OperationalError):
-            SQLSource(self.connection, self.query, initsql="CREATE TABLE book (bid INTEGER)")
+            SQLSource(
+                self.connection,
+                self.query,
+                initsql="CREATE TABLE book (bid INTEGER)",
+            )
 
 
 class MappingSourceTest(unittest.TestCase):
@@ -95,63 +114,59 @@ class MappingSourceTest(unittest.TestCase):
 
     def setUp(self):
         self.input_list = [
-            { "id": 1, "title": "Unknown", "genre": "Unknown" },
-            { "id": 2, "title": "Nineteen Eighty-Four", "genre": "Novel" },
-            { "id": 3, "title": "Calvin and Hobbes One", "genre": "Comic" },
-            { "id": 4, "title": "Calvin and Hobbes Two", "genre": "Comic" },
-            { "id": 5, "title": "The Silver Spoon", "genre": "Cookbook" }
+            {"id": 1, "title": "Unknown", "genre": "Unknown"},
+            {"id": 2, "title": "Nineteen Eighty-Four", "genre": "Novel"},
+            {"id": 3, "title": "Calvin and Hobbes One", "genre": "Comic"},
+            {"id": 4, "title": "Calvin and Hobbes Two", "genre": "Comic"},
+            {"id": 5, "title": "The Silver Spoon", "genre": "Cookbook"},
         ]
 
     def test_mapping_single_callable(self):
-        source = MappingSource(iter(self.input_list), {
-            "id": lambda x: x + 1
-        })
+        source = MappingSource(iter(self.input_list), {"id": lambda x: x + 1})
         expected = [
-            { "id": 2, "title": "Unknown", "genre": "Unknown" },
-            { "id": 3, "title": "Nineteen Eighty-Four", "genre": "Novel" },
-            { "id": 4, "title": "Calvin and Hobbes One", "genre": "Comic" },
-            { "id": 5, "title": "Calvin and Hobbes Two", "genre": "Comic" },
-            { "id": 6, "title": "The Silver Spoon", "genre": "Cookbook" }
+            {"id": 2, "title": "Unknown", "genre": "Unknown"},
+            {"id": 3, "title": "Nineteen Eighty-Four", "genre": "Novel"},
+            {"id": 4, "title": "Calvin and Hobbes One", "genre": "Comic"},
+            {"id": 5, "title": "Calvin and Hobbes Two", "genre": "Comic"},
+            {"id": 6, "title": "The Silver Spoon", "genre": "Cookbook"},
         ]
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(expected, list(source))
 
     def test_mapping_two_callables(self):
-        source = MappingSource(iter(self.input_list), {
-            "id": lambda x: x + 1,
-            "genre": lambda x: x[0]
-        })
+        source = MappingSource(
+            iter(self.input_list),
+            {"id": lambda x: x + 1, "genre": lambda x: x[0]},
+        )
         expected = [
-            { "id": 2, "title": "Unknown", "genre": "U" },
-            { "id": 3, "title": "Nineteen Eighty-Four", "genre": "N" },
-            { "id": 4, "title": "Calvin and Hobbes One", "genre": "C" },
-            { "id": 5, "title": "Calvin and Hobbes Two", "genre": "C" },
-            { "id": 6, "title": "The Silver Spoon", "genre": "C" }
+            {"id": 2, "title": "Unknown", "genre": "U"},
+            {"id": 3, "title": "Nineteen Eighty-Four", "genre": "N"},
+            {"id": 4, "title": "Calvin and Hobbes One", "genre": "C"},
+            {"id": 5, "title": "Calvin and Hobbes Two", "genre": "C"},
+            {"id": 6, "title": "The Silver Spoon", "genre": "C"},
         ]
-
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(expected, list(source))
 
 
 class SQLTransformationSourceTest(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.input_list = [
-            { "id": 1, "title": "Unknown", "genre": "Unknown" },
-            { "id": 2, "title": "Nineteen Eighty-Four", "genre": "Novel" },
-            { "id": 3, "title": "Calvin and Hobbes One", "genre": "Comic" },
-            { "id": 4, "title": "Calvin and Hobbes Two", "genre": "Comic" },
-            { "id": 5, "title": "The Silver Spoon", "genre": "Cookbook" }
+            {"id": 1, "title": "Unknown", "genre": "Unknown"},
+            {"id": 2, "title": "Nineteen Eighty-Four", "genre": "Novel"},
+            {"id": 3, "title": "Calvin and Hobbes One", "genre": "Comic"},
+            {"id": 4, "title": "Calvin and Hobbes Two", "genre": "Comic"},
+            {"id": 5, "title": "The Silver Spoon", "genre": "Cookbook"},
         ]
 
         cls.expected_group_by_genre = [
             {"genre": "Comic", "COUNT(title)": 2},
             {"genre": "Cookbook", "COUNT(title)": 1},
             {"genre": "Novel", "COUNT(title)": 1},
-            {"genre": "Unknown", "COUNT(title)": 1}
+            {"genre": "Unknown", "COUNT(title)": 1},
         ]
 
         # Ensure other tests does not affect these tests
@@ -159,17 +174,21 @@ class SQLTransformationSourceTest(unittest.TestCase):
 
     def test_transform(self):
         source = SQLTransformingSource(
-            iter(self.input_list), "book",
-            "SELECT genre, COUNT(title) FROM book GROUP BY genre")
+            iter(self.input_list),
+            "book",
+            "SELECT genre, COUNT(title) FROM book GROUP BY genre",
+        )
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(self.expected_group_by_genre, list(source))
 
     def test_transform_with_batch_size_of_one(self):
         source = SQLTransformingSource(
-            iter(self.input_list), "book",
+            iter(self.input_list),
+            "book",
             "SELECT genre, COUNT(title) FROM book GROUP BY genre",
-            batchsize=1)
+            batchsize=1,
+        )
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(self.expected_group_by_genre, list(source))
@@ -180,13 +199,16 @@ class SQLTransformationSourceTest(unittest.TestCase):
             {"genre": "Novel", "COUNT(title)": 1},
             {"genre": "Comic", "COUNT(title)": 1},
             {"genre": "Comic", "COUNT(title)": 1},
-            {"genre": "Cookbook", "COUNT(title)": 1}
+            {"genre": "Cookbook", "COUNT(title)": 1},
         ]
 
         source = SQLTransformingSource(
-            iter(self.input_list), "book",
+            iter(self.input_list),
+            "book",
             "SELECT genre, COUNT(title) FROM book GROUP BY genre",
-            batchsize=1, perbatch=True)
+            batchsize=1,
+            perbatch=True,
+        )
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(expected_group_by_genre_per_batch, list(source))
@@ -196,31 +218,37 @@ class SQLTransformationSourceTest(unittest.TestCase):
             {"genre": "Comic", "count": 2},
             {"genre": "Cookbook", "count": 1},
             {"genre": "Novel", "count": 1},
-            {"genre": "Unknown", "count": 1}
+            {"genre": "Unknown", "count": 1},
         ]
 
         source = SQLTransformingSource(
-            iter(self.input_list), "book",
+            iter(self.input_list),
+            "book",
             "SELECT genre, COUNT(title) FROM book GROUP BY genre",
-            columnnames=["genre", "count"])
+            columnnames=["genre", "count"],
+        )
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(expected_group_by_genre_renamed, list(source))
 
     def test_transform_with_pep_connection(self):
         source = SQLTransformingSource(
-            iter(self.input_list), "book",
+            iter(self.input_list),
+            "book",
             "SELECT genre, COUNT(title) FROM book GROUP BY genre",
-            targetconnection=sqlite3.connect(":memory:"))
+            targetconnection=sqlite3.connect(":memory:"),
+        )
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(self.expected_group_by_genre, list(source))
 
     def test_transform_with_connection_wrapper(self):
         source = SQLTransformingSource(
-            iter(self.input_list), "book",
+            iter(self.input_list),
+            "book",
             "SELECT genre, COUNT(title) FROM book GROUP BY genre",
-            targetconnection=utilities.ensure_default_connection_wrapper())
+            targetconnection=utilities.ensure_default_connection_wrapper(),
+        )
 
         # Ensure this test does not affect the other tests even if it fails
         utilities.remove_default_connection_wrapper()

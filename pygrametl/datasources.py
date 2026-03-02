@@ -1,6 +1,6 @@
 """This module holds classes that can be used as data soures. Note that it is
-   easy to create other data sources: A data source must be iterable and
-   provide dicts that map from attribute names to attribute values.
+easy to create other data sources: A data source must be iterable and
+provide dicts that map from attribute names to attribute values.
 """
 
 # Copyright (c) 2009-2023, Aalborg University (pygrametl@cs.aau.dk)
@@ -36,7 +36,7 @@ from pygrametl import tables
 from pygrametl import ConnectionWrapper
 
 
-if sys.platform.startswith('java'):
+if sys.platform.startswith("java"):
     # Jython specific code
     from pygrametl.jythonmultiprocessing import Queue, Process
 else:
@@ -48,12 +48,25 @@ except ImportError:
     from queue import Empty  # Python 3
 
 
-__all__ = ['CSVSource', 'TypedCSVSource', 'SQLSource', 'PandasSource',
-           'JoiningSource', 'HashJoiningSource', 'MergeJoiningSource',
-           'BackgroundSource', 'ProcessSource', 'MappingSource',
-           'TransformingSource', 'SQLTransformingSource', 'UnionSource',
-           'CrossTabbingSource', 'FilteringSource', 'DynamicForEachSource',
-           'RoundRobinSource']
+__all__ = [
+    "CSVSource",
+    "TypedCSVSource",
+    "SQLSource",
+    "PandasSource",
+    "JoiningSource",
+    "HashJoiningSource",
+    "MergeJoiningSource",
+    "BackgroundSource",
+    "ProcessSource",
+    "MappingSource",
+    "TransformingSource",
+    "SQLTransformingSource",
+    "UnionSource",
+    "CrossTabbingSource",
+    "FilteringSource",
+    "DynamicForEachSource",
+    "RoundRobinSource",
+]
 
 
 CSVSource = DictReader
@@ -62,26 +75,42 @@ CSVSource = DictReader
 class TypedCSVSource(DictReader):
     """A class for iterating a CSV file and type cast the values."""
 
-    def __init__(self, f, casts, fieldnames=None, restkey=None,
-                 restval=None, dialect='excel', *args, **kwds):
+    def __init__(
+        self,
+        f,
+        casts,
+        fieldnames=None,
+        restkey=None,
+        restval=None,
+        dialect="excel",
+        *args,
+        **kwds,
+    ):
         """Arguments:
 
-           - f: An iterable object such as as file. Passed on to
-             csv.DictReader
-           - casts: A dict mapping from attribute names to functions to apply
-             to these names, e.g., {'id':int, 'salary':float}
-           - fieldnames: Passed on to csv.DictReader
-           - restkey: Passed on to csv.DictReader
-           - restval: Passed on to csv.DictReader
-           - dialect: Passed on to csv.DictReader
-           - *args: Passed on to csv.DictReader
-           - **kwds: Passed on to csv.DictReader
+        - f: An iterable object such as as file. Passed on to
+          csv.DictReader
+        - casts: A dict mapping from attribute names to functions to apply
+          to these names, e.g., {'id':int, 'salary':float}
+        - fieldnames: Passed on to csv.DictReader
+        - restkey: Passed on to csv.DictReader
+        - restval: Passed on to csv.DictReader
+        - dialect: Passed on to csv.DictReader
+        - *args: Passed on to csv.DictReader
+        - **kwds: Passed on to csv.DictReader
         """
-        DictReader.__init__(self, f, fieldnames=fieldnames,
-                            restkey=restkey, restval=restval, dialect=dialect,
-                            *args, **kwds)
+        DictReader.__init__(
+            self,
+            f,
+            fieldnames=fieldnames,
+            restkey=restkey,
+            restval=restval,
+            dialect=dialect,
+            *args,
+            **kwds,
+        )
 
-        if not type(casts) == dict:
+        if type(casts) is not dict:
             raise TypeError("The casts argument must be a dict")
         for v in casts.values():
             if not callable(v):
@@ -90,38 +119,45 @@ class TypedCSVSource(DictReader):
 
     def __next__(self):  # For Python 3
         row = DictReader.__next__(self)
-        for (att, func) in self._casts.items():
+        for att, func in self._casts.items():
             row[att] = func(row[att])
         return row
 
     def next(self):  # For Python 2
         row = DictReader.next(self)
-        for (att, func) in self._casts.items():
+        for att, func in self._casts.items():
             row[att] = func(row[att])
         return row
 
 
 class SQLSource(object):
-
     """A class for iterating the result set of a single SQL query."""
 
-    def __init__(self, connection, query, names=(), initsql=None,
-                 cursorarg=None, parameters=None, fetchsize=500):
+    def __init__(
+        self,
+        connection,
+        query,
+        names=(),
+        initsql=None,
+        cursorarg=None,
+        parameters=None,
+        fetchsize=500,
+    ):
         """Arguments:
 
-           - connection: the PEP 249 connection to use. NOT a
-             ConnectionWrapper!
-           - query: the query that generates the result
-           - names: names of attributes in the result. If not set,
-             the names from the database are used. Default: ()
-           - initsql: SQL that is executed before the query. The result of this
-             initsql is not returned. Default: None.
-           - cursorarg: if not None, this argument is used as an argument when
-             the connection's cursor method is called. Default: None.
-           - parameters: if not None, this sequence or mapping of parameters
-             will be sent when the query is executed.
-           - fetchsize: The amount of rows to fetch into memory for each round trip to the source.
-             All rows will be fetched at once if fetchsize is set to 0 or less.
+        - connection: the PEP 249 connection to use. NOT a
+          ConnectionWrapper!
+        - query: the query that generates the result
+        - names: names of attributes in the result. If not set,
+          the names from the database are used. Default: ()
+        - initsql: SQL that is executed before the query. The result of this
+          initsql is not returned. Default: None.
+        - cursorarg: if not None, this argument is used as an argument when
+          the connection's cursor method is called. Default: None.
+        - parameters: if not None, this sequence or mapping of parameters
+          will be sent when the query is executed.
+        - fetchsize: The amount of rows to fetch into memory for each round trip to the source.
+          All rows will be fetched at once if fetchsize is set to 0 or less.
         """
         self.connection = connection
         if cursorarg is not None:
@@ -145,8 +181,7 @@ class SQLSource(object):
                     self.cursor.execute(self.query)
                 names = None
                 if self.names or self.cursor.description:
-                    names = self.names or \
-                        [t[0] for t in self.cursor.description]
+                    names = self.names or [t[0] for t in self.cursor.description]
             while True:
                 if self.fetchsize <= 0:
                     data = self.cursor.fetchall()
@@ -163,8 +198,9 @@ class SQLSource(object):
                     names = [t[0] for t in self.cursor.description]
                 if len(names) != len(data[0]):
                     raise ValueError(
-                        "Incorrect number of names provided. " +
-                        "%d given, %d needed." % (len(names), len(data[0])))
+                        "Incorrect number of names provided. "
+                        + "%d given, %d needed." % (len(names), len(data[0]))
+                    )
                 for row in data:
                     yield dict(zip(names, row))
 
@@ -178,38 +214,37 @@ class SQLSource(object):
             except Exception:
                 pass
 
-class PandasSource(object):
 
+class PandasSource(object):
     """A source for iterating a Pandas DataFrame and cast each row to a dict."""
 
     def __init__(self, dataFrame):
         """Arguments:
 
-           - dataFrame: A Pandas DataFrame
+        - dataFrame: A Pandas DataFrame
         """
         self._dataFrame = dataFrame
 
     def __iter__(self):
-        for (_, series) in self._dataFrame.iterrows():
+        for _, series in self._dataFrame.iterrows():
             row = series.to_dict()
             yield row
 
 
 class ProcessSource(object):
-
     """A class for iterating another source in a separate process"""
 
     def __init__(self, source, batchsize=500, queuesize=20):
         """Arguments:
 
-           - source: the source to iterate
-           - batchsize: the number of rows passed from the worker process each
-             time it passes on a batch of rows. Must be positive. Default: 500
-           - queuesize: the maximum number of batches that can wait in a queue
-             between the processes. 0 means unlimited. Default: 20
+        - source: the source to iterate
+        - batchsize: the number of rows passed from the worker process each
+          time it passes on a batch of rows. Must be positive. Default: 500
+        - queuesize: the maximum number of batches that can wait in a queue
+          between the processes. 0 means unlimited. Default: 20
         """
         if not isinstance(batchsize, int) or batchsize < 1:
-            raise ValueError('batchsize must be a positive integer')
+            raise ValueError("batchsize must be a positive integer")
         self.__source = source
         self.__batchsize = batchsize
         self.__queue = Queue(queuesize)
@@ -228,27 +263,28 @@ class ProcessSource(object):
             # We're done. Send the batch if it has any data and a signal
             if batch:
                 self.__queue.put(batch)
-            self.__queue.put('STOP')
+            self.__queue.put("STOP")
         except Exception:
             # Jython 2.5.X does not support the as syntax required by Python 3
             e = sys.exc_info()[1]
 
             if batch:
                 self.__queue.put(batch)
-            self.__queue.put('EXCEPTION')
+            self.__queue.put("EXCEPTION")
             self.__queue.put(e)
 
     def __iter__(self):
         while True:
             data = self.__queue.get()
-            if data == 'STOP':
+            if data == "STOP":
                 break
-            elif data == 'EXCEPTION':
+            elif data == "EXCEPTION":
                 exc = self.__queue.get()
                 raise exc
             # else we got a list of rows from the other process
             for row in data:
                 yield row
+
 
 BackgroundSource = ProcessSource  # for compatability
 # The old thread-based BackgroundSource has been removed and
@@ -256,17 +292,16 @@ BackgroundSource = ProcessSource  # for compatability
 
 
 class HashJoiningSource(object):
-
     """A class for equi-joining two data sources."""
 
     def __init__(self, src1, key1, src2, key2):
         """Arguments:
 
-           - src1: the first source. This source is iterated row by row.
-           - key1: the attribute of the first source to use in the join
-           - src2: the second source. The rows of this source are all loaded
-             into memory.
-           - key2: the attriubte of the second source to use in the join.
+        - src1: the first source. This source is iterated row by row.
+        - key1: the attribute of the first source to use in the join
+        - src2: the second source. The rows of this source are all loaded
+          into memory.
+        - key2: the attriubte of the second source to use in the join.
         """
         self.__hash = {}
         self.__src1 = src1
@@ -277,9 +312,9 @@ class HashJoiningSource(object):
     def __buildhash(self):
         for row in self.__src2:
             keyval = row[self.__key2]
-            l = self.__hash.get(keyval, [])
-            l.append(row)
-            self.__hash[keyval] = l
+            rows = self.__hash.get(keyval, [])
+            rows.append(row)
+            self.__hash[keyval] = rows
         self.__ready = True
 
     def __iter__(self):
@@ -296,7 +331,6 @@ JoiningSource = HashJoiningSource  # for compatability
 
 
 class MergeJoiningSource(object):
-
     """A class for merge-joining two sorted data sources"""
 
     def __init__(self, src1, key1, src2, key2):
@@ -339,7 +373,7 @@ class MergeJoiningSource(object):
                     rows2 = self.__getnextrows(iter2)
                     keyval2 = rows2[0][self.__key2]
         except StopIteration:
-            return # Needed in Python 3.7+ due to PEP 479
+            return  # Needed in Python 3.7+ due to PEP 479
 
     def __getnextrows(self, iterval):
         res = []
@@ -371,11 +405,11 @@ class MappingSource(object):
     def __init__(self, source, callables):
         """Arguments:
 
-           - source: A data source
-           - callables: A dict mapping from attribute names to functions to
-             apply to these names, e.g. type casting {'id':int, 'salary':float}
+        - source: A data source
+        - callables: A dict mapping from attribute names to functions to
+          apply to these names, e.g. type casting {'id':int, 'salary':float}
         """
-        if not type(callables) == dict:
+        if type(callables) is not dict:
             raise TypeError("The callables argument must be a dict")
         for v in callables.values():
             if not callable(v):
@@ -386,13 +420,12 @@ class MappingSource(object):
 
     def __iter__(self):
         for row in self._source:
-            for (att, func) in self._callables.items():
+            for att, func in self._callables.items():
                 row[att] = func(row[att])
             yield row
 
 
 class TransformingSource(object):
-
     """A source that applies functions to the rows from another source"""
 
     def __init__(self, source, *transformations):
@@ -414,17 +447,25 @@ class TransformingSource(object):
 
 
 class SQLTransformingSource(object):
-
     """A source that transforms rows from another source by loading them into a
-       temporary table in an RDBMS and then retrieving them using an SQL query.
+    temporary table in an RDBMS and then retrieving them using an SQL query.
 
-       .. Warning::
-          Creates, empties, and drops the temporary table.
+    .. Warning::
+       Creates, empties, and drops the temporary table.
     """
 
-    def __init__(self, source, temptablename, query, additionalcasts=None,
-                 batchsize=10000, perbatch=False, columnnames=None,
-                 usetruncate=True, targetconnection=None):
+    def __init__(
+        self,
+        source,
+        temptablename,
+        query,
+        additionalcasts=None,
+        batchsize=10000,
+        perbatch=False,
+        columnnames=None,
+        usetruncate=True,
+        targetconnection=None,
+    ):
         """Arguments:
 
         - source: a data source that yields rows with the same schema, i.e.,
@@ -474,7 +515,7 @@ class SQLTransformingSource(object):
             targetconnection = sqlite3.connect(":memory:")
 
             # TRUNCATE is not supported in SQLite
-            usetruncate=False
+            usetruncate = False
         else:
             self.__close = False
 
@@ -487,8 +528,7 @@ class SQLTransformingSource(object):
             self.__targetconnection = ConnectionWrapper(targetconnection)
 
             # Ensure the implicitly created ConnectionWrapper is not default
-            if self.__targetconnection == \
-               pygrametl.getdefaulttargetconnection():
+            if self.__targetconnection == pygrametl.getdefaulttargetconnection():
                 pygrametl._defaulttargetconnection = None
 
         # Create table SQL
@@ -496,20 +536,27 @@ class SQLTransformingSource(object):
         row = next(source)
         self.__batch.append(row)
 
-        createsql = "CREATE TABLE {}({})".format(temptablename, ', '.join(
-            [name + " " + self.__casts[type(value)]
-             for name, value in row.items()]))
+        createsql = "CREATE TABLE {}({})".format(
+            temptablename,
+            ", ".join(
+                [name + " " + self.__casts[type(value)] for name, value in row.items()]
+            ),
+        )
         self.__targetconnection.execute(createsql)
         self.__targetconnection.commit()
 
         # Create insert SQL
         # This gives "INSERT INTO tablename(att1, att2, att3, ...)
         #             VALUES (%(att1)s, %(att2)s, %(att3)s, ...)"
-        quote = tables._quote
-        quotelist = lambda x: [quote(xn) for xn in x]
-        self.__insertsql = "INSERT INTO " + temptablename \
-            + "(" + ", ".join(quotelist(row.keys())) + ") VALUES (" + \
-            ", ".join(["%%(%s)s" % (att,) for att in row.keys()]) + ")"
+        self.__insertsql = (
+            "INSERT INTO "
+            + temptablename
+            + "("
+            + ", ".join([tables._quote(key) for key in row.keys()])
+            + ") VALUES ("
+            + ", ".join(["%%(%s)s" % (att,) for att in row.keys()])
+            + ")"
+        )
 
         # Create drop and truncate SQL
         self.__dropsql = "DROP TABLE " + temptablename
@@ -558,11 +605,18 @@ class SQLTransformingSource(object):
 
 
 class CrossTabbingSource(object):
-
     """A source that produces a crosstab from another source"""
 
-    def __init__(self, source, rowvaluesatt, colvaluesatt, values,
-                 aggregator=None, nonevalue=0, sortrows=False):
+    def __init__(
+        self,
+        source,
+        rowvaluesatt,
+        colvaluesatt,
+        values,
+        aggregator=None,
+        nonevalue=0,
+        sortrows=False,
+    ):
         """Arguments:
 
         - source: the data source to pull data from
@@ -584,6 +638,7 @@ class CrossTabbingSource(object):
         self.__values = values
         if aggregator is None:
             from pygrametl.aggregators import Sum
+
             self.__aggregator = Sum()
         else:
             self.__aggregator = aggregator
@@ -601,27 +656,24 @@ class CrossTabbingSource(object):
             self.__aggregator.process((row, col), data[self.__values])
 
         # ... and then we build result rows
-        for row in (self.__sortrows and sorted(self.__allrows) or
-                    self.__allrows):
+        for row in self.__sortrows and sorted(self.__allrows) or self.__allrows:
             res = {self.__rowvaluesatt: row}
             for col in self.__allcolumns:
-                res[col] = \
-                    self.__aggregator.finish((row, col), self.__nonevalue)
+                res[col] = self.__aggregator.finish((row, col), self.__nonevalue)
             yield res
 
 
 class FilteringSource(object):
-
     """A source that applies a filter to another source"""
 
     def __init__(self, source, filter=bool):
         """Arguments:
 
-           - source: the source to filter
-           - filter: a callable f(row). If the result is a True value,
-             the row is passed on. If not, the row is discarded.
-             Default: bool, i.e., Python's standard boolean conversion which
-             removes empty rows.
+        - source: the source to filter
+        - filter: a callable f(row). If the result is a True value,
+          the row is passed on. If not, the row is discarded.
+          Default: bool, i.e., Python's standard boolean conversion which
+          removes empty rows.
         """
         self.__source = source
         self.__filter = filter
@@ -633,7 +685,6 @@ class FilteringSource(object):
 
 
 class UnionSource(object):
-
     """A source to union other sources (possibly with different types of rows).
     All rows are read from the 1st source before rows are read from the 2nd
     source and so on (to interleave the rows, use a RoundRobinSource)
@@ -642,7 +693,7 @@ class UnionSource(object):
     def __init__(self, *sources):
         """Arguments:
 
-           - *sources: The sources to union in the order they should be used.
+        - *sources: The sources to union in the order they should be used.
         """
         self.__sources = sources
 
@@ -653,16 +704,15 @@ class UnionSource(object):
 
 
 class RoundRobinSource(object):
-
     """A source that reads sets of rows from sources in round robin-fashion"""
 
     def __init__(self, sources, batchsize=500):
         """Arguments:
 
-           - sources: a sequence of data sources
-           - batchsize: the amount of rows to read from a data source before
-             going to the next data source. Must be positive (to empty a source
-             before going to the next, use UnionSource)
+        - sources: a sequence of data sources
+        - batchsize: the amount of rows to read from a data source before
+          going to the next data source. Must be positive (to empty a source
+          before going to the next, use UnionSource)
         """
         self.__sources = [iter(src) for src in sources]
         self.__sources.reverse()  # we iterate it from the back in __iter__
@@ -687,7 +737,6 @@ class RoundRobinSource(object):
 
 
 class DynamicForEachSource(object):
-
     """A source that for each given argument creates a new source that
     will be iterated by this source.
 
@@ -702,17 +751,17 @@ class DynamicForEachSource(object):
     def __init__(self, seq, callee):
         """Arguments:
 
-           - seq: a sequence with the elements for each of which a unique
-             source must be created. the elements are given (one by one) to
-             callee.
-           - callee: a function f(e) that must accept elements as those in the
-             seq argument. the function should return a source which then will
-             be iterated by this source. the function is called once for every
-             element in seq.
+        - seq: a sequence with the elements for each of which a unique
+          source must be created. the elements are given (one by one) to
+          callee.
+        - callee: a function f(e) that must accept elements as those in the
+          seq argument. the function should return a source which then will
+          be iterated by this source. the function is called once for every
+          element in seq.
         """
         self.__queue = Queue()  # a multiprocessing.Queue
         if not callable(callee):
-            raise TypeError('callee must be callable')
+            raise TypeError("callee must be callable")
         self.__callee = callee
         for e in seq:
             # put them in a safe queue such that this object can be used from

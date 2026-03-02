@@ -18,7 +18,7 @@ Unreleased
   in ``t``.
 
   ``__len__`` added to ``drawntabletesting.Table``. For a Table ``t``,
-  this makes it possible to use ``len(n)`` to get the number of rows
+  this makes it possible to use ``len(t)`` to get the number of rows
   in ``t``.
 
 **Fixed**
@@ -40,6 +40,9 @@ Unreleased
   Changed psycopg2 bulkloader documentation to use ``copy_expert`` instead of 
   ``copy_from``. This solves issue #74, where newer psycopg2 versions escape 
   table names to avoid sql injection.
+
+  Removed the ``getlong()`` function from ``pygrametl/__init__.py`` as
+  Python 3 does not include a ``long`` type.
 
 Version 2.8
 -----------

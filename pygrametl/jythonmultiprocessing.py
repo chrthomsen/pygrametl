@@ -1,6 +1,6 @@
 """A module for Jython emulating (a small part of) CPython's multiprocessing.
-   With this, pygrametl can be made to use multiprocessing, but actually use
-   threads when used from Jython (where there is no GIL).
+With this, pygrametl can be made to use multiprocessing, but actually use
+threads when used from Jython (where there is no GIL).
 """
 
 # Copyright (c) 2011-2020, Aalborg University (pygrametl@cs.aau.dk)
@@ -40,16 +40,15 @@ except ImportError:
 
 # NOTE: This module is made for Jython.
 
-__all__ = ['JoinableQueue', 'Process', 'Queue', 'Value']
+__all__ = ["JoinableQueue", "Process", "Queue", "Value"]
 
 
 class Process(Thread):
-    pid = '<n/a>'
+    pid = "<n/a>"
     daemon = property(Thread.isDaemon, Thread.setDaemon)
     name = property(Thread.getName, Thread.setName)
 
 
 class JoinableQueue(Queue):
-
     def close(self):
         pass

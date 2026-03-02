@@ -1,6 +1,6 @@
 """This module contains methods and classes for making parallel ETL flows.
-   Note that this module in many cases will give better results with Jython
-   (where it uses threads) than with CPython (where it uses processes).
+Note that this module in many cases will give better results with Jython
+(where it uses threads) than with CPython (where it uses processes).
 """
 
 # Copyright (c) 2011-2020, Aalborg University (pygrametl@cs.aau.dk)
@@ -40,19 +40,31 @@ try:
 except ImportError:
     from queue import Empty  # Python 3
 
-if sys.platform.startswith('java'):
+if sys.platform.startswith("java"):
     # Jython specific code in jythonmultiprocessing
     import pygrametl.jythonmultiprocessing as multiprocessing
 else:
     # Use (C)Python's std. lib.
     import multiprocessing
-    # This module assumes processes inherit state through fork. Thus,
-    # it requires that the platform supports the fork start method
-    if multiprocessing.get_start_method(allow_none=True) != 'fork':
-        multiprocessing.set_start_method('fork')
 
-__all__ = ['splitpoint', 'endsplits', 'createflow', 'Decoupled',
-           'shareconnectionwrapper', 'getsharedsequencefactory']
+    # This module assumes processes inherit state through fork. Thus, it
+    # requires that the platform supports the fork start method. The start
+    # method is not set to fork when Sphinx is building the documentation as it
+    # prevents Windows from doing so
+    if (
+        multiprocessing.get_start_method(allow_none=True) != "fork"
+        and os.environ.get("SPHINX_BUILD") != "1"
+    ):
+        multiprocessing.set_start_method("fork")
+
+__all__ = [
+    "splitpoint",
+    "endsplits",
+    "createflow",
+    "Decoupled",
+    "shareconnectionwrapper",
+    "getsharedsequencefactory",
+]
 
 
 # Support for spawned processes to be able to terminate all related processes
@@ -65,23 +77,29 @@ _toterminator = None
 def _getexitfunction():
     """Return a function that halts the execution of pygrametl.
 
-       pygrametl uses the function as excepthook in spawned processes such that
-       an uncaught exception halts the entire execution.
+    pygrametl uses the function as excepthook in spawned processes such that
+    an uncaught exception halts the entire execution.
     """
     # On Java, System.exit will do as there are no separate processes
-    if sys.platform.startswith('java'):
+    if sys.platform.startswith("java"):
+
         def javaexitfunction():
             import java.lang.System
+
             java.lang.System.exit(1)
+
         return javaexitfunction
 
     # else see if the os module provides functions to kill process groups;
     # this should be the case on UNIX.
     import signal
-    if hasattr(os, 'getpgrp') and hasattr(os, 'killpg'):
+
+    if hasattr(os, "getpgrp") and hasattr(os, "killpg"):
+
         def unixexitfunction():
             procgrp = os.getpgrp()
             os.killpg(procgrp, signal.SIGTERM)
+
         return unixexitfunction
 
     # else, we are on a platform that does not allow us to kill a group.
@@ -116,7 +134,7 @@ def _getexitfunction():
 
     # return a function that tells the terminator to kill all known processes
     def exitfunction():
-        _toterminator.put('TERMINATE')
+        _toterminator.put("TERMINATE")
 
     return exitfunction
 
@@ -132,10 +150,11 @@ def _getexcepthook():
 
     def excepthook(exctype, excvalue, exctraceback):
         import traceback
-        sys.stderr.write(
-            "An uncaught exception occured. Terminating pygrametl.\n")
+
+        sys.stderr.write("An uncaught exception occured. Terminating pygrametl.\n")
         traceback.print_exception(exctype, excvalue, exctraceback)
         exit()
+
     return excepthook
 
 
@@ -157,52 +176,53 @@ def _splitprocess(func, input, output, splitid):
         input.task_done()
         (args, kw) = input.get()
 
+
 _splitpointqueues = []
 
 
 def splitpoint(*arg, **kwargs):
     """To be used as an annotation to make a function run in a separate process.
 
-       Each call of a @splitpoint annotated function f involves adding the
-       request (and arguments, if any) to a shared queue. This can be
-       relatively expensive if f only uses little computation time.
-       The benefits from @splitpoint are thus best obtained for a function f
-       which is time-consuming. To wait for all splitpoints to finish their
-       computations, call endsplits().
+    Each call of a @splitpoint annotated function f involves adding the
+    request (and arguments, if any) to a shared queue. This can be
+    relatively expensive if f only uses little computation time.
+    The benefits from @splitpoint are thus best obtained for a function f
+    which is time-consuming. To wait for all splitpoints to finish their
+    computations, call endsplits().
 
-       @splitpoint can be used as in the following examples:
+    @splitpoint can be used as in the following examples:
 
-       | @splitpoint
-       | def f(args):
+    | @splitpoint
+    | def f(args):
 
-           `The simplest case. Makes f run in a separate process.
-           All calls of f will return None immediately and f will be
-           invoked in the separate process.`
+        `The simplest case. Makes f run in a separate process.
+        All calls of f will return None immediately and f will be
+        invoked in the separate process.`
 
-       | @splitpoint()
-       | def g(args):
+    | @splitpoint()
+    | def g(args):
 
-           `With parentheses. Has the same effect as the previous example.`
+        `With parentheses. Has the same effect as the previous example.`
 
-       | @splitpoint(output=queue, instances=2, queuesize=200)
-       | def h(args):
+    | @splitpoint(output=queue, instances=2, queuesize=200)
+    | def h(args):
 
-           `With keyword arguments. It is not required that
-           all of keyword arguments above are given.`
+        `With keyword arguments. It is not required that
+        all of keyword arguments above are given.`
 
-       Keyword arguments:
+    Keyword arguments:
 
-       - output: If given, it should be a queue-like object (offering the
-         .put(obj) method). The annotated function's results will then be put
-         in the output
-       - instances: Determines how many processes should run the function.
-         Each of the processes will have the value parallel.splitno set to
-         a unique value between 0 (incl.) and instances (excl.).
-       - queuesize: Given as an argument to a multiprocessing.JoinableQueue
-         which holds arguments to the annotated function while they wait for
-         an idle process that will pass them on to the annotated function.
-         The argument decides the maximum number of calls that can wait in the
-         queue. 0 means unlimited. Default: 0
+    - output: If given, it should be a queue-like object (offering the
+      .put(obj) method). The annotated function's results will then be put
+      in the output
+    - instances: Determines how many processes should run the function.
+      Each of the processes will have the value parallel.splitno set to
+      a unique value between 0 (incl.) and instances (excl.).
+    - queuesize: Given as an argument to a multiprocessing.JoinableQueue
+      which holds arguments to the annotated function while they wait for
+      an idle process that will pass them on to the annotated function.
+      The argument decides the maximum number of calls that can wait in the
+      queue. 0 means unlimited. Default: 0
     """
 
     # We construct a function called decorator. We either return this
@@ -220,13 +240,12 @@ def splitpoint(*arg, **kwargs):
     # We then return decorator(function).
 
     for kw in kwargs.keys():
-        if kw not in ('instances', 'output', 'queuesize'):
-            raise TypeError(
-                "'%s' is an invalid keyword argument for splitpoint" % kw)
+        if kw not in ("instances", "output", "queuesize"):
+            raise TypeError("'%s' is an invalid keyword argument for splitpoint" % kw)
 
-    output = kwargs.get('output', None)
-    instances = kwargs.get('instances', 1)
-    queuesize = kwargs.get('queuesize', 0)
+    output = kwargs.get("output", None)
+    instances = kwargs.get("instances", 1)
+    queuesize = kwargs.get("queuesize", 0)
 
     def decorator(func):
         global _splitpointqueues
@@ -237,19 +256,22 @@ def splitpoint(*arg, **kwargs):
                 res = func(*args, **kw)
                 if output is not None:
                     output.put(res)
+
             return sillywrapper
         # Else set up processes
         input = multiprocessing.JoinableQueue(queuesize)
         for n in range(instances):
-            p = multiprocessing.Process(target=_splitprocess,
-                                        args=(func, input, output, n))
-            p.name = 'Process-%d for %s' % (n, func.__name__)
+            p = multiprocessing.Process(
+                target=_splitprocess, args=(func, input, output, n)
+            )
+            p.name = "Process-%d for %s" % (n, func.__name__)
             p.daemon = True
             p.start()
         _splitpointqueues.append(input)
 
         def wrapper(*args, **kw):
             input.put((args, kw))
+
         return wrapper
 
     if len(arg) == 0:
@@ -257,7 +279,7 @@ def splitpoint(*arg, **kwargs):
     elif len(arg) == 1:
         return decorator(*arg)
     else:
-        raise ValueError('More than one *arg given')
+        raise ValueError("More than one *arg given")
 
 
 def endsplits():
@@ -268,6 +290,7 @@ def endsplits():
 
 
 # Stuff for (function) flows
+
 
 def _flowprocess(func, input, output, inclosed, outclosed):
     sys.excepthook = _getexcepthook()  # To handle uncaught exceptions and halt
@@ -298,9 +321,8 @@ def _flowprocess(func, input, output, inclosed, outclosed):
 
 
 class Flow(object):
-
     """A Flow consists of different functions running in different processes.
-       A Flow should be created by calling createflow.
+    A Flow should be created by calling createflow.
     """
 
     def __init__(self, queues, closedarray, batchsize=1000):
@@ -337,13 +359,13 @@ class Flow(object):
     def get(self):
         """Return the result of a single call of the flow.
 
-           If the flow was called with a single argument -- as in
-           flow({'foo':0, 'bar':1}) -- that single argument is returned (with
-           the side-effects of the flow preserved).
+        If the flow was called with a single argument -- as in
+        flow({'foo':0, 'bar':1}) -- that single argument is returned (with
+        the side-effects of the flow preserved).
 
-           If the flow was called with multiple arguments -- as in
-           flow({'foo'0}, {'bar':1}) -- a tuple with those arguments is
-           returned (with the side-effects of the flow preserved).
+        If the flow was called with multiple arguments -- as in
+        flow({'foo'0}, {'bar':1}) -- a tuple with those arguments is
+        returned (with the side-effects of the flow preserved).
         """
         if self.__resultbatch:
             return self.__oneortuple(self.__resultbatch.pop())
@@ -370,7 +392,7 @@ class Flow(object):
     def getall(self):
         """Return all results in a single list.
 
-           The results are of the same form as those returned by get.
+        The results are of the same form as those returned by get.
         """
         res = []
         try:
@@ -406,67 +428,72 @@ def _buildgroupfunction(funcseq):
     def groupfunc(*args):
         for f in funcseq:
             f(*args)
-        groupfunc.__doc__ = 'group function calling ' + \
-            (', '.join([f.__name__ for f in funcseq]))
+        groupfunc.__doc__ = "group function calling " + (
+            ", ".join([f.__name__ for f in funcseq])
+        )
+
     return groupfunc
 
 
 def createflow(*functions, **options):
     """Create a flow of functions running in different processes.
 
-       A Flow object ready for use is returned.
+    A Flow object ready for use is returned.
 
-       A flow consists of several functions running in several processes.
-       A flow created by
+    A flow consists of several functions running in several processes.
+    A flow created by
 
-           flow = createflow(f1, f2, f3)
+        flow = createflow(f1, f2, f3)
 
-       uses three processes. Data can be inserted into the flow by calling it
-       as in flow(data). The argument data is then first processed by f1(data),
-       then f2(data), and finally f3(data). Return values from f1, f2, and f3
-       are *not* preserved, but their side-effects are. The functions in a flow
-       should all accept the same number of arguments (*args are also okay).
+    uses three processes. Data can be inserted into the flow by calling it
+    as in flow(data). The argument data is then first processed by f1(data),
+    then f2(data), and finally f3(data). Return values from f1, f2, and f3
+    are *not* preserved, but their side-effects are. The functions in a flow
+    should all accept the same number of arguments (*args are also okay).
 
-       Internally, a Flow object groups calls together in batches to reduce
-       communication costs (see also the description of arguments below).
-       In the example above, f1 could thus work on one batch, while f2 works
-       on another batch and so on. Flows are thus good to use even if there
-       are many calls of relatively fast functions.
+    Internally, a Flow object groups calls together in batches to reduce
+    communication costs (see also the description of arguments below).
+    In the example above, f1 could thus work on one batch, while f2 works
+    on another batch and so on. Flows are thus good to use even if there
+    are many calls of relatively fast functions.
 
-       When no more data is to be inserted into a flow, it should be closed
-       by calling its close method.
+    When no more data is to be inserted into a flow, it should be closed
+    by calling its close method.
 
-       Data processed by a flow can be fetched by calling get/getall or simply
-       iterating the flow. This can both be done by the process that inserted
-       data into the flow or by another (possibly concurrent) process. All
-       data in a flow should be fetched again as it otherwise will remain in
-       memory .
+    Data processed by a flow can be fetched by calling get/getall or simply
+    iterating the flow. This can both be done by the process that inserted
+    data into the flow or by another (possibly concurrent) process. All
+    data in a flow should be fetched again as it otherwise will remain in
+    memory .
 
-       Arguments:
+    Arguments:
 
-       - *functions: A sequence of functions of sequences of functions.
-         Each element in the sequence will be executed in a separate process.
-         For example, the argument (f1, (f2, f3), f4) leads to that
-         f1 executes in process-1, f2 and f3 execute in process-2, and f4
-         executes in process-3.
-         The functions in the sequence should all accept the same number of
-         arguments.
-       - **options: keyword arguments configuring details. The considered
-         options are:
+    - *functions: A sequence of functions of sequences of functions.
+      Each element in the sequence will be executed in a separate process.
+      For example, the argument (f1, (f2, f3), f4) leads to that
+      f1 executes in process-1, f2 and f3 execute in process-2, and f4
+      executes in process-3.
+      The functions in the sequence should all accept the same number of
+      arguments.
+    - **options: keyword arguments configuring details. The considered
+      options are:
 
-         - batchsize: an integer deciding how many function calls are "grouped
-           together" before they are passed on between processes. The default
-           is 500.
-         - queuesize: an integer deciding the maximum number of batches
-           that can wait in a JoinableQueue between two different processes.
-           0 means that there is no limit.
-           The default is 25.
+      - batchsize: an integer deciding how many function calls are "grouped
+        together" before they are passed on between processes. The default
+        is 500.
+      - queuesize: an integer deciding the maximum number of batches
+        that can wait in a JoinableQueue between two different processes.
+        0 means that there is no limit.
+        The default is 25.
 
     """
     # A special case
     if not functions:
-        return Flow([multiprocessing.JoinableQueue()],
-                    [multiprocessing.Value('b', 0)], 1)
+        return Flow(
+            [multiprocessing.JoinableQueue()],
+            [multiprocessing.Value("b", 0)],
+            1,
+        )
 
     # Create functions that invoke a group of functions if needed
     resultfuncs = []
@@ -475,31 +502,35 @@ def createflow(*functions, **options):
             resultfuncs.append(item)
         else:
             # Check the arguments
-            if not hasattr(item, '__iter__'):
-                raise ValueError(
-                    'An element is neither iterable nor callable')
+            if not hasattr(item, "__iter__"):
+                raise ValueError("An element is neither iterable nor callable")
             for f in item:
                 if not callable(f):
-                    raise ValueError(
-                        'An element in a sequence is not callable')
+                    raise ValueError("An element in a sequence is not callable")
             # We can - finally - create the function
             groupfunc = _buildgroupfunction(item)
             resultfuncs.append(groupfunc)
 
     # resultfuncs are now the functions we need to deal with.
     # Each function in resultfuncs should run in a separate process
-    queuesize = ('queuesize' in options and options['queuesize']) or 0
-    batchsize = ('batchsize' in options and options['batchsize']) or 25
+    queuesize = ("queuesize" in options and options["queuesize"]) or 0
+    batchsize = ("batchsize" in options and options["batchsize"]) or 25
     if batchsize < 1:
         batchsize = 25
     queues = [multiprocessing.JoinableQueue(queuesize) for f in resultfuncs]
     queues.append(multiprocessing.JoinableQueue(queuesize))  # for the results
-    closed = [multiprocessing.Value('b', 0) for q in queues]  # in shared mem
+    closed = [multiprocessing.Value("b", 0) for q in queues]  # in shared mem
     for i in range(len(resultfuncs)):
-        p = multiprocessing.Process(target=_flowprocess,
-                                    args=(resultfuncs[i],
-                                          queues[i], queues[i + 1],
-                                          closed[i], closed[i + 1]))
+        p = multiprocessing.Process(
+            target=_flowprocess,
+            args=(
+                resultfuncs[i],
+                queues[i],
+                queues[i + 1],
+                closed[i],
+                closed[i + 1],
+            ),
+        )
         p.start()
 
     # Now create and return the object which allows data to enter the flow
@@ -508,10 +539,10 @@ def createflow(*functions, **options):
 
 # Stuff for Decoupled objects
 
-class FutureResult(object):
 
+class FutureResult(object):
     """Represent a value that may or may not be computed yet.
-       FutureResults are created by Decoupled objects.
+    FutureResults are created by Decoupled objects.
     """
 
     def __init__(self, creator, id):
@@ -544,17 +575,25 @@ class FutureResult(object):
 # through its subclasses DecoupledDimension and DecoupledFactTable in
 # pygrametl.tables
 
+
 class Decoupled(object):
     __instances = []
 
-    def __init__(self, obj, returnvalues=True, consumes=(),
-                 directupdatepositions=(),
-                 batchsize=500, queuesize=200, autowrap=True):
+    def __init__(
+        self,
+        obj,
+        returnvalues=True,
+        consumes=(),
+        directupdatepositions=(),
+        batchsize=500,
+        queuesize=200,
+        autowrap=True,
+    ):
         self.__instancenumber = len(Decoupled.__instances)
         self.__futurecnt = 0
         Decoupled.__instances.append(self)
         self._obj = obj
-        if hasattr(obj, '_decoupling') and callable(obj._decoupling):
+        if hasattr(obj, "_decoupling") and callable(obj._decoupling):
             obj._decoupling()
         self.batchsize = batchsize
         self.__batch = []
@@ -565,16 +604,19 @@ class Decoupled(object):
             self.__fromworker = multiprocessing.JoinableQueue(queuesize)
         else:
             self.__fromworker = None
-        self.__otherqueues = dict([(dcpld.__instancenumber, dcpld.__fromworker)
-                                   for dcpld in consumes])
+        self.__otherqueues = dict(
+            [(dcpld.__instancenumber, dcpld.__fromworker) for dcpld in consumes]
+        )
         # Will store dicts - see also __decoupledworker
         self.__otherresults = {}
         self.__directupdates = directupdatepositions
 
         self.__worker = multiprocessing.Process(target=self.__decoupledworker)
         self.__worker.daemon = True
-        self.__worker.name = 'Process for %s object for %s' % (
-            self.__class__.__name__, getattr(obj, 'name', 'an unnamed object'))
+        self.__worker.name = "Process for %s object for %s" % (
+            self.__class__.__name__,
+            getattr(obj, "name", "an unnamed object"),
+        )
         self.__worker.start()
 
     # Stuff for the forked process
@@ -585,11 +627,12 @@ class Decoupled(object):
                 return self.__otherresults[queuenumber].pop(id)
             # else wait for more results to become available
             self.__otherresults[queuenumber].update(
-                self.__otherqueues[queuenumber].get())
+                self.__otherqueues[queuenumber].get()
+            )
 
     def __replacefuturesindict(self, dct):
         res = {}
-        for (k, v) in dct.items():
+        for k, v in dct.items():
             if isinstance(v, FutureResult) and v.creator in self.__otherqueues:
                 res[k] = self.__getresultfromother(v.creator, v.id)
             elif isinstance(v, list):
@@ -631,20 +674,20 @@ class Decoupled(object):
                 fut = args[x][y][z]
                 args[x][y][z] = self.__getresultfromother(fut.creator, fut.id)
             else:
-                raise ValueError('Positions must be of length 2 or 3')
+                raise ValueError("Positions must be of length 2 or 3")
 
     def __decoupledworker(self):
         sys.excepthook = _getexcepthook()
-        if hasattr(self._obj, '_decoupled') and callable(self._obj._decoupled):
+        if hasattr(self._obj, "_decoupled") and callable(self._obj._decoupled):
             self._obj._decoupled()
 
-        for (creatorid, queue) in self.__otherqueues.items():
+        for creatorid, queue in self.__otherqueues.items():
             self.__otherresults[creatorid] = {}
 
         while True:
             batch = self.__toworker.get()
             ###
-            if batch == 'STOP':
+            if batch == "STOP":
                 self.__toworker.task_done()
                 return
             ###
@@ -661,9 +704,7 @@ class Decoupled(object):
                     else:
                         args = self.__replacefuturesintuple(args)
                 func = getattr(self._obj, funcname)
-                res = func(
-                    *
-                    args)  # NB: func's side-effects on args are ignored
+                res = func(*args)  # NB: func's side-effects on args are ignored
                 if id is not None:
                     resbatch.append((id, res))
             if self.__fromworker and resbatch:
@@ -675,8 +716,10 @@ class Decoupled(object):
     def __getattr__(self, name):
         res = getattr(self._obj, name)
         if callable(res) and self.autowrap:
+
             def wrapperfunc(*args):
                 return self._enqueue(name, *args)
+
             res = wrapperfunc
         setattr(self, name, res)  # NB: Values are only read once...
         return res
@@ -722,7 +765,7 @@ class Decoupled(object):
         The Decoupled instance should not be used after this.
         """
         self._join()
-        self.__toworker.put('STOP')
+        self.__toworker.put("STOP")
         self.__toworker.join()
         self.__toworker.close()
         if self.__fromworker is not None:
@@ -735,8 +778,8 @@ class Decoupled(object):
 
 # SharedConnectionWrapper stuff
 
-class SharedConnectionWrapperClient(object):
 
+class SharedConnectionWrapperClient(object):
     """Provide access to a shared ConnectionWrapper.
 
     Users should not create a SharedConnectionWrapperClient directly, but
@@ -746,8 +789,14 @@ class SharedConnectionWrapperClient(object):
     the copy()/new() method.
     """
 
-    def __init__(self, toserver, fromserver, freelines, connectionmodule,
-                 userfuncnames=()):
+    def __init__(
+        self,
+        toserver,
+        fromserver,
+        freelines,
+        connectionmodule,
+        userfuncnames=(),
+    ):
         self.nametranslator = lambda s: s
         self.__clientid = None
         self.__toserver = toserver
@@ -760,7 +809,7 @@ class SharedConnectionWrapperClient(object):
 
     def __getstate__(self):
         res = self.__dict__.copy()
-        res['_SharedConnectionWrapperClient__clientid'] = None
+        res["_SharedConnectionWrapperClient__clientid"] = None
         return res
 
     def __setstate__(self, state):
@@ -782,7 +831,7 @@ class SharedConnectionWrapperClient(object):
     def __getrows(self, amount):
         # TODO:Should exceptions be transferred to the client and received
         # here?
-        self.__enqueue('#get', amount)
+        self.__enqueue("#get", amount)
         return self.__fromserver[self.__clientid].get()
 
     def __join(self):
@@ -794,43 +843,44 @@ class SharedConnectionWrapperClient(object):
 
     def __createuserfunc(self, funcname):
         def userfunction(*args):
-            self.__enqueue('_userfunc_' + funcname, *args)
+            self.__enqueue("_userfunc_" + funcname, *args)
             # Wait for the userfunc to finish...
             # OK after __enqueue
             res = self.__fromserver[self.__clientid].get()
-            assert res == 'USERFUNC'
+            assert res == "USERFUNC"
+
         return userfunction
 
     def copy(self):
-        """ Create a new copy of the SharedConnectionWrapper (same as new) """
+        """Create a new copy of the SharedConnectionWrapper (same as new)"""
         return copy.copy(self)
 
     def new(self):
-        """ Create a new copy of the SharedConnectionWrapper (same as copy) """
+        """Create a new copy of the SharedConnectionWrapper (same as copy)"""
         return self.copy()
 
     def execute(self, stmt, arguments=None, namemapping=None, translate=True):
         """Execute a statement.
 
-           Arguments:
+        Arguments:
 
-           - stmt: the statement to execute
-           - arguments: a mapping with the arguments (default: None)
-           - namemapping: a mapping of names such that if stmt uses %(arg)s
-             and namemapping[arg]=arg2, the value arguments[arg2] is used
-             instead of arguments[arg]
-           - translate: decides if translation from 'pyformat' to the
-             undlying connection's format should take place. Default: True
+        - stmt: the statement to execute
+        - arguments: a mapping with the arguments (default: None)
+        - namemapping: a mapping of names such that if stmt uses %(arg)s
+          and namemapping[arg]=arg2, the value arguments[arg2] is used
+          instead of arguments[arg]
+        - translate: decides if translation from 'pyformat' to the
+          undlying connection's format should take place. Default: True
         """
         if namemapping and arguments:
             arguments = pygrametl.copy(arguments, **namemapping)
         elif arguments:
             arguments = arguments.copy()
-        self.__enqueue('execute', stmt, arguments, None, translate)
+        self.__enqueue("execute", stmt, arguments, None, translate)
 
     def executemany(self, stmt, params, translate=True):
         """Execute a sequence of statements."""
-        self.__enqueue('executemany', stmt, params, translate)
+        self.__enqueue("executemany", stmt, params, translate)
 
     def rowfactory(self, names=None):
         """Return a generator object returning result rows (i.e. dicts)."""
@@ -845,7 +895,7 @@ class SharedConnectionWrapperClient(object):
         # contain only None values. Dimension.lookup expects a tuple.
         (rownames, row) = self.__getrows(1)
         if not row:
-            row = (None, ) * len(rownames)
+            row = (None,) * len(rownames)
         return (rownames, row)
 
     def fetchone(self, names=None):
@@ -879,16 +929,16 @@ class SharedConnectionWrapperClient(object):
     def commit(self):
         """Commit the transaction."""
         pygrametl.endload()
-        self.__enqueue('commit')
+        self.__enqueue("commit")
         self.__join()
 
     def close(self):
         """Close the connection to the database,"""
-        self.__enqueue('close')
+        self.__enqueue("close")
 
     def rollback(self):
         """Rollback the transaction."""
-        self.__enqueue('rollback')
+        self.__enqueue("rollback")
         self.__join()
 
     def setasdefault(self):
@@ -902,11 +952,12 @@ class SharedConnectionWrapperClient(object):
     def resultnames(self):
         (rownames, nothing) = self.__getrows(None)
         return rownames
+
+
 ###
 
 
 class SharedConnectionWrapperServer(object):
-
     """Manage access to a shared ConnectionWrapper.
 
     Users should not create a SharedConnectionWrapperServer directly, but
@@ -948,13 +999,13 @@ class SharedConnectionWrapperServer(object):
         # occured...
         while True:
             (client, method, args) = self.__toserver.get()
-            if method == '#get':
+            if method == "#get":
                 self.__senddata(client, *args)
-            elif method.startswith('_userfunc_'):
+            elif method.startswith("_userfunc_"):
                 target = getattr(self, method)
                 target(*args)
-                self.__toclients[client].put('USERFUNC')
-            elif method == 'close':
+                self.__toclients[client].put("USERFUNC")
+            elif method == "close":
                 target = getattr(self.__wrapped, method)
                 target(*args)  # Probably no arguments anyway, but ...
             else:  # it must be a function from the wrapped ConnectionWrapper
@@ -967,7 +1018,7 @@ class SharedConnectionWrapperServer(object):
                     res = list(res)
                 self.__results[client] = (self.__wrapped.resultnames(), res)
             self.__toserver.task_done()
-            if method == 'close':
+            if method == "close":
                 return
 
 
@@ -1027,60 +1078,65 @@ def shareconnectionwrapper(targetconnection, maxclients=10, userfuncs=()):
     freelines = multiprocessing.Queue()
     for i in range(maxclients):
         freelines.put(i)
-    serverCW = SharedConnectionWrapperServer(targetconnection, toserver,
-                                             toclients)
+    serverCW = SharedConnectionWrapperServer(targetconnection, toserver, toclients)
     userfuncnames = []
     for func in userfuncs:
         # Compatability for Python 2 and 3
         if version_info[0] == 2:
-            if not (callable(func) and hasattr(func, 'func_name') and
-                    not func.func_name == '<lambda>'):
-                raise ValueError(
-                    "Elements in userfunc must be callable and named")
+            if not (
+                callable(func)
+                and hasattr(func, "func_name")
+                and not func.func_name == "<lambda>"
+            ):
+                raise ValueError("Elements in userfunc must be callable and named")
             if hasattr(SharedConnectionWrapperClient, func.func_name):
                 raise ValueError("Illegal function name: " + func.func_name)
-            setattr(serverCW, '_userfunc_' + func.func_name, func)
+            setattr(serverCW, "_userfunc_" + func.func_name, func)
             userfuncnames.append(func.func_name)
         else:
-            if not (callable(func) and hasattr(func, '__name__') and
-                    not func.__name__ == '<lambda>'):
-                raise ValueError(
-                    "Elements in userfunc must be callable and named")
+            if not (
+                callable(func)
+                and hasattr(func, "__name__")
+                and not func.__name__ == "<lambda>"
+            ):
+                raise ValueError("Elements in userfunc must be callable and named")
             if hasattr(SharedConnectionWrapperClient, func.__name__):
                 raise ValueError("Illegal function name: " + func.__name__)
-            setattr(serverCW, '_userfunc_' + func.__name__, func)
+            setattr(serverCW, "_userfunc_" + func.__name__, func)
             userfuncnames.append(func.__name__)
     serverprocess = multiprocessing.Process(target=serverCW.worker)
-    serverprocess.name = 'Process for shared connection wrapper'
+    serverprocess.name = "Process for shared connection wrapper"
     serverprocess.daemon = True
     serverprocess.start()
     module = targetconnection.getunderlyingmodule()
-    clientCW = SharedConnectionWrapperClient(toserver, toclients, freelines,
-                                             module, userfuncnames)
+    clientCW = SharedConnectionWrapperClient(
+        toserver, toclients, freelines, module, userfuncnames
+    )
     return clientCW
 
 
 # Shared sequences
 
+
 def getsharedsequencefactory(startvalue, intervallen=5000):
-    """ Creates a factory for parallel readers of a sequence.
+    """Creates a factory for parallel readers of a sequence.
 
-        Returns a callable f. When f() is called, it returns a callable g.
-        Whenever g(*args) is called, it returns a unique int from a sequence
-        (if several g's are created, the order of the calls may lead to that
-        the returned ints are not ordered, but they will be unique). The
-        arguments to g are ignored, but accepted. Thus g can be used as
-        idfinder for [Decoupled]Dimensions.
+    Returns a callable f. When f() is called, it returns a callable g.
+    Whenever g(*args) is called, it returns a unique int from a sequence
+    (if several g's are created, the order of the calls may lead to that
+    the returned ints are not ordered, but they will be unique). The
+    arguments to g are ignored, but accepted. Thus g can be used as
+    idfinder for [Decoupled]Dimensions.
 
-        The different g's can be used safely from different processes and
-        threads.
+    The different g's can be used safely from different processes and
+    threads.
 
-        Arguments:
+    Arguments:
 
-        - startvalue: The first value to return. If None, 0 is assumed.
-        - intervallen: The amount of numbers that a single g from above
-          can return before synchronization is needed to get a new amount.
-          Default: 5000.
+    - startvalue: The first value to return. If None, 0 is assumed.
+    - intervallen: The amount of numbers that a single g from above
+      can return before synchronization is needed to get a new amount.
+      Default: 5000.
     """
     if startvalue is None:
         startvalue = 0
@@ -1115,6 +1171,7 @@ def getsharedsequencefactory(startvalue, intervallen=5000):
 
         def getnextseqval(*ignored):
             return next(generator)
+
         return getnextseqval
 
     return factory

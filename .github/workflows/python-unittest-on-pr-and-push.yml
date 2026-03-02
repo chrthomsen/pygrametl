@@ -16,6 +16,18 @@ jobs:
         operating-system: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Python unittest
+    - uses: actions/checkout@v6
+    - name: Install Ruff and Sphinx
+      run: pip install ruff sphinx
+
+    - name: Ruff Check
+      run: ruff check --output-format=github
+    - name: Ruff Format Check
+      run: ruff format --check
+
+    - name: Python Unittest
       run: python3 -m unittest --verbose
+
+    - name: Sphinx Build
+      run: python -m sphinx.cmd.build --builder html . _build --fresh-env --fail-on-warning
+      working-directory: docs
