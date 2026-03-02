@@ -71,7 +71,6 @@ __all__ = [
     "rename",
     "renametofrom",
     "getint",
-    "getlong",
     "getfloat",
     "getstr",
     "getstrippedstr",

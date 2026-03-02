@@ -41,6 +41,9 @@ Unreleased
   ``copy_from``. This solves issue #74, where newer psycopg2 versions escape 
   table names to avoid sql injection.
 
+  Removed the ``getlong()`` function from ``pygrametl/__init__.py`` as
+  Python 3 does not include a ``long`` type.
+
 Version 2.8
 -----------
 **Added**
