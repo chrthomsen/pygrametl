@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,7 @@ name = "pygrametl"
 authors = [{name = "Aalborg University", email = "pygrametl@cs.aau.dk"}]
 urls = {Homepage = "http://pygrametl.org"}
 description = "ETL programming in Python"
-readme = "README.rst"
+readme = {file = "README.rst", content-type = "text/x-rst"}
 license = "BSD-2-Clause"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
