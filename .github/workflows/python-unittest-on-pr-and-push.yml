@@ -43,11 +43,11 @@ jobs:
       run: python -m build
 
     - name: Install sdist
-      run: pip install pygrametl-*.tar.gz --force-reinstall
+      run: pip install pygrametl-2.8.tar.gz --force-reinstall
       working-directory: dist
 
     - name: Install wheel
-      run: pip install pygrametl-*.whl --force-reinstall
+      run: pip install pygrametl-2.8-py3-none-any.whl --force-reinstall
       working-directory: dist
 
     - name: Jython Imports
