@@ -44,6 +44,8 @@ Unreleased
   Removed the ``getlong()`` function from ``pygrametl/__init__.py`` as
   Python 3 does not include a ``long`` type.
 
+  Replaced ``setup.py`` with ``pyproject.toml`` to centralize configuration of tools.
+
 Version 2.8
 -----------
 **Added**

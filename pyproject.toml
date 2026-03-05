@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pygrametl"
+authors = [{name = "Aalborg University", email = "pygrametl@cs.aau.dk"}]
+urls = {Homepage = "http://pygrametl.org"}
+description = "ETL programming in Python"
+readme = {file = "README.rst", content-type = "text/x-rst"}
+license = "BSD-2-Clause"
+requires-python = ">= 3.7"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Database",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+dynamic = ["version"]
+scripts = {dttr = "pygrametl.drawntabletesting.dttr:main"}
+
+[tool.setuptools.dynamic]
+version = {attr = "pygrametl.__version__"}

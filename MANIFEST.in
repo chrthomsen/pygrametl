@@ -1,4 +1,4 @@
-include *.rst
-include *.txt
+include CHANGELOG.rst
+recursive-include pygrametl/jythonsupport *
 recursive-include docs *
 prune docs/_build
