@@ -2,13 +2,21 @@
 
 Jython
 ======
-pygrametl supports running ETL flows on Jython, an implementation of Python that
-run on the JVM. Using Jython instead of CPython allows an ETL flow to be
-parallelized using multiple threads instead of multiple processes. This is
-because Jython does not have a global interpreter lock, which in CPython ensures
-that only a single thread is running per process at a given time. For more
+pygrametl partially supports running ETL flows on Jython, an implementation
+of Python that run on the JVM. Using Jython instead of CPython allows an ETL
+flow to be parallelized using multiple threads instead of multiple processes.
+This is because Jython does not have a global interpreter lock, which in CPython
+ensures that only a single thread is running per process at a given time. For more
 information about the GIL see the Python wiki `GIL
 <https://wiki.python.org/moin/GlobalInterpreterLock>`__.
+
+.. warning::
+    As Python 2 is no longer being `maintained
+    <https://www.python.org/doc/sunset-python-2/>`_ and
+    `Jython 3 <https://github.com/jython/jython/tree/main>`_ has not yet been
+    released, support for Jython will be reduced as we continue to develop
+    pygrametl and phase out support for Python 2. Currently, :mod:`.datasources`
+    and :mod:`.drawntabletesting` are not supported in Jython.
 
 To make switching between CPython and Jython as simple as possible, two
 abstractions are provided by pygrametl. Firstly, :mod:`.JDBCConnectionWrapper`
