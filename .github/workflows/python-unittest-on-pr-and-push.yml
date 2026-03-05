@@ -42,16 +42,13 @@ jobs:
     - name: Build Package
       run: python -m build
 
-    - name: Install sdist (Unix-like)
-      run: pip install dist/pygrametl-*.tar.gz --force-reinstall
-      if: runner.os != 'Windows'
-
-    - name: Install sdist (Windows)
-      run: ls dist/
-      if: runner.os == 'Windows'
+    - name: Install sdist
+      run: pip install pygrametl-*.tar.gz --force-reinstall
+      working-directory: dist
 
     - name: Install wheel
-      run: pip install dist/pygrametl-*.whl --force-reinstall
+      run: pip install pygrametl-*.whl --force-reinstall
+      working-directory: dist
 
     - name: Jython Imports
       shell: bash
