@@ -47,7 +47,7 @@ jobs:
       if: runner.os != 'Windows'
 
     - name: Install sdist (Windows)
-      run: ls -al dist/
+      run: ls dist/
       if: runner.os == 'Windows'
 
     - name: Install wheel
