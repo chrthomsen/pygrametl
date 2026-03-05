@@ -1,6 +1,7 @@
 .egg-info
 .ruff_cache
 __pycache__
+build
 dist
 docs/_build
 pygrametl.egg-info
