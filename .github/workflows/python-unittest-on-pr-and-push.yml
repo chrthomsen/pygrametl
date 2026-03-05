@@ -47,7 +47,7 @@ jobs:
       if: runner.os != 'Windows'
 
     - name: Install sdist (Windows)
-      run: pip install dist/pygrametl-*.zip --force-reinstall
+      run: ls -al dist/
       if: runner.os == 'Windows'
 
     - name: Install wheel
