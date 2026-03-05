@@ -19,7 +19,7 @@ jobs:
     # Setup.
     - uses: actions/checkout@v6
     - name: Install Dependencies
-      run: pip install ruff sphinx build setuptools
+      run: python -m pip install ruff sphinx build setuptools
 
     # Check.
     - name: Ruff Check
@@ -28,7 +28,7 @@ jobs:
       run: ruff format --check
 
     - name: Python Unittest
-      run: python3 -m unittest --verbose
+      run: python -m unittest --verbose
 
     # Docs.
     - name: Sphinx Build

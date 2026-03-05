@@ -3,7 +3,7 @@
 Jython
 ======
 pygrametl partially supports running ETL flows on Jython, an implementation
-of Python that run on the JVM. Using Jython instead of CPython allows an ETL
+of Python that runs on the JVM. Using Jython instead of CPython allows an ETL
 flow to be parallelized using multiple threads instead of multiple processes.
 This is because Jython does not have a global interpreter lock, which in CPython
 ensures that only a single thread is running per process at a given time. For more

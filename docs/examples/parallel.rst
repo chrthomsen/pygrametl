@@ -233,7 +233,7 @@ An example of such a function is the bulk loader used for pygrametl's
     from pygrametl.JDBCConnectionWrapper import JDBCConnectionWrapper
     from pygrametl.parallel import shareconnectionwrapper
 
-    # JDBC and Jython are used as threads usually provides better performance
+    # JDBC and Jython are used as threads usually provide better performance
     import java.sql.DriverManager
     jconn = java.sql.DriverManager.getConnection(
 	"jdbc:postgresql://localhost/dw?user=dwuser&password=dwpass")
