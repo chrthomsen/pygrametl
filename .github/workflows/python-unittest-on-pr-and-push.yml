@@ -42,8 +42,13 @@ jobs:
     - name: Build Package
       run: python -m build
 
-    - name: Install sdist
+    - name: Install sdist (Unix-like)
       run: pip install dist/pygrametl-*.tar.gz --force-reinstall
+      if: runner.os != 'Windows'
+
+    - name: Install sdist (Windows)
+      run: pip install dist/pygrametl-*.zip --force-reinstall
+      if: runner.os == 'Windows'
 
     - name: Install wheel
       run: pip install dist/pygrametl-*.whl --force-reinstall
