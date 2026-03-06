@@ -15,8 +15,8 @@ information about the GIL see the Python wiki `GIL
     <https://www.python.org/doc/sunset-python-2/>`_ and
     `Jython 3 <https://github.com/jython/jython/tree/main>`_ has not yet been
     released, support for Jython will be reduced as we continue to develop
-    pygrametl and phase out support for Python 2. Currently, :mod:`.datasources`
-    and :mod:`.drawntabletesting` are not supported in Jython.
+    pygrametl and phase out support for Python 2. Currently,
+    :mod:`.drawntabletesting` are not supported in Jython.
 
 To make switching between CPython and Jython as simple as possible, two
 abstractions are provided by pygrametl. Firstly, :mod:`.JDBCConnectionWrapper`

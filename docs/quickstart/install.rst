@@ -22,7 +22,8 @@ implementations like `PyPy <https://www.pypy.org/>`__ and `IronPython
 .. warning::
     As Python 2 is no longer being `maintained
     <https://www.python.org/doc/sunset-python-2/>`_ support for it will slowly
-    be reduced as we continue to develop pygrametl.
+    be reduced as we continue to develop pygrametl. Currently, :mod:`.dttr` is
+    the only pygrametl module that requires Python 3 (version 3.4 or above).
 
 After a Python implementation has been installed and added to the system's
 path, it can be run from either the command prompt in Windows or the shell in
