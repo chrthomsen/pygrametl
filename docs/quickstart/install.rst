@@ -17,7 +17,7 @@ implementations like `PyPy <https://www.pypy.org/>`__ and `IronPython
 
 * `Jython <http://www.jython.org/>`__, version 2.7 or above
 * `Python 2 <http://www.python.org/>`__, version 2.7 or above
-* `Python 3 <http://www.python.org/>`__, version 3.7 or above
+* `Python 3 <http://www.python.org/>`__, version 3.4 or above
 
 .. warning::
     As Python 2 is no longer being `maintained

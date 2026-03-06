@@ -9,13 +9,13 @@ urls = {Homepage = "http://pygrametl.org"}
 description = "ETL programming in Python"
 readme = {file = "README.rst", content-type = "text/x-rst"}
 license = "BSD-2-Clause"
-requires-python = ">= 3.7"
+requires-python = ">= 3.4"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.4",
     "Topic :: Database",
     "Topic :: Database :: Front-Ends",
     "Topic :: Software Development",
