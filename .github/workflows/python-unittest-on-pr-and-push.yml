@@ -19,16 +19,20 @@ jobs:
     # Setup.
     - uses: actions/checkout@v6
     - name: Install Dependencies
-      run: python -m pip install ruff sphinx build setuptools
+      run: python -m pip install ruff vermin sphinx build setuptools
 
     # Check.
     - name: Ruff Check
       run: ruff check --output-format=github
+
     - name: Ruff Format Check
       run: ruff format --check
 
     - name: Python Unittest
       run: python -m unittest --verbose
+
+    - name: Vermin Violations
+      run: vermin --quiet  --target=3.4 --violations .
 
     # Docs.
     - name: Sphinx Build
