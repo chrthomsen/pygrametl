@@ -29,7 +29,6 @@ provide dicts that map from attribute names to attribute values.
 
 from csv import DictReader
 import sys
-import sqlite3
 
 import pygrametl
 from pygrametl import tables
@@ -41,6 +40,7 @@ if sys.platform.startswith("java"):
     from pygrametl.jythonmultiprocessing import Queue, Process
 else:
     from multiprocessing import Queue, Process
+    import sqlite3  # Only used by SQLTransformingSource
 
 try:
     from Queue import Empty  # Python 2
@@ -75,6 +75,7 @@ CSVSource = DictReader
 class TypedCSVSource(DictReader):
     """A class for iterating a CSV file and type cast the values."""
 
+    # Jython 2.7.4 cannot parse **kwds,
     def __init__(
         self,
         f,
@@ -84,8 +85,8 @@ class TypedCSVSource(DictReader):
         restval=None,
         dialect="excel",
         *args,
-        **kwds,
-    ):
+        **kwds
+    ):  # fmt: skip
         """Arguments:
 
         - f: An iterable object such as as file. Passed on to
@@ -99,6 +100,7 @@ class TypedCSVSource(DictReader):
         - *args: Passed on to csv.DictReader
         - **kwds: Passed on to csv.DictReader
         """
+        # Jython 2.7.4 cannot parse **kwds,
         DictReader.__init__(
             self,
             f,
@@ -107,8 +109,8 @@ class TypedCSVSource(DictReader):
             restval=restval,
             dialect=dialect,
             *args,
-            **kwds,
-        )
+            **kwds
+        )  # fmt: skip
 
         if type(casts) is not dict:
             raise TypeError("The casts argument must be a dict")
