@@ -4,9 +4,9 @@ Install Guide
 =============
 Installing pygrametl is fairly simple, mainly due to the package having no
 mandatory dependencies. This guide contains all the information needed to
-install and use the package with CPython. pygrametl also supports the JVM-based
-Python implementation Jython. For more information about using pygrametl with
-Jython see :ref:`jython`.
+install and use the package with CPython. pygrametl also partially supports
+the JVM-based Python implementation Jython. For more information about using
+pygrametl with Jython see :ref:`jython`.
 
 Installing a Python Implementation
 ----------------------------------
@@ -22,8 +22,7 @@ implementations like `PyPy <https://www.pypy.org/>`__ and `IronPython
 .. warning::
     As Python 2 is no longer being `maintained
     <https://www.python.org/doc/sunset-python-2/>`_ support for it will slowly
-    be reduced as we continue to develop pygrametl. Currently, :mod:`.dttr` is
-    the only pygrametl module that requires Python 3 (version 3.4 or above).
+    be reduced as we continue to develop pygrametl.
 
 After a Python implementation has been installed and added to the system's
 path, it can be run from either the command prompt in Windows or the shell in

@@ -34,17 +34,20 @@ class DTTRTest(unittest.TestCase):
         newenv = os.environ.copy()
         newenv["PYTHONPATH"] = "."
 
-        process = subprocess.run(
+        process = subprocess.Popen(
             [
                 "python3",
                 "pygrametl/drawntabletesting/dttr.py",
                 "-f",
                 "tests/drawntabletesting/dttr/",
             ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             env=newenv,
-            capture_output=True,
         )
 
-        process.check_returncode()
-        self.assertEqual(b"", process.stdout)
-        self.assertEqual(b"", process.stderr)
+        stdout, stderr = process.communicate()
+
+        self.assertEqual(0, process.returncode)
+        self.assertEqual(b"", stdout)
+        self.assertEqual(b"", stderr)
