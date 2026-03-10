@@ -1,5 +1,5 @@
-Unreleased
-----------
+Version 2.9
+-----------
 **Added**
   Support for specifying if all or only the latest version of a member should be
   updated when type 1 updates are applied to ``SlowlyChangingDimension``.
