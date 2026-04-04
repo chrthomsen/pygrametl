@@ -60,7 +60,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "pygrametl"
-copyright = "2009 - 2023, Aalborg University"
+copyright = "2009 - 2026, Aalborg University"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
