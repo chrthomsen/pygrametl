@@ -66,6 +66,7 @@ __all__ = [
     "FilteringSource",
     "DynamicForEachSource",
     "RoundRobinSource",
+    "UnpivotingSource",
 ]
 
 
@@ -779,3 +780,75 @@ class DynamicForEachSource(object):
                     yield row
             except Empty:
                 return
+
+
+class UnpivotingSource(object):
+    """A source that transforms rows from wide to long format."""
+
+    def __init__(
+        self,
+        source,
+        keyatts=(),
+        unpivotatts=None,
+        nameatt="name",
+        valueatt="value",
+        ignorenone=False,
+    ):
+        """Arguments:
+
+        - source: the source to unpivot
+        - keyatts: a sequence of attributes to keep in each created row.
+          Default: ()
+        - unpivotatts: a sequence of attributes to unpivot. If None, all
+          attributes except those in keyatts are unpivoted. Default: None
+        - nameatt: the name of the attribute to store the original column
+          name in. Default: 'name'
+        - valueatt: the name of the attribute to store the original column
+          value in. Default: 'value'
+        - ignorenone: a boolean deciding if attributes with the value None
+          should be skipped. Default: False
+        """
+        self.__source = source
+
+        if type(keyatts) in pygrametl._stringtypes:
+            keyatts = (keyatts,)
+        self.__keyatts = tuple(keyatts)
+
+        if unpivotatts is not None and type(unpivotatts) in pygrametl._stringtypes:
+            unpivotatts = (unpivotatts,)
+        self.__unpivotatts = tuple(unpivotatts) if unpivotatts is not None else None
+
+        self.__nameatt = nameatt
+        self.__valueatt = valueatt
+        self.__ignorenone = ignorenone
+
+        if nameatt == valueatt:
+            raise ValueError("nameatt and valueatt must be different")
+        if nameatt in self.__keyatts or valueatt in self.__keyatts:
+            raise ValueError("nameatt and valueatt must not be among keyatts")
+        if self.__unpivotatts is not None:
+            for att in self.__unpivotatts:
+                if att in self.__keyatts:
+                    raise ValueError(
+                        "unpivotatts must not contain attributes also in keyatts"
+                    )
+
+    def __iter__(self):
+        for row in self.__source:
+            resbase = {}
+            for att in self.__keyatts:
+                resbase[att] = row[att]
+
+            if self.__unpivotatts is None:
+                atts = [att for att in row if att not in self.__keyatts]
+            else:
+                atts = self.__unpivotatts
+
+            for att in atts:
+                value = row[att]
+                if self.__ignorenone and value is None:
+                    continue
+                res = resbase.copy()
+                res[self.__nameatt] = att
+                res[self.__valueatt] = value
+                yield res
