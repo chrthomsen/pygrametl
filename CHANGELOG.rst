@@ -2,7 +2,7 @@ Unreleased
 ----------
 **Added**
   ``UnpivotingSource`` a new class that adds support for reshaping
-  wide rows into long rows (Thanks to Huu Hung Nguyen)
+  wide rows into long rows. (Thanks to Huu Hung Nguyen)
 
 **Fixed**
 **Changed**
