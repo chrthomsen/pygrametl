@@ -385,3 +385,19 @@ features see :doc:`parallel`.
 
     salesFiles = glob.glob('sales/*.csv')
     combinedSales = DynamicForEachSource(seq=salesFiles, callee=createCSVSource)
+
+UnpivotingSource
+----------------
+Converts wide rows (e.g. monthly columns) into long rows.
+
+.. code-block:: python
+
+    from pygrametl.datasources import UnpivotingSource
+    source = UnpivotingSource(
+        [{"product": "A", "jan": 10, "feb": 12}],
+        keyatts=("product",),
+        unpivotatts=("jan", "feb"),
+        nameatt="month",
+        valueatt="sales"
+    )
+    # → [{"product": "A", "month": "jan", "sales": 10}, ...]
