@@ -23,9 +23,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
-from unittest.mock import patch
 from datetime import date, datetime
-from sqlite3.dbapi2 import Timestamp, Date
+from sqlite3.dbapi2 import Date, Timestamp
+from unittest.mock import patch
 
 import pygrametl
 import pygrametl.drawntabletesting as dtt
@@ -367,7 +367,7 @@ class InitTest(unittest.TestCase):
         alltables = pygrametl._alltables
         pygrametl._alltables = []
 
-        for _ in range(0, 10):
+        for _ in range(10):
             self.MockDimensionOrFacttable()
 
         for dimension_or_facttable in pygrametl._alltables:

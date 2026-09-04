@@ -47,7 +47,7 @@ class FIFODictDeque:
           when an item is explicitly deleted with del d[key] or when the
           dict is cleared).
         """
-        if not isinstance(size, type(0)):
+        if not isinstance(size, int):
             raise TypeError("size must be an int")
         if not size > 0:
             raise ValueError("size must be positive")
@@ -148,7 +148,7 @@ class FIFODictOrderedDict:
           when an item is explicitly deleted with del d[key] or when the
           dict is cleared).
         """
-        if not isinstance(size, type(0)):
+        if not isinstance(size, int):
             raise TypeError("size must be an int")
         if not size > 0:
             raise ValueError("size must be positive")

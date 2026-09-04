@@ -36,13 +36,13 @@ If no such results exists, default is returned.
 
 __all__ = [
     "Aggregator",
-    "SimpleAggregator",
-    "Sum",
+    "Avg",
     "Count",
     "CountDistinct",
     "Max",
     "Min",
-    "Avg",
+    "SimpleAggregator",
+    "Sum",
 ]
 
 

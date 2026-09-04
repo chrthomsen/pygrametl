@@ -29,11 +29,10 @@ Note that this module in many cases will give better results with Jython
 
 import copy
 import os
-from sys import version_info
 import sys
+from sys import version_info
 
 import pygrametl
-
 
 try:
     from Queue import Empty  # Python 2
@@ -58,12 +57,12 @@ else:
         multiprocessing.set_start_method("fork")
 
 __all__ = [
-    "splitpoint",
-    "endsplits",
-    "createflow",
     "Decoupled",
-    "shareconnectionwrapper",
+    "createflow",
+    "endsplits",
     "getsharedsequencefactory",
+    "shareconnectionwrapper",
+    "splitpoint",
 ]
 
 
@@ -239,7 +238,7 @@ def splitpoint(*arg, **kwargs):
     # single element, namely the function to annotate, arg == (<function>,).
     # We then return decorator(function).
 
-    for kw in kwargs.keys():
+    for kw in kwargs:
         if kw not in ("instances", "output", "queuesize"):
             raise TypeError("'%s' is an invalid keyword argument for splitpoint" % kw)
 
@@ -734,7 +733,6 @@ class Decoupled(object):
         self.__batch.append([None, funcname, args])
         if len(self.__batch) >= self.batchsize:
             self._endbatch()
-        return None
 
     def _getresult(self, future):
         if self.__fromworker is None:

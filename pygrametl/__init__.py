@@ -48,13 +48,12 @@ from threading import Thread
 
 from pygrametl.FIFODict import FIFODict
 
-
 if version_info[0] == 2:
     import types
 
     _stringtypes = types.StringTypes  # (str, unicode) on Python 2
-    from Queue import Queue
     from exceptions import Exception as _DBBaseException  # Used by PEP249,but
+    from Queue import Queue
     # not avail. on Py3
 else:  # For Python 3
     _stringtypes = (str,)
@@ -65,38 +64,38 @@ else:  # For Python 3
 
 __version__ = "2.9"
 __all__ = [
-    "project",
+    "ConnectionWrapper",
+    "_stringtypes",
     "copy",
-    "renamefromto",
-    "rename",
-    "renametofrom",
-    "getint",
+    "datereader",
+    "datespan",
+    "datetimereader",
+    "endload",
+    "getbool",
+    "getdate",
+    "getdbfriendlystr",
+    "getdefaulttargetconnection",
     "getfloat",
+    "getint",
     "getstr",
     "getstrippedstr",
     "getstrornullvalue",
-    "getdbfriendlystr",
-    "getbool",
-    "getdate",
     "gettimestamp",
     "getvalue",
     "getvalueor",
-    "setdefaults",
-    "rowfactory",
-    "endload",
-    "today",
-    "now",
-    "ymdparser",
-    "ymdhmsparser",
-    "datereader",
-    "datetimereader",
-    "datespan",
-    "toupper",
-    "tolower",
     "keepasis",
-    "getdefaulttargetconnection",
-    "ConnectionWrapper",
-    "_stringtypes",
+    "now",
+    "project",
+    "rename",
+    "renamefromto",
+    "renametofrom",
+    "rowfactory",
+    "setdefaults",
+    "today",
+    "tolower",
+    "toupper",
+    "ymdhmsparser",
+    "ymdparser",
 ]
 
 
@@ -151,7 +150,7 @@ def copy(row, **renaming):
         # needed for renamings like {'x':'repeated', 'y':'repeated'}
         if v in tmp:
             del tmp[v]
-    for k in renaming.keys():
+    for k in renaming:
         # Avoid overwriting renamed values with old values
         tmp.pop(k, None)
     res.update(tmp)

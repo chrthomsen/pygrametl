@@ -28,8 +28,8 @@ import unittest
 import pygrametl
 import pygrametl.drawntabletesting as dtt
 from pygrametl.datasources import (
-    SQLSource,
     MappingSource,
+    SQLSource,
     SQLTransformingSource,
     UnpivotingSource,
 )
