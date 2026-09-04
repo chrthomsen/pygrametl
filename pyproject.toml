@@ -34,5 +34,5 @@ ignore = [
   "DTZ001", "DTZ006", "DTZ005", "DTZ011", # Timezone.
   "N999", # Preserve module names for compatibility.
   "RUF012", "SIM115", # Changes make code more complex.
-  "B026", "UP028", "UP031", "UP036", # Jython compatibility.
+  "B026", "UP028", "UP031", "UP032", "UP036", # Jython.
 ]
