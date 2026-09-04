@@ -1541,7 +1541,7 @@ class SlowlyChangingDimension(Dimension):
                 if key in self.rowcache:
                     del self.rowcache[key]
 
-    def closecurrent(self, row, namemapping=None, end=pygrametl.today()):
+    def closecurrent(self, row, namemapping=None, end=None):
         """Close the current version by setting its toatt if it is maxto.
 
         The newest version will have its toatt set to the given end
@@ -1559,6 +1559,8 @@ class SlowlyChangingDimension(Dimension):
         """
         if namemapping is None:
             namemapping = {}
+        if end is None:
+            end = pygrametl.today()
         if self.toatt is None:
             raise RuntimeError("A toatt must be defined")
         keyval = self.lookup(row, namemapping)
