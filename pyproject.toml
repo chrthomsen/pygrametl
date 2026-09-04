@@ -29,4 +29,7 @@ scripts = {dttr = "pygrametl.drawntabletesting.dttr:main"}
 version = {attr = "pygrametl.__version__"}
 
 [tool.ruff.lint]
-ignore = ["UP028", "UP031", "UP036"]
+ignore = [
+  "BLE001", # Simplify code.
+  "UP028", "UP031", "UP036" # Jython compatibility.
+]
