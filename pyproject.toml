@@ -29,4 +29,4 @@ scripts = {dttr = "pygrametl.drawntabletesting.dttr:main"}
 version = {attr = "pygrametl.__version__"}
 
 [tool.ruff.lint]
-ignore = ["UP028", "UP031"]
+ignore = ["UP028", "UP031", "UP036"]
