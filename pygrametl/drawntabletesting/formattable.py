@@ -25,8 +25,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys
-
 import pygrametl.drawntabletesting as dtt
+
 
 if len(sys.argv) != 3:
     print("usage: " + sys.argv[0] + " file line")

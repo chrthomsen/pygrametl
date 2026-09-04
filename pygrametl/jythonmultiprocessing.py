@@ -31,6 +31,7 @@ from threading import Thread
 
 from pygrametl.jythonsupport import Value
 
+
 # Needed for both pip2 and pip3 to be supported
 try:
     from Queue import Queue

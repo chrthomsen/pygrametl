@@ -48,12 +48,13 @@ from threading import Thread
 
 from pygrametl.FIFODict import FIFODict
 
+
 if version_info[0] == 2:
     import types
 
     _stringtypes = types.StringTypes  # (str, unicode) on Python 2
-    from exceptions import Exception as _DBBaseException  # Used by PEP249,but
     from Queue import Queue
+    from exceptions import Exception as _DBBaseException  # Used by PEP249,but
     # not avail. on Py3
 else:  # For Python 3
     _stringtypes = (str,)
@@ -64,38 +65,38 @@ else:  # For Python 3
 
 __version__ = "2.9"
 __all__ = [
-    "ConnectionWrapper",
-    "_stringtypes",
+    "project",
     "copy",
-    "datereader",
-    "datespan",
-    "datetimereader",
-    "endload",
-    "getbool",
-    "getdate",
-    "getdbfriendlystr",
-    "getdefaulttargetconnection",
-    "getfloat",
+    "renamefromto",
+    "rename",
+    "renametofrom",
     "getint",
+    "getfloat",
     "getstr",
     "getstrippedstr",
     "getstrornullvalue",
+    "getdbfriendlystr",
+    "getbool",
+    "getdate",
     "gettimestamp",
     "getvalue",
     "getvalueor",
-    "keepasis",
-    "now",
-    "project",
-    "rename",
-    "renamefromto",
-    "renametofrom",
-    "rowfactory",
     "setdefaults",
+    "rowfactory",
+    "endload",
     "today",
-    "tolower",
-    "toupper",
-    "ymdhmsparser",
+    "now",
     "ymdparser",
+    "ymdhmsparser",
+    "datereader",
+    "datetimereader",
+    "datespan",
+    "toupper",
+    "tolower",
+    "keepasis",
+    "getdefaulttargetconnection",
+    "ConnectionWrapper",
+    "_stringtypes",
 ]
 
 
@@ -150,7 +151,7 @@ def copy(row, **renaming):
         # needed for renamings like {'x':'repeated', 'y':'repeated'}
         if v in tmp:
             del tmp[v]
-    for k in renaming:
+    for k in renaming.keys():
         # Avoid overwriting renamed values with old values
         tmp.pop(k, None)
     res.update(tmp)
@@ -666,7 +667,7 @@ def getdefaulttargetconnection():
     return _defaulttargetconnection
 
 
-class ConnectionWrapper:
+class ConnectionWrapper(object):
     """Provide a uniform representation of different database connection types.
 
     All Dimensions and FactTables communicate with the data warehouse using
@@ -1026,7 +1027,7 @@ class ConnectionWrapper:
         self.__cursor = self.__connection.cursor()
 
 
-class BackgroundConnectionWrapper:
+class BackgroundConnectionWrapper(object):
     """Deprecated: This class is not maintained anymore! Use ConnectionWrapper
     instead.
 

@@ -31,9 +31,9 @@ from sys import modules
 from threading import Thread
 
 import java.sql as jdbc
-
 import pygrametl
 from pygrametl.FIFODict import FIFODict
+
 
 # Needed for both pip2 and pip3 to be supported
 try:
@@ -44,10 +44,10 @@ except ImportError:
 
 # NOTE: This module is made for Jython.
 
-__all__ = ["BackgroundJDBCConnectionWrapper", "JDBCConnectionWrapper"]
+__all__ = ["JDBCConnectionWrapper", "BackgroundJDBCConnectionWrapper"]
 
 
-class JDBCConnectionWrapper:
+class JDBCConnectionWrapper(object):
     """Wrap a JDBC Connection.
 
     All Dimension and FactTable communicate with the data warehouse using
@@ -308,7 +308,7 @@ class JDBCConnectionWrapper:
 # to JDBCConnectionWrapper and one of them may be removed.
 
 
-class BackgroundJDBCConnectionWrapper:
+class BackgroundJDBCConnectionWrapper(object):
     """Wrap a JDBC Connection and do all DB communication in the background.
 
     All Dimension and FactTable communicate with the data warehouse using

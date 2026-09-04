@@ -29,10 +29,11 @@ Note that this module in many cases will give better results with Jython
 
 import copy
 import os
-import sys
 from sys import version_info
+import sys
 
 import pygrametl
+
 
 try:
     from Queue import Empty  # Python 2
@@ -57,12 +58,12 @@ else:
         multiprocessing.set_start_method("fork")
 
 __all__ = [
-    "Decoupled",
-    "createflow",
-    "endsplits",
-    "getsharedsequencefactory",
-    "shareconnectionwrapper",
     "splitpoint",
+    "endsplits",
+    "createflow",
+    "Decoupled",
+    "shareconnectionwrapper",
+    "getsharedsequencefactory",
 ]
 
 
@@ -238,7 +239,7 @@ def splitpoint(*arg, **kwargs):
     # single element, namely the function to annotate, arg == (<function>,).
     # We then return decorator(function).
 
-    for kw in kwargs:
+    for kw in kwargs.keys():
         if kw not in ("instances", "output", "queuesize"):
             raise TypeError("'%s' is an invalid keyword argument for splitpoint" % kw)
 
@@ -317,7 +318,7 @@ def _flowprocess(func, input, output, inclosed, outclosed):
     outclosed.value = 1
 
 
-class Flow:
+class Flow(object):
     """A Flow consists of different functions running in different processes.
     A Flow should be created by calling createflow.
     """
@@ -537,7 +538,7 @@ def createflow(*functions, **options):
 # Stuff for Decoupled objects
 
 
-class FutureResult:
+class FutureResult(object):
     """Represent a value that may or may not be computed yet.
     FutureResults are created by Decoupled objects.
     """
@@ -573,7 +574,7 @@ class FutureResult:
 # pygrametl.tables
 
 
-class Decoupled:
+class Decoupled(object):
     __instances = []
 
     def __init__(
@@ -733,6 +734,7 @@ class Decoupled:
         self.__batch.append([None, funcname, args])
         if len(self.__batch) >= self.batchsize:
             self._endbatch()
+        return None
 
     def _getresult(self, future):
         if self.__fromworker is None:
@@ -775,7 +777,7 @@ class Decoupled:
 # SharedConnectionWrapper stuff
 
 
-class SharedConnectionWrapperClient:
+class SharedConnectionWrapperClient(object):
     """Provide access to a shared ConnectionWrapper.
 
     Users should not create a SharedConnectionWrapperClient directly, but
@@ -953,7 +955,7 @@ class SharedConnectionWrapperClient:
 ###
 
 
-class SharedConnectionWrapperServer:
+class SharedConnectionWrapperServer(object):
     """Manage access to a shared ConnectionWrapper.
 
     Users should not create a SharedConnectionWrapperServer directly, but

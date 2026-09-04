@@ -27,13 +27,12 @@ to efficiently evaluate the expected database state.
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import collections
 import copy
 import sqlite3
-
+import collections
 import pygrametl
 
-__all__ = ["Table", "connectionwrapper"]
+__all__ = ["connectionwrapper", "Table"]
 
 
 def connectionwrapper(connection=None):
