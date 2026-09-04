@@ -302,8 +302,8 @@ class InitTest(unittest.TestCase):
                 return False
             rows = set()
 
-            for i in range(i):
-                record = (i, i * 2)
+            for j in range(i):
+                record = (j, j * 2)
                 rows.add(record)
                 self.rows_left -= 1
             return rows
