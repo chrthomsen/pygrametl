@@ -1447,7 +1447,10 @@ class SlowlyChangingDimension(Dimension):
 
     def _before_update(self, row, namemapping):
         """ """
-        # We have to remove old values from the caches.
+        # We have to remove old values from the caches if they exist.
+        if self.__cachesize == 0:
+            return None
+
         key = namemapping.get(self.key) or self.key
         for att in self.lookupatts:
             if (att in namemapping and namemapping[att] in row) or att in row:
@@ -1523,9 +1526,10 @@ class SlowlyChangingDimension(Dimension):
         self.targetconnection.execute(sql, updates)
 
         # Remove from our own cache
-        for key in updatekeys:
-            if key in self.rowcache:
-                del self.rowcache[key]
+        if self.__cachesize:
+            for key in updatekeys:
+                if key in self.rowcache:
+                    del self.rowcache[key]
 
     def closecurrent(self, row, namemapping={}, end=pygrametl.today()):
         """Close the current version by setting its toatt if it is maxto.

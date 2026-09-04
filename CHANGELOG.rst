@@ -5,6 +5,9 @@ Unreleased
   wide rows into long rows. (Thanks to Huu Hung Nguyen)
 
 **Fixed**
+  A ``cachesize`` of 0 could lead to an ``AttributeError`` in
+  ``SlowlyChangingDimension`` (GitHub issue #98).
+
 **Changed**
 
 Version 2.9
