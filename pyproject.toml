@@ -27,3 +27,6 @@ scripts = {dttr = "pygrametl.drawntabletesting.dttr:main"}
 
 [tool.setuptools.dynamic]
 version = {attr = "pygrametl.__version__"}
+
+[tool.ruff.lint]
+ignore = ["UP031"]
