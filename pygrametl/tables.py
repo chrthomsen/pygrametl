@@ -647,7 +647,6 @@ class CachedDimension(Dimension):
             self.__key2row[keyvalue] = tuple([resultrow[a] for a in self.all])
 
     def _before_update(self, row, namemapping):
-        """ """
         # We have to remove old values from the caches.
         key = namemapping.get(self.key) or self.key
         for att in self.lookupatts:
@@ -669,7 +668,6 @@ class CachedDimension(Dimension):
 
 
     def _after_update(self, row, namemapping):
-        """ """
         if (
             self.__prefill
             and self.cacheoninsert
@@ -683,7 +681,6 @@ class CachedDimension(Dimension):
             self._after_lookup(newrow, {}, keyval)  # Updates __vals2key
 
     def _after_insert(self, row, namemapping, newkeyvalue):
-        """ """
         # After the insert, we can look the row up. Pretend that we
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
@@ -1463,7 +1460,6 @@ class SlowlyChangingDimension(Dimension):
             self.rowcache[keyvalue] = tuple([resultrow[a] for a in self.all])
 
     def _before_update(self, row, namemapping):
-        """ """
         # We have to remove old values from the caches if they exist.
         if self.__cachesize == 0:
             return
@@ -1489,7 +1485,6 @@ class SlowlyChangingDimension(Dimension):
         return
 
     def _after_insert(self, row, namemapping, newkeyvalue):
-        """ """
         # After the insert, we can look it up. Pretend that we
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
@@ -1504,7 +1499,6 @@ class SlowlyChangingDimension(Dimension):
             self._after_getbykey(newkeyvalue, tmp)
 
     def __preparetype1updates(self, updates, lookupvalues, type2changes):
-        """ """
         # Perform type 1 updates for the latest version unless type2changes is
         # True as the latest version then is a new version about to be inserted
         updateslatest = {
@@ -1528,7 +1522,6 @@ class SlowlyChangingDimension(Dimension):
             self.__performtype1updates(updatekeys, updatesall)
 
     def __performtype1updates(self, updatekeys, updates):
-        """ """
         # Generate SQL for the update
         valparts = ", ".join(["%s = %%(%s)s" % (self.quote(k), k) for k in updates])
         keyparts = ", ".join([str(k) for k in updatekeys])
@@ -2097,7 +2090,6 @@ class SnowflakedDimension:
         """Finalize the load."""
 
     def __ensure_helper(self, dimension, row, namemapping, insertdone):
-        """ """
         # NB: Has side-effects: Key values are set for all dimensions
         key = None
         retry = False
