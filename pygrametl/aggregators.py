@@ -36,17 +36,17 @@ If no such results exists, default is returned.
 
 __all__ = [
     "Aggregator",
-    "SimpleAggregator",
-    "Sum",
+    "Avg",
     "Count",
     "CountDistinct",
     "Max",
     "Min",
-    "Avg",
+    "SimpleAggregator",
+    "Sum",
 ]
 
 
-class Aggregator(object):
+class Aggregator:
     def process(self, group, val):
         raise NotImplementedError()
 

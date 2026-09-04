@@ -29,21 +29,20 @@ each step does something with the row.
 
 import pygrametl
 
-
 __all__ = [
-    "Step",
-    "SourceStep",
-    "MappingStep",
-    "ValueMappingStep",
-    "PrintStep",
-    "DimensionStep",
-    "SCDimensionStep",
-    "RenamingStep",
-    "RenamingFromToStep",
-    "RenamingToFromStep",
-    "GarbageStep",
     "ConditionalStep",
     "CopyStep",
+    "DimensionStep",
+    "GarbageStep",
+    "MappingStep",
+    "PrintStep",
+    "RenamingFromToStep",
+    "RenamingStep",
+    "RenamingToFromStep",
+    "SCDimensionStep",
+    "SourceStep",
+    "Step",
+    "ValueMappingStep",
     "connectsteps",
 ]
 
@@ -54,7 +53,7 @@ def connectsteps(*steps):
         steps[i].next = steps[i + 1]
 
 
-class Step(object):
+class Step:
     """The basic class for steps in an ETL flow."""
 
     __steps = {}
@@ -138,7 +137,6 @@ class Step(object):
 
         Inheriting classes should implement this method.
         """
-        pass
 
 
 class SourceStep(Step):

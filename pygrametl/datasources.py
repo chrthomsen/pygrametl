@@ -27,20 +27,18 @@ provide dicts that map from attribute names to attribute values.
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from csv import DictReader
 import sys
+from csv import DictReader
 
 import pygrametl
-from pygrametl import tables
-from pygrametl import ConnectionWrapper
-
+from pygrametl import ConnectionWrapper, tables
 
 if sys.platform.startswith("java"):
     # Jython specific code
-    from pygrametl.jythonmultiprocessing import Queue, Process
+    from pygrametl.jythonmultiprocessing import Process, Queue
 else:
-    from multiprocessing import Queue, Process
     import sqlite3  # Only used by SQLTransformingSource
+    from multiprocessing import Process, Queue
 
 try:
     from Queue import Empty  # Python 2
@@ -49,23 +47,23 @@ except ImportError:
 
 
 __all__ = [
-    "CSVSource",
-    "TypedCSVSource",
-    "SQLSource",
-    "PandasSource",
-    "JoiningSource",
-    "HashJoiningSource",
-    "MergeJoiningSource",
     "BackgroundSource",
-    "ProcessSource",
-    "MappingSource",
-    "TransformingSource",
-    "SQLTransformingSource",
-    "UnionSource",
+    "CSVSource",
     "CrossTabbingSource",
-    "FilteringSource",
     "DynamicForEachSource",
+    "FilteringSource",
+    "HashJoiningSource",
+    "JoiningSource",
+    "MappingSource",
+    "MergeJoiningSource",
+    "PandasSource",
+    "ProcessSource",
     "RoundRobinSource",
+    "SQLSource",
+    "SQLTransformingSource",
+    "TransformingSource",
+    "TypedCSVSource",
+    "UnionSource",
     "UnpivotingSource",
 ]
 
@@ -133,7 +131,7 @@ class TypedCSVSource(DictReader):
         return row
 
 
-class SQLSource(object):
+class SQLSource:
     """A class for iterating the result set of a single SQL query."""
 
     def __init__(
@@ -218,7 +216,7 @@ class SQLSource(object):
                 pass
 
 
-class PandasSource(object):
+class PandasSource:
     """A source for iterating a Pandas DataFrame and cast each row to a dict."""
 
     def __init__(self, dataFrame):
@@ -234,7 +232,7 @@ class PandasSource(object):
             yield row
 
 
-class ProcessSource(object):
+class ProcessSource:
     """A class for iterating another source in a separate process"""
 
     def __init__(self, source, batchsize=500, queuesize=20):
@@ -294,7 +292,7 @@ BackgroundSource = ProcessSource  # for compatability
 # replaced by ProcessSource
 
 
-class HashJoiningSource(object):
+class HashJoiningSource:
     """A class for equi-joining two data sources."""
 
     def __init__(self, src1, key1, src2, key2):
@@ -333,7 +331,7 @@ class HashJoiningSource(object):
 JoiningSource = HashJoiningSource  # for compatability
 
 
-class MergeJoiningSource(object):
+class MergeJoiningSource:
     """A class for merge-joining two sorted data sources"""
 
     def __init__(self, src1, key1, src2, key2):
@@ -402,7 +400,7 @@ class MergeJoiningSource(object):
                 return res
 
 
-class MappingSource(object):
+class MappingSource:
     """A class for iterating a source and applying a function to each column."""
 
     def __init__(self, source, callables):
@@ -428,7 +426,7 @@ class MappingSource(object):
             yield row
 
 
-class TransformingSource(object):
+class TransformingSource:
     """A source that applies functions to the rows from another source"""
 
     def __init__(self, source, *transformations):
@@ -449,7 +447,7 @@ class TransformingSource(object):
             yield row
 
 
-class SQLTransformingSource(object):
+class SQLTransformingSource:
     """A source that transforms rows from another source by loading them into a
     temporary table in an RDBMS and then retrieving them using an SQL query.
 
@@ -607,7 +605,7 @@ class SQLTransformingSource(object):
             return self.__targetconnection.rowfactory()
 
 
-class CrossTabbingSource(object):
+class CrossTabbingSource:
     """A source that produces a crosstab from another source"""
 
     def __init__(
@@ -666,7 +664,7 @@ class CrossTabbingSource(object):
             yield res
 
 
-class FilteringSource(object):
+class FilteringSource:
     """A source that applies a filter to another source"""
 
     def __init__(self, source, filter=bool):
@@ -687,7 +685,7 @@ class FilteringSource(object):
                 yield row
 
 
-class UnionSource(object):
+class UnionSource:
     """A source to union other sources (possibly with different types of rows).
     All rows are read from the 1st source before rows are read from the 2nd
     source and so on (to interleave the rows, use a RoundRobinSource)
@@ -706,7 +704,7 @@ class UnionSource(object):
                 yield row
 
 
-class RoundRobinSource(object):
+class RoundRobinSource:
     """A source that reads sets of rows from sources in round robin-fashion"""
 
     def __init__(self, sources, batchsize=500):
@@ -736,10 +734,9 @@ class RoundRobinSource(object):
                     # we're done with this source and can delete it since
                     # we iterate the list as we do
                     del self.__sources[i]
-        return
 
 
-class DynamicForEachSource(object):
+class DynamicForEachSource:
     """A source that for each given argument creates a new source that
     will be iterated by this source.
 
@@ -782,7 +779,7 @@ class DynamicForEachSource(object):
                 return
 
 
-class UnpivotingSource(object):
+class UnpivotingSource:
     """A source that transforms rows from wide to long format."""
 
     def __init__(

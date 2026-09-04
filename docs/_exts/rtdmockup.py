@@ -33,7 +33,7 @@ https://read-the-docs.readthedocs.org/en/latest/index.html
 import sys
 
 
-class Mock(object):
+class Mock:
     def __init__(self, *args, **kwargs):
         pass
 

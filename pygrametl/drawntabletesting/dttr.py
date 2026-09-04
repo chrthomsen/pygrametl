@@ -24,18 +24,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-import sys
-import csv
-import shlex
-import types
-import sqlite3
 import argparse
+import csv
+import os
+import shlex
+import sqlite3
+import sys
+import types
 from collections import namedtuple
 from pathlib import Path
 
 import pygrametl.drawntabletesting as dtt
-
 
 # Types
 ReaderError = namedtuple("ReaderError", "path start end name cause")
@@ -59,9 +58,7 @@ DEFAULT_CONNECTION_NAME = "connection"
 # Functions
 def print_reason_for_failure(when, condition, reason):
     print(
-        "[{} {}({}-{})] {}".format(
-            when, condition.path, condition.start, condition.end, reason
-        ),
+        f"[{when} {condition.path}({condition.start}-{condition.end})] {reason}",
         end="\n",
     )
 
@@ -267,7 +264,7 @@ def usage(parser, verbose):
             if action.metavar:
                 print(action.metavar, end="\t")
             else:
-                print("", end="\t")
+                print(end="\t")
             print(action.help, end="")
             print()
     sys.exit(1)

@@ -24,15 +24,17 @@
 
 import unittest
 
-from tests import utilities
 import pygrametl
 import pygrametl.drawntabletesting as dtt
-from pygrametl.tables import Dimension
-from pygrametl.tables import CachedDimension
-from pygrametl.tables import BulkDimension
-from pygrametl.tables import CachedBulkDimension
-from pygrametl.tables import SlowlyChangingDimension
-from pygrametl.tables import SnowflakedDimension
+from pygrametl.tables import (
+    BulkDimension,
+    CachedBulkDimension,
+    CachedDimension,
+    Dimension,
+    SlowlyChangingDimension,
+    SnowflakedDimension,
+)
+from tests import utilities
 
 
 class DimensionTest(unittest.TestCase):

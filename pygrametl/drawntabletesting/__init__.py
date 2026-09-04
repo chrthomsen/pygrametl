@@ -27,12 +27,13 @@ to efficiently evaluate the expected database state.
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import collections
 import copy
 import sqlite3
-import collections
+
 import pygrametl
 
-__all__ = ["connectionwrapper", "Table"]
+__all__ = ["Table", "connectionwrapper"]
 
 
 def connectionwrapper(connection=None):
@@ -108,7 +109,7 @@ class Table:
             or all(len(lines[0]) != len(line) for line in lines)
         ):
             table = "\n".join(map(lambda line: line.strip(), table.split("\n")))
-            raise ValueError("Malformed table\n{}".format(table))
+            raise ValueError(f"Malformed table\n{table}")
 
         # Mapping of database types to Python types
         self.__casts = {
@@ -213,7 +214,7 @@ class Table:
 
     def getSQLToCreate(self):
         """Return a string of SQL that creates the table."""
-        sql = "CREATE TABLE {}(".format(self.name) + ", ".join(
+        sql = f"CREATE TABLE {self.name}(" + ", ".join(
             [
                 n + " " + t + c
                 for n, t, c in zip(
@@ -376,7 +377,7 @@ class Table:
             table.__additions.add(index)
             return table
         raise ValueError(
-            "{} index out of bounds {} > {}".format(self.name, index, len(self.__rows))
+            f"{self.name} index out of bounds {index} > {len(self.__rows)}"
         )
 
     def additions(self, withKey=False):
@@ -451,9 +452,7 @@ class Table:
                         )
                     else:
                         raise ValueError(
-                            "Unknown constraint in {} for {}: {}".format(
-                                self.name, name, constraint
-                            )
+                            f"Unknown constraint in {self.name} for {name}: {constraint}"
                         )
                 column[1] = column[1][:startOfConstraints]
             localConstraints.append(" ".join(columnConstraints))
@@ -559,7 +558,7 @@ class Table:
         rowSet = set(self.__rows)
         if len(self.__rows) != len(rowSet):
             raise ValueError(
-                "The '{}' table instance contains duplicate rows".format(self.name)
+                f"The '{self.name}' table instance contains duplicate rows"
             )
 
         self.__testconnection.execute(
@@ -569,7 +568,7 @@ class Table:
         dbSet = set(dbRows)
         if len(dbRows) != len(dbSet):
             raise ValueError(
-                "The '{}' database table contains duplicate rows".format(self.name)
+                f"The '{self.name}' database table contains duplicate rows"
             )
 
         success = comparison(rowSet, dbSet)
@@ -612,9 +611,7 @@ class Table:
         dbRows = list(self.__testconnection.fetchalltuples())
         if len(dbRows) != 1:
             raise ValueError(
-                "No unambigiuous value for the variable {} in {}".format(
-                    variable.name, self.name
-                )
+                f"No unambigiuous value for the variable {variable.name} in {self.name}"
             )
         variable.set(dbRows[0][variable.column])
 
@@ -623,7 +620,7 @@ class Table:
         if columnAndValue[1] is None:
             return columnAndValue[0] + " IS NULL"
         else:
-            return columnAndValue[0] + " = '{}'".format(columnAndValue[1])
+            return columnAndValue[0] + f" = '{columnAndValue[1]}'"
 
     def __table2str(self, rows, violation, indention=2):
         """Format a table as a string."""
@@ -715,7 +712,7 @@ class Variable:
         return self.value == other
 
     def __format__(self, format_spec):
-        return format("{}({})".format(self.definition, self.value), format_spec)
+        return format(f"{self.definition}({self.value})", format_spec)
 
     def __str__(self):
         return str(self.value)
@@ -735,10 +732,8 @@ class Variable:
         if self.name == "_!":
             if value is None:
                 raise AssertionError(
-                    "Expected a NOT NULL value in {}(row {},"
-                    " column {} {}), found NULL in database".format(
-                        self.origin, self.row, self.column, self.column_name
-                    )
+                    f"Expected a NOT NULL value in {self.origin}(row {self.row},"
+                    f" column {self.column} {self.column_name}), found NULL in database"
                 )
             return
 
@@ -747,23 +742,11 @@ class Variable:
             existing = type(self).__all[self.definition]
             if not existing.value == value:
                 raise AssertionError(
-                    (
-                        "Ambiguous values for {}; {}(row {}, "
-                        "column {} {}) is {} and {}(row {}, "
-                        "column {} {}) is {}"
-                    ).format(
-                        self.definition,
-                        existing.origin,
-                        existing.row,
-                        existing.column,
-                        existing.column_name,
-                        existing.value,
-                        self.origin,
-                        self.row,
-                        self.column,
-                        self.column_name,
-                        self.value,
-                    )
+                    
+                        f"Ambiguous values for {self.definition}; {existing.origin}(row {existing.row}, "
+                        f"column {existing.column} {existing.column_name}) is {existing.value} and {self.origin}(row {self.row}, "
+                        f"column {self.column} {self.column_name}) is {self.value}"
+                    
                 )
         else:
             type(self).__all[self.definition] = self

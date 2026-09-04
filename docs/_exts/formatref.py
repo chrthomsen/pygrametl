@@ -28,6 +28,7 @@ on pygrametl.org when the documentation is exported to a PDF.
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from pathlib import Path
+
 from docutils import nodes
 from sphinx.util import logging
 

@@ -44,11 +44,11 @@ dim.insert(row=..., namemapping={'order_date':'date'})
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import locale
+import tempfile
 from operator import ge, gt, le, lt
 from os import path
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 from sys import version_info
-import tempfile
 from time import sleep
 
 import pygrametl
@@ -58,7 +58,7 @@ try:
     from pygrametl.parallel import Decoupled
 except ValueError:
 
-    class Decoupled(object):
+    class Decoupled:
         def __init__(*args):
             raise ValueError("Decoupled is not supported on platforms without fork")
 
@@ -70,24 +70,24 @@ except ImportError:
     pass
 
 __all__ = [
-    "definequote",
-    "Dimension",
-    "CachedDimension",
-    "BulkDimension",
-    "CachedBulkDimension",
-    "TypeOneSlowlyChangingDimension",
-    "SlowlyChangingDimension",
-    "SnowflakedDimension",
-    "FactTable",
-    "BatchFactTable",
-    "BulkFactTable",
     "AccumulatingSnapshotFactTable",
-    "SubprocessFactTable",
+    "BasePartitioner",
+    "BatchFactTable",
+    "BulkDimension",
+    "BulkFactTable",
+    "CachedBulkDimension",
+    "CachedDimension",
     "DecoupledDimension",
     "DecoupledFactTable",
-    "BasePartitioner",
+    "Dimension",
     "DimensionPartitioner",
+    "FactTable",
     "FactTablePartitioner",
+    "SlowlyChangingDimension",
+    "SnowflakedDimension",
+    "SubprocessFactTable",
+    "TypeOneSlowlyChangingDimension",
+    "definequote",
 ]
 
 
@@ -122,7 +122,7 @@ def definequote(quotechar):
         raise AttributeError("Expected either a string or a tuple of two strings")
 
 
-class Dimension(object):
+class Dimension:
     """A class for accessing a dimension. Does no caching."""
 
     def __init__(
@@ -463,7 +463,6 @@ class Dimension(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
 
 class CachedDimension(Dimension):
@@ -655,7 +654,6 @@ class CachedDimension(Dimension):
                 # not in the cache.
                 del self.__key2row[row[key]]
 
-        return None
 
     def _after_update(self, row, namemapping):
         """ """
@@ -1449,7 +1447,7 @@ class SlowlyChangingDimension(Dimension):
         """ """
         # We have to remove old values from the caches if they exist.
         if self.__cachesize == 0:
-            return None
+            return
 
         key = namemapping.get(self.key) or self.key
         for att in self.lookupatts:
@@ -1469,7 +1467,7 @@ class SlowlyChangingDimension(Dimension):
             # not in the cache.
             del self.rowcache[row[key]]
 
-        return None
+        return
 
     def _after_insert(self, row, namemapping, newkeyvalue):
         """ """
@@ -1722,7 +1720,7 @@ SCDimension = SlowlyChangingDimension
 # row[somedim.key] = someval.
 
 
-class SnowflakedDimension(object):
+class SnowflakedDimension:
     """A class for accessing a snowflaked dimension spanning several tables
     in the underlying database. Lookups and inserts are then automatically
     spread out over the relevant tables while the programmer only needs
@@ -2060,7 +2058,6 @@ class SnowflakedDimension(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
     def __ensure_helper(self, dimension, row, namemapping, insertdone):
         """ """
@@ -2137,7 +2134,7 @@ class SnowflakedDimension(object):
         return row[(namemapping.get(self.root.key) or self.root.key)]
 
 
-class FactTable(object):
+class FactTable:
     """A class for accessing a fact table in the DW."""
 
     def __init__(self, name, keyrefs, measures=(), targetconnection=None):
@@ -2276,7 +2273,6 @@ class FactTable(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
 
 class BatchFactTable(FactTable):
@@ -2509,7 +2505,7 @@ class AccumulatingSnapshotFactTable(FactTable):
         self.targetconnection.execute(updatesql, newrow, namemapping)
 
 
-class _BaseBulkloadable(object):
+class _BaseBulkloadable:
     """Common functionality for bulkloadable tables"""
 
     def __init__(
@@ -2931,11 +2927,9 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
 
     def _before_getbyvals(self, values, namemapping):
         self._bulkloadnow()
-        return None
 
     def _before_update(self, row, namemapping):
         self._bulkloadnow()
-        return None
 
     def getbykey(self, keyvalue):
         """Lookup and return the row with the given key value.
@@ -3160,11 +3154,9 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
     def _before_getbyvals(self, values, namemapping):
         self._bulkloadnow()
-        return None
 
     def _before_update(self, row, namemapping):
         self._bulkloadnow()
-        return None
 
     def _bulkloadnow(self):
         emptydict = {}
@@ -3173,7 +3165,6 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         self.__localcache.clear()
         self.__localkeys.clear()
         _BaseBulkloadable._bulkloadnow(self)
-        return
 
     def getbykey(self, keyvalue):
         """Lookup and return the row with the given key value.
@@ -3223,7 +3214,7 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         return keyval
 
 
-class SubprocessFactTable(object):
+class SubprocessFactTable:
     """Class for addition of facts to a subprocess.
 
     The subprocess can, e.g., be a logger or bulkloader. Reads are not
@@ -3410,7 +3401,6 @@ class DecoupledDimension(Decoupled):
         self._enqueuenoreturn("endload")
         self._endbatch()
         self._join()
-        return None
 
     def scdensure(self, row, namemapping={}):
         "Invoke scdensure on the decoupled Dimension in the separate process"
@@ -3484,7 +3474,6 @@ class DecoupledFactTable(Decoupled):
         self._enqueuenoreturn("endload")
         self._endbatch()
         self._join()
-        return None
 
     def lookup(self, row, namemapping={}):
         """Invoke lookup on the decoupled FactTable in the separate process"""
@@ -3504,7 +3493,7 @@ class DecoupledFactTable(Decoupled):
 #######
 
 
-class BasePartitioner(object):
+class BasePartitioner:
     """A base class for partitioning between several parts.
 
     See also DimensionPartitioner and FactTablePartitioner.

@@ -90,11 +90,7 @@ def correct_function_pointers(obj, signature):
     # Signatures can belong to either a function, method or object, depending
     # on what version of python is used. Extration of docstrings from objects
     # does in some versions of python require accessing the method first.
-    if hasattr(obj, "func_defaults"):
-        filename = obj.__code__.co_filename
-        lineno = obj.__code__.co_firstlineno
-        source_code_line = read_function_signature(filename, lineno)
-    elif hasattr(obj, "__code__"):
+    if hasattr(obj, "func_defaults") or hasattr(obj, "__code__"):
         filename = obj.__code__.co_filename
         lineno = obj.__code__.co_firstlineno
         source_code_line = read_function_signature(filename, lineno)
