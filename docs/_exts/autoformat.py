@@ -140,18 +140,17 @@ def read_function_signature(filename, lineno):
     # "activated" and we make a copy of all lines read until we match a ":"
     # indicating the end of the function signature which is all we need.
     function_signature = ""
-    file_handle = open(filename)
-    reached_function_signature = False
-    for file_index, line in enumerate(file_handle):
-        if file_index == lineno:
-            reached_function_signature = True
+    with open(filename) as file_handle:
+        reached_function_signature = False
+        for file_index, line in enumerate(file_handle):
+            if file_index == lineno:
+                reached_function_signature = True
 
-        if reached_function_signature:
-            function_signature += line.strip()
+            if reached_function_signature:
+                function_signature += line.strip()
 
-            if line.endswith(":\n"):
-                file_handle.close()
-                break
+                if line.endswith(":\n"):
+                    break
 
     # Finally the all white space is removed from the signature to make it
     # simpler to process in "correct_function_pointers(obj, signature)"
