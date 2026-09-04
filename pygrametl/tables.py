@@ -2518,9 +2518,10 @@ class AccumulatingSnapshotFactTable(FactTable):
     def __diffhelper(self, oldrow, newrow, namemapping, atts, ignorenone, res):
         for a in atts:
             newa = namemapping.get(a) or a
-            if newrow.get(newa) != oldrow.get(a):
-                if newrow.get(newa) is not None or not ignorenone:
-                    res.add(a)
+            if newrow.get(newa) != oldrow.get(a) and (
+                newrow.get(newa) is not None or not ignorenone
+            ):
+                res.add(a)
 
     def __addmissingkeys(self, row, namemappingfornew, oldrow):
         for key in self.all:
