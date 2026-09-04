@@ -422,9 +422,9 @@ class InitTest(unittest.TestCase):
         self.assertEqual(None, pygrametl.ymdparser(None))
 
         # Incorrect input or format
-        self.assertRaises(Exception, pygrametl.ymdparser, "Not a date")
-        self.assertRaises(Exception, pygrametl.ymdparser, "01-01-2021")
-        self.assertRaises(Exception, pygrametl.ymdparser, "2050-01-01-01")
+        self.assertRaises(ValueError, pygrametl.ymdparser, "Not a date")
+        self.assertRaises(ValueError, pygrametl.ymdparser, "01-01-2021")
+        self.assertRaises(ValueError, pygrametl.ymdparser, "2050-01-01-01")
 
     def test_ymdhmsparser(self):
         datetime_expected = datetime(2021, 1, 1, 14, 32, 56)
@@ -435,9 +435,9 @@ class InitTest(unittest.TestCase):
         self.assertEqual(None, pygrametl.ymdparser(None))
 
         # Incorrect input or format
-        self.assertRaises(Exception, pygrametl.ymdhmsparser, "Not a datetime")
-        self.assertRaises(Exception, pygrametl.ymdhmsparser, "01-01-2021 14:32:56")
-        self.assertRaises(Exception, pygrametl.ymdhmsparser, "2021-01-01")
+        self.assertRaises(ValueError, pygrametl.ymdhmsparser, "Not a datetime")
+        self.assertRaises(ValueError, pygrametl.ymdhmsparser, "01-01-2021 14:32:56")
+        self.assertRaises(ValueError, pygrametl.ymdhmsparser, "2021-01-01")
 
     def test_datereader(self):
         datereader = pygrametl.datereader("date")

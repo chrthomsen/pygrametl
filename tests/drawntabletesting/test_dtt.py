@@ -210,7 +210,7 @@ class TableTest(unittest.TestCase):
             connection_wrapper.execute("SELECT * FROM " + self.initial.name)
 
         self.initial.create()
-        with self.assertRaises(Exception):
+        with self.assertRaises(AssertionError):
             self.initial.ensure()
 
         self.initial.drop()
