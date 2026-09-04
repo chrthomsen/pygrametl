@@ -24,8 +24,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
 import locale
+import os
+
 import pygrametl
 
 
@@ -62,7 +63,6 @@ def ensure_default_connection_wrapper():
         connection_wrapper.rollback()
     except Exception:
         # The connection is closed so a new one is created
-        global get_connection
         connection_wrapper = pygrametl.ConnectionWrapper(get_connection())
         connection_wrapper.setasdefault()
 
@@ -74,6 +74,13 @@ def ensure_default_connection_wrapper():
 def remove_default_connection_wrapper():
     """Ensure there is no default connection wrapper set."""
     pygrametl._defaulttargetconnection = None
+
+
+def close_default_connection_wrapper():
+    """Close and remove the default connection wrapper, if one exists."""
+    connection_wrapper = pygrametl.getdefaulttargetconnection()
+    if connection_wrapper is not None:
+        connection_wrapper.close()
 
 
 def __sqlite3_connection(connection_string):

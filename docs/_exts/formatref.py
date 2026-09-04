@@ -28,19 +28,23 @@ on pygrametl.org when the documentation is exported to a PDF.
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from pathlib import Path
+
 from docutils import nodes
 from sphinx.util import logging
 
 
-def role(name, rawtext, text, lineno, inliner, options={}, content=[]):
+def role(name, rawtext, text, lineno, inliner, options=None, content=None):
     # text is the roles input, i.e., file name in text <relative file path>
+    if content is None:
+        content = []
+    if options is None:
+        options = {}
     start_of_path = text.index("<") + 1
     end_of_path = text.rindex(">")
     file_name = text[: start_of_path - 1].strip()
     file_path = text[start_of_path:end_of_path]
 
     # References the file in an appropriate manner for the output format
-    global sphinx_app
     if sphinx_app.builder.format == "html":
         # For HTML :formatref:` <>` links to the local file like ` <>`_
         node = nodes.reference(rawtext, file_name, refuri=str(file_path), **options)

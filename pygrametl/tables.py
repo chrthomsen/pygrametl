@@ -44,11 +44,11 @@ dim.insert(row=..., namemapping={'order_date':'date'})
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import locale
+import tempfile
 from operator import ge, gt, le, lt
 from os import path
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 from sys import version_info
-import tempfile
 from time import sleep
 
 import pygrametl
@@ -70,24 +70,24 @@ except ImportError:
     pass
 
 __all__ = [
-    "definequote",
-    "Dimension",
-    "CachedDimension",
-    "BulkDimension",
-    "CachedBulkDimension",
-    "TypeOneSlowlyChangingDimension",
-    "SlowlyChangingDimension",
-    "SnowflakedDimension",
-    "FactTable",
-    "BatchFactTable",
-    "BulkFactTable",
     "AccumulatingSnapshotFactTable",
-    "SubprocessFactTable",
+    "BasePartitioner",
+    "BatchFactTable",
+    "BulkDimension",
+    "BulkFactTable",
+    "CachedBulkDimension",
+    "CachedDimension",
     "DecoupledDimension",
     "DecoupledFactTable",
-    "BasePartitioner",
+    "Dimension",
     "DimensionPartitioner",
+    "FactTable",
     "FactTablePartitioner",
+    "SlowlyChangingDimension",
+    "SnowflakedDimension",
+    "SubprocessFactTable",
+    "TypeOneSlowlyChangingDimension",
+    "definequote",
 ]
 
 
@@ -242,7 +242,7 @@ class Dimension(object):
                 self.__maxid = 0
             self.idfinder = self._getnextid
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
         """Find the key for the row with the given values.
 
         Arguments:
@@ -250,6 +250,8 @@ class Dimension(object):
         - row: a dict which must contain at least the lookup attributes.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         key = self._before_lookup(row, namemapping)
         if key is not None:
             return key
@@ -292,7 +294,7 @@ class Dimension(object):
     def _after_getbykey(self, keyvalue, resultrow):
         pass
 
-    def getbyvals(self, values, namemapping={}):
+    def getbyvals(self, values, namemapping=None):
         """Return a list of all rows with values identical to the given.
 
         Arguments:
@@ -302,6 +304,8 @@ class Dimension(object):
           dict are returned.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_getbyvals(values, namemapping)
         if res is not None:
             return res
@@ -332,7 +336,7 @@ class Dimension(object):
     def _after_getbyvals(self, values, namemapping, resultrows):
         pass
 
-    def update(self, row, namemapping={}):
+    def update(self, row, namemapping=None):
         """Update a single row in the dimension table.
 
         Arguments:
@@ -343,6 +347,8 @@ class Dimension(object):
           row.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_update(row, namemapping)
         if res:
             return
@@ -371,7 +377,7 @@ class Dimension(object):
     def _after_update(self, row, namemapping):
         pass
 
-    def ensure(self, row, namemapping={}):
+    def ensure(self, row, namemapping=None):
         """Lookup the given row. If that fails, insert it. Return the key value.
 
         If the lookup fails and a rowexpander was set when creating the
@@ -384,6 +390,8 @@ class Dimension(object):
           using idfinder if missing.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         res = self.lookup(row, namemapping)
         if res is not None and res != self.defaultidvalue:
             return res
@@ -397,7 +405,7 @@ class Dimension(object):
                     )
             return self.insert(row, namemapping)
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Insert the given row. Return the new key value.
 
         Arguments:
@@ -408,6 +416,8 @@ class Dimension(object):
           idfinder if missing.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_insert(row, namemapping)
         if res is not None:
             return res
@@ -430,7 +440,7 @@ class Dimension(object):
     def _after_insert(self, row, namemapping, newkeyvalue):
         pass
 
-    def lookuprow(self, row, namemapping={}):
+    def lookuprow(self, row, namemapping=None):
         """Perform a lookup followed by a getbykey.
 
         Given a row with the lookupatts, a row with all attributes
@@ -444,6 +454,8 @@ class Dimension(object):
         - namemapping: an optional namemapping (see module's documentation).
 
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_lookuprow(row, namemapping)
         if res is not None:
             return res
@@ -463,7 +475,6 @@ class Dimension(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
 
 class CachedDimension(Dimension):
@@ -592,7 +603,9 @@ class CachedDimension(Dimension):
                 t = tuple([rawrow[i] for i in positions])
                 self.__vals2key[t] = rawrow[0]
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
+        if namemapping is None:
+            namemapping = {}
         if (
             self.__prefill
             and self.cacheoninsert
@@ -634,7 +647,6 @@ class CachedDimension(Dimension):
             self.__key2row[keyvalue] = tuple([resultrow[a] for a in self.all])
 
     def _before_update(self, row, namemapping):
-        """ """
         # We have to remove old values from the caches.
         key = namemapping.get(self.key) or self.key
         for att in self.lookupatts:
@@ -649,16 +661,12 @@ class CachedDimension(Dimension):
                     del self.__vals2key[searchtuple]
                 break
 
-        if self.cachefullrows:
-            if row[key] in self.__key2row:
-                # The cached row is now incorrect. We must make sure it is
-                # not in the cache.
-                del self.__key2row[row[key]]
-
-        return None
+        if self.cachefullrows and row[key] in self.__key2row:
+            # The cached row is now incorrect. We must make sure it is
+            # not in the cache.
+            del self.__key2row[row[key]]
 
     def _after_update(self, row, namemapping):
-        """ """
         if (
             self.__prefill
             and self.cacheoninsert
@@ -672,7 +680,6 @@ class CachedDimension(Dimension):
             self._after_lookup(newrow, {}, keyval)  # Updates __vals2key
 
     def _after_insert(self, row, namemapping, newkeyvalue):
-        """ """
         # After the insert, we can look the row up. Pretend that we
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
@@ -794,7 +801,7 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
                 for row in data:
                     self.__key2sca[row[0]] = row[1:]
 
-    def scdensure(self, row, namemapping={}):
+    def scdensure(self, row, namemapping=None):
         """Lookup or insert a version of a slowly changing dimension member.
 
         .. Note:: Has side-effects on the given row.
@@ -813,6 +820,8 @@ class TypeOneSlowlyChangingDimension(CachedDimension):
         # only contains "lookupatts" which "scdensure" is prohibited from
         # changing
 
+        if namemapping is None:
+            namemapping = {}
         keyval = self.lookup(row, namemapping)
         key = namemapping.get(self.key) or self.key
         if keyval is None:
@@ -1219,7 +1228,7 @@ class SlowlyChangingDimension(Dimension):
             t = tuple([rawrow[i] for i in positions])
             self.keycache[t] = rawrow[0]
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
         """Find the key for the newest version with the given values.
 
         Arguments:
@@ -1227,6 +1236,8 @@ class SlowlyChangingDimension(Dimension):
         - row: a dict which must contain at least the lookup attributes.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         if self.__prefill and (
             self.__cachesize < 0 or len(self.keycache) < self.__cachesize
         ):
@@ -1271,7 +1282,7 @@ class SlowlyChangingDimension(Dimension):
         self._after_lookup(row, namemapping, keyvalue)
         return keyvalue
 
-    def scdensure(self, row, namemapping={}):
+    def scdensure(self, row, namemapping=None):
         """Lookup or insert a version of a slowly changing dimension member.
 
         .. Note:: Has side-effects on the given row.
@@ -1283,6 +1294,8 @@ class SlowlyChangingDimension(Dimension):
           present but will be added (if defined).
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         key = namemapping.get(self.key) or self.key
         if self.versionatt:
             versionatt = namemapping.get(self.versionatt) or self.versionatt
@@ -1446,10 +1459,9 @@ class SlowlyChangingDimension(Dimension):
             self.rowcache[keyvalue] = tuple([resultrow[a] for a in self.all])
 
     def _before_update(self, row, namemapping):
-        """ """
         # We have to remove old values from the caches if they exist.
         if self.__cachesize == 0:
-            return None
+            return
 
         key = namemapping.get(self.key) or self.key
         for att in self.lookupatts:
@@ -1469,10 +1481,9 @@ class SlowlyChangingDimension(Dimension):
             # not in the cache.
             del self.rowcache[row[key]]
 
-        return None
+        return
 
     def _after_insert(self, row, namemapping, newkeyvalue):
-        """ """
         # After the insert, we can look it up. Pretend that we
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
@@ -1487,7 +1498,6 @@ class SlowlyChangingDimension(Dimension):
             self._after_getbykey(newkeyvalue, tmp)
 
     def __preparetype1updates(self, updates, lookupvalues, type2changes):
-        """ """
         # Perform type 1 updates for the latest version unless type2changes is
         # True as the latest version then is a new version about to be inserted
         updateslatest = {
@@ -1511,7 +1521,6 @@ class SlowlyChangingDimension(Dimension):
             self.__performtype1updates(updatekeys, updatesall)
 
     def __performtype1updates(self, updatekeys, updates):
-        """ """
         # Generate SQL for the update
         valparts = ", ".join(["%s = %%(%s)s" % (self.quote(k), k) for k in updates])
         keyparts = ", ".join([str(k) for k in updatekeys])
@@ -1531,7 +1540,7 @@ class SlowlyChangingDimension(Dimension):
                 if key in self.rowcache:
                     del self.rowcache[key]
 
-    def closecurrent(self, row, namemapping={}, end=pygrametl.today()):
+    def closecurrent(self, row, namemapping=None, end=None):
         """Close the current version by setting its toatt if it is maxto.
 
         The newest version will have its toatt set to the given end
@@ -1547,6 +1556,10 @@ class SlowlyChangingDimension(Dimension):
         - end: the value to set for the newest version. Default: The current
           date as given by pygrametl.today()
         """
+        if namemapping is None:
+            namemapping = {}
+        if end is None:
+            end = pygrametl.today()
         if self.toatt is None:
             raise RuntimeError("A toatt must be defined")
         keyval = self.lookup(row, namemapping)
@@ -1556,7 +1569,7 @@ class SlowlyChangingDimension(Dimension):
         if existing[self.toatt] == self.maxto:
             self.update({self.key: keyval, self.toatt: end})
 
-    def lookuprowasof(self, row, when, inclusive, namemapping={}):
+    def lookuprowasof(self, row, when, inclusive, namemapping=None):
         """Find the entire row version that was valid at a given time.
 
         If both fromatt and toatt have been set, the method returns the row
@@ -1590,6 +1603,8 @@ class SlowlyChangingDimension(Dimension):
         - namemapping: an optional namemapping (see module's documentation).
 
         """
+        if namemapping is None:
+            namemapping = {}
         key = self.lookupasof(row, when, inclusive, namemapping)
         if key is None:
             # No need to try to find this row in the DB
@@ -1597,7 +1612,7 @@ class SlowlyChangingDimension(Dimension):
         else:
             return self.getbykey(key)
 
-    def lookupasof(self, row, when, inclusive, namemapping={}):
+    def lookupasof(self, row, when, inclusive, namemapping=None):
         """Find the key of the version that was valid at a given time.
 
         If both fromatt and toatt have been set, the method returns the key
@@ -1630,6 +1645,8 @@ class SlowlyChangingDimension(Dimension):
         - namemapping: an optional namemapping (see module's documentation).
 
         """
+        if namemapping is None:
+            namemapping = {}
         if self.fromatt and self.toatt:
             return self._lookupasofusingfromattandtoatt(
                 row, when, inclusive, namemapping
@@ -1761,7 +1778,7 @@ class SnowflakedDimension(object):
         self.key = self.root.key
         self.lookupatts = self.root.lookupatts
 
-        dims = set([self.root])
+        dims = {self.root}
         self.refs = {}
         self.refkeys = {}
         self.all = self.root.all[:]
@@ -1791,7 +1808,7 @@ class SnowflakedDimension(object):
         # Check that all dimensions in dims are reachable from the root
         dimscopy = dims.copy()
         dimscopy.remove(self.root)
-        for _, targets in self.refs.items():
+        for targets in self.refs.values():
             for target in targets:
                 # It is safe to use remove as each dim is only referenced once
                 dimscopy.remove(target)
@@ -1816,7 +1833,7 @@ class SnowflakedDimension(object):
             "SELECT "
             + ", ".join(self.root.quotelist(self.allnames))
             + " FROM "
-            + " NATURAL JOIN ".join(map(lambda d: d.name, dims))
+            + " NATURAL JOIN ".join(d.name for d in dims)
         )
         self.rowlookupsql = self.alljoinssql + " WHERE %s.%s = %%(%s)s" % (
             self.root.name,
@@ -1838,7 +1855,7 @@ class SnowflakedDimension(object):
         for ref in self.refs.get(node, []):
             self.__buildlevels(ref, level + 1)
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
         """Find the key for the row with the given values.
 
         Arguments:
@@ -1848,6 +1865,8 @@ class SnowflakedDimension(object):
           fact table).
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_lookup(row, namemapping)
         if res:
             return res
@@ -1892,7 +1911,7 @@ class SnowflakedDimension(object):
     def _after_getbykey(self, keyvalue, resultrow, fullrow=False):
         pass
 
-    def getbyvals(self, values, namemapping={}, fullrow=False):
+    def getbyvals(self, values, namemapping=None, fullrow=False):
         """Return a list of all rows with values identical to the given.
 
         Arguments:
@@ -1906,6 +1925,8 @@ class SnowflakedDimension(object):
           only data from the lowest level in the hierarchy (i.e., the table
           the closest to the fact table) is returned. Default: False
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_getbyvals(values, namemapping)
         if res is not None:
             return res
@@ -1934,7 +1955,7 @@ class SnowflakedDimension(object):
     def _after_getbyvals(self, values, namemapping, resultrows, fullrow=False):
         pass
 
-    def update(self, row, namemapping={}):
+    def update(self, row, namemapping=None):
         """Update rows in the participating dimension tables.
 
         If the key of a participating dimension D is in the given row,
@@ -1954,6 +1975,8 @@ class SnowflakedDimension(object):
           dict, D.update(...) is invoked.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_update(row, namemapping)
         if res is not None:
             return
@@ -1973,7 +1996,7 @@ class SnowflakedDimension(object):
     def _after_update(self, row, namemapping):
         pass
 
-    def ensure(self, row, namemapping={}):
+    def ensure(self, row, namemapping=None):
         """Lookup the given member. If that fails, insert it. Return key value.
 
         If the member must be inserted, data is automatically inserted in
@@ -1991,10 +2014,12 @@ class SnowflakedDimension(object):
           using idfinder if missing.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         (key, _) = self.__ensure_helper(self.root, row, namemapping, False)
         return key
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Insert the given member. If that fails, insert it. Return key value.
 
         Data is automatically inserted in all participating tables where
@@ -2012,6 +2037,8 @@ class SnowflakedDimension(object):
           using idfinder if missing.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         key = self._before_insert(row, namemapping)
         if key is not None:
             return key
@@ -2027,7 +2054,7 @@ class SnowflakedDimension(object):
     def _after_insert(self, row, namemapping, newkeyvalue):
         pass
 
-    def lookuprow(self, row, namemapping={}, fullrow=False):
+    def lookuprow(self, row, namemapping=None, fullrow=False):
         """Perform a lookup followed by a getbykey. Given a row with
         the lookupatts, a row with all attributes is thus returned
         if it exists in the dimension table. Otherwise, a row where
@@ -2045,6 +2072,8 @@ class SnowflakedDimension(object):
           only data from the lowest level in the hierarchy (i.e., the table
           the closest to the fact table) is returned. Default: False
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_lookuprow(row, namemapping, fullrow)
         if res is not None:
             return res
@@ -2060,10 +2089,8 @@ class SnowflakedDimension(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
     def __ensure_helper(self, dimension, row, namemapping, insertdone):
-        """ """
         # NB: Has side-effects: Key values are set for all dimensions
         key = None
         retry = False
@@ -2106,7 +2133,7 @@ class SnowflakedDimension(object):
         row[(namemapping.get(dimension.key) or dimension.key)] = key
         return (key, insertdone)
 
-    def scdensure(self, row, namemapping={}):
+    def scdensure(self, row, namemapping=None):
         """Lookup or insert a version of a slowly changing dimension member.
 
         .. Warning::
@@ -2127,6 +2154,8 @@ class SnowflakedDimension(object):
         # If we were to allow other nodes to be SCDs, we should require
         # that those between those nodes and the root (incl.) were also
         # SCDs.
+        if namemapping is None:
+            namemapping = {}
         for dim in self.levels.get(1, []):
             (keyval, _) = self.__ensure_helper(dim, row, namemapping, False)
             row[(namemapping.get(dim.key) or dim.key)] = keyval
@@ -2185,7 +2214,7 @@ class FactTable(object):
             + " AND ".join(["%s = %%(%s)s" % (self.quote(k), k) for k in self.keyrefs])
         )
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Insert a fact into the fact table.
 
         Arguments:
@@ -2194,6 +2223,8 @@ class FactTable(object):
           attributes (both keys/references and measures).
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         tmp = self._before_insert(row, namemapping)
         if tmp:
             return
@@ -2215,7 +2246,7 @@ class FactTable(object):
                 return argdict
         return None
 
-    def lookup(self, keyvalues, namemapping={}):
+    def lookup(self, keyvalues, namemapping=None):
         """Lookup a fact from the given key values. Return key and measure vals.
 
         Return None if no fact is found.
@@ -2225,6 +2256,8 @@ class FactTable(object):
         - keyvalues: a dict at least containing values for all keys
         - namemapping: an optional namemapping (see module's documentation)
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_lookup(keyvalues, namemapping)
         if res:
             return self._emptyfacttonone(res)
@@ -2239,7 +2272,7 @@ class FactTable(object):
     def _after_lookup(self, keyvalues, namemapping, resultrow):
         pass
 
-    def ensure(self, row, compare=False, namemapping={}):
+    def ensure(self, row, compare=False, namemapping=None):
         """Ensure that a fact is present (insert it if it is not already there).
 
         Return True if a fact with identical values for keyrefs attributes
@@ -2254,6 +2287,8 @@ class FactTable(object):
         - namemapping: an optional namemapping (see module's documentation).
 
         """
+        if namemapping is None:
+            namemapping = {}
         res = self.lookup(row, namemapping)
         if not res:
             self.insert(row, namemapping)
@@ -2276,7 +2311,6 @@ class FactTable(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
 
 class BatchFactTable(FactTable):
@@ -2323,7 +2357,7 @@ class BatchFactTable(FactTable):
             self.__basesql = self.insertsql[: self.insertsql.find(" (") + 1]
             self.__rowtovalue = lambda row: (
                 "("
-                + ",".join(map(lambda c: pygrametl.getsqlfriendlystr(row[c]), self.all))
+                + ",".join(pygrametl.getsqlfriendlystr(row[c]) for c in self.all)
                 + ")"
             )
         else:
@@ -2419,7 +2453,7 @@ class AccumulatingSnapshotFactTable(FactTable):
 
     # insert and lookup are inherited from FactTable
 
-    def ensure(self, row, namemapping={}):
+    def ensure(self, row, namemapping=None):
         """Lookup the given row. If that fails, insert it. If found, see
         if values for attributes in otherrefs or measures have changed and
         update the found row if necessary (note that values for attributes
@@ -2436,6 +2470,8 @@ class AccumulatingSnapshotFactTable(FactTable):
           inserted.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         oldrow = self.lookup(row, namemapping)
         if not oldrow:
             if (self.otherrefs + self.measures) - row.keys():
@@ -2481,9 +2517,10 @@ class AccumulatingSnapshotFactTable(FactTable):
     def __diffhelper(self, oldrow, newrow, namemapping, atts, ignorenone, res):
         for a in atts:
             newa = namemapping.get(a) or a
-            if newrow.get(newa) != oldrow.get(a):
-                if newrow.get(newa) is not None or not ignorenone:
-                    res.add(a)
+            if newrow.get(newa) != oldrow.get(a) and (
+                newrow.get(newa) is not None or not ignorenone
+            ):
+                res.add(a)
 
     def __addmissingkeys(self, row, namemappingfornew, oldrow):
         for key in self.all:
@@ -2491,7 +2528,9 @@ class AccumulatingSnapshotFactTable(FactTable):
             if mappedkey not in row:
                 row[mappedkey] = oldrow[key]
 
-    def update(self, row, namemapping={}):
+    def update(self, row, namemapping=None):
+        if namemapping is None:
+            namemapping = {}
         oldrow = self.lookup(row, namemapping)
         updated = self.__differences(oldrow, row, namemapping)
         if updated:
@@ -2622,7 +2661,7 @@ class _BaseBulkloadable(object):
         """Return the amount of rows awaiting to be loaded into the table"""
         return self.__count
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Insert (eventually) a row into the table.
 
         Arguments:
@@ -2632,6 +2671,8 @@ class _BaseBulkloadable(object):
         - namemapping: an optional namemapping (see module's documentation).
         """
 
+        if namemapping is None:
+            namemapping = {}
         if not self.__ready:
             self.__preparetempfile()
         rawdata = [row[namemapping.get(att) or att] for att in self.atts]
@@ -2931,11 +2972,9 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
 
     def _before_getbyvals(self, values, namemapping):
         self._bulkloadnow()
-        return None
 
     def _before_update(self, row, namemapping):
         self._bulkloadnow()
-        return None
 
     def getbykey(self, keyvalue):
         """Lookup and return the row with the given key value.
@@ -2959,7 +2998,7 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
             # Do not look in the DB; we cache everything
             return self.emptyrow.copy()
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Insert the given row. Return the new key value.
 
         Arguments:
@@ -2970,6 +3009,8 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
           idfinder if missing.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         res = self._before_insert(row, namemapping)
         if res is not None:
             return res
@@ -3160,11 +3201,9 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
     def _before_getbyvals(self, values, namemapping):
         self._bulkloadnow()
-        return None
 
     def _before_update(self, row, namemapping):
         self._bulkloadnow()
-        return None
 
     def _bulkloadnow(self):
         emptydict = {}
@@ -3173,7 +3212,6 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         self.__localcache.clear()
         self.__localkeys.clear()
         _BaseBulkloadable._bulkloadnow(self)
-        return
 
     def getbykey(self, keyvalue):
         """Lookup and return the row with the given key value.
@@ -3188,10 +3226,12 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
             return self.__localkeys[keyvalue].copy()
         return CachedDimension.getbykey(self, keyvalue)
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
+        if namemapping is None:
+            namemapping = {}
         return CachedDimension.lookup(self, row, namemapping=namemapping)
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Insert the given row. Return the new key value.
 
         Arguments:
@@ -3202,6 +3242,8 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
           idfinder if missing.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         row = pygrametl.copy(row, **namemapping)
         searchtuple = tuple([row[n] for n in self.lookupatts])
         res = self._before_insert(row, {})
@@ -3288,7 +3330,7 @@ class SubprocessFactTable(object):
 
         pygrametl._alltables.append(self)
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Insert a fact into the fact table.
 
         Arguments:
@@ -3296,6 +3338,8 @@ class SubprocessFactTable(object):
         - row: a dict at least containing values for the keys and measures.
         - namemapping: an optional namemapping (see module's documentation).
         """
+        if namemapping is None:
+            namemapping = {}
         rawdata = [row[namemapping.get(att) or att] for att in self.all]
         data = [self.strconverter(val, self.nullsubst) for val in rawdata]
         self.pipe.write("%s%s" % (self.fieldsep.join(data), self.rowsep))
@@ -3377,8 +3421,10 @@ class DecoupledDimension(Decoupled):
             pygrametl._alltables.remove(dim)  # We add self instead...
         pygrametl._alltables.append(self)
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
         """Invoke lookup on the decoupled Dimension in the separate process"""
+        if namemapping is None:
+            namemapping = {}
         return self._enqueue("lookup", row, namemapping)
 
     def getbykey(self, keyvalue, *rest):
@@ -3386,20 +3432,28 @@ class DecoupledDimension(Decoupled):
         process"""
         return self._enqueue("getbykey", keyvalue, *rest)
 
-    def getbyvals(self, row, namemapping={}, *rest):
+    def getbyvals(self, row, namemapping=None, *rest):
         "Invoke getbyvals on the decoupled Dimension in the separate process"
+        if namemapping is None:
+            namemapping = {}
         return self._enqueue("getbyvals", row, namemapping, *rest)
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Invoke insert on the decoupled Dimension in the separate process"""
+        if namemapping is None:
+            namemapping = {}
         return self._enqueue("insert", row, namemapping)
 
-    def ensure(self, row, namemapping={}):
+    def ensure(self, row, namemapping=None):
         """Invoke ensure on the decoupled Dimension in the separate process"""
+        if namemapping is None:
+            namemapping = {}
         return self._enqueue("ensure", row, namemapping)
 
-    def lookuprow(self, row, namemapping={}):
+    def lookuprow(self, row, namemapping=None):
         """Invoke lookuprow on the decoupled Dimension in the separate process"""
+        if namemapping is None:
+            namemapping = {}
         return self._enqueue("lookuprow", row, namemapping)
 
     def endload(self):
@@ -3410,10 +3464,11 @@ class DecoupledDimension(Decoupled):
         self._enqueuenoreturn("endload")
         self._endbatch()
         self._join()
-        return None
 
-    def scdensure(self, row, namemapping={}):
+    def scdensure(self, row, namemapping=None):
         "Invoke scdensure on the decoupled Dimension in the separate process"
+        if namemapping is None:
+            namemapping = {}
         if hasattr(self._obj, "scdensure"):
             return self._enqueue("scdensure", row, namemapping)
         else:
@@ -3473,8 +3528,10 @@ class DecoupledFactTable(Decoupled):
             pygrametl._alltables.remove(facttbl)  # We add self instead
         pygrametl._alltables.append(self)
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Invoke insert on the decoupled FactTable in the separate process"""
+        if namemapping is None:
+            namemapping = {}
         return self._enqueue("insert", row, namemapping)
 
     def endload(self):
@@ -3484,17 +3541,20 @@ class DecoupledFactTable(Decoupled):
         self._enqueuenoreturn("endload")
         self._endbatch()
         self._join()
-        return None
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
         """Invoke lookup on the decoupled FactTable in the separate process"""
+        if namemapping is None:
+            namemapping = {}
         if hasattr(self._obj, "lookup"):
             return self._enqueue("lookup", row, namemapping)
         else:
             raise AttributeError("The object does not support lookup")
 
-    def ensure(self, row, namemapping={}):
+    def ensure(self, row, namemapping=None):
         """Invoke ensure on the decoupled FactTable in the separate process"""
+        if namemapping is None:
+            namemapping = {}
         if hasattr(self._obj, "ensure"):
             return self._enqueue("ensure", row, namemapping)
         else:
@@ -3531,10 +3591,12 @@ class BasePartitioner(object):
         else:
             self.parts.remove(part)
 
-    def getpart(self, row, namemapping={}):
+    def getpart(self, row, namemapping=None):
         """Find  the part that should handle the given row. The provided
         implementation in BasePartitioner does only use round robin
         partitioning, but subclasses apply other methods"""
+        if namemapping is None:
+            namemapping = {}
         part = self.parts[self.__nextpart]
         self.__nextpart = (self.__nextpart + 1) % len(self.parts)
         return part
@@ -3592,8 +3654,10 @@ class DimensionPartitioner(BasePartitioner):
                 (lambda x, y: x + y), map(hash, row.values())
             )
 
-    def getpart(self, row, namemapping={}):
+    def getpart(self, row, namemapping=None):
         """Return the part that should handle the given row"""
+        if namemapping is None:
+            namemapping = {}
         vals = {}
         for att in self.lookupatts:
             vals[att] = row[namemapping.get(att) or att]
@@ -3601,8 +3665,10 @@ class DimensionPartitioner(BasePartitioner):
 
     # Below this, methods like those in Dimensions:
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
         """Invoke lookup on the relevant Dimension part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         return part.lookup(row, namemapping)
 
@@ -3618,14 +3684,18 @@ class DimensionPartitioner(BasePartitioner):
         """Invoke getbykey on the relevant Dimension part"""
         return self.__getbykeyhelper(keyvalue)[0]
 
-    def lookuprow(self, row, namemapping={}):
+    def lookuprow(self, row, namemapping=None):
         """Invoke lookup followed by getbykey on the relevant Dimension part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         return part.getbykey(part.lookup(row, namemapping))
 
-    def getbyvals(self, values, namemapping={}):
+    def getbyvals(self, values, namemapping=None):
         """Invoke getbyvals on the first part or all parts (depending on the
         value of the instance's getbyvalsfromall)"""
+        if namemapping is None:
+            namemapping = {}
         if not self.getbyvalsfromall:
             return self.parts[0].getbyvals(values, namemapping)
         res = []
@@ -3633,25 +3703,33 @@ class DimensionPartitioner(BasePartitioner):
             res += part.getbyvals(values, namemapping)
         return res
 
-    def update(self, row, namemapping={}):
+    def update(self, row, namemapping=None):
         """Invoke update on the relevant Dimension part"""
+        if namemapping is None:
+            namemapping = {}
         keyval = row[namemapping.get(self.key) or self.key]
         part = self.__getbykeyhelper(keyval)[1]
         if part is not None:
             part.update(row, namemapping)
 
-    def ensure(self, row, namemapping={}):
+    def ensure(self, row, namemapping=None):
         """Invoke ensure on the relevant Dimension part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         return part.ensure(row, namemapping)
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Invoke insert on the relevant Dimension part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         return part.insert(row, namemapping)
 
-    def scdensure(self, row, namemapping={}):
+    def scdensure(self, row, namemapping=None):
         """Invoke scdensure on the relevant Dimension part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         return part.scdensure(row, namemapping)
 
@@ -3691,24 +3769,32 @@ class FactTablePartitioner(BasePartitioner):
             if not (self.keyrefs == ft.keyrefs and self.measures == ft.measures):
                 raise ValueError("The parts must have the same measures and keyrefs")
 
-    def getpart(self, row, namemapping={}):
+    def getpart(self, row, namemapping=None):
         """Return the relevant part for the given row"""
+        if namemapping is None:
+            namemapping = {}
         vals = {}
         for att in self.keyrefs:
             vals[att] = row[namemapping.get(att) or att]
         return self.parts[self.partitioner(vals) % len(self.parts)]
 
-    def insert(self, row, namemapping={}):
+    def insert(self, row, namemapping=None):
         """Invoke insert on the relevant part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         part.insert(row, namemapping)
 
-    def lookup(self, row, namemapping={}):
+    def lookup(self, row, namemapping=None):
         """Invoke lookup on the relevant part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         return part.lookup(row, namemapping)
 
-    def ensure(self, row, namemapping={}):
+    def ensure(self, row, namemapping=None):
         """Invoke ensure on the relevant part"""
+        if namemapping is None:
+            namemapping = {}
         part = self.getpart(row, namemapping)
         return part.ensure(row, namemapping)

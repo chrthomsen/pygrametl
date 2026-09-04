@@ -22,15 +22,18 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import tempfile
 import unittest
-from tests import utilities
+
 import pygrametl
 import pygrametl.drawntabletesting as dtt
-import tempfile
-from pygrametl.tables import FactTable
-from pygrametl.tables import BatchFactTable
-from pygrametl.tables import BulkFactTable
-from pygrametl.tables import AccumulatingSnapshotFactTable
+from pygrametl.tables import (
+    AccumulatingSnapshotFactTable,
+    BatchFactTable,
+    BulkFactTable,
+    FactTable,
+)
+from tests import utilities
 
 
 class FactTableTest(unittest.TestCase):
@@ -59,6 +62,10 @@ class FactTableTest(unittest.TestCase):
             keyrefs=["bib", "cid", "did"],
             measures=["count", "profit"],
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
 
     def test_insert_new_fact_with_commit(self):
         postcondition = self.initial + "| 1 | 1 | 60 | 87 | 7000 |"
@@ -274,7 +281,7 @@ class BatchFactTableTest(FactTableTest):
         postcondition = self.initial
 
         # Generate and insert batchsize - 1 new facts
-        for i in range(0, self.batchsize - 1):
+        for i in range(self.batchsize - 1):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -284,7 +291,7 @@ class BatchFactTableTest(FactTableTest):
         self.assertEqual(self.batchsize - 1, self.fact_table.awaitingrows)
 
         # The facts can still be looked up
-        for i in range(0, self.batchsize - 1):
+        for i in range(self.batchsize - 1):
             expected_fact = {
                 "bib": 10,
                 "cid": 10,
@@ -299,7 +306,7 @@ class BatchFactTableTest(FactTableTest):
         postcondition = self.initial
 
         # Generate and insert batchsize number of new facts
-        for i in range(0, self.batchsize):
+        for i in range(self.batchsize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -318,7 +325,7 @@ class BatchFactTableTest(FactTableTest):
         postcondition = self.initial
 
         # Generate and insert batchsize number of new facts
-        for i in range(0, self.batchsize):
+        for i in range(self.batchsize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -355,7 +362,7 @@ class BatchFactTableTest(FactTableTest):
         postcondition = self.initial
 
         # Generate and insert batchsize number of new facts
-        for i in range(0, 3 * self.batchsize):
+        for i in range(3 * self.batchsize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -401,6 +408,10 @@ class BulkFactTableTest(unittest.TestCase):
             bulksize=self.bulksize,
         )
 
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
+
     def loader(self, name, attributes, fieldsep, rowsep, nullval, filehandle):
         sql = (
             "INSERT INTO sales(bib, cid, did, count, profit) VALUES({}, {}, {}, {}, {})"
@@ -429,7 +440,7 @@ class BulkFactTableTest(unittest.TestCase):
     def test_insert_less_than_bulksize_number_of_facts(self):
         postcondition = self.initial
 
-        for i in range(0, self.bulksize - 1):
+        for i in range(self.bulksize - 1):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -443,7 +454,7 @@ class BulkFactTableTest(unittest.TestCase):
     def test_insert_bulksize_number_of_facts(self):
         postcondition = self.initial
 
-        for i in range(0, self.bulksize):
+        for i in range(self.bulksize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -464,7 +475,7 @@ class BulkFactTableTest(unittest.TestCase):
         postcondition = self.initial
 
         # Generate and insert bulksize number of new facts
-        for i in range(0, self.bulksize):
+        for i in range(self.bulksize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -492,6 +503,7 @@ class BulkFactTableTest(unittest.TestCase):
         self,
     ):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         self.fact_table = BulkFactTable(
             name=self.initial.name,
             keyrefs=["bib", "cid", "did"],
@@ -503,7 +515,7 @@ class BulkFactTableTest(unittest.TestCase):
         postcondition = self.initial
         inserted_facts = []
 
-        for i in range(0, self.bulksize - 1):
+        for i in range(self.bulksize - 1):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -526,6 +538,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_insert_bulksize_number_of_facts_with_custom_tempdest(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         self.fact_table = BulkFactTable(
             name=self.initial.name,
             keyrefs=["bib", "cid", "did"],
@@ -536,7 +549,7 @@ class BulkFactTableTest(unittest.TestCase):
         )
         postcondition = self.initial
 
-        for i in range(0, self.bulksize):
+        for i in range(self.bulksize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -561,6 +574,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_insert_more_than_bulksize_num_of_facts_with_custom_tempdest(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         self.fact_table = BulkFactTable(
             name=self.initial.name,
             keyrefs=["bib", "cid", "did"],
@@ -572,7 +586,7 @@ class BulkFactTableTest(unittest.TestCase):
         postcondition = self.initial
 
         # Generate and insert bulksize number of new facts
-        for i in range(0, self.bulksize):
+        for i in range(self.bulksize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -608,6 +622,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_fields_are_separated_by_custom_fieldsep_in_file(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         fieldsep = ","
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -622,7 +637,7 @@ class BulkFactTableTest(unittest.TestCase):
         inserted_facts = []
 
         # Write bulksize - 1 number of facts to the file
-        for i in range(0, self.bulksize - 1):
+        for i in range(self.bulksize - 1):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -646,6 +661,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_facts_are_loaded_correctly_using_custom_fieldsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         fieldsep = ","
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -658,7 +674,7 @@ class BulkFactTableTest(unittest.TestCase):
         )
         postcondition = self.initial
 
-        for i in range(0, self.bulksize):
+        for i in range(self.bulksize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -683,6 +699,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_fields_are_separated_by_custom_rowsep_in_file(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -697,7 +714,7 @@ class BulkFactTableTest(unittest.TestCase):
         inserted_facts = []
 
         # Write bulksize - 1 number of facts to the file
-        for i in range(0, self.bulksize - 1):
+        for i in range(self.bulksize - 1):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -723,6 +740,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_facts_are_loaded_correctly_using_custom_rowsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -735,7 +753,7 @@ class BulkFactTableTest(unittest.TestCase):
         )
         postcondition = self.initial
 
-        for i in range(0, self.bulksize):
+        for i in range(self.bulksize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -760,6 +778,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_fields_and_rows_are_separated_by_custom_rowsep_and_fieldsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         fieldsep = ","
         self.fact_table = BulkFactTable(
@@ -776,7 +795,7 @@ class BulkFactTableTest(unittest.TestCase):
         inserted_facts = []
 
         # Write bulksize - 1 number of facts to the file
-        for i in range(0, self.bulksize - 1):
+        for i in range(self.bulksize - 1):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -802,6 +821,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_facts_are_loaded_correctly_using_custom_rowsep_and_fieldsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         fieldsep = ","
         self.fact_table = BulkFactTable(
@@ -816,7 +836,7 @@ class BulkFactTableTest(unittest.TestCase):
         )
         postcondition = self.initial
 
-        for i in range(0, self.bulksize):
+        for i in range(self.bulksize):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
@@ -866,6 +886,10 @@ class AccumulatingSnapshotFactTableTest(unittest.TestCase):
             measures=["meas", "lag21"],
             factexpander=self.__complag,
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
 
     def __complag(self, row, namemapping, updated):
         if "ref2" in updated:

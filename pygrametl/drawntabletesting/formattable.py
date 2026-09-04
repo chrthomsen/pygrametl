@@ -25,8 +25,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import sys
-import pygrametl.drawntabletesting as dtt
 
+import pygrametl.drawntabletesting as dtt
 
 if len(sys.argv) != 3:
     print("usage: " + sys.argv[0] + " file line")
@@ -61,12 +61,10 @@ table = table[first_char : last_char + 1]
 table = dtt.Table("", table, testconnection=object())
 table = str(table).split("\n")
 
-write = 0
 indention = "\n" + " " * first_char
-for output in range(start, end):
-    lines[output] = indention + table[write]
-    write += 1
 lines[start] = prefix + table[0]
+for output, row in enumerate(table[1:-1], start + 1):
+    lines[output] = indention + row
 lines[end] = indention + table[-1] + suffix
 
 # The file is updated to format the table
