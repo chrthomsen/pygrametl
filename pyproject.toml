@@ -31,7 +31,7 @@ version = {attr = "pygrametl.__version__"}
 [tool.ruff.lint]
 ignore = [
   "N999", # Preserve module names for compatibility.
-  "BLE001", "B017", # Support any RDBMS driver.
+  "BLE001", "B017", "S110", # Support any RDBMS driver.
   "UP028", "UP031", "UP036", # Jython compatibility.
-  "SIM115", # Changes make code more complex.
+  "RUF012", "SIM115", # Changes make code more complex.
 ]
