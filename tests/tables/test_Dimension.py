@@ -1772,7 +1772,7 @@ class SlowlyChangingDimensionNoCacheTest(SlowlyChangingDimensionTest):
             toatt="todate",
             type1atts=["age"],
             srcdateatt="from",
-            cachesize=0
+            cachesize=0,
         )
 
         self.scdimension = SlowlyChangingDimension(
@@ -1783,7 +1783,7 @@ class SlowlyChangingDimensionNoCacheTest(SlowlyChangingDimensionTest):
             versionatt="version",
             fromatt="fromdate",
             srcdateatt="from",
-            cachesize=0
+            cachesize=0,
         )
 
 

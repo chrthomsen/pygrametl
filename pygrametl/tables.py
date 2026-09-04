@@ -666,7 +666,6 @@ class CachedDimension(Dimension):
             # not in the cache.
             del self.__key2row[row[key]]
 
-
     def _after_update(self, row, namemapping):
         if (
             self.__prefill

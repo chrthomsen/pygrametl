@@ -306,10 +306,7 @@ class BatchFactTableTest(FactTableTest):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # Table is unchanged as batchsize is not reached and commit is not run
         postcondition.assertEqual()
@@ -323,10 +320,7 @@ class BatchFactTableTest(FactTableTest):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # Generate and insert 10 more facts, these should only be in memory
         for i in range(self.batchsize, self.batchsize + 10):
@@ -358,10 +352,7 @@ class BatchFactTableTest(FactTableTest):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # All facts should have been inserted to the fact table
         postcondition.assertEqual()
@@ -444,10 +435,7 @@ class BulkFactTableTest(unittest.TestCase):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # The inserted facts should have been inserted into the table
         postcondition.assertEqual()
@@ -463,10 +451,7 @@ class BulkFactTableTest(unittest.TestCase):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # Generate and insert 10 more facts, these should be in the tempfile
         for i in range(self.bulksize, self.bulksize + 10):
@@ -533,10 +518,7 @@ class BulkFactTableTest(unittest.TestCase):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # The inserted facts should have been inserted into the table
         postcondition.assertEqual()
@@ -567,10 +549,7 @@ class BulkFactTableTest(unittest.TestCase):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # Generate and insert 10 more facts, these should be in the tempfile
         inserted_facts = []
@@ -651,10 +630,7 @@ class BulkFactTableTest(unittest.TestCase):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # The inserted facts should have been inserted into the db table
         postcondition.assertEqual()
@@ -726,10 +702,7 @@ class BulkFactTableTest(unittest.TestCase):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # The inserted facts should have been inserted into the db table
         postcondition.assertEqual()
@@ -805,10 +778,7 @@ class BulkFactTableTest(unittest.TestCase):
             self.fact_table.insert(
                 {"bib": 10, "cid": 10, "did": i, "count": i, "profit": i}
             )
-            postcondition = (
-                postcondition
-                + f"| 10 | 10 | {i} | {i} | {i} |"
-            )
+            postcondition = postcondition + f"| 10 | 10 | {i} | {i} | {i} |"
 
         # The inserted facts should have been inserted into the db table
         postcondition.assertEqual()

@@ -363,9 +363,14 @@ def main():
 
     # Reads only the DTT files required to execute the tests, the arguments
     # to Table is always given to ensure the defaults in dttr.py is used
-    dtts = [str(p) for p in (Path(os.getcwd()).glob("*.dtt")
+    dtts = [
+        str(p)
+        for p in (
+            Path(os.getcwd()).glob("*.dtt")
             if args.recursion_off
-            else Path(os.getcwd()).rglob("*.dtt"))]
+            else Path(os.getcwd()).rglob("*.dtt")
+        )
+    ]
     if args.pre and args.post:
         paths = set(args.pre + args.post)
         dtts = filter(lambda path: str(path) in paths, dtts)

@@ -370,7 +370,8 @@ def executeETLFlow(cw, row):
             "INSERT INTO book (bid, title, genre) VALUES("
             + (
                 ",".join(
-                    "'" + x + "'" if type(x) is str else str(x) for x in list(row.values())
+                    "'" + x + "'" if type(x) is str else str(x)
+                    for x in list(row.values())
                 )
             )
             + ")"

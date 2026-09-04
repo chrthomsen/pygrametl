@@ -387,12 +387,15 @@ class Table:
         if withKey:
             return [dict(zip(self.__columns, self.__rows[i])) for i in self.__additions]
         else:
-            return [dict(
-                        zip(
-                            self.attributes,
-                            self.__rows[i][len(self.__keyrefs) :],
-                        )
-                    ) for i in self.__additions]
+            return [
+                dict(
+                    zip(
+                        self.attributes,
+                        self.__rows[i][len(self.__keyrefs) :],
+                    )
+                )
+                for i in self.__additions
+            ]
 
     def drop(self):
         """Drop the table in the database without checking the contents."""
@@ -718,11 +721,9 @@ class Variable:
             existing = type(self).__all[self.definition]
             if not existing.value == value:
                 raise AssertionError(
-                    
-                        f"Ambiguous values for {self.definition}; {existing.origin}(row {existing.row}, "
-                        f"column {existing.column} {existing.column_name}) is {existing.value} and {self.origin}(row {self.row}, "
-                        f"column {self.column} {self.column_name}) is {self.value}"
-                    
+                    f"Ambiguous values for {self.definition}; {existing.origin}(row {existing.row}, "
+                    f"column {existing.column} {existing.column_name}) is {existing.value} and {self.origin}(row {self.row}, "
+                    f"column {self.column} {self.column_name}) is {self.value}"
                 )
         else:
             type(self).__all[self.definition] = self
