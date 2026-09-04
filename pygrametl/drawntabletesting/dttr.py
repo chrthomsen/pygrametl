@@ -58,7 +58,9 @@ DEFAULT_CONNECTION_NAME = "connection"
 # Functions
 def print_reason_for_failure(when, condition, reason):
     print(
-        f"[{when} {condition.path}({condition.start}-{condition.end})] {reason}",
+        "[{} {}({}-{})] {}".format(
+            when, condition.path, condition.start, condition.end, reason
+        ),
         end="\n",
     )
 
