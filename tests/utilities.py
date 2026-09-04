@@ -63,7 +63,6 @@ def ensure_default_connection_wrapper():
         connection_wrapper.rollback()
     except Exception:
         # The connection is closed so a new one is created
-        global get_connection
         connection_wrapper = pygrametl.ConnectionWrapper(get_connection())
         connection_wrapper.setasdefault()
 

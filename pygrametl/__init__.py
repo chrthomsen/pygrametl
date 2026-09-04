@@ -450,7 +450,6 @@ def rowfactory(source, names, close=True):
 
 def endload():
     """Signal to all Dimension and FactTable objects that all data is loaded."""
-    global _alltables
     for t in _alltables:
         method = getattr(t, "endload", None)
         if callable(method):
@@ -664,7 +663,6 @@ _defaulttargetconnection = None
 
 def getdefaulttargetconnection():
     """Return the default target connection"""
-    global _defaulttargetconnection
     return _defaulttargetconnection
 
 

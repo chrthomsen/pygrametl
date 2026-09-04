@@ -247,7 +247,6 @@ def splitpoint(*arg, **kwargs):
     queuesize = kwargs.get("queuesize", 0)
 
     def decorator(func):
-        global _splitpointqueues
         if instances < 1:
             # A special case where there is no process so
             # we just call func directly
@@ -283,7 +282,6 @@ def splitpoint(*arg, **kwargs):
 
 def endsplits():
     """Wait for all splitpoints to finish"""
-    global _splitpointqueues
     for q in _splitpointqueues:
         q.join()
 
