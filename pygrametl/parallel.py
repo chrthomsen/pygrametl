@@ -503,7 +503,7 @@ def createflow(*functions, **options):
                 raise ValueError("An element is neither iterable nor callable")
             for f in item:
                 if not callable(f):
-                    raise ValueError("An element in a sequence is not callable")
+                    raise TypeError("An element in a sequence is not callable")
             # We can - finally - create the function
             groupfunc = _buildgroupfunction(item)
             resultfuncs.append(groupfunc)
