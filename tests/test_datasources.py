@@ -59,6 +59,10 @@ class SQLSourceTest(unittest.TestCase):
         cls.initial.ensure()
         cls.query = "SELECT * FROM book"
 
+    @classmethod
+    def tearDownClass(cls):
+        cls.connection_wrapper.close()
+
     def assert_all_rows_and_columns_returned(self, sql_source, names):
         row_counter = 0
         for row in sql_source:
@@ -233,22 +237,26 @@ class SQLTransformationSourceTest(unittest.TestCase):
         self.assertEqual(expected_group_by_genre_renamed, list(source))
 
     def test_transform_with_pep_connection(self):
+        connection = sqlite3.connect(":memory:")
+        self.addCleanup(connection.close)
         source = SQLTransformingSource(
             iter(self.input_list),
             "book",
             "SELECT genre, COUNT(title) FROM book GROUP BY genre",
-            targetconnection=sqlite3.connect(":memory:"),
+            targetconnection=connection,
         )
 
         self.assertIsNone(pygrametl.getdefaulttargetconnection())
         self.assertEqual(self.expected_group_by_genre, list(source))
 
     def test_transform_with_connection_wrapper(self):
+        connection_wrapper = utilities.ensure_default_connection_wrapper()
+        self.addCleanup(connection_wrapper.close)
         source = SQLTransformingSource(
             iter(self.input_list),
             "book",
             "SELECT genre, COUNT(title) FROM book GROUP BY genre",
-            targetconnection=utilities.ensure_default_connection_wrapper(),
+            targetconnection=connection_wrapper,
         )
 
         # Ensure this test does not affect the other tests even if it fails

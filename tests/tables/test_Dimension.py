@@ -127,6 +127,10 @@ class DimensionTest(unittest.TestCase):
         self.connection_wrapper = pygrametl.getdefaulttargetconnection()
         self.test_dimension = self.get_test_dimension_instance()
 
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
+
     # Get an instance of the class being tested by this TestCase
     def get_test_dimension_instance(self, **specifics):
         args = {

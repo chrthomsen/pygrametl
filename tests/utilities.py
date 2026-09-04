@@ -76,6 +76,13 @@ def remove_default_connection_wrapper():
     pygrametl._defaulttargetconnection = None
 
 
+def close_default_connection_wrapper():
+    """Close and remove the default connection wrapper, if one exists."""
+    connection_wrapper = pygrametl.getdefaulttargetconnection()
+    if connection_wrapper is not None:
+        connection_wrapper.close()
+
+
 def __sqlite3_connection(connection_string):
     """Create a new sqlite3 connection for use with unit tests."""
     import sqlite3

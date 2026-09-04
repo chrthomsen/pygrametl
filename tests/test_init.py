@@ -157,6 +157,7 @@ class InitTest(unittest.TestCase):
 
     def test_getdate(self):
         connection_wrapper = dtt.connectionwrapper()
+        self.addCleanup(connection_wrapper.close)
         date_expected = Date(2021, 4, 16)
         date_actual = pygrametl.getdate(connection_wrapper, "2021-04-16")
         self.assertEqual(date_expected, date_actual)
@@ -166,6 +167,7 @@ class InitTest(unittest.TestCase):
 
     def test_gettimestamp(self):
         connection_wrapper = dtt.connectionwrapper()
+        self.addCleanup(connection_wrapper.close)
         timestamp_expected = Timestamp(2021, 4, 16, 12, 55, 32)
         timestamp_actual = pygrametl.gettimestamp(
             connection_wrapper, "2021-04-16 12:55:32"
@@ -592,11 +594,12 @@ class InitTest(unittest.TestCase):
 
     def test_getdefaulttargetconnection(self):
         # _defaulttargetconnection may contain a connectionwrapper set by other
-        pygrametl._defaulttargetconnection = None
+        utilities.remove_default_connection_wrapper()
 
         # Create a default connection and ConnectionWrapper. This should then be
         # the default target connection wrapper
         connectionwrapper_first = utilities.ensure_default_connection_wrapper()
+        self.addCleanup(connectionwrapper_first.close)
         self.assertEqual(
             connectionwrapper_first, pygrametl.getdefaulttargetconnection()
         )
@@ -605,6 +608,7 @@ class InitTest(unittest.TestCase):
         # wrapper should still be the previous connection wrapper
         connection_second = utilities.get_connection()
         connectionwrapper_second = pygrametl.ConnectionWrapper(connection_second)
+        self.addCleanup(connectionwrapper_second.close)
         self.assertNotEqual(
             connectionwrapper_second, pygrametl.getdefaulttargetconnection()
         )

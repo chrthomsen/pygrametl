@@ -50,6 +50,10 @@ class TableTest(unittest.TestCase):
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
 
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
+
     def test_init_correct(self):
         dtt.Table(
             "book",
@@ -397,6 +401,10 @@ class BookStateTest(unittest.TestCase):
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
         self.initial.reset()
+
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
 
     def test_insertNew(self):
         expected = self.initial + "| 5 | Calvin and Hobbes Two | Comic |"

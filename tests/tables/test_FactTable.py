@@ -63,6 +63,10 @@ class FactTableTest(unittest.TestCase):
             measures=["count", "profit"],
         )
 
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
+
     def test_insert_new_fact_with_commit(self):
         postcondition = self.initial + "| 1 | 1 | 60 | 87 | 7000 |"
 
@@ -404,6 +408,10 @@ class BulkFactTableTest(unittest.TestCase):
             bulksize=self.bulksize,
         )
 
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
+
     def loader(self, name, attributes, fieldsep, rowsep, nullval, filehandle):
         sql = (
             "INSERT INTO sales(bib, cid, did, count, profit) VALUES({}, {}, {}, {}, {})"
@@ -495,6 +503,7 @@ class BulkFactTableTest(unittest.TestCase):
         self,
     ):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         self.fact_table = BulkFactTable(
             name=self.initial.name,
             keyrefs=["bib", "cid", "did"],
@@ -529,6 +538,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_insert_bulksize_number_of_facts_with_custom_tempdest(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         self.fact_table = BulkFactTable(
             name=self.initial.name,
             keyrefs=["bib", "cid", "did"],
@@ -564,6 +574,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_insert_more_than_bulksize_num_of_facts_with_custom_tempdest(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         self.fact_table = BulkFactTable(
             name=self.initial.name,
             keyrefs=["bib", "cid", "did"],
@@ -611,6 +622,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_fields_are_separated_by_custom_fieldsep_in_file(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         fieldsep = ","
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -649,6 +661,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_facts_are_loaded_correctly_using_custom_fieldsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         fieldsep = ","
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -686,6 +699,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_fields_are_separated_by_custom_rowsep_in_file(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -726,6 +740,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_facts_are_loaded_correctly_using_custom_rowsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         self.fact_table = BulkFactTable(
             name=self.initial.name,
@@ -763,6 +778,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_fields_and_rows_are_separated_by_custom_rowsep_and_fieldsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         fieldsep = ","
         self.fact_table = BulkFactTable(
@@ -805,6 +821,7 @@ class BulkFactTableTest(unittest.TestCase):
 
     def test_facts_are_loaded_correctly_using_custom_rowsep_and_fieldsep(self):
         filehandle = tempfile.NamedTemporaryFile()
+        self.addCleanup(filehandle.close)
         rowsep = " newline "
         fieldsep = ","
         self.fact_table = BulkFactTable(
@@ -869,6 +886,10 @@ class AccumulatingSnapshotFactTableTest(unittest.TestCase):
             measures=["meas", "lag21"],
             factexpander=self.__complag,
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
 
     def __complag(self, row, namemapping, updated):
         if "ref2" in updated:
