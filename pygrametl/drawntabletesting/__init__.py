@@ -108,7 +108,7 @@ class Table:
             or (len(lines) > 1 and not all(ch in delim for ch in lines[1]))
             or all(len(lines[0]) != len(line) for line in lines)
         ):
-            table = "\n".join(map(lambda line: line.strip(), table.split("\n")))
+            table = "\n".join(line.strip() for line in table.split("\n"))
             raise ValueError(f"Malformed table\n{table}")
 
         # Mapping of database types to Python types
@@ -169,7 +169,7 @@ class Table:
 
     def __iter__(self):
         """Return an iterator of the rows as dicts."""
-        return map(lambda row: dict(zip(self.__columns, row)), self.__rows)
+        return (dict(zip(self.__columns, row)) for row in self.__rows)
 
     def __getitem__(self, index):
         """Return the row at the given index as a dict.
@@ -368,10 +368,7 @@ class Table:
             table = self.__copy()
             newRow = table.__row(line, False)
             newRow = tuple(
-                map(
-                    lambda tp: tp[1] if tp[1] else tp[0],
-                    zip(self.__rows[index], newRow),
-                )
+                tp[1] if tp[1] else tp[0] for tp in zip(self.__rows[index], newRow)
             )
             table.__rows[index] = newRow
             table.__additions.add(index)
@@ -388,24 +385,14 @@ class Table:
         - withKey: if True the primary keys are included in the rows.
         """
         if withKey:
-            return list(
-                map(
-                    lambda i: dict(zip(self.__columns, self.__rows[i])),
-                    self.__additions,
-                )
-            )
+            return [dict(zip(self.__columns, self.__rows[i])) for i in self.__additions]
         else:
-            return list(
-                map(
-                    lambda i: dict(
+            return [dict(
                         zip(
                             self.attributes,
                             self.__rows[i][len(self.__keyrefs) :],
                         )
-                    ),
-                    self.__additions,
-                )
-            )
+                    ) for i in self.__additions]
 
     def drop(self):
         """Drop the table in the database without checking the contents."""
@@ -468,7 +455,7 @@ class Table:
             types.append(column[1].strip())
 
         # Formats both types of constraints for use with generated SQL
-        localConstraints = list(map(lambda c: " " + c if c else c, localConstraints))
+        localConstraints = [" " + c if c else c for c in localConstraints]
         if keyrefs:
             globalConstraints.insert(0, "PRIMARY KEY (" + ", ".join(keyrefs) + ")")
             globalConstraints = ", " + ", ".join(globalConstraints) + ")"
@@ -502,18 +489,17 @@ class Table:
             self.__variables.append(value)
             return value
 
-        if type(value) is str:
-            if value.startswith(self.__prefix):
-                variable = Variable(
-                    value,
-                    self.__prefix,
-                    self.name,
-                    len(self.__rows),
-                    index,
-                    self.__columns[index],
-                )
-                self.__variables.append(variable)
-                return variable
+        if type(value) is str and value.startswith(self.__prefix):
+            variable = Variable(
+                value,
+                self.__prefix,
+                self.name,
+                len(self.__rows),
+                index,
+                self.__columns[index],
+            )
+            self.__variables.append(variable)
+            return variable
 
         baseType = self.__types[index].split("(", 1)[0].lower()
         cast = self.__casts[baseType]
@@ -625,12 +611,7 @@ class Table:
     def __table2str(self, rows, violation, indention=2):
         """Format a table as a string."""
         # Determine the longest value of each column for formatting with (pk)
-        header = list(
-            map(
-                lambda tp: tp[0] + ":" + tp[1],
-                zip(self.__columns, self.__types),
-            )
-        )
+        header = [tp[0] + ":" + tp[1] for tp in zip(self.__columns, self.__types)]
         for i, _ in enumerate(self.__keyrefs):
             header[i] += " (pk)"
         widths = list(map(len, header))
@@ -642,13 +623,8 @@ class Table:
         prefix = indention * " "
         fs = ("{{}}" + ("| {{: <{}}} " * len(widths)) + "|").format(*widths)
         header = fs.format(prefix, *header)
-        delimiter = fs.format(prefix, *map(lambda w: w * "-", widths))
-        rows = list(
-            map(
-                lambda r: tuple(map(lambda v: "NULL" if v is None else v, r)),
-                rows,
-            )
-        )
+        delimiter = fs.format(prefix, *(w * "-" for w in widths))
+        rows = [tuple("NULL" if v is None else v for v in r) for r in rows]
 
         # The rows are formatted and a prefix is added to the rows violating
         # the assert. Expected rows are marked with an E while rows currently

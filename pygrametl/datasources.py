@@ -553,9 +553,9 @@ class SQLTransformingSource:
             "INSERT INTO "
             + temptablename
             + "("
-            + ", ".join([tables._quote(key) for key in row.keys()])
+            + ", ".join([tables._quote(key) for key in row])
             + ") VALUES ("
-            + ", ".join(["%%(%s)s" % (att,) for att in row.keys()])
+            + ", ".join(["%%(%s)s" % (att,) for att in row])
             + ")"
         )
 

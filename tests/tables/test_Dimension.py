@@ -293,7 +293,7 @@ class DimensionTest(unittest.TestCase):
         # subset of the attributes. So the namemapping cannot be passed directly
         namemapping = {}
         for key, value in self.namemapping.items():
-            if value in vals_namemapped.keys():
+            if value in vals_namemapped:
                 namemapping[key] = value
 
         rows = self.test_dimension.getbyvals(vals_namemapped, namemapping=namemapping)

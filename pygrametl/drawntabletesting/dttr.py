@@ -86,7 +86,7 @@ def read_sql(columns, config, *arguments):
     # DTT expects a sequence of dicts with the column names as keys
     cursor = connection.cursor()
     cursor.execute(query)
-    rows = map(lambda row: dict(zip(columns, row)), cursor.fetchall())
+    rows = (dict(zip(columns, row)) for row in cursor.fetchall())
     cursor.close()
     return rows
 
@@ -104,7 +104,7 @@ def read_dt(
     pre_conditions,
     post_conditions,
 ):
-    header = list(map(lambda s: s.strip(), dt[0].split(",")))
+    header = [s.strip() for s in dt[0].split(",")]
     firstlinenumber = lastlinenumber - len(dt) + 1
 
     # If the last line does not start with a pipe it cannot be a DT column and
@@ -251,7 +251,7 @@ def usage(parser, verbose):
         "usage: "
         + Path(sys.argv[0]).stem
         + " [-"
-        + "".join(map(lambda a: a.option_strings[0][1:], parser._actions))
+        + "".join(a.option_strings[0][1:] for a in parser._actions)
         + "]",
         end="\n",
     )
@@ -363,14 +363,9 @@ def main():
 
     # Reads only the DTT files required to execute the tests, the arguments
     # to Table is always given to ensure the defaults in dttr.py is used
-    dtts = list(
-        map(
-            lambda p: str(p),
-            Path(os.getcwd()).glob("*.dtt")
+    dtts = [str(p) for p in (Path(os.getcwd()).glob("*.dtt")
             if args.recursion_off
-            else Path(os.getcwd()).rglob("*.dtt"),
-        )
-    )
+            else Path(os.getcwd()).rglob("*.dtt"))]
     if args.pre and args.post:
         paths = set(args.pre + args.post)
         dtts = filter(lambda path: str(path) in paths, dtts)

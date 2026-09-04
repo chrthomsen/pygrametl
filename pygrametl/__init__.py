@@ -102,7 +102,7 @@ __all__ = [
 _alltables = []
 
 
-def project(atts, row, renaming={}):
+def project(atts, row, renaming=None):
     """Create a new dictionary with a subset of the attributes.
 
     Arguments:
@@ -117,6 +117,8 @@ def project(atts, row, renaming={}):
       - If k not in renaming then result[k] = row[k].
       - renaming defaults to {}
     """
+    if renaming is None:
+        renaming = {}
     res = {}
     for c in atts:
         if c in renaming:
@@ -271,8 +273,8 @@ def getstrornullvalue(value, nullvalue="None"):
 def getbool(
     value,
     default=None,
-    truevalues=set((True, 1, "1", "t", "true", "True")),
-    falsevalues=set((False, 0, "0", "f", "false", "False")),
+    truevalues=None,
+    falsevalues=None,
 ):
     """Convert a given value to True, False, or a default value.
 
@@ -280,6 +282,10 @@ def getbool(
     If the given value is in the given falsevalues, False is returned.
     Otherwise, the default value is returned.
     """
+    if falsevalues is None:
+        falsevalues = {False, "0", "f", "false", "False"}
+    if truevalues is None:
+        truevalues = {True, "1", "t", "true", "True"}
     if value in truevalues:
         return True
     elif value in falsevalues:
@@ -336,16 +342,20 @@ def gettimestamp(targetconnection, ymdhmsstr, default=None):
         return default
 
 
-def getvalue(row, name, mapping={}):
+def getvalue(row, name, mapping=None):
     """If name in mapping, return row[mapping[name]], else return row[name]."""
+    if mapping is None:
+        mapping = {}
     if name in mapping:
         return row[mapping[name]]
     else:
         return row[name]
 
 
-def getvalueor(row, name, mapping={}, default=None):
+def getvalueor(row, name, mapping=None, default=None):
     """Return the value of name from row using a mapping and a default value."""
+    if mapping is None:
+        mapping = {}
     if name in mapping:
         return row.get(mapping[name], default)
     else:
@@ -529,7 +539,9 @@ def datereader(dateattribute, parsingfunction=ymdparser):
       to a datetime.date
     """
 
-    def readerfunction(targetconnection, row, namemapping={}):
+    def readerfunction(targetconnection, row, namemapping=None):
+        if namemapping is None:
+            namemapping = {}
         atttouse = namemapping.get(dateattribute) or dateattribute
         return parsingfunction(row[atttouse])  # a datetime.date
 
@@ -550,7 +562,9 @@ def datetimereader(datetimeattribute, parsingfunction=ymdhmsparser):
       to a datetime.datetime
     """
 
-    def readerfunction(targetconnection, row, namemapping={}):
+    def readerfunction(targetconnection, row, namemapping=None):
+        if namemapping is None:
+            namemapping = {}
         atttouse = namemapping.get(datetimeattribute) or datetimeattribute
         return parsingfunction(row[atttouse])  # a datetime.datetime
 
@@ -563,8 +577,8 @@ def datespan(
     fromdateincl=True,
     todateincl=True,
     key="dateid",
-    strings={"date": "%Y-%m-%d", "monthname": "%B", "weekday": "%A"},
-    ints={"year": "%Y", "month": "%m", "day": "%d"},
+    strings=None,
+    ints=None,
     expander=None,
 ):
     """Return a generator yielding dicts for all dates in an interval.
@@ -591,6 +605,10 @@ def datespan(
       dict. Not invoked if None. Default: None
     """
 
+    if ints is None:
+        ints = {"year": "%Y", "month": "%m", "day": "%d"}
+    if strings is None:
+        strings = {"date": "%Y-%m-%d", "monthname": "%B", "weekday": "%A"}
     for arg in (fromdate, todate):
         if not (
             (type(arg) in _stringtypes and arg.count("-") == 2) or isinstance(arg, date)
@@ -706,7 +724,7 @@ class ConnectionWrapper:
         if paramstyle is None:
             paramstyle = self.__underlyingmodule.paramstyle
 
-        if copyintonew or not paramstyle == "pyformat":
+        if copyintonew or paramstyle != "pyformat":
             self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, "_translate2" + paramstyle)
@@ -910,7 +928,7 @@ class ConnectionWrapper:
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
-            return dict([(n, None) for n in names])
+            return {n: None for n in names}
         else:
             return dict(zip(names, values))
 
@@ -1042,7 +1060,7 @@ class BackgroundConnectionWrapper:
         if paramstyle is None:
             paramstyle = self.__underlyingmodule.paramstyle
 
-        if not paramstyle == "pyformat":
+        if paramstyle != "pyformat":
             self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, "_translate2" + paramstyle)
@@ -1185,7 +1203,7 @@ class BackgroundConnectionWrapper:
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
-            return dict([(n, None) for n in names])
+            return {n: None for n in names}
         else:
             return dict(zip(names, values))
 

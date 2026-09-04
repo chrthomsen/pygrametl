@@ -33,8 +33,12 @@ from docutils import nodes
 from sphinx.util import logging
 
 
-def role(name, rawtext, text, lineno, inliner, options={}, content=[]):
+def role(name, rawtext, text, lineno, inliner, options=None, content=None):
     # text is the roles input, i.e., file name in text <relative file path>
+    if content is None:
+        content = []
+    if options is None:
+        options = {}
     start_of_path = text.index("<") + 1
     end_of_path = text.rindex(">")
     file_name = text[: start_of_path - 1].strip()

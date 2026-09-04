@@ -112,7 +112,7 @@ def _getexitfunction():
         _toterminator = multiprocessing.Queue()
 
         def terminatorfunction():
-            pids = set([_masterpid])
+            pids = {_masterpid}
             while True:
                 item = _toterminator.get()
                 if isinstance(item, int):
@@ -603,9 +603,9 @@ class Decoupled:
             self.__fromworker = multiprocessing.JoinableQueue(queuesize)
         else:
             self.__fromworker = None
-        self.__otherqueues = dict(
-            [(dcpld.__instancenumber, dcpld.__fromworker) for dcpld in consumes]
-        )
+        self.__otherqueues = {
+            dcpld.__instancenumber: dcpld.__fromworker for dcpld in consumes
+        }
         # Will store dicts - see also __decoupledworker
         self.__otherresults = {}
         self.__directupdates = directupdatepositions
@@ -680,7 +680,7 @@ class Decoupled:
         if hasattr(self._obj, "_decoupled") and callable(self._obj._decoupled):
             self._obj._decoupled()
 
-        for creatorid, queue in self.__otherqueues.items():
+        for creatorid in self.__otherqueues:
             self.__otherresults[creatorid] = {}
 
         while True:
@@ -903,17 +903,17 @@ class SharedConnectionWrapperClient:
 
     def fetchonetuple(self):
         """Return one result tuple."""
-        (ignoredrownames, row) = self.__fetchonehelper()
+        (_ignoredrownames, row) = self.__fetchonehelper()
         return row
 
     def fetchmanytuples(self, cnt):
         """Return cnt result tuples."""
-        (rownames, rows) = self.__getrows(cnt)
+        (_rownames, rows) = self.__getrows(cnt)
         return rows
 
     def fetchalltuples(self):
         """Return all result tuples"""
-        (rownames, rows) = self.__getrows(0)
+        (_rownames, rows) = self.__getrows(0)
         return rows
 
     def rowcount(self):
@@ -948,7 +948,7 @@ class SharedConnectionWrapperClient:
         raise NotImplementedError()
 
     def resultnames(self):
-        (rownames, nothing) = self.__getrows(None)
+        (rownames, _nothing) = self.__getrows(None)
         return rownames
 
 

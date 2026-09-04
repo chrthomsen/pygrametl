@@ -70,7 +70,7 @@ class InitTest(unittest.TestCase):
         self.assertEqual(27, row["years_in_country"])
 
     def test_renamefromto(self):
-        renaming = dict((v, k) for k, v in self.renaming.items())
+        renaming = {v: k for k, v in self.renaming.items()}
 
         pygrametl.renamefromto(self.row, renaming)
 
