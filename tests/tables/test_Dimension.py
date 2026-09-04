@@ -1755,6 +1755,36 @@ class SlowlyChangingDimensionTest(DimensionTest):
         postcondition.assertEqual()
 
 
+class SlowlyChangingDimensionNoCacheTest(SlowlyChangingDimensionTest):
+    def setUp(self):
+        utilities.ensure_default_connection_wrapper()
+        self.initial.reset()
+        self.connection_wrapper = pygrametl.getdefaulttargetconnection()
+        self.test_dimension = SlowlyChangingDimension(
+            name=self.initial.name,
+            key=self.initial.key(),
+            attributes=self.initial.attributes,
+            lookupatts=["name"],
+            versionatt="version",
+            fromatt="fromdate",
+            toatt="todate",
+            type1atts=["age"],
+            srcdateatt="from",
+            cachesize=0
+        )
+
+        self.scdimension = SlowlyChangingDimension(
+            name=self.initial.name,
+            key=self.initial.key(),
+            attributes=self.initial.attributes,
+            lookupatts=["name", "age"],
+            versionatt="version",
+            fromatt="fromdate",
+            srcdateatt="from",
+            cachesize=0
+        )
+
+
 class SnowflakedDimensionTest(unittest.TestCase):
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
