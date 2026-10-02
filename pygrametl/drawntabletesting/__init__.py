@@ -53,7 +53,7 @@ def connectionwrapper(connection=None):
     return cw
 
 
-class Table:
+class Table(object):
     """A class representing a concrete database table.
 
     Note that the asserts assume that the Table instance and the database
@@ -671,7 +671,7 @@ class Table:
             return str(e)
 
 
-class Variable:
+class Variable(object):
     __all = {}
 
     def __init__(self, definition, prefix, origin, row, column, column_name):
