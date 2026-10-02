@@ -336,20 +336,16 @@ def gettimestamp(targetconnection, ymdhmsstr, default=None):
         return default
 
 
-def getvalue(row, name, mapping=None):
+def getvalue(row, name, mapping={}):
     """If name in mapping, return row[mapping[name]], else return row[name]."""
-    if mapping is None:
-        mapping = {}
     if name in mapping:
         return row[mapping[name]]
     else:
         return row[name]
 
 
-def getvalueor(row, name, mapping=None, default=None):
+def getvalueor(row, name, mapping={}, default=None):
     """Return the value of name from row using a mapping and a default value."""
-    if mapping is None:
-        mapping = {}
     if name in mapping:
         return row.get(mapping[name], default)
     else:
@@ -532,9 +528,7 @@ def datereader(dateattribute, parsingfunction=ymdparser):
       to a datetime.date
     """
 
-    def readerfunction(targetconnection, row, namemapping=None):
-        if namemapping is None:
-            namemapping = {}
+    def readerfunction(targetconnection, row, namemapping={}):
         atttouse = namemapping.get(dateattribute) or dateattribute
         return parsingfunction(row[atttouse])  # a datetime.date
 
@@ -555,9 +549,7 @@ def datetimereader(datetimeattribute, parsingfunction=ymdhmsparser):
       to a datetime.datetime
     """
 
-    def readerfunction(targetconnection, row, namemapping=None):
-        if namemapping is None:
-            namemapping = {}
+    def readerfunction(targetconnection, row, namemapping={}):
         atttouse = namemapping.get(datetimeattribute) or datetimeattribute
         return parsingfunction(row[atttouse])  # a datetime.datetime
 
