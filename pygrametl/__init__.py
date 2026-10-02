@@ -271,8 +271,8 @@ def getstrornullvalue(value, nullvalue="None"):
 def getbool(
     value,
     default=None,
-    truevalues=frozenset(True, "1", "t", "true", "True"),
-    falsevalues=frozenset(False, "0", "f", "false", "False"),
+    truevalues=frozenset({True, "1", "t", "true", "True"}),
+    falsevalues=frozenset({False, "0", "f", "false", "False"}),
 ):
     """Convert a given value to True, False, or a default value.
 
