@@ -48,13 +48,12 @@ from threading import Thread
 
 from pygrametl.FIFODict import FIFODict
 
-
 if version_info[0] == 2:
     import types
 
     _stringtypes = types.StringTypes  # (str, unicode) on Python 2
-    from Queue import Queue
     from exceptions import Exception as _DBBaseException  # Used by PEP249,but
+    from Queue import Queue
     # not avail. on Py3
 else:  # For Python 3
     _stringtypes = (str,)
@@ -65,38 +64,38 @@ else:  # For Python 3
 
 __version__ = "2.9"
 __all__ = [
-    "project",
+    "ConnectionWrapper",
+    "_stringtypes",
     "copy",
-    "renamefromto",
-    "rename",
-    "renametofrom",
-    "getint",
+    "datereader",
+    "datespan",
+    "datetimereader",
+    "endload",
+    "getbool",
+    "getdate",
+    "getdbfriendlystr",
+    "getdefaulttargetconnection",
     "getfloat",
+    "getint",
     "getstr",
     "getstrippedstr",
     "getstrornullvalue",
-    "getdbfriendlystr",
-    "getbool",
-    "getdate",
     "gettimestamp",
     "getvalue",
     "getvalueor",
-    "setdefaults",
-    "rowfactory",
-    "endload",
-    "today",
-    "now",
-    "ymdparser",
-    "ymdhmsparser",
-    "datereader",
-    "datetimereader",
-    "datespan",
-    "toupper",
-    "tolower",
     "keepasis",
-    "getdefaulttargetconnection",
-    "ConnectionWrapper",
-    "_stringtypes",
+    "now",
+    "project",
+    "rename",
+    "renamefromto",
+    "renametofrom",
+    "rowfactory",
+    "setdefaults",
+    "today",
+    "tolower",
+    "toupper",
+    "ymdhmsparser",
+    "ymdparser",
 ]
 
 
@@ -149,7 +148,7 @@ def copy(row, **renaming):
         # needed for renamings like {'x':'repeated', 'y':'repeated'}
         if v in tmp:
             del tmp[v]
-    for k in renaming.keys():
+    for k in renaming:
         # Avoid overwriting renamed values with old values
         tmp.pop(k, None)
     res.update(tmp)
@@ -272,8 +271,8 @@ def getstrornullvalue(value, nullvalue="None"):
 def getbool(
     value,
     default=None,
-    truevalues=set((True, 1, "1", "t", "true", "True")),
-    falsevalues=set((False, 0, "0", "f", "false", "False")),
+    truevalues=frozenset({True, "1", "t", "true", "True"}),
+    falsevalues=frozenset({False, "0", "f", "false", "False"}),
 ):
     """Convert a given value to True, False, or a default value.
 
@@ -441,7 +440,6 @@ def rowfactory(source, names, close=True):
 
 def endload():
     """Signal to all Dimension and FactTable objects that all data is loaded."""
-    global _alltables
     for t in _alltables:
         method = getattr(t, "endload", None)
         if callable(method):
@@ -647,7 +645,6 @@ _defaulttargetconnection = None
 
 def getdefaulttargetconnection():
     """Return the default target connection"""
-    global _defaulttargetconnection
     return _defaulttargetconnection
 
 
@@ -707,7 +704,7 @@ class ConnectionWrapper(object):
         if paramstyle is None:
             paramstyle = self.__underlyingmodule.paramstyle
 
-        if copyintonew or not paramstyle == "pyformat":
+        if copyintonew or paramstyle != "pyformat":
             self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, "_translate2" + paramstyle)
@@ -911,7 +908,7 @@ class ConnectionWrapper(object):
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
-            return dict([(n, None) for n in names])
+            return {n: None for n in names}
         else:
             return dict(zip(names, values))
 
@@ -1043,7 +1040,7 @@ class BackgroundConnectionWrapper(object):
         if paramstyle is None:
             paramstyle = self.__underlyingmodule.paramstyle
 
-        if not paramstyle == "pyformat":
+        if paramstyle != "pyformat":
             self.__translations = FIFODict(stmtcachesize)
             try:
                 self.__translate = getattr(self, "_translate2" + paramstyle)
@@ -1186,7 +1183,7 @@ class BackgroundConnectionWrapper(object):
         values = self.__cursor.fetchone()
         if values is None:
             # A row with each att = None
-            return dict([(n, None) for n in names])
+            return {n: None for n in names}
         else:
             return dict(zip(names, values))
 

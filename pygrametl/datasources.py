@@ -27,20 +27,18 @@ provide dicts that map from attribute names to attribute values.
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from csv import DictReader
 import sys
+from csv import DictReader
 
 import pygrametl
-from pygrametl import tables
-from pygrametl import ConnectionWrapper
-
+from pygrametl import ConnectionWrapper, tables
 
 if sys.platform.startswith("java"):
     # Jython specific code
-    from pygrametl.jythonmultiprocessing import Queue, Process
+    from pygrametl.jythonmultiprocessing import Process, Queue
 else:
-    from multiprocessing import Queue, Process
     import sqlite3  # Only used by SQLTransformingSource
+    from multiprocessing import Process, Queue
 
 try:
     from Queue import Empty  # Python 2
@@ -49,23 +47,23 @@ except ImportError:
 
 
 __all__ = [
-    "CSVSource",
-    "TypedCSVSource",
-    "SQLSource",
-    "PandasSource",
-    "JoiningSource",
-    "HashJoiningSource",
-    "MergeJoiningSource",
     "BackgroundSource",
-    "ProcessSource",
-    "MappingSource",
-    "TransformingSource",
-    "SQLTransformingSource",
-    "UnionSource",
+    "CSVSource",
     "CrossTabbingSource",
-    "FilteringSource",
     "DynamicForEachSource",
+    "FilteringSource",
+    "HashJoiningSource",
+    "JoiningSource",
+    "MappingSource",
+    "MergeJoiningSource",
+    "PandasSource",
+    "ProcessSource",
     "RoundRobinSource",
+    "SQLSource",
+    "SQLTransformingSource",
+    "TransformingSource",
+    "TypedCSVSource",
+    "UnionSource",
     "UnpivotingSource",
 ]
 
@@ -555,9 +553,9 @@ class SQLTransformingSource(object):
             "INSERT INTO "
             + temptablename
             + "("
-            + ", ".join([tables._quote(key) for key in row.keys()])
+            + ", ".join([tables._quote(key) for key in row])
             + ") VALUES ("
-            + ", ".join(["%%(%s)s" % (att,) for att in row.keys()])
+            + ", ".join(["%%(%s)s" % (att,) for att in row])
             + ")"
         )
 
@@ -736,7 +734,6 @@ class RoundRobinSource(object):
                     # we're done with this source and can delete it since
                     # we iterate the list as we do
                     del self.__sources[i]
-        return
 
 
 class DynamicForEachSource(object):

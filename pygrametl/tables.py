@@ -44,11 +44,11 @@ dim.insert(row=..., namemapping={'order_date':'date'})
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import locale
+import tempfile
 from operator import ge, gt, le, lt
 from os import path
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 from sys import version_info
-import tempfile
 from time import sleep
 
 import pygrametl
@@ -70,24 +70,24 @@ except ImportError:
     pass
 
 __all__ = [
-    "definequote",
-    "Dimension",
-    "CachedDimension",
-    "BulkDimension",
-    "CachedBulkDimension",
-    "TypeOneSlowlyChangingDimension",
-    "SlowlyChangingDimension",
-    "SnowflakedDimension",
-    "FactTable",
-    "BatchFactTable",
-    "BulkFactTable",
     "AccumulatingSnapshotFactTable",
-    "SubprocessFactTable",
+    "BasePartitioner",
+    "BatchFactTable",
+    "BulkDimension",
+    "BulkFactTable",
+    "CachedBulkDimension",
+    "CachedDimension",
     "DecoupledDimension",
     "DecoupledFactTable",
-    "BasePartitioner",
+    "Dimension",
     "DimensionPartitioner",
+    "FactTable",
     "FactTablePartitioner",
+    "SlowlyChangingDimension",
+    "SnowflakedDimension",
+    "SubprocessFactTable",
+    "TypeOneSlowlyChangingDimension",
+    "definequote",
 ]
 
 
@@ -463,7 +463,6 @@ class Dimension(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
 
 class CachedDimension(Dimension):
@@ -634,7 +633,6 @@ class CachedDimension(Dimension):
             self.__key2row[keyvalue] = tuple([resultrow[a] for a in self.all])
 
     def _before_update(self, row, namemapping):
-        """ """
         # We have to remove old values from the caches.
         key = namemapping.get(self.key) or self.key
         for att in self.lookupatts:
@@ -649,16 +647,12 @@ class CachedDimension(Dimension):
                     del self.__vals2key[searchtuple]
                 break
 
-        if self.cachefullrows:
-            if row[key] in self.__key2row:
-                # The cached row is now incorrect. We must make sure it is
-                # not in the cache.
-                del self.__key2row[row[key]]
-
-        return None
+        if self.cachefullrows and row[key] in self.__key2row:
+            # The cached row is now incorrect. We must make sure it is
+            # not in the cache.
+            del self.__key2row[row[key]]
 
     def _after_update(self, row, namemapping):
-        """ """
         if (
             self.__prefill
             and self.cacheoninsert
@@ -672,7 +666,6 @@ class CachedDimension(Dimension):
             self._after_lookup(newrow, {}, keyval)  # Updates __vals2key
 
     def _after_insert(self, row, namemapping, newkeyvalue):
-        """ """
         # After the insert, we can look the row up. Pretend that we
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
@@ -1446,10 +1439,9 @@ class SlowlyChangingDimension(Dimension):
             self.rowcache[keyvalue] = tuple([resultrow[a] for a in self.all])
 
     def _before_update(self, row, namemapping):
-        """ """
         # We have to remove old values from the caches if they exist.
         if self.__cachesize == 0:
-            return None
+            return
 
         key = namemapping.get(self.key) or self.key
         for att in self.lookupatts:
@@ -1469,10 +1461,9 @@ class SlowlyChangingDimension(Dimension):
             # not in the cache.
             del self.rowcache[row[key]]
 
-        return None
+        return
 
     def _after_insert(self, row, namemapping, newkeyvalue):
-        """ """
         # After the insert, we can look it up. Pretend that we
         # did that. Then we get the new data cached.
         # NB: Here we assume that the DB doesn't change or add anything.
@@ -1487,7 +1478,6 @@ class SlowlyChangingDimension(Dimension):
             self._after_getbykey(newkeyvalue, tmp)
 
     def __preparetype1updates(self, updates, lookupvalues, type2changes):
-        """ """
         # Perform type 1 updates for the latest version unless type2changes is
         # True as the latest version then is a new version about to be inserted
         updateslatest = {
@@ -1511,7 +1501,6 @@ class SlowlyChangingDimension(Dimension):
             self.__performtype1updates(updatekeys, updatesall)
 
     def __performtype1updates(self, updatekeys, updates):
-        """ """
         # Generate SQL for the update
         valparts = ", ".join(["%s = %%(%s)s" % (self.quote(k), k) for k in updates])
         keyparts = ", ".join([str(k) for k in updatekeys])
@@ -1761,7 +1750,7 @@ class SnowflakedDimension(object):
         self.key = self.root.key
         self.lookupatts = self.root.lookupatts
 
-        dims = set([self.root])
+        dims = {self.root}
         self.refs = {}
         self.refkeys = {}
         self.all = self.root.all[:]
@@ -1791,7 +1780,7 @@ class SnowflakedDimension(object):
         # Check that all dimensions in dims are reachable from the root
         dimscopy = dims.copy()
         dimscopy.remove(self.root)
-        for _, targets in self.refs.items():
+        for targets in self.refs.values():
             for target in targets:
                 # It is safe to use remove as each dim is only referenced once
                 dimscopy.remove(target)
@@ -1816,7 +1805,7 @@ class SnowflakedDimension(object):
             "SELECT "
             + ", ".join(self.root.quotelist(self.allnames))
             + " FROM "
-            + " NATURAL JOIN ".join(map(lambda d: d.name, dims))
+            + " NATURAL JOIN ".join(d.name for d in dims)
         )
         self.rowlookupsql = self.alljoinssql + " WHERE %s.%s = %%(%s)s" % (
             self.root.name,
@@ -2060,10 +2049,8 @@ class SnowflakedDimension(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
     def __ensure_helper(self, dimension, row, namemapping, insertdone):
-        """ """
         # NB: Has side-effects: Key values are set for all dimensions
         key = None
         retry = False
@@ -2276,7 +2263,6 @@ class FactTable(object):
 
     def endload(self):
         """Finalize the load."""
-        pass
 
 
 class BatchFactTable(FactTable):
@@ -2323,7 +2309,7 @@ class BatchFactTable(FactTable):
             self.__basesql = self.insertsql[: self.insertsql.find(" (") + 1]
             self.__rowtovalue = lambda row: (
                 "("
-                + ",".join(map(lambda c: pygrametl.getsqlfriendlystr(row[c]), self.all))
+                + ",".join(pygrametl.getsqlfriendlystr(row[c]) for c in self.all)
                 + ")"
             )
         else:
@@ -2481,9 +2467,10 @@ class AccumulatingSnapshotFactTable(FactTable):
     def __diffhelper(self, oldrow, newrow, namemapping, atts, ignorenone, res):
         for a in atts:
             newa = namemapping.get(a) or a
-            if newrow.get(newa) != oldrow.get(a):
-                if newrow.get(newa) is not None or not ignorenone:
-                    res.add(a)
+            if newrow.get(newa) != oldrow.get(a) and (
+                newrow.get(newa) is not None or not ignorenone
+            ):
+                res.add(a)
 
     def __addmissingkeys(self, row, namemappingfornew, oldrow):
         for key in self.all:
@@ -2931,11 +2918,9 @@ class BulkDimension(_BaseBulkloadable, CachedDimension):
 
     def _before_getbyvals(self, values, namemapping):
         self._bulkloadnow()
-        return None
 
     def _before_update(self, row, namemapping):
         self._bulkloadnow()
-        return None
 
     def getbykey(self, keyvalue):
         """Lookup and return the row with the given key value.
@@ -3160,11 +3145,9 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
 
     def _before_getbyvals(self, values, namemapping):
         self._bulkloadnow()
-        return None
 
     def _before_update(self, row, namemapping):
         self._bulkloadnow()
-        return None
 
     def _bulkloadnow(self):
         emptydict = {}
@@ -3173,7 +3156,6 @@ class CachedBulkDimension(_BaseBulkloadable, CachedDimension):
         self.__localcache.clear()
         self.__localkeys.clear()
         _BaseBulkloadable._bulkloadnow(self)
-        return
 
     def getbykey(self, keyvalue):
         """Lookup and return the row with the given key value.
@@ -3410,7 +3392,6 @@ class DecoupledDimension(Decoupled):
         self._enqueuenoreturn("endload")
         self._endbatch()
         self._join()
-        return None
 
     def scdensure(self, row, namemapping={}):
         "Invoke scdensure on the decoupled Dimension in the separate process"
@@ -3484,7 +3465,6 @@ class DecoupledFactTable(Decoupled):
         self._enqueuenoreturn("endload")
         self._endbatch()
         self._join()
-        return None
 
     def lookup(self, row, namemapping={}):
         """Invoke lookup on the decoupled FactTable in the separate process"""

@@ -28,6 +28,7 @@ on pygrametl.org when the documentation is exported to a PDF.
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from pathlib import Path
+
 from docutils import nodes
 from sphinx.util import logging
 
@@ -40,7 +41,6 @@ def role(name, rawtext, text, lineno, inliner, options={}, content=[]):
     file_path = text[start_of_path:end_of_path]
 
     # References the file in an appropriate manner for the output format
-    global sphinx_app
     if sphinx_app.builder.format == "html":
         # For HTML :formatref:` <>` links to the local file like ` <>`_
         node = nodes.reference(rawtext, file_name, refuri=str(file_path), **options)

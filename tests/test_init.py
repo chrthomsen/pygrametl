@@ -23,9 +23,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
-from unittest.mock import patch
 from datetime import date, datetime
-from sqlite3.dbapi2 import Timestamp, Date
+from sqlite3.dbapi2 import Date, Timestamp
+from unittest.mock import patch
 
 import pygrametl
 import pygrametl.drawntabletesting as dtt
@@ -70,7 +70,7 @@ class InitTest(unittest.TestCase):
         self.assertEqual(27, row["years_in_country"])
 
     def test_renamefromto(self):
-        renaming = dict((v, k) for k, v in self.renaming.items())
+        renaming = {v: k for k, v in self.renaming.items()}
 
         pygrametl.renamefromto(self.row, renaming)
 
@@ -157,6 +157,7 @@ class InitTest(unittest.TestCase):
 
     def test_getdate(self):
         connection_wrapper = dtt.connectionwrapper()
+        self.addCleanup(connection_wrapper.close)
         date_expected = Date(2021, 4, 16)
         date_actual = pygrametl.getdate(connection_wrapper, "2021-04-16")
         self.assertEqual(date_expected, date_actual)
@@ -166,6 +167,7 @@ class InitTest(unittest.TestCase):
 
     def test_gettimestamp(self):
         connection_wrapper = dtt.connectionwrapper()
+        self.addCleanup(connection_wrapper.close)
         timestamp_expected = Timestamp(2021, 4, 16, 12, 55, 32)
         timestamp_actual = pygrametl.gettimestamp(
             connection_wrapper, "2021-04-16 12:55:32"
@@ -302,8 +304,8 @@ class InitTest(unittest.TestCase):
                 return False
             rows = set()
 
-            for i in range(0, i):
-                record = (i, i * 2)
+            for j in range(i):
+                record = (j, j * 2)
                 rows.add(record)
                 self.rows_left -= 1
             return rows
@@ -367,7 +369,7 @@ class InitTest(unittest.TestCase):
         alltables = pygrametl._alltables
         pygrametl._alltables = []
 
-        for _ in range(0, 10):
+        for _ in range(10):
             self.MockDimensionOrFacttable()
 
         for dimension_or_facttable in pygrametl._alltables:
@@ -422,9 +424,9 @@ class InitTest(unittest.TestCase):
         self.assertEqual(None, pygrametl.ymdparser(None))
 
         # Incorrect input or format
-        self.assertRaises(Exception, pygrametl.ymdparser, "Not a date")
-        self.assertRaises(Exception, pygrametl.ymdparser, "01-01-2021")
-        self.assertRaises(Exception, pygrametl.ymdparser, "2050-01-01-01")
+        self.assertRaises(ValueError, pygrametl.ymdparser, "Not a date")
+        self.assertRaises(ValueError, pygrametl.ymdparser, "01-01-2021")
+        self.assertRaises(ValueError, pygrametl.ymdparser, "2050-01-01-01")
 
     def test_ymdhmsparser(self):
         datetime_expected = datetime(2021, 1, 1, 14, 32, 56)
@@ -435,9 +437,9 @@ class InitTest(unittest.TestCase):
         self.assertEqual(None, pygrametl.ymdparser(None))
 
         # Incorrect input or format
-        self.assertRaises(Exception, pygrametl.ymdhmsparser, "Not a datetime")
-        self.assertRaises(Exception, pygrametl.ymdhmsparser, "01-01-2021 14:32:56")
-        self.assertRaises(Exception, pygrametl.ymdhmsparser, "2021-01-01")
+        self.assertRaises(ValueError, pygrametl.ymdhmsparser, "Not a datetime")
+        self.assertRaises(ValueError, pygrametl.ymdhmsparser, "01-01-2021 14:32:56")
+        self.assertRaises(ValueError, pygrametl.ymdhmsparser, "2021-01-01")
 
     def test_datereader(self):
         datereader = pygrametl.datereader("date")
@@ -592,11 +594,12 @@ class InitTest(unittest.TestCase):
 
     def test_getdefaulttargetconnection(self):
         # _defaulttargetconnection may contain a connectionwrapper set by other
-        pygrametl._defaulttargetconnection = None
+        utilities.remove_default_connection_wrapper()
 
         # Create a default connection and ConnectionWrapper. This should then be
         # the default target connection wrapper
         connectionwrapper_first = utilities.ensure_default_connection_wrapper()
+        self.addCleanup(connectionwrapper_first.close)
         self.assertEqual(
             connectionwrapper_first, pygrametl.getdefaulttargetconnection()
         )
@@ -605,6 +608,7 @@ class InitTest(unittest.TestCase):
         # wrapper should still be the previous connection wrapper
         connection_second = utilities.get_connection()
         connectionwrapper_second = pygrametl.ConnectionWrapper(connection_second)
+        self.addCleanup(connectionwrapper_second.close)
         self.assertNotEqual(
             connectionwrapper_second, pygrametl.getdefaulttargetconnection()
         )

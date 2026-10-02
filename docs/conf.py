@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # pygrametl documentation build configuration file, created by
 # sphinx-quickstart2 on Thu Nov 14 21:04:01 2013.
@@ -14,8 +13,8 @@
 
 # -- Interpreter configuration -------------------------------------------
 
-import sys
 import os
+import sys
 from os.path import abspath, dirname
 
 # Make sure we get this copy of pygrametl, and not one on the system
