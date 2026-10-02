@@ -562,8 +562,8 @@ def datespan(
     fromdateincl=True,
     todateincl=True,
     key="dateid",
-    strings=None,
-    ints=None,
+    strings={"date": "%Y-%m-%d", "monthname": "%B", "weekday": "%A"},
+    ints={"year": "%Y", "month": "%m", "day": "%d"},
     expander=None,
 ):
     """Return a generator yielding dicts for all dates in an interval.
@@ -590,10 +590,6 @@ def datespan(
       dict. Not invoked if None. Default: None
     """
 
-    if ints is None:
-        ints = {"year": "%Y", "month": "%m", "day": "%d"}
-    if strings is None:
-        strings = {"date": "%Y-%m-%d", "monthname": "%B", "weekday": "%A"}
     for arg in (fromdate, todate):
         if not (
             (type(arg) in _stringtypes and arg.count("-") == 2) or isinstance(arg, date)
