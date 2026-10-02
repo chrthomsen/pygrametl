@@ -500,7 +500,7 @@ def createflow(*functions, **options):
         else:
             # Check the arguments
             if not hasattr(item, "__iter__"):
-                raise ValueError("An element is neither iterable nor callable")
+                raise TypeError("An element is neither iterable nor callable")
             for f in item:
                 if not callable(f):
                     raise TypeError("An element in a sequence is not callable")
