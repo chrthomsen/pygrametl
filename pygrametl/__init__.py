@@ -102,7 +102,7 @@ __all__ = [
 _alltables = []
 
 
-def project(atts, row, renaming=None):
+def project(atts, row, renaming={}):
     """Create a new dictionary with a subset of the attributes.
 
     Arguments:
@@ -117,8 +117,6 @@ def project(atts, row, renaming=None):
       - If k not in renaming then result[k] = row[k].
       - renaming defaults to {}
     """
-    if renaming is None:
-        renaming = {}
     res = {}
     for c in atts:
         if c in renaming:
@@ -273,8 +271,8 @@ def getstrornullvalue(value, nullvalue="None"):
 def getbool(
     value,
     default=None,
-    truevalues=None,
-    falsevalues=None,
+    truevalues=frozenset(True, "1", "t", "true", "True"),
+    falsevalues=frozenset(False, "0", "f", "false", "False"),
 ):
     """Convert a given value to True, False, or a default value.
 
@@ -282,10 +280,6 @@ def getbool(
     If the given value is in the given falsevalues, False is returned.
     Otherwise, the default value is returned.
     """
-    if falsevalues is None:
-        falsevalues = {False, "0", "f", "false", "False"}
-    if truevalues is None:
-        truevalues = {True, "1", "t", "true", "True"}
     if value in truevalues:
         return True
     elif value in falsevalues:
