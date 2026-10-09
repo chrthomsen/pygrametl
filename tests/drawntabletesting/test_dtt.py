@@ -23,6 +23,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
+
 import pygrametl
 import pygrametl.drawntabletesting as dtt
 from tests import utilities
@@ -48,6 +49,10 @@ class TableTest(unittest.TestCase):
 
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
+
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
 
     def test_init_correct(self):
         dtt.Table(
@@ -209,7 +214,7 @@ class TableTest(unittest.TestCase):
             connection_wrapper.execute("SELECT * FROM " + self.initial.name)
 
         self.initial.create()
-        with self.assertRaises(Exception):
+        with self.assertRaises(AssertionError):
             self.initial.ensure()
 
         self.initial.drop()
@@ -369,10 +374,8 @@ def executeETLFlow(cw, row):
             "INSERT INTO book (bid, title, genre) VALUES("
             + (
                 ",".join(
-                    map(
-                        lambda x: "'" + x + "'" if type(x) is str else str(x),
-                        list(row.values()),
-                    )
+                    "'" + x + "'" if type(x) is str else str(x)
+                    for x in list(row.values())
                 )
             )
             + ")"
@@ -398,6 +401,10 @@ class BookStateTest(unittest.TestCase):
     def setUp(self):
         utilities.ensure_default_connection_wrapper()
         self.initial.reset()
+
+    @classmethod
+    def tearDownClass(cls):
+        utilities.close_default_connection_wrapper()
 
     def test_insertNew(self):
         expected = self.initial + "| 5 | Calvin and Hobbes Two | Comic |"

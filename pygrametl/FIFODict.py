@@ -29,7 +29,7 @@ the max. capacity is reached, the first inserted key/value pair is deleted
 __all__ = ["FIFODict"]
 
 
-class FIFODictDeque:
+class FIFODictDeque(object):
     """A simple FIFO mapping between keys and values. Implemented using a dict
     and a Deque. When the max. capacity is reached, the key/value pair that
     has been in the dict the longest time is removed.
@@ -47,7 +47,7 @@ class FIFODictDeque:
           when an item is explicitly deleted with del d[key] or when the
           dict is cleared).
         """
-        if not isinstance(size, type(0)):
+        if not isinstance(size, int):
             raise TypeError("size must be an int")
         if not size > 0:
             raise ValueError("size must be positive")
@@ -130,7 +130,7 @@ class FIFODictDeque:
             yield k
 
 
-class FIFODictOrderedDict:
+class FIFODictOrderedDict(object):
     """A simple FIFO mapping between keys and values. Implemented using an
     OrderedDict. When the max. capacity is reached, the key/value pair that
     has been in the dict the longest time is removed.
@@ -148,7 +148,7 @@ class FIFODictOrderedDict:
           when an item is explicitly deleted with del d[key] or when the
           dict is cleared).
         """
-        if not isinstance(size, type(0)):
+        if not isinstance(size, int):
             raise TypeError("size must be an int")
         if not size > 0:
             raise ValueError("size must be positive")
