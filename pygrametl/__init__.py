@@ -45,6 +45,7 @@ The package's modules are:
 from sys import modules, version_info
 from pygrametl.FIFODict import FIFODict
 from freethreading import Worker
+from datetime import date, datetime
 
 if version_info[0] == 2:
     import types

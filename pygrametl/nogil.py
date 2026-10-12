@@ -2,6 +2,8 @@ from freethreading import RLock
 import psycopg
 from pygrametl import ConnectionWrapper
 
+__all__ = ["Value", "PicklableConnectionWrapper"]
+
 class Value:
     """Drop-in threading replacement for multiprocessing.Value."""
     def __init__(self, typecode: str, value=0):
