@@ -925,6 +925,10 @@ class SharedConnectionWrapperClient(object):
     def commit(self):
         """Commit the transaction."""
         pygrametl.endload()
+
+        # Ensures all tasks added to __toserver by endload() is done before the
+        # commit as JoinableQueue give no order guarantee for multiple writers.
+        self.__join()
         self.__enqueue("commit")
         self.__join()
 

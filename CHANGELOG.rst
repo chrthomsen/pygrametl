@@ -8,6 +8,11 @@ Unreleased
   A ``cachesize`` of 0 could lead to an ``AttributeError`` in
   ``SlowlyChangingDimension`` (GitHub issue #98).
 
+  A race condition in ``SharedConnectionWrapperClient.commit()`` due to
+  ``JoinableQueue`` not guaranteeing a FIFO order when multiple processes write
+  to it. Thus, tasks added by ``endload()`` were sometimes placed after commit
+  in the queue, i.e., some inserts and updates did not get committed.
+
 **Changed**
   Changed the two exceptions that ``createflow()`` can raised from ``ValueError``
   to ``TypeError`` to satisfy the new lints in Ruff 0.16.x (GitHub issue #97)
